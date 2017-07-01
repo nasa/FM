@@ -1,0 +1,146 @@
+CfeSoftwareCommand FSW_FM_NOOP
+{
+    applicationId {range=0x8C}
+    commandCode {range=0}
+}
+
+CfeSoftwareCommand FSW_FM_RESET_CNTRS
+{
+    applicationId {range=0x8C}
+    commandCode {range=1}
+}
+
+CfeSoftwareCommand FSW_FM_FILE_COPY
+{
+    criticality="critical"
+    applicationId {range=0x8C}
+    commandCode {range=2}
+
+    U21 overwriteFlag {range=0..1}
+    S1 Source {lengthInCharacters=64}
+    S1 Destination {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_FILE_MOVE
+{
+    criticality="critical"
+    applicationId {range=0x8C}
+    commandCode {range=3}
+
+    U21 overwriteFlag {range=0..1}
+    S1 Source {lengthInCharacters=64}
+    S1 Destination {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_FILE_RENAME
+{
+    applicationId {range=0x8C}
+    commandCode {range=4}
+
+    S1 Source {lengthInCharacters=64}
+    S1 Destination {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DELETE_FILE
+{
+    criticality="critical"
+    applicationId {range=0x8C}
+    commandCode {range=5}
+
+    S1 Source {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DELETE_ALL_FILES
+{
+    criticality="critical"
+    applicationId {range=0x8C}
+    commandCode {range=7}
+
+    S1 Source {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DECOMPRESS_FILE
+{
+    applicationId {range=0x8C}
+    commandCode {range=8}
+
+    S1 Source {lengthInCharacters=64}
+    S1 Destination {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_CONCAT_FILES
+{
+    applicationId {range=0x8C}
+    commandCode {range=9}
+
+    S1 Source1 {lengthInCharacters=64}
+    S1 Source2 {lengthInCharacters=64}
+    S1 Destination {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_FILE_INFO
+{
+    applicationId {range=0x8C}
+    commandCode {range=10}
+
+    S1 Filename {lengthInCharacters=64}
+    U4321 FileCRC {range=0..4294967295}
+}
+
+CfeSoftwareCommand FSW_FM_OPEN_FILE_LIST
+{
+    applicationId {range=0x8C}
+    commandCode {range=11}
+}
+
+CfeSoftwareCommand FSW_FM_CREATE_DIR
+{
+    applicationId {range=0x8C}
+    commandCode {range=12}
+
+    S1 DirName {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DELETE_DIR
+{
+    criticality="critical"
+    applicationId{range=0x8C}
+    commandCode{range=13}
+
+    S1 DirName {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DIR_LIST_FILE
+{
+    applicationId {range=0x8C}
+    commandCode {range=14}
+
+    S1 DirName {lengthInCharacters=64}
+    S1 Filename {lengthInCharacters=64}
+}
+
+CfeSoftwareCommand FSW_FM_DIR_LIST_MSG
+{
+    applicationId {range=0x8C}
+    commandCode {range=15}
+
+    S1 DirName {lengthInCharacters=64}
+    U4321 Offset {range=0..4294967295}
+}
+
+CfeSoftwareCommand FSW_FM_GET_FREE_SPACE
+{
+    applicationId {range=0x8C}
+    commandCode {range=16}
+}
+
+CfeSoftwareCommand FSW_FM_SET_TABLE_STATE
+{
+    applicationId {range=0x8C}
+    commandCode {range=17}
+
+    U4321 Index {range=0..4294967295}
+    U4321 State {range=0..1}
+}
+
+

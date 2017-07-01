@@ -1,0 +1,30 @@
+CfeTelemetryPacket FSW_FM_HkPkt
+{
+    applyWhen={FieldInRange{field=applicationId, range=0x8A}}
+
+    U1 FM_CommandCounter {generateMnemonic="no"}
+    U1 FM_CommandErrCounter {generateMnemonic="no"}
+    U1 FM_CommandWarnCounter {generateMnemonic="no"}
+    U1 FM_NumOpenFiles {generateMnemonic="no"}
+    U1 FM_ChildCmdCounter {generateMnemonic="no"}
+    U1 FM_ChildCmdErrCounter {generateMnemonic="no"}
+    U1 FM_ChildCmdWarnCounter {generateMnemonic="no"}
+    U1 FM_ChildQueueCount {generateMnemonic="no"}
+    U1 FM_ChildCurrentCC {generateMnemonic="no"}
+    U1 FM_ChildPreviousCC {generateMnemonic="no"}
+}
+
+/* Define the mnemonics */
+
+D FSW_FM_HkPkt_packet_time {sourceFields={FSW_FM_HkPkt.time}}
+U FSW_FM_CMDPC {sourceFields={FSW_FM_HkPkt.FM_CommandCounter}}
+U FSW_FM_CMDEC {sourceFields={FSW_FM_HkPkt.FM_CommandErrCounter}}
+U FSW_FM_CMDWC {sourceFields={FSW_FM_HkPkt.FM_CommandWarnCounter}}
+U FSW_FM_NumOpenFiles {sourceFields={FSW_FM_HkPkt.FM_NumOpenFiles}}
+U FSW_FM_ChildCMDPC {sourceFields={FSW_FM_HkPkt.FM_ChildCmdCounter}}
+U FSW_FM_ChildCmdEC {sourceFields={FSW_FM_HkPkt.FM_ChildCmdErrCounter}}
+U FSW_FM_ChildCmdWC {sourceFields={FSW_FM_HkPkt.FM_ChildCmdWarnCounter}}
+U FSW_FM_ChildQueueCount {sourceFields={FSW_FM_HkPkt.FM_ChildQueueCount}}
+U FSW_FM_ChildCurrentCC {sourceFields={FSW_FM_HkPkt.FM_ChildCurrentCC}}
+U FSW_FM_ChildPreviousCC {sourceFields={FSW_FM_HkPkt.FM_ChildPreviousCC}}
+
