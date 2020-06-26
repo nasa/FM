@@ -1,22 +1,29 @@
 /*
-** $Id: fm_msgdefs.h 1.4.1.2 2017/01/23 21:52:59EST sstrege Exp  $
+** Filename: fm_msgdefs.h 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
 **
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+*
 ** Title: CFS File Manager (FM) Application Command and Telemetry
 **        Packet Definitions Header File
 **
 ** Purpose: Specification for the CFS FM command and telemetry message
 **          macro definitions.
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
 **
 ** Notes:
 **
@@ -71,7 +78,6 @@
 **       This command resets the following housekeeping telemetry:
 **       - Command success counter /FM_CMDPC
 **       - Command error counter /FM_CMDEC
-**       - Command warning counter /FM_WarnCtr
 **       - Child cmd success counter /FM_ChildCMDPC
 **       - Child cmd error counter /FM_ChildCMDEC
 **       - Child cmd warning counter /FM_ChildWarnCtr
@@ -109,6 +115,7 @@
 **       an existing file, provided that the file is closed.
 **       If the Overwrite command argument is FALSE, then the target must not exist.
 **       The source and target may be on different file systems.
+**       
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       copying the file will be performed by a lower priority child task.
@@ -144,9 +151,17 @@
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_COPY_PKT_ERR_EID may be sent
 **       - Error event #FM_COPY_OVR_ERR_EID may be sent
-**       - Error event #FM_COPY_SRC_ERR_EID may be sent
-**       - Error event #FM_COPY_TGT_ERR_EID may be sent
-**       - Error event #FM_COPY_CHILD_ERR_EID may be sent
+**       - Error event #FM_COPY_SRC_INVAL_ERR_EID may be sent
+**       - Error event #FM_COPY_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_COPY_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_COPY_SRC_UNKNOWN_ERR_EID may be sent
+**       - Error event #FM_COPY_TGT_INVAL_ERR_EID may be sent
+**       - Error event #FM_COPY_TGT_EXIST_ERR_EID may be sent
+**       - Error event #FM_COPY_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_COPY_TGT_UNKNOWN_ERR_EID may be sent
+**       - Error event #FM_COPY_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_COPY_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_COPY_CHILD_BROKEN_ERR_EID may be sent 
 **       - Error event #FM_COPY_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -175,13 +190,22 @@
 **       If the user wishes to move a file across file systems, he
 **       must first copy the file and then delete the original.
 **
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       moving the file will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
+**
 **  \fmcmdmnemonic \FM_Move
 **
 **  \par Command Packet Structure
 **       #FM_MoveFileCmd_t
 **
 **  \par Command Success Verification
-**       - Command success counter /FM_CMDPC will increment
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_MOVE_CMD_EID will be sent
 **
 **  \par Command Error Conditions
@@ -196,11 +220,19 @@
 **       - Failure of OS move function
 **
 **  \par Command Failure Verification
-**       - Command error counter /FM_CMDEC will increment
+**       - Command error counter /FM_CMDEC may increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_MOVE_PKT_ERR_EID may be sent
 **       - Error event #FM_MOVE_OVR_ERR_EID may be sent
-**       - Error event #FM_MOVE_SRC_ERR_EID may be sent
-**       - Error event #FM_MOVE_TGT_ERR_EID may be sent
+**       - Error event #FM_MOVE_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_MOVE_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_MOVE_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_MOVE_TGT_INVALID_ERR_EID may be sent
+**       - Error event #FM_MOVE_TGT_DNE_ERR_EID may be sent
+**       - Error event #FM_MOVE_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_MOVE_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_MOVE_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_MOVE_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_MOVE_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -223,13 +255,21 @@
 **       If the user wishes to rename a file across file systems, he
 **       must first copy the file and then delete the original.
 **
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       renaming the file will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
 **  \fmcmdmnemonic \FM_Rename
 **
 **  \par Command Packet Structure
 **       #FM_RenameFileCmd_t
 **
 **  \par Command Success Verification
-**       - Command success counter /FM_CMDPC will increment
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_RENAME_CMD_EID will be sent
 **
 **  \par Command Error Conditions
@@ -243,10 +283,18 @@
 **       - Failure of OS rename function
 **
 **  \par Command Failure Verification
-**       - Command error counter /FM_CMDEC will increment
+**       - Command error counter /FM_CMDEC may increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_RENAME_PKT_ERR_EID may be sent
-**       - Error event #FM_RENAME_SRC_ERR_EID may be sent
-**       - Error event #FM_RENAME_TGT_ERR_EID may be sent
+**       - Error event #FM_RENAME_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_RENAME_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_RENAME_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_RENAME_TGT_INVALID_ERR_EID may be sent
+**       - Error event #FM_RENAME_TGT_DNE_ERR_EID may be sent
+**       - Error event #FM_RENAME_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_RENAME_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_RENAME_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_RENAME_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_RENAME_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -263,13 +311,21 @@
 **       This command deletes the source file.
 **       Source must be an existing file that is not open.
 **
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       deleting the file will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
 **  \fmcmdmnemonic \FM_Delete
 **
 **  \par Command Packet Structure
 **       #FM_DeleteFileCmd_t
 **
 **  \par Command Success Verification
-**       - Command success counter /FM_CMDPC will increment
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_DELETE_CMD_EID will be sent
 **
 **  \par Command Error Conditions
@@ -282,8 +338,15 @@
 **
 **  \par Command Failure Verification
 **       - Command error counter /FM_CMDEC will increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_DELETE_PKT_ERR_EID may be sent
-**       - Error event #FM_DELETE_SRC_ERR_EID may be sent
+**       - Error event #FM_DELETE_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_DELETE_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_DELETE_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_DELETE_SRC_OPEN_ERR_EID may be sent
+**       - Error event #FM_DELETE_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_DELETE_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_DELETE_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_DELETE_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -301,6 +364,7 @@
 **       This command deletes all files in the source directory.
 **       Source must be an existing directory.
 **       Open files and sub-directories are not deleted.
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       reading the directory and deleting each file will be performed by a
@@ -319,6 +383,15 @@
 **       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_DELETE_ALL_CMD_EID will be sent
 **
+**  \par Command Warning Conditions
+**       - Directory entry is not a file (sub-directory)
+**       - Directory entry is an open file
+**
+**  \par Command Warning Verification
+**       - Warning counter /FM_WarnCtr will increment
+**       - Informational event #FM_DELETE_ALL_FILES_ND_WARNING_EID may be sent
+**       - Informational event #FM_DELETE_ALL_SKIP_WARNING_EID may be sent
+**
 **  \par Command Error Conditions
 **       - Invalid command packet length
 **       - Invalid directory name
@@ -330,8 +403,12 @@
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_DELETE_ALL_PKT_ERR_EID may be sent
-**       - Error event #FM_DELETE_ALL_SRC_ERR_EID may be sent
-**       - Error event #FM_DELETE_ALL_CHILD_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_SRC_FILE_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_DELETE_ALL_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_DELETE_ALL_OS_ERR_EID may be sent
 **
 **  \par Command Warning Conditions
@@ -339,7 +416,7 @@
 **       - Directory entry is an open file
 **
 **  \par Command Warning Verification
-**       - Warning counter /FM_WarnCtr will increment
+**       - Warning counter /FM_ChildWarnCtr will increment
 **       - Informational event #FM_DELETE_ALL_WARNING_EID will be sent
 **
 **  \par Criticality
@@ -360,6 +437,7 @@
 **       file into the target file.
 **       Source must be an existing file and target must not exist.
 **       Source and target may be on different file systems.
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       decompressing the source file into the target file will be performed by
@@ -390,8 +468,16 @@
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_DECOM_PKT_ERR_EID may be sent
-**       - Error event #FM_DECOM_SRC_ERR_EID may be sent
-**       - Error event #FM_DECOM_TGT_ERR_EID may be sent
+**       - Error event #FM_DECOM_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_DECOM_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_DECOM_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_DECOM_SRC_OPEN_ERR_EID may be sent
+**       - Error event #FM_DECOM_TGT_INVALID_ERR_EID may be sent
+**       - Error event #FM_DECOM_TGT_DNE_ERR_EID may be sent
+**       - Error event #FM_DECOM_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_DECOM_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_DECOM_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_DECOM_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_DECOM_CFE_ERR_EID may be sent
 **
 **  \par Criticality
@@ -408,6 +494,7 @@
 **       file.
 **       Sources must both be existing files and target must not exist.
 **       Sources and target may be on different file systems.
+**       
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       copying the first source file to the target file and then appending the
@@ -439,10 +526,25 @@
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_CONCAT_PKT_ERR_EID may be sent
-**       - Error event #FM_CONCAT_SRC1_ERR_EID may be sent
-**       - Error event #FM_CONCAT_SRC2_ERR_EID may be sent
-**       - Error event #FM_CONCAT_TGT_ERR_EID may be sent
-**       - Error event #FM_CONCAT_OS_ERR_EID may be sent
+**       - Error event #FM_CONCAT_OSCPY_ERR_EID may be sent
+**       - Error event #FM_CONCAT_OPEN_SRC2_ERR_EID may be sent
+**       - Error event #FM_CONCAT_OPEN_TGT_ERR_EID may be sent
+**       - Error event #FM_CONCAT_OSRD_ERR_EID may be sent
+**       - Error event #FM_CONCAT_OSWR_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC1_INVALID_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC1_DNE_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC1_ISDIR_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC1_OPEN_ERR_EID
+**       - Error event #FM_CONCAT_SRC2_INVALID_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC2_DNE_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC2_ISDIR_ERR_EID may be sent
+**       - Error event #FM_CONCAT_SRC2_OPEN_ERR_EID may be sent
+**       - Error event #FM_CONCAT_TGT_INVALID_ERR_EID may be sent
+**       - Error event #FM_CONCAT_TGT_DNE_ERR_EID may be sent
+**       - Error event #FM_CONCAT_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_CONCAT_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_CONCAT_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_CONCAT_CHILD_BROKEN_ERR_EID may be sent
 **
 **  \par Criticality
 **       Concatenating very large files may consume more CPU resource
@@ -463,6 +565,7 @@
 **       or does not exist.
 **       The file information data also includes a CRC, file size,
 **       last modify time and the source name.
+**       
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       collecting the status data and calculating the CRC will be performed by
@@ -481,6 +584,17 @@
 **       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_GET_FILE_INFO_CMD_EID will be sent
 **
+**  \par Command Warning Conditions
+**       - File is open and CRC cannot be calculated
+**       - Specified CRC type is not valid
+**       - CRC cannot be calculated because file cannot be read
+**
+**  \par Command Warning Verification
+**       - Warning counter /FM_ChildWarnCtr will increment
+**       - Informational event #FM_GET_FILE_INFO_STATE_WARNING_EID may be sent
+**       - Informational event #FM_GET_FILE_INFO_TYPE_WARNING_EID may be sent
+**       - Informational event #FM_GET_FILE_INFO_READ_WARNING_EID may be sent
+*
 **  \par Command Error Conditions
 **       - Invalid command packet length
 **       - Invalid source filename
@@ -489,9 +603,12 @@
 **  \par Command Failure Verification
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
+**       - Error event #FM_GET_FILE_INFO_OPEN_ERR_EID may be sent
 **       - Error event #FM_GET_FILE_INFO_PKT_ERR_EID may be sent
 **       - Error event #FM_GET_FILE_INFO_SRC_ERR_EID may be sent
-**       - Error event #FM_GET_FILE_INFO_CHILD_ERR_EID may be sent
+**       - Error event #FM_FILE_INFO_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_FILE_INFO_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_FILE_INFO_CHILD_BROKEN_ERR_EID may be sent
 **
 **  \par Criticality
 **       Calculating the CRC for a very large file may consume more CPU resource than
@@ -540,13 +657,21 @@
 **       This command creates the source directory.
 **       Source must be a valid directory name that does not exist.
 **
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       creation of the directory will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
 **  \fmcmdmnemonic \FM_CreateDir
 **
 **  \par Command Packet Structure
 **       #FM_CreateDirCmd_t
 **
 **  \par Command Success Verification
-**       - Command success counter /FM_CMDPC will increment
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_CREATE_DIR_CMD_EID will be sent
 **
 **  \par Command Error Conditions
@@ -557,8 +682,14 @@
 **
 **  \par Command Failure Verification
 **       - Command error counter /FM_CMDEC will increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_CREATE_DIR_PKT_ERR_EID may be sent
-**       - Error event #FM_CREATE_DIR_SRC_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_CREATE_DIR_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_CREATE_DIR_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -576,13 +707,21 @@
 **       not delete the contents of the directory.
 **       Source must be a valid directory name that exists.
 **
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       removal of the directory will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
 **  \fmcmdmnemonic \FM_DeleteDir
 **
 **  \par Command Packet Structure
 **       #FM_DeleteDirCmd_t
 **
 **  \par Command Success Verification
-**       - Command success counter /FM_CMDPC will increment
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_DELETE_DIR_CMD_EID will be sent
 **
 **  \par Command Error Conditions
@@ -594,9 +733,17 @@
 **
 **  \par Command Failure Verification
 **       - Command error counter /FM_CMDEC will increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_DELETE_DIR_PKT_ERR_EID may be sent
-**       - Error event #FM_DELETE_DIR_SRC_ERR_EID may be sent
 **       - Error event #FM_DELETE_DIR_EMPTY_ERR_EID may be sent
+**       - Error event #FM_DELETE_OPENDIR_OS_ERR_EID may be sent
+**       - Error event #FM_DELETE_RMDIR_OS_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_DELETE_DIR_CHLID_BROKEN_ERR_EID may be sent
 **       - Error event #FM_DELETE_DIR_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -617,6 +764,7 @@
 **       target filename #FM_DIR_LIST_FILE_DEFNAME is used.
 **       The command will overwrite a previous copy of the target
 **       file, if one exists.
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       reading the directory will be performed by a lower priority child task.
@@ -634,6 +782,13 @@
 **       - Child cmd success counter /FM_ChildCMDPC will increment after completion
 **       - Debug event #FM_GET_DIR_FILE_CMD_EID will be sent
 **
+**  \par Command Warning Conditions
+**       - Combined directory and entry name is too long
+**
+**  \par Command Warning Verification
+**       - Warning counter /FM_ChildWarnCtr will increment
+**       - Informational event #FM_GET_DIR_FILE_WARNING_EID may be sent
+**
 **  \par Command Error Conditions
 **       - Invalid command packet length
 **       - Invalid source directory name
@@ -648,10 +803,21 @@
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_GET_DIR_FILE_PKT_ERR_EID may be sent
-**       - Error event #FM_GET_DIR_FILE_SRC_ERR_EID may be sent
-**       - Error event #FM_GET_DIR_FILE_TGT_ERR_EID may be sent
-**       - Error event #FM_GET_DIR_FILE_WARNING_EID may be sent
-**       - Error event #FM_GET_DIR_FILE_OS_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_OSOPENDIR_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_WRBLANK_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_WRHDR_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_OSCREAT_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_WRENTRY_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_UPSTATS_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_TGT_INVALID_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_TGT_DNE_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_TGT_ISDIR_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_FILE_CHILD_BROKEN_ERR_EID may be sent
 **
 **  \par Criticality
 **       Reading a directory that contains thousands of files may consume more CPU
@@ -681,6 +847,7 @@
 **       first packet entry.
 **       The number of entries per packet #FM_DIR_LIST_PKT_ENTRIES
 **       is a platform configuration definition.
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       reading the directory will be performed by a lower priority child task.
@@ -701,6 +868,13 @@
 **       - The #FM_DirListPkt_t telemetry packet will be sent
 **       - The #FM_GET_DIR_PKT_CMD_EID debug event will be sent
 **
+**  \par Command Warning Conditions
+**       - Combined directory and entry name is too long
+**
+**  \par Command Warning Verification
+**       - Warning counter /FM_ChildWarnCtr will increment
+**       - Informational event #FM_GET_DIR_PKT_WARNING_EID may be sent
+**
 **  \par Error Conditions
 **       This command may fail for the following reason(s):
 **       - OS error received opening directory
@@ -713,9 +887,13 @@
 **       - Command error counter /FM_CMDEC may increment
 **       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_GET_DIR_PKT_PKT_ERR_EID may be sent
-**       - Error event #FM_GET_DIR_PKT_SRC_ERR_EID may be sent
-**       - Error event #FM_GET_DIR_PKT_CHILD_ERR_EID may be sent
 **       - Error event #FM_GET_DIR_PKT_OS_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_SRC_INVALID_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_SRC_DNE_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_SRC_ISDIR_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_CHILD_DISABLED_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_CHILD_FULL_ERR_EID may be sent
+**       - Error event #FM_GET_DIR_PKT_CHILD_BROKEN_ERR_EID may be sent
 **
 **  \par Criticality
 **       Reading a directory that contains thousands of files may consume more CPU
@@ -745,10 +923,12 @@
 **
 **  \par Error Conditions
 **       - Invalid command packet length
+**       - Free space table is not loaded
 **
 **  \par Evidence of failure may be found in the following telemetry:
 **       - Command error counter /FM_CMDEC will increment
-**       - Error event #FM_GET_FREE_SPACE_PKT_ERR_EID will be sent
+**       - Error event #FM_GET_FREE_SPACE_PKT_ERR_EID may be sent
+**       - Error event #FM_GET_FREE_SPACE_TBL_ERR_EID may be sent
 **
 **  \par Criticality
 **       - There are no critical issues related to this command.
@@ -784,7 +964,8 @@
 **       - Command error counter /FM_CMDEC will increment
 **       - Error event #FM_SET_TABLE_STATE_PKT_ERR_EID may be sent
 **       - Error event #FM_SET_TABLE_STATE_TBL_ERR_EID may be sent
-**       - Error event #FM_SET_TABLE_STATE_ARG_ERR_EID may be sent
+**       - Error event #FM_SET_TABLE_STATE_ARG_IDX_ERR_EID may be sent
+**       - Error event #FM_SET_TABLE_STATE_ARG_STATE_ERR_EID may be sent
 **       - Error event #FM_SET_TABLE_STATE_UNUSED_ERR_EID may be sent
 **
 **  \par Criticality
@@ -815,40 +996,55 @@
 **       This command sets the permissions for a file. This is a direct interface
 **       to OS_chmod in the OSAL. OS_chmod accepts a uint32 to set the file's mode.
 **       The mode value also contains the type of file (regular or directory, etc) so
-**       care should be taken to not change the file type from regular to directory or vice-versa. 
+**       care should be taken to not change the file type from regular to directory 
+**       or vice-versa. 
+**
+**       Because of the possibility that this command might take a very long time
+**       to complete, command argument validation will be done immediately but
+**       setting permissions will be performed by a lower priority child task.
+**       As such, the command result for this function only refers to the result
+**       of command argument verification and being able to place the command on
+**       the child task interface queue.
+**
 **       Examples for a regular file:
 **       
 **       0100700 (Decimal: 33216) - Read, Write and Execute
 **       0100600 (Decimal: 33152) - Read, and Write
 **       0100400 (Decimal: 33024) - Read Only
- * 
- *       Examples for a directory:
+** 
+**       Examples for a directory:
 **       0040700 (Decimal: 16832) - Read, Write and Execute
 **       0040600 (Decimal: 16786) - Read, and Write
 **       0040400 (Decimal: 16640) - Read Only
- * 
+** 
 **       S_IFMT     0170000   bit mask for the file type bit field
-
-         S_IFSOCK   0140000   socket
-         S_IFLNK    0120000   symbolic link
-         S_IFREG    0100000   regular file
-         S_IFBLK    0060000   block device
-         S_IFDIR    0040000   directory
-         S_IFCHR    0020000   character device
-         S_IFIFO    0010000   FIFO
+**
+**       S_IFSOCK   0140000   socket
+**       S_IFLNK    0120000   symbolic link
+**       S_IFREG    0100000   regular file
+**       S_IFBLK    0060000   block device
+**       S_IFDIR    0040000   directory
+**       S_IFCHR    0020000   character device
+**       S_IFIFO    0010000   FIFO
+**
 **  \fmcmdmnemonic \FM_SetFilePerm
 **
 **  \par Command Packet Structure
 **       #FM_SetPermCmd_t
+**
+**  \par Command Success Verification
+**       - Command success counter /FM_CMDPC will increment after validation
+**       - Child cmd success counter /FM_ChildCMDPC will increment after completion
+**       - Debug event #FM_SET_PERM_CMD_EID will be sent
 **
 **  \par Error Conditions
 **       - Invalid command packet length
 **       - Error from call to OS_chmod
 **
 **  \par Evidence of failure may be found in the following telemetry:
-**       - Command error counter /FM_CMDEC will increment
+**       - Command error counter /FM_CMDEC may increment
+**       - Child cmd error counter /FM_ChildCMDEC may increment
 **       - Error event #FM_SET_PERM_ERR_EID may be sent
-**       - Error event #FM_SET_PERM_CMD_EID may be sent
 **       - Error event #FM_SET_PERM_OS_ERR_EID may be sent
 **
 **  \par Criticality

@@ -1,15 +1,23 @@
  /*************************************************************************
- ** File:
- **   $Id: fm_child_test.c 1.10.1.4 2017/01/24 23:53:32EST mdeschu Exp  $
+ ** Filename: fm_child_test.c 
  **
- **  Copyright (c) 2007-2014 United States Government as represented by the 
- **  Administrator of the National Aeronautics and Space Administration. 
- **  All Other Rights Reserved.  
+ ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+ ** File Manager Application Version 2.5.3
  **
- **  This software was created at NASA's Goddard Space Flight Center.
- **  This software is governed by the NASA Open Source Agreement and may be 
- **  used, distributed and modified only pursuant to the terms of that 
- **  agreement.
+ ** Copyright © 2020 United States Government as represented by the Administrator of
+ ** the National Aeronautics and Space Administration. All Rights Reserved. 
+ **
+ ** Licensed under the Apache License, Version 2.0 (the "License"); 
+ ** you may not use this file except in compliance with the License. 
+ **  
+ ** You may obtain a copy of the License at 
+ ** http://www.apache.org/licenses/LICENSE-2.0 
+ **
+ ** Unless required by applicable law or agreed to in writing, software 
+ ** distributed under the License is distributed on an "AS IS" BASIS, 
+ ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ ** See the License for the specific language governing permissions and 
+ ** limitations under the License. 
  **
  ** Purpose: 
  **   This file contains unit test cases for the functions contained in the file fm_child.c.
@@ -17,6 +25,7 @@
  ** References:
  **   Flight Software Branch C Coding Standard Version 1.2
  **   CFS Development Standards Document
+ **
  ** Notes:
  **
  *************************************************************************/
@@ -100,23 +109,36 @@ int32 UT_FM_CFE_OSFILEAPI_ReadHookCPUHogging(int32  filedes, void *buffer, uint3
 
 int32 UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookIsDirectory(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_DIR;
+#else
     filestats->st_mode = S_IFDIR;
-
+#endif
     return CFE_SUCCESS;
 } /* end UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookIsDirectory */
 
 int32 UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookIsFile(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_READ;
+#else
     filestats->st_mode = S_IFREG;
-
+#endif
     return CFE_SUCCESS;
 } /* end UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookIsFile */
 
 int32 UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookSetSize(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_SIZE
+    filestats->FileSize = 5;
+#else
     filestats->st_size = 5;
+#endif
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ;
+#else
     filestats->st_mode = 0777;
-
+#endif
     return CFE_SUCCESS;
 } /* end UT_FM_CHILD_TEST_CFE_OSFILEAPI_StatHookSetSize */
 
@@ -127,7 +149,7 @@ os_dirent_t *UT_FM_CFE_OSFILEAPI_ReadDirHook1(os_dirp_t directory)
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount += 1;
 
     if (UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount == 1)
-        strncpy (UT_FM_GLOBAL_DirEntry.d_name, "filename", 256);
+        strncpy (UT_FM_GLOBAL_DirEntry.FileName, "filename", 256);
     else
         return NULL;
 
@@ -144,10 +166,10 @@ os_dirent_t *UT_FM_CFE_OSFILEAPI_ReadDirHook2(os_dirp_t directory)
     {
         for (i = 0; i < OS_MAX_PATH_LEN - 1; i++)
         {
-            UT_FM_GLOBAL_DirEntry.d_name[i] = 'a';
+            UT_FM_GLOBAL_DirEntry.FileName[i] = 'a';
         }
 
-        UT_FM_GLOBAL_DirEntry.d_name[OS_MAX_PATH_LEN - 1] = '\0';
+        UT_FM_GLOBAL_DirEntry.FileName[OS_MAX_PATH_LEN - 1] = '\0';
     }
     else
         return NULL;
@@ -160,7 +182,7 @@ os_dirent_t *UT_FM_CFE_OSFILEAPI_ReadDirHook3(os_dirp_t directory)
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount += 1;
 
     if (UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount == 1)
-        strncpy (UT_FM_GLOBAL_DirEntry.d_name, "", 256);
+        strncpy (UT_FM_GLOBAL_DirEntry.FileName, "", 256);
     else
         return NULL;
 
@@ -179,7 +201,7 @@ void FM_ChildInit_Test_CreateChildSemaphoreFailed(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create semaphore failed: result = -1"),
+        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_SEM_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create semaphore failed: result = -1"),
         "Child Task initialization error: create semaphore failed: result = -1");
 
     UtAssert_True (Result == -1, "Result == -1");
@@ -200,7 +222,7 @@ void FM_ChildInit_Test_CreateQueueSemaphoreFailed(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create queue count semaphore failed: result = -1"),
+        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_QSEM_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create queue count semaphore failed: result = -1"),
         "Child Task initialization error: create queue count semaphore failed: result = -1");
 
     UtAssert_True (Result == -1, "Result == -1");
@@ -221,7 +243,7 @@ void FM_ChildInit_Test_CreateTaskFailed(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create task failed: result = -1"),
+        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_CREATE_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: create task failed: result = -1"),
         "Child Task initialization error: create task failed: result = -1");
 
     UtAssert_True (Result == -1, "Result == -1");
@@ -255,10 +277,12 @@ void FM_ChildTask_Test_RegisterChildFailed(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR, "Child Task initialization error: register child failed: result = -1"),
-        "Child Task initialization error: register child failed: result = -1");
+        (Ut_CFE_ES_SysLogWritten("Child Task initialization error: register child failed: result = -1"),
+                                "Child Task initialization error: register child failed: result = -1");
 
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
+    UtAssert_True (Ut_CFE_ES_GetSysLogQueueDepth() == 1,
+                    "Ut_CFE_ES_GetSysLogQueueDepth() == 1");
+
 
 } /* end FM_ChildTask_Test_RegisterChildFailed */
 
@@ -287,7 +311,7 @@ void FM_ChildLoop_Test_SemaphoreTakeFailed(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_SEM_ERR_EID, CFE_EVS_ERROR,
                               "Child Task termination error:  semaphore take failed: result = -1"),
         "Child Task termination error:  semaphore take failed: result = -1");
 
@@ -305,7 +329,7 @@ void FM_ChildLoop_Test_EmptyQueue(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_EMPTYQ_ERR_EID, CFE_EVS_ERROR,
                                   "Child Task termination error:  empty queue"),
         "Child Task termination error:  empty queue");
 
@@ -326,7 +350,7 @@ void FM_ChildLoop_Test_InvalidQueueIndex(void)
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+        (Ut_CFE_EVS_EventSent(FM_CHILD_TERM_QIDX_ERR_EID, CFE_EVS_ERROR,
                                   "Child Task termination error:  invalid queue index: index = 3"),
         "Child Task termination error:  invalid queue index: index = 3");
 
@@ -837,7 +861,7 @@ void FM_ChildDeleteAllCmd_Test_Nominal(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name so nominal case is reached */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName so nominal case is reached */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
 
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
@@ -907,7 +931,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFilenameTooLarge(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name to satisfy strcmp condition */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName to satisfy strcmp condition */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -925,7 +949,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFilenameTooLarge(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
         "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -963,7 +987,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedNameIsInvalid(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
         "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -983,7 +1007,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedNameIsNotInUse(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name to satisfy strcmp condition */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName to satisfy strcmp condition */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -1004,7 +1028,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedNameIsNotInUse(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
         "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1024,7 +1048,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFileOpen(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name to satisfy strcmp condition */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName to satisfy strcmp condition */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -1048,7 +1072,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFileOpen(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
         "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1068,7 +1092,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFileClosed(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name to satisfy strcmp condition */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName to satisfy strcmp condition */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -1089,7 +1113,7 @@ void FM_ChildDeleteAllCmd_Test_FilesNotDeletedFileClosed(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source"),
         "Delete All Files command: one or more files could not be deleted. Files may be open : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1109,7 +1133,7 @@ void FM_ChildDeleteAllCmd_Test_DirectorySkipped(void)
     /* Set to fail condition "DirPtr == NULL" */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_OPENDIR_INDEX, 100, 1);
 
-    /* Causes while-loop to run exactly one time, and sets DirEntry->d_name to satisfy strcmp condition */
+    /* Causes while-loop to run exactly one time, and sets DirEntry->FileName to satisfy strcmp condition */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -1129,7 +1153,7 @@ void FM_ChildDeleteAllCmd_Test_DirectorySkipped(void)
         "Delete All Files command: deleted 0 files: dir = source");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more directories skipped : dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_ALL_SKIP_WARNING_EID, CFE_EVS_INFORMATION, "Delete All Files command: one or more directories skipped : dir = source"),
         "Delete All Files command: one or more directories skipped : dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1241,7 +1265,7 @@ void FM_ChildConcatCmd_Test_CopyFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_cp failed: result = -1, src = source1, tgt = target"),
+        (Ut_CFE_EVS_EventSent(FM_CONCAT_OSCPY_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_cp failed: result = -1, src = source1, tgt = target"),
         "Concat Files error: OS_cp failed: result = -1, src = source1, tgt = target");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1271,7 +1295,7 @@ void FM_ChildConcatCmd_Test_OpenFailed1(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_open failed: result = -1, src2 = source2"),
+        (Ut_CFE_EVS_EventSent(FM_CONCAT_OPEN_SRC2_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_open failed: result = -1, src2 = source2"),
         "Concat Files error: OS_open failed: result = -1, src2 = source2");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1301,7 +1325,7 @@ void FM_ChildConcatCmd_Test_OpenFailed2(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_open failed: result = -1, tgt = target"),
+        (Ut_CFE_EVS_EventSent(FM_CONCAT_OPEN_TGT_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_open failed: result = -1, tgt = target"),
         "Concat Files error: OS_open failed: result = -1, tgt = target");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1331,7 +1355,7 @@ void FM_ChildConcatCmd_Test_ReadFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_read failed: result = -1, file = source2"),
+        (Ut_CFE_EVS_EventSent(FM_CONCAT_OSRD_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_read failed: result = -1, file = source2"),
         "Concat Files error: OS_read failed: result = -1, file = source2");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1364,7 +1388,7 @@ void FM_ChildConcatCmd_Test_WriteFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_write failed: result = -1, expected = 1"),
+        (Ut_CFE_EVS_EventSent(FM_CONCAT_OSWR_ERR_EID, CFE_EVS_ERROR, "Concat Files error: OS_write failed: result = -1, expected = 1"),
         "Concat Files error: OS_write failed: result = -1, expected = 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1532,7 +1556,7 @@ void FM_ChildFileInfoCmd_Test_InvalidFileState(void)
     UtAssert_True (CmdArgs->FileInfoCRC == FM_IGNORE_CRC, "CmdArgs->FileInfoCRC == FM_IGNORE_CRC");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: invalid file state = 99, file = source1"),
+        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_STATE_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: invalid file state = 99, file = source1"),
         "Get File Info warning: unable to compute CRC: invalid file state = 99, file = source1");
 
     /* Generates 1 event message we don't care about in this test */
@@ -1565,7 +1589,7 @@ void FM_ChildFileInfoCmd_Test_InvalidCRCType(void)
     UtAssert_True (CmdArgs->FileInfoCRC == FM_IGNORE_CRC, "CmdArgs->FileInfoCRC == FM_IGNORE_CRC");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: invalid CRC type = 99, file = source1"),
+        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_TYPE_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: invalid CRC type = 99, file = source1"),
         "Get File Info warning: unable to compute CRC: invalid CRC type = 99, file = source1");
 
     /* Generates 1 event message we don't care about in this test */
@@ -1604,7 +1628,7 @@ void FM_ChildFileInfoCmd_Test_OpenFailed(void)
         "Get File Info command: file = source1");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_ERROR, "Get File Info warning: unable to compute CRC: OS_open result = -1, file = source1"),
+        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_OPEN_ERR_EID, CFE_EVS_ERROR, "Get File Info warning: unable to compute CRC: OS_open result = -1, file = source1"),
         "Get File Info warning: unable to compute CRC: OS_open result = -1, file = source1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1643,7 +1667,7 @@ void FM_ChildFileInfoCmd_Test_ReadFailed(void)
         "Get File Info command: file = source1");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: OS_read result = -1, file = source1"),
+        (Ut_CFE_EVS_EventSent(FM_GET_FILE_INFO_READ_WARNING_EID, CFE_EVS_INFORMATION, "Get File Info warning: unable to compute CRC: OS_read result = -1, file = source1"),
         "Get File Info warning: unable to compute CRC: OS_read result = -1, file = source1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -1752,7 +1776,7 @@ void FM_ChildDeleteDirCmd_Test_OpenDirFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_DIR_OS_ERR_EID, CFE_EVS_ERROR, "Delete Directory error: OS_opendir failed: dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_OPENDIR_OS_ERR_EID, CFE_EVS_ERROR, "Delete Directory error: OS_opendir failed: dir = source"),
         "Delete Directory error: OS_opendir failed: dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1815,7 +1839,7 @@ void FM_ChildDeleteDirCmd_Test_rmdirFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_DELETE_DIR_OS_ERR_EID, CFE_EVS_ERROR, "Delete Directory error: OS_rmdir failed: result = -1, dir = source"),
+        (Ut_CFE_EVS_EventSent(FM_DELETE_RMDIR_OS_ERR_EID, CFE_EVS_ERROR, "Delete Directory error: OS_rmdir failed: result = -1, dir = source"),
         "Delete Directory error: directory is not empty: dir = source");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1880,7 +1904,7 @@ void FM_ChildDirListFileCmd_Test_opendirFailed(void)
     UtAssert_True (FM_GlobalData.ChildCurrentCC == 0, "FM_GlobalData.ChildCurrentCC == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: OS_opendir failed: dir = source1"),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OSOPENDIR_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: OS_opendir failed: dir = source1"),
         "Directory List to File error: OS_opendir failed: dir = source1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1904,7 +1928,7 @@ void FM_ChildDirListPktCmd_Test_Nominal(void)
 
     FM_GlobalData.DirListPkt.TotalFiles = FM_GlobalData.DirListPkt.FirstFile + 1;
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -1920,8 +1944,9 @@ void FM_ChildDirListPktCmd_Test_Nominal(void)
     UtAssert_True (FM_GlobalData.DirListPkt.FirstFile == 0, "FM_GlobalData.DirListPkt.FirstFile == 0");
     UtAssert_True (FM_GlobalData.DirListPkt.TotalFiles == 1, "FM_GlobalData.DirListPkt.TotalFiles == 1");
     UtAssert_True
-        (strncmp(FM_GlobalData.DirListPkt.FileList[0].EntryName, UT_FM_GLOBAL_DirEntry.d_name, OS_MAX_PATH_LEN) == 0,
-        "strncmp(FM_GlobalData.DirListPkt.FileList[0].EntryName, UT_FM_GLOBAL_DirEntry.d_name, OS_MAX_PATH_LEN) == 0");
+        (strncmp(FM_GlobalData.DirListPkt.FileList[0].EntryName,
+        UT_FM_GLOBAL_DirEntry.FileName, OS_MAX_PATH_LEN) == 0,
+        "strncmp(FM_GlobalData.DirListPkt.FileList[0].EntryName, UT_FM_GLOBAL_DirEntry.FileName, OS_MAX_PATH_LEN) == 0");
 
     UtAssert_True (FM_GlobalData.DirListPkt.PacketFiles == 1, "FM_GlobalData.DirListPkt.PacketFiles == 1");
 
@@ -1987,7 +2012,7 @@ void FM_ChildDirListPktCmd_Test_DirPlusEntryTooLong(void)
 
     FM_GlobalData.DirListPkt.TotalFiles = FM_GlobalData.DirListPkt.FirstFile + 1;
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -2070,7 +2095,7 @@ void FM_ChildDirListFileInit_Test_WriteBlankStatsFailed(void)
 
     sprintf(EventMessage, "Directory List to File error: OS_write blank stats failed: result = 0, expected = %d", sizeof(FM_DirListFileStats_t));
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, EventMessage),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_WRBLANK_ERR_EID, CFE_EVS_ERROR, EventMessage),
         EventMessage);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -2094,7 +2119,7 @@ void FM_ChildDirListFileInit_Test_WriteHeaderFailed(void)
     UtAssert_True (FM_GlobalData.ChildCmdErrCounter == 1, "FM_GlobalData.ChildCmdErrCounter == 1");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: CFE_FS_WriteHeader failed: result = 0, expected = 64"),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_WRHDR_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: CFE_FS_WriteHeader failed: result = 0, expected = 64"),
         "Directory List to File error: CFE_FS_WriteHeader failed: result = 0, expected = 64");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -2118,7 +2143,7 @@ void FM_ChildDirListFileInit_Test_creatFailed(void)
     UtAssert_True (FM_GlobalData.ChildCmdErrCounter == 1, "FM_GlobalData.ChildCmdErrCounter == 1");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: OS_creat failed: result = -1, file = filename"),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OSCREAT_ERR_EID, CFE_EVS_ERROR, "Directory List to File error: OS_creat failed: result = -1, file = filename"),
         "Directory List to File error: OS_creat failed: result = -1, file = filename");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -2131,7 +2156,7 @@ void FM_ChildDirListFileLoop_Test_Nominal(void)
     os_dirp_t DirPtr = 0;
     uint8 getSizeTimeMode = TRUE;
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -2162,7 +2187,7 @@ void FM_ChildDirListFileLoop_Test_ExcludeFileTimeSizeMode(void)
     os_dirp_t DirPtr = 0;
     uint8 getSizeTimeMode = FALSE;
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -2196,7 +2221,7 @@ void FM_ChildDirListFileLoop_Test_WriteEntryFailed(void)
     char EventMessage[CFE_EVS_MAX_MESSAGE_LENGTH];
     uint8 getSizeTimeMode = TRUE;
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -2212,7 +2237,7 @@ void FM_ChildDirListFileLoop_Test_WriteEntryFailed(void)
 
     sprintf(EventMessage, "Directory List to File error: OS_write entry failed: result = 0, expected = %d", sizeof(FM_DirListEntry_t));
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, EventMessage),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_WRENTRY_ERR_EID, CFE_EVS_ERROR, EventMessage),
         EventMessage);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -2272,7 +2297,7 @@ void FM_ChildDirListFileLoop_Test_WriteUpdateStatsFailed(void)
     uint8 getSizeTimeMode = TRUE;
     char EventMessage[CFE_EVS_MAX_MESSAGE_LENGTH];
 
-    /* Sets DirEntry->d_name to pass strcmp conditions that check its value */
+    /* Sets DirEntry->FileName to pass strcmp conditions that check its value */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_READDIR_INDEX, &UT_FM_CFE_OSFILEAPI_ReadDirHook1);
     UT_FM_CFE_OSFILEAPI_ReadDirHookRunCount = 0;
 
@@ -2290,7 +2315,7 @@ void FM_ChildDirListFileLoop_Test_WriteUpdateStatsFailed(void)
 
     sprintf(EventMessage, "Directory List to File error: OS_write update stats failed: result = 0, expected = %d", sizeof(FM_DirListFileStats_t));
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR, EventMessage),
+        (Ut_CFE_EVS_EventSent(FM_GET_DIR_FILE_UPSTATS_ERR_EID, CFE_EVS_ERROR, EventMessage),
         EventMessage);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -2316,7 +2341,12 @@ void FM_ChildSizeAndTime_Test_Nominal(void)
     /* Verify results */
     UtAssert_True (FileTime == 10, "FileTime == 10");
     UtAssert_True (FileSize == 5, "FileSize == 5");
+#ifdef OS_FILESTAT_MODE
+    UtAssert_True (FileMode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ),
+                   "FileMode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ)");
+#else
     UtAssert_True (FileMode == 0777, "FileMode == 0777");
+#endif
     UtAssert_True (Result == OS_SUCCESS, "Result == OS_SUCCESS");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
@@ -2426,8 +2456,14 @@ void FM_ChildSleepStat_Test_GetStatsAndDoNotSleep(void)
     
     UtAssert_True (DirListData.EntrySize == 5,  "DirListData.EntrySize == 5");
     UtAssert_True (DirListData.ModifyTime == 10, "DirListData.ModifyTime == 10");
-    UtAssert_True (DirListData.Mode == 511,       "DirListData.Mode == 511"); /* 0777 mode */
-    
+
+#ifdef OS_FILESTAT_MODE
+    UtAssert_True(DirListData.Mode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ),
+                  "DirListData.Mode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ)");
+#else
+    UtAssert_True (DirListData.Mode == 511, "DirListData.Mode == 511"); /* 0777 mode */
+#endif
+
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 
 } /* end FM_ChildSleepStat_Test_GetStats */
@@ -2458,8 +2494,14 @@ void FM_ChildSleepStat_Test_GetStatsAndSleep(void)
     
     UtAssert_True (DirListData.EntrySize == 5,  "DirListData.EntrySize == 5");
     UtAssert_True (DirListData.ModifyTime == 10, "DirListData.ModifyTime == 10");
-    UtAssert_True (DirListData.Mode == 511,       "DirListData.Mode == 511"); /* 0777 mode */
-    
+
+#ifdef OS_FILESTAT_MODE
+    UtAssert_True(DirListData.Mode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ),
+                  "DirListData.Mode == (OS_FILESTAT_MODE_WRITE | OS_FILESTAT_MODE_READ)");
+#else
+    UtAssert_True (DirListData.Mode == 511, "DirListData.Mode == 511"); /* 0777 mode */
+#endif
+
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 
 } /* end FM_ChildSleepStat_Test_GetStatsAndSleep */

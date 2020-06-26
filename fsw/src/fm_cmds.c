@@ -1,20 +1,27 @@
 /*
-** $Id: fm_cmds.c 1.8.1.2 2017/01/23 21:52:56EST sstrege Exp  $
+** Filename: fm_cmds.c 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
 **
 ** Title: File Manager (FM) Application Ground Commands
 **
 ** Purpose: Provides functions for the execution of the FM ground commands
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
 **
 ** Notes:
 **
@@ -45,7 +52,7 @@
 boolean FM_NoopCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     char *CmdText = "No-op";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify message length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_NoopCmd_t),
@@ -73,7 +80,7 @@ boolean FM_NoopCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_ResetCountersCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     char *CmdText = "Reset Counters";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify message length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_ResetCmd_t),
@@ -107,9 +114,9 @@ boolean FM_ResetCountersCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_CopyFileCmd_t *CmdPtr = (FM_CopyFileCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Copy File";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_CopyFileCmd_t),
@@ -126,7 +133,7 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileExists(CmdPtr->Source, sizeof(CmdPtr->Source),
-                                            FM_COPY_SRC_ERR_EID, CmdText);
+                                            FM_COPY_SRC_BASE_EID, CmdText);
     }
 
     /* Verify target filename per the overwrite argument */
@@ -135,19 +142,19 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr)
         if (CmdPtr->Overwrite == 0)
         {
             CommandResult = FM_VerifyFileNoExist(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                                 FM_COPY_TGT_ERR_EID, CmdText);
+                                                 FM_COPY_TGT_BASE_EID, CmdText);
         }
         else
         {
             CommandResult = FM_VerifyFileNotOpen(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                                 FM_COPY_TGT_ERR_EID, CmdText);
+                                                 FM_COPY_TGT_BASE_EID, CmdText);
         }
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_COPY_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_COPY_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -157,8 +164,11 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_COPY_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Source);
-        strcpy(CmdArgs->Target,  CmdPtr->Target);
+        strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Target,  CmdPtr->Target, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -178,9 +188,9 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_MoveFileCmd_t  *CmdPtr = (FM_MoveFileCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Move File";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_MoveFileCmd_t),
@@ -197,7 +207,7 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileExists(CmdPtr->Source, sizeof(CmdPtr->Source),
-                                            FM_MOVE_SRC_ERR_EID, CmdText);
+                                            FM_MOVE_SRC_BASE_EID, CmdText);
     }
 
     /* Verify target filename per the overwrite argument */
@@ -206,19 +216,19 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr)
         if (CmdPtr->Overwrite == 0)
         {
             CommandResult = FM_VerifyFileNoExist(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                                 FM_MOVE_TGT_ERR_EID, CmdText);
+                                                 FM_MOVE_TGT_BASE_EID, CmdText);
         }
         else
         {
             CommandResult = FM_VerifyFileNotOpen(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                                 FM_MOVE_TGT_ERR_EID, CmdText);
+                                                 FM_MOVE_TGT_BASE_EID, CmdText);
         }
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_MOVE_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_MOVE_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -228,8 +238,12 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_MOVE_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Source);
-        strcpy(CmdArgs->Target,  CmdPtr->Target);
+
+        strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Target,  CmdPtr->Target, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -249,9 +263,9 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_RenameFileCmd_t  *CmdPtr = (FM_RenameFileCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Rename File";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_RenameFileCmd_t),
@@ -261,20 +275,20 @@ boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileExists(CmdPtr->Source, sizeof(CmdPtr->Source),
-                                            FM_RENAME_SRC_ERR_EID, CmdText);
+                                            FM_RENAME_SRC_BASE_EID, CmdText);
     }
 
     /* Verify that target file does not exist */
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileNoExist(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                             FM_RENAME_TGT_ERR_EID, CmdText);
+                                             FM_RENAME_TGT_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_RENAME_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_RENAME_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -284,8 +298,12 @@ boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_RENAME_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Source);
-        strcpy(CmdArgs->Target,  CmdPtr->Target);
+
+        strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Target,  CmdPtr->Target, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -305,9 +323,9 @@ boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_DeleteFileCmd_t *CmdPtr = (FM_DeleteFileCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Delete File";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_DeleteFileCmd_t),
@@ -317,13 +335,13 @@ boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileClosed(CmdPtr->Filename, sizeof(CmdPtr->Filename),
-                                            FM_DELETE_SRC_ERR_EID, CmdText);
+                                            FM_DELETE_SRC_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_DELETE_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_DELETE_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -333,7 +351,9 @@ boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args - might be global or internal CC */
         CmdArgs->CommandCode = CFE_SB_GetCmdCode(MessagePtr);
-        strcpy(CmdArgs->Source1, CmdPtr->Filename);
+        strncpy(CmdArgs->Source1, CmdPtr->Filename, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -354,9 +374,9 @@ boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_DeleteAllCmd_t *CmdPtr = (FM_DeleteAllCmd_t *) MessagePtr;
     char *CmdText = "Delete All Files";
-    char DirWithSep[OS_MAX_PATH_LEN];
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
+    char DirWithSep[OS_MAX_PATH_LEN] = "\0";
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
 
     /* Verify message length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_DeleteAllCmd_t),
@@ -366,17 +386,18 @@ boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyDirExists(CmdPtr->Directory, sizeof(CmdPtr->Directory),
-                                           FM_DELETE_ALL_SRC_ERR_EID, CmdText);
+                                           FM_DELETE_ALL_SRC_BASE_EID, CmdText);
     }
 
     if (CommandResult == TRUE)
     {
         /* Append a path separator to the end of the directory name */
-        strcpy(DirWithSep, CmdPtr->Directory);
+        strncpy(DirWithSep, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    DirWithSep[OS_MAX_PATH_LEN - 1] = '\0';
         FM_AppendPathSep(DirWithSep, OS_MAX_PATH_LEN);
 
         /* Check for lower priority child task availability */
-        CommandResult = FM_VerifyChildTask(FM_DELETE_ALL_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_DELETE_ALL_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -386,8 +407,11 @@ boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_DELETE_ALL_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Directory);
-        strcpy(CmdArgs->Source2, DirWithSep);
+        strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Source2, DirWithSep, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source2[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -408,8 +432,8 @@ boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_DecompressCmd_t  *CmdPtr = (FM_DecompressCmd_t *) MessagePtr;
     char *CmdText = "Decompress File";
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_DecompressCmd_t),
@@ -419,20 +443,20 @@ boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileClosed(CmdPtr->Source, sizeof(CmdPtr->Source),
-                                            FM_DECOM_SRC_ERR_EID, CmdText);
+                                            FM_DECOM_SRC_BASE_EID, CmdText);
     }
 
     /* Verify that target file does not exist */
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileNoExist(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                             FM_DECOM_TGT_ERR_EID, CmdText);
+                                             FM_DECOM_TGT_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_DECOM_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_DECOM_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -442,8 +466,10 @@ boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_DECOMPRESS_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Source);
-        strcpy(CmdArgs->Target, CmdPtr->Target);
+        strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
+    	CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+        strncpy(CmdArgs->Target, CmdPtr->Target, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -464,8 +490,8 @@ boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_ConcatCmd_t *CmdPtr = (FM_ConcatCmd_t *) MessagePtr;
     char *CmdText = "Concat Files";
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_ConcatCmd_t),
@@ -475,27 +501,27 @@ boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileClosed(CmdPtr->Source1, sizeof(CmdPtr->Source1),
-                                            FM_CONCAT_SRC1_ERR_EID, CmdText);
+                                            FM_CONCAT_SRC1_BASE_EID, CmdText);
     }
 
     /* Verify that source file #2 exists, is not a directory and is not open */
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileClosed(CmdPtr->Source2, sizeof(CmdPtr->Source2),
-                                            FM_CONCAT_SRC2_ERR_EID, CmdText);
+                                            FM_CONCAT_SRC2_BASE_EID, CmdText);
     }
 
     /* Verify that target file does not exist */
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyFileNoExist(CmdPtr->Target, sizeof(CmdPtr->Target),
-                                             FM_CONCAT_TGT_ERR_EID, CmdText);
+                                             FM_CONCAT_TGT_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_CONCAT_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_CONCAT_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -505,9 +531,12 @@ boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_CONCAT_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Source1);
-        strcpy(CmdArgs->Source2, CmdPtr->Source2);
-        strcpy(CmdArgs->Target, CmdPtr->Target);
+        strncpy(CmdArgs->Source1, CmdPtr->Source1, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+        strncpy(CmdArgs->Source2, CmdPtr->Source2, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source2[OS_MAX_PATH_LEN - 1] = '\0';
+        strncpy(CmdArgs->Target, CmdPtr->Target, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -528,9 +557,9 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_GetFileInfoCmd_t *CmdPtr = (FM_GetFileInfoCmd_t *) MessagePtr;
     char *CmdText = "Get File Info";
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
-    uint32 FilenameState;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
+    uint32 FilenameState = FM_NAME_IS_INVALID;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_GetFileInfoCmd_t),
@@ -551,7 +580,7 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr)
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_GET_FILE_INFO_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_FILE_INFO_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -561,7 +590,9 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_GET_FILE_INFO_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Filename);
+        strncpy(CmdArgs->Source1, CmdPtr->Filename, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
         CmdArgs->FileInfoState = FilenameState;
         CmdArgs->FileInfoCRC = CmdPtr->FileInfoCRC;
 
@@ -587,8 +618,8 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_GetOpenFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     char *CmdText = "Get Open Files";
-    boolean CommandResult;
-    uint32 NumOpenFiles;
+    boolean CommandResult = FALSE;
+    uint32 NumOpenFiles = 0;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_GetOpenFilesCmd_t),
@@ -626,9 +657,9 @@ boolean FM_GetOpenFilesCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_CreateDirCmd_t *CmdPtr = (FM_CreateDirCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Create Directory";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_CreateDirCmd_t),
@@ -638,13 +669,13 @@ boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyDirNoExist(CmdPtr->Directory, sizeof(CmdPtr->Directory),
-                                            FM_CREATE_DIR_SRC_ERR_EID, CmdText);
+                                            FM_CREATE_DIR_SRC_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_CREATE_DIR_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_CREATE_DIR_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -654,7 +685,8 @@ boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_CREATE_DIR_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Directory);
+        strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -674,9 +706,9 @@ boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_DeleteDirCmd_t *CmdPtr = (FM_DeleteDirCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Delete Directory";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_DeleteDirCmd_t),
@@ -686,13 +718,13 @@ boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyDirExists(CmdPtr->Directory, sizeof(CmdPtr->Directory),
-                                           FM_DELETE_DIR_SRC_ERR_EID, CmdText);
+                                           FM_DELETE_DIR_SRC_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_DELETE_DIR_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_DELETE_DIR_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -702,7 +734,9 @@ boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_DELETE_DIR_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->Directory);
+        strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -723,10 +757,10 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_GetDirFileCmd_t *CmdPtr = (FM_GetDirFileCmd_t *) MessagePtr;
     char *CmdText = "Directory List to File";
-    char DirWithSep[OS_MAX_PATH_LEN];
-    char Filename[OS_MAX_PATH_LEN];
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
+    char DirWithSep[OS_MAX_PATH_LEN] = "\0";
+    char Filename[OS_MAX_PATH_LEN] = "\0";
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_GetDirFileCmd_t),
@@ -736,7 +770,7 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyDirExists(CmdPtr->Directory, sizeof(CmdPtr->Directory),
-                                           FM_GET_DIR_FILE_SRC_ERR_EID, CmdText);
+                                           FM_GET_DIR_FILE_SRC_BASE_EID, CmdText);
     }
 
     /* Verify that target file is not already open */
@@ -745,7 +779,8 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr)
         /* Use default filename if not specified in the command */
         if (CmdPtr->Filename[0] == '\0')
         {
-            strcpy(Filename, FM_DIR_LIST_FILE_DEFNAME);
+            strncpy(Filename, FM_DIR_LIST_FILE_DEFNAME, OS_MAX_PATH_LEN - 1);
+	        Filename[OS_MAX_PATH_LEN - 1] = '\0';
         }
         else
         {
@@ -754,13 +789,13 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr)
 
         /* Note: it is OK for this file to overwrite a previous version of the file */
         CommandResult = FM_VerifyFileNotOpen(Filename, sizeof(Filename),
-                                             FM_GET_DIR_FILE_TGT_ERR_EID, CmdText);
+                                             FM_GET_DIR_FILE_TGT_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_GET_DIR_FILE_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_GET_DIR_FILE_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -769,15 +804,21 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Append a path separator to the end of the directory name */
-        strcpy(DirWithSep, CmdPtr->Directory);
+        strncpy(DirWithSep, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    DirWithSep[OS_MAX_PATH_LEN - 1] = '\0';
         FM_AppendPathSep(DirWithSep, OS_MAX_PATH_LEN);
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_GET_DIR_FILE_CC;
         CmdArgs->GetSizeTimeMode = CmdPtr->GetSizeTimeMode;
-        strcpy(CmdArgs->Source1, CmdPtr->Directory);
-        strcpy(CmdArgs->Source2, DirWithSep);
-        strcpy(CmdArgs->Target, Filename);
+        strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Source2, DirWithSep, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source2[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Target, Filename, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -798,9 +839,9 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_GetDirPktCmd_t *CmdPtr = (FM_GetDirPktCmd_t *) MessagePtr;
     char *CmdText = "Directory List to Packet";
-    char DirWithSep[OS_MAX_PATH_LEN];
-    FM_ChildQueueEntry_t *CmdArgs;
-    boolean CommandResult;
+    char DirWithSep[OS_MAX_PATH_LEN] = "\0";
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_GetDirPktCmd_t),
@@ -810,13 +851,13 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr)
     if (CommandResult == TRUE)
     {
         CommandResult = FM_VerifyDirExists(CmdPtr->Directory, sizeof(CmdPtr->Directory),
-                                           FM_GET_DIR_PKT_SRC_ERR_EID, CmdText);
+                                           FM_GET_DIR_PKT_SRC_BASE_EID, CmdText);
     }
 
     /* Check for lower priority child task availability */
     if (CommandResult == TRUE)
     {
-        CommandResult = FM_VerifyChildTask(FM_GET_DIR_PKT_CHILD_ERR_EID, CmdText);
+        CommandResult = FM_VerifyChildTask(FM_GET_DIR_PKT_CHILD_BASE_EID, CmdText);
     }
 
     /* Prepare command for child task execution */
@@ -825,14 +866,18 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Append a path separator to the end of the directory name */
-        strcpy(DirWithSep, CmdPtr->Directory);
+        strncpy(DirWithSep, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    DirWithSep[OS_MAX_PATH_LEN - 1] = '\0';
         FM_AppendPathSep(DirWithSep, OS_MAX_PATH_LEN);
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_GET_DIR_PKT_CC;
         CmdArgs->GetSizeTimeMode = CmdPtr->GetSizeTimeMode;
-        strcpy(CmdArgs->Source1, CmdPtr->Directory);
-        strcpy(CmdArgs->Source2, DirWithSep);
+        strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
+
+        strncpy(CmdArgs->Source2, DirWithSep, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source2[OS_MAX_PATH_LEN - 1] = '\0';
         CmdArgs->DirListOffset = CmdPtr->DirListOffset;
 
         /* Invoke lower priority child task */
@@ -853,9 +898,9 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_GetFreeSpaceCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     char *CmdText = "Get Free Space";
-    boolean CommandResult;
-    uint32 i;
-    uint64 FreeSpace64;
+    boolean CommandResult = FALSE;
+    uint32 i = 0;
+    uint64 FreeSpace64 = 0;
 
 
     /* Verify command packet length */
@@ -883,8 +928,9 @@ boolean FM_GetFreeSpaceCmd(CFE_SB_MsgPtr_t MessagePtr)
                 if (FM_GlobalData.FreeSpaceTablePtr->FileSys[i].State == FM_TABLE_ENTRY_ENABLED)
                 {
                     /* Get file system name */
-                    strcpy(FM_GlobalData.FreeSpacePkt.FileSys[i].Name,
-                           FM_GlobalData.FreeSpaceTablePtr->FileSys[i].Name);
+                    strncpy(FM_GlobalData.FreeSpacePkt.FileSys[i].Name,
+                           FM_GlobalData.FreeSpaceTablePtr->FileSys[i].Name, OS_MAX_PATH_LEN - 1);
+		            FM_GlobalData.FreeSpacePkt.FileSys[i].Name[OS_MAX_PATH_LEN - 1] = '\0';
 
                     /* Get file system free space */
                     FreeSpace64 = 0;
@@ -921,7 +967,7 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_SetTableStateCmd_t *CmdPtr = (FM_SetTableStateCmd_t *) MessagePtr;
     char *CmdText = "Set Table State";
-    boolean CommandResult;
+    boolean CommandResult = FALSE;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_SetTableStateCmd_t),
@@ -941,7 +987,7 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr)
             /* Table index argument is out of range */
             CommandResult = FALSE;
 
-            CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_IDX_ERR_EID, CFE_EVS_ERROR,
                "%s error: invalid command argument: index = %d", CmdText, (int)CmdPtr->TableEntryIndex);
         }
         else if ((CmdPtr->TableEntryState != FM_TABLE_ENTRY_ENABLED) &&
@@ -950,7 +996,7 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr)
             /* State argument must be either enabled or disabled */
             CommandResult = FALSE;
 
-            CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_STATE_ERR_EID, CFE_EVS_ERROR,
                "%s error: invalid command argument: state = %d", CmdText, (int)CmdPtr->TableEntryState);
         }
         else if (FM_GlobalData.FreeSpaceTablePtr->FileSys[CmdPtr->TableEntryIndex].State == FM_TABLE_ENTRY_UNUSED)
@@ -989,10 +1035,10 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr)
 boolean FM_SetPermissionsCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     FM_SetPermCmd_t *CmdPtr = (FM_SetPermCmd_t *) MessagePtr;
-    FM_ChildQueueEntry_t *CmdArgs;
+    FM_ChildQueueEntry_t *CmdArgs = NULL;
     char *CmdText = "Set Permissions";
-    boolean CommandResult;
-    boolean FilenameState;
+    boolean CommandResult = FALSE;
+    boolean FilenameState = FM_NAME_IS_INVALID;
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_SetPermCmd_t),
@@ -1022,7 +1068,8 @@ boolean FM_SetPermissionsCmd(CFE_SB_MsgPtr_t MessagePtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_SET_FILE_PERM_CC;
-        strcpy(CmdArgs->Source1, CmdPtr->FileName);
+        strncpy(CmdArgs->Source1, CmdPtr->FileName, OS_MAX_PATH_LEN - 1);
+	    CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
         CmdArgs->Mode = CmdPtr->Mode;
 
         /* Invoke lower priority child task */

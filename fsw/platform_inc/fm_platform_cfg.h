@@ -1,21 +1,29 @@
 /*
-** $Id: fm_platform_cfg.h 1.6.1.2 2017/01/23 21:53:19EST sstrege Exp  $
+** Filename: fm_platform_cfg.h
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+**
 **
 ** Title: File Manager (FM) Platform Configuration Header File
 **
 ** Purpose: Specification for the CFS FM application constants
 **          that can be configured form one platform to another
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
 **
 ** Notes:
 **
@@ -70,12 +78,12 @@
 **  \par Description:
 **       This definition sets the total number of packets that may queue
 **       in the FM command pipe.  The limit for individual message types
-**       in the queue is the default cFE Software Bus subscription limit
-**       of four.
+**       in the queue is the default cFE Software Bus subscription
+**       limit.
 **
 **  \par Limits:
-**       The FM application limits this value to be no less than 4 and
-**       no greater than 20 packets at any one time in the command pipe.
+**       It is recommended that this value be no less than 4 and
+**       no greater than 20 packets, but this is not enforced by FM.
 */
 #define FM_APP_PIPE_DEPTH               10
 
@@ -313,10 +321,11 @@
 /** \fmcfg Child Task Execution Priority
 **
 **  \par Description:
-**       This definition sets the execution priority for the FM child
-**       task.  It is highly recommended that this assignment be made
-**       by someone familiar with the system requirements for tasks
-**       running on the target platform.
+**	This parameter sets the execution priority for the FM child task. 
+**	It is highly recommended that this assignment be made by someone 
+**	familiar with the system requirements for tasks running on the 
+** 	target platform. Note: This parameter is VxWorks® specific. Not 
+**	all operating systems set task priority this way.
 **
 **  \par Limits:
 **       Value to be no less than 1 and no greater than 255.  
@@ -376,7 +385,7 @@
 **       no limits on the definition.  If the named table does not
 **       exist or fails validation, the table load will fail.
 */
-#define FM_TABLE_DEF_NAME               "/cf/apps/fm_freespace.tbl"
+#define FM_TABLE_DEF_NAME               "/cf/fm_freespace.tbl"
 
 
 /** \fmcfg Free Space Table Name - filename without path
@@ -419,7 +428,7 @@
 **       file systems for which FM may be enabled to report free space data.
 **
 **  \par Limits:
-**       FM limits this value to be not less than 1 and not greater than 16.
+**       FM limits this value to be not less than 1 and not greater than 32.
 */
 #define FM_TABLE_ENTRY_COUNT            8
 

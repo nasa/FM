@@ -44,11 +44,17 @@
 
   <H1> Scope </H1>
 
-  This document provides a complete specification for the commands and telemetry associated
-  with the CFS File Manager (FM) application software.  The document is intended primarily 
-  for users of the software (operations personal, test engineers, and maintenance personal).  
-  The deployment guide section, is intended for mission developers when deploying and 
-  configuring the FM application software for a mission flight software build environment. 
+  This Doxygen-based User's Guide provides a complete reference for the
+  cFS File Manager (FM) application.  The Guide is intended primarily for
+  users of the software (operations personnel, test engineers, and 
+  maintenance personnel) who prefer a developer-focused document and direct
+  references to the source code.  The "deployment guide" section is intended
+  for mission developers when deploying and configuring the FM application 
+  software for a mission flight software build environment.
+
+  A separate user's guide for non-developers integrates information from this 
+  guide with other items, such as flow charts and heritage information, into 
+  a single document. 
 
   <H1> Applicable Documents </H1>
 
@@ -103,7 +109,7 @@
   <TR><TD WIDTH="20%"> TBD     </TD> <TD WIDTH="40%"> To Be Determined                                </TD>
   <TR><TD WIDTH="20%"> TBL     </TD> <TD WIDTH="40%"> Table                                           </TD>
   <TR><TD WIDTH="20%"> TLM     </TD> <TD WIDTH="40%"> Telemetry                                       </TD>
-  <TR><TD WIDTH="20%"> UTC     </TD> <TD WIDTH="40%"> Universal time code                             </TD>
+  <TR><TD WIDTH="20%"> UTC     </TD> <TD WIDTH="40%"> Coordinated Universal Time                      </TD>
   </TABLE>
 
   Next: \ref cfsfmovr <BR>
@@ -127,7 +133,8 @@
   processing ground commands.  The FM application interfaces with the 
   <A HREF="../sch/index.html">Scheduler (SCH) Application</A> for 
   receiving periodic housekeeping requests.  Upon receipt of a housekeeping request, FM will send its 
-  housekeeping telemetry packets on the Software Bus.  Housekeeping telemetry packets are subscribed to 
+  housekeeping telemetry packets on the Software Bus.  Housekeeping telemetry
+  packets are typically subscribed to 
   by the Housekeeping (HK), Telemetry Output (TO), and Data Storage applications.  See page 
   \ref cfsfmtlm for a detailed description of the contents of the FM housekeeping telemetry packet. <BR>
 
@@ -154,9 +161,10 @@
   The CFS FM application is a command and telemetry driven application.  FM waits in a command loop 
   infinitely until the software receives a scheduled housekeeping request, ground command, or stored 
   command.  Command packets (including housekeeping requests) are processed as they are received.  The 
-  application sends an FM housekeeping telemetry message to the ground upon receipt of a scheduled 
+  application sends an FM housekeeping telemetry message on the cFE Software Bus upon receipt of a scheduled 
   housekeeping request produced by the SCH application.  This request is typically performed every 
-  4-5 seconds. <BR>  
+  4-5 seconds and these housekeeping messages are usually sent to the ground
+  (though this depends on the configuration of the rest of the system). <BR>  
 
   Various FM ground commands produce telemetry messages as a result of processing the command.  These 
   telemetry messages include a directory listing telemetry message, file information telemetry message, 
@@ -273,7 +281,7 @@
 
   The table contains #FM_TABLE_ENTRY_COUNT entries of the following structure:<BR>
       <ul><li>State - An integer value ranging from 0 to 2 indicating the state of this entry. The values correspond to "Unused", "Enabled", and "Disabled" <BR>
-      <li>Name  - The full path specification of the file system. I.e., "/ram"
+      <li>Name  - The full path specification of the file system. E.g., "/ram"
       </ul>
 **/
 

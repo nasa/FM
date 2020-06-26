@@ -1,18 +1,25 @@
 /*
-** $Id: fm_child.c 1.16.1.5 2017/01/24 23:53:32EST mdeschu Exp  $
+** Filename: fm_child.c 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
 **
 ** Purpose: File Manager (FM) Child task (low priority command handler)
-**
-** Author: Scott Walling (Microtel)
 **
 ** Notes:
 **
@@ -53,16 +60,19 @@
 
 int32 FM_ChildInit(void)
 {
-    int32 TaskTextLen = 64;
-    char TaskText[TaskTextLen];
-    int32 Result;
+    int32 TaskTextLen = OS_MAX_PATH_LEN;
+    char TaskText[OS_MAX_PATH_LEN] = "\0";
+    int32 Result = CFE_SUCCESS;
+    uint32 TaskEID = 0;
     
 
     /* Create counting semaphore (given by parent to wake-up child) */
     Result = OS_CountSemCreate(&FM_GlobalData.ChildSemaphore, FM_CHILD_SEM_NAME, 0, 0);
     if (Result != CFE_SUCCESS)
     {
-        strncpy(TaskText, "create semaphore failed", TaskTextLen);
+        TaskEID = FM_CHILD_INIT_SEM_ERR_EID;
+        strncpy(TaskText, "create semaphore failed", TaskTextLen - 1);
+	    TaskText[TaskTextLen - 1] = '\0';
     }
     else
     {
@@ -71,7 +81,10 @@ int32 FM_ChildInit(void)
 
         if (Result != CFE_SUCCESS)
         {
-            strncpy(TaskText, "create queue count semaphore failed", TaskTextLen);
+
+            TaskEID = FM_CHILD_INIT_QSEM_ERR_EID;
+            strncpy(TaskText, "create queue count semaphore failed", TaskTextLen - 1);
+	        TaskText[TaskTextLen - 1] = '\0';
         }
         else
         {
@@ -83,14 +96,16 @@ int32 FM_ChildInit(void)
                                              FM_CHILD_TASK_PRIORITY, 0);
             if (Result != CFE_SUCCESS)
             {
-                strncpy(TaskText, "create task failed", TaskTextLen);
+                TaskEID = FM_CHILD_INIT_CREATE_ERR_EID;
+                strncpy(TaskText, "create task failed", TaskTextLen - 1);
+		        TaskText[TaskTextLen - 1] = '\0';
             }
         }
     }
     
     if (Result != CFE_SUCCESS)
     {   
-        CFE_EVS_SendEvent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(TaskEID, CFE_EVS_ERROR,
            "Child Task initialization error: %s: result = %d",
             TaskText, (int)Result);
     }
@@ -109,7 +124,7 @@ int32 FM_ChildInit(void)
 void FM_ChildTask(void)
 {
     char *TaskText = "Child Task";
-    int32 Result;
+    int32 Result = CFE_SUCCESS;
 
     /*
     ** The child task runs until the parent dies (normal end) or
@@ -119,9 +134,9 @@ void FM_ChildTask(void)
 
     if (Result != CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(FM_CHILD_INIT_ERR_EID, CFE_EVS_ERROR,
-           "%s initialization error: register child failed: result = %d",
-            TaskText, (int)Result);
+	/* Can't call CFE_EVS_SendEvent if child was not successfully registered */
+        CFE_ES_WriteToSysLog("%s initialization error: register child failed: result = %d",
+                             TaskText, (int)Result);
     }
     else
     {
@@ -168,7 +183,7 @@ void FM_ChildLoop(void)
             if (FM_GlobalData.ChildQueueCount == 0)
             {
                 FM_GlobalData.ChildCmdErrCounter++;
-                CFE_EVS_SendEvent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+                CFE_EVS_SendEvent(FM_CHILD_TERM_EMPTYQ_ERR_EID, CFE_EVS_ERROR,
                                   "%s empty queue", TaskText);
 
                 /* Set result that will terminate child task run loop */
@@ -177,7 +192,7 @@ void FM_ChildLoop(void)
             else if (FM_GlobalData.ChildReadIndex >= FM_CHILD_QUEUE_DEPTH)
             {
                 FM_GlobalData.ChildCmdErrCounter++;
-                CFE_EVS_SendEvent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+                CFE_EVS_SendEvent(FM_CHILD_TERM_QIDX_ERR_EID, CFE_EVS_ERROR,
                                   "%s invalid queue index: index = %d",
                                   TaskText, (int)FM_GlobalData.ChildReadIndex);
 
@@ -192,7 +207,7 @@ void FM_ChildLoop(void)
         }
         else
         {
-            CFE_EVS_SendEvent(FM_CHILD_TERM_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_CHILD_TERM_SEM_ERR_EID, CFE_EVS_ERROR,
                               "%s semaphore take failed: result = %d",
                               TaskText, (int)Result);
         }
@@ -214,9 +229,7 @@ void FM_ChildLoop(void)
 void FM_ChildProcess(void)
 {
     char *TaskText = "Child Task";
-    FM_ChildQueueEntry_t *CmdArgs;
-
-    CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildReadIndex];
+    FM_ChildQueueEntry_t *CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildReadIndex];
 
     /* Invoke the command specific handler */
     switch (CmdArgs->CommandCode)
@@ -312,7 +325,7 @@ void FM_ChildProcess(void)
 void FM_ChildCopyCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Copy File";
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -357,7 +370,7 @@ void FM_ChildCopyCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildMoveCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Move File";
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -401,7 +414,7 @@ void FM_ChildMoveCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildRenameCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Rename File";
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -445,7 +458,7 @@ void FM_ChildRenameCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Delete File";
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -491,20 +504,15 @@ void FM_ChildDeleteCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char        *CmdText = "Delete All Files";
-    char        *Directory;
-    char        *DirWithSep;
-    os_dirp_t    DirPtr;
-    os_dirent_t *DirEntry;
-    int32        OS_Status;
-    uint32       FilenameState;
-    uint32       NameLength;
+    os_dirp_t    DirPtr = NULL;
+    os_dirent_t *DirEntry = NULL;
+    int32        OS_Status = OS_SUCCESS;
+    uint32       FilenameState = FM_NAME_IS_INVALID;
+    uint32       NameLength = 0;
     uint32       DeleteCount = 0;
     uint32       FilesNotDeletedCount = 0;
     uint32       DirectoriesSkippedCount = 0;
-    char         Filename[OS_MAX_PATH_LEN];
-
-    /* Report current child task activity */
-    FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
+    char         Filename[OS_MAX_PATH_LEN] = "\0";
 
     /*
     ** Command argument useage for this command:
@@ -513,8 +521,11 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
     **  CmdArgs->Source1     = directory name
     **  CmdArgs->Source2     = directory name plus separator
     */
-    Directory  = CmdArgs->Source1;
-    DirWithSep = CmdArgs->Source2;
+    char *Directory  = CmdArgs->Source1;
+    char *DirWithSep = CmdArgs->Source2;
+
+    /* Report current child task activity */
+    FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
     /* Open directory so that we can read from it */
     DirPtr = OS_opendir(Directory);
@@ -549,51 +560,61 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
                 else
                 {
                     /* Note: Directory name already has trailing "/" appended */
-                    strcpy(Filename, DirWithSep);
-                    strcat(Filename, OS_DIRENTRY_NAME(*DirEntry));
+                    strncpy(Filename, DirWithSep, OS_MAX_PATH_LEN - 1);
+	   	            Filename[OS_MAX_PATH_LEN - 1] = '\0';
+                    
+                    strncat(Filename, OS_DIRENTRY_NAME(*DirEntry), (NameLength - strlen(DirWithSep)));
 
                     /* What kind of directory entry is this? */
                     FilenameState = FM_GetFilenameState(Filename, OS_MAX_PATH_LEN, FALSE);
 
-                    if (FilenameState == FM_NAME_IS_INVALID)
-                    {
-                        FilesNotDeletedCount++;
-                    }
-                    else if (FilenameState == FM_NAME_IS_NOT_IN_USE)
-                    {
-                        /* This result is very unlikely - the */
-                        /*   name existed a moment ago when   */
-                        /*   the directory entry was read but */
-                        /*   now the call to OS_stat() failed */
-                        /*   implying that the entry is gone  */
-                        FilesNotDeletedCount++;
-                    }
-                    else if (FilenameState == FM_NAME_IS_DIRECTORY)
-                    {
-                        DirectoriesSkippedCount++;
-                    }
-                    else if (FilenameState == FM_NAME_IS_FILE_OPEN)
-                    {
-                       FilesNotDeletedCount++;
-                    }
-                    else if (FilenameState == FM_NAME_IS_FILE_CLOSED)
-                    {
-                        if ((OS_Status = OS_remove(Filename)) == OS_SUCCESS)
-                        {
-                            /*
-                            ** After deleting the file, rewind the directory
-                            ** to keep the file system from getting confused
-                            */
-                            OS_rewinddir(DirPtr);
+		            /* FilenameState cannot have a value beyond five macros in cases below */
+		            switch (FilenameState)
+		            {
+			            case FM_NAME_IS_INVALID:
+			                FilesNotDeletedCount++;
+			                break;
 
-                            /* Increment delete count */
-                            DeleteCount++;
-                        }
-                        else
-                        {
+                        case FM_NAME_IS_NOT_IN_USE:
+                   
+                            /* This result is very unlikely - the */
+                            /*   name existed a moment ago when   */
+                            /*   the directory entry was read but */
+                            /*   now the call to OS_stat() failed */
+                            /*   implying that the entry is gone  */
                             FilesNotDeletedCount++;
-                        }
-                    }
+			                break;
+                    
+                    	case FM_NAME_IS_DIRECTORY:
+                            DirectoriesSkippedCount++;
+			                break;
+               
+                    	case FM_NAME_IS_FILE_OPEN:
+                            FilesNotDeletedCount++;
+ 			                break;
+                    
+                      	case FM_NAME_IS_FILE_CLOSED:                   
+                            if ((OS_Status = OS_remove(Filename)) == OS_SUCCESS)
+                            {
+                            	/*
+                            	** After deleting the file, rewind the directory
+                            	** to keep the file system from getting confused
+                            	*/
+                            	OS_rewinddir(DirPtr);
+
+                            	/* Increment delete count */
+                            	DeleteCount++;
+                            }
+                            else
+                            {
+                            	FilesNotDeletedCount++;
+                            }
+
+			                break;
+			            default:
+                            FilesNotDeletedCount++;
+                            break;
+                    } /* end switch statement */
                 }
             } /* end if "." or ".." directory entries */
         } /* End while OS_readdir */
@@ -609,7 +630,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
         if ( FilesNotDeletedCount > 0 )
         {
            /* If errors occured, report generic event(s) */
-           CFE_EVS_SendEvent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION,
+           CFE_EVS_SendEvent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_INFORMATION,
            "%s command: one or more files could not be deleted. Files may be open : dir = %s",
             CmdText, Directory);
            FM_GlobalData.ChildCmdWarnCounter++;
@@ -618,7 +639,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
         if ( DirectoriesSkippedCount > 0 )
         {
            /* If errors occured, report generic event(s) */
-           CFE_EVS_SendEvent(FM_DELETE_ALL_WARNING_EID, CFE_EVS_INFORMATION,
+           CFE_EVS_SendEvent(FM_DELETE_ALL_SKIP_WARNING_EID, CFE_EVS_INFORMATION,
            "%s command: one or more directories skipped : dir = %s",
             CmdText, Directory);
            FM_GlobalData.ChildCmdWarnCounter++;
@@ -644,7 +665,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDecompressCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char    *CmdText = "Decompress File";
-    int32    CFE_Status;
+    int32    CFE_Status = CFE_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -694,12 +715,12 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
     boolean     CreatedTgtFile = FALSE;
     boolean     OpenedSource2 = FALSE;
     boolean     OpenedTgtFile = FALSE;
-    int32       LoopCount;
-    int32       OS_Status;
-    int32       FileHandleSrc;
-    int32       FileHandleTgt;
-    int32       BytesRead;
-    int32       BytesWritten;
+    int32       LoopCount = 0;
+    int32       OS_Status = OS_SUCCESS;
+    int32       FileHandleSrc = 0;
+    int32       FileHandleTgt = 0;
+    int32       BytesRead = 0;
+    int32       BytesWritten = 0;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -712,7 +733,7 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdErrCounter++;
 
         /* Send command failure event (error) */
-        CFE_EVS_SendEvent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(FM_CONCAT_OSCPY_ERR_EID, CFE_EVS_ERROR,
            "%s error: OS_cp failed: result = %d, src = %s, tgt = %s",
             CmdText, (int)OS_Status, CmdArgs->Source1, CmdArgs->Target);
     }
@@ -731,7 +752,7 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
             FM_GlobalData.ChildCmdErrCounter++;
 
             /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_CONCAT_OPEN_SRC2_ERR_EID, CFE_EVS_ERROR,
                "%s error: OS_open failed: result = %d, src2 = %s",
                 CmdText, (int)FileHandleSrc, CmdArgs->Source2);
         }
@@ -751,7 +772,7 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
             FM_GlobalData.ChildCmdErrCounter++;
 
             /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_CONCAT_OPEN_TGT_ERR_EID, CFE_EVS_ERROR,
                "%s error: OS_open failed: result = %d, tgt = %s",
                 CmdText, (int)FileHandleTgt, CmdArgs->Target);
         }
@@ -786,7 +807,7 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
                 FM_GlobalData.ChildCmdErrCounter++;
 
                 /* Send command failure event (error) */
-                CFE_EVS_SendEvent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR,
+                CFE_EVS_SendEvent(FM_CONCAT_OSRD_ERR_EID, CFE_EVS_ERROR,
                    "%s error: OS_read failed: result = %d, file = %s",
                     CmdText, (int)BytesRead, CmdArgs->Source2);
             }
@@ -801,7 +822,7 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs)
                     FM_GlobalData.ChildCmdErrCounter++;
 
                     /* Send command failure event (error) */
-                    CFE_EVS_SendEvent(FM_CONCAT_OS_ERR_EID, CFE_EVS_ERROR,
+                    CFE_EVS_SendEvent(FM_CONCAT_OSWR_ERR_EID, CFE_EVS_ERROR,
                        "%s error: OS_write failed: result = %d, expected = %d",
                         CmdText, (int)BytesWritten, (int)BytesRead);
                 }
@@ -872,8 +893,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     boolean GettingCRC = FALSE;
     uint32 CurrentCRC = 0;
     int32  LoopCount = 0;
-    int32  BytesRead;
-    int32  FileHandle;
+    int32  BytesRead = 0;
+    int32  FileHandle = 0;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -894,7 +915,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
     /* Report directory or filename state, name, size and time */
     FM_GlobalData.FileInfoPkt.FileStatus = (uint8) CmdArgs->FileInfoState;
-    strcpy(FM_GlobalData.FileInfoPkt.Filename, CmdArgs->Source1);
+    strncpy(FM_GlobalData.FileInfoPkt.Filename, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
+    FM_GlobalData.FileInfoPkt.Filename[OS_MAX_PATH_LEN - 1] = '\0';
 
     FM_GlobalData.FileInfoPkt.FileSize = CmdArgs->FileInfoSize;
     FM_GlobalData.FileInfoPkt.LastModifiedTime = CmdArgs->FileInfoTime;
@@ -907,7 +929,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
             /* Can only calculate CRC for closed files */
             FM_GlobalData.ChildCmdWarnCounter++;
 
-            CFE_EVS_SendEvent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION,
+            CFE_EVS_SendEvent(FM_GET_FILE_INFO_STATE_WARNING_EID, CFE_EVS_INFORMATION,
                "%s warning: unable to compute CRC: invalid file state = %d, file = %s",
                 CmdText, (int)CmdArgs->FileInfoState, CmdArgs->Source1);
 
@@ -920,7 +942,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
             /* Can only calculate CRC using known algorithms */
             FM_GlobalData.ChildCmdWarnCounter++;
 
-            CFE_EVS_SendEvent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION,
+            CFE_EVS_SendEvent(FM_GET_FILE_INFO_TYPE_WARNING_EID, CFE_EVS_INFORMATION,
                "%s warning: unable to compute CRC: invalid CRC type = %d, file = %s",
                 CmdText, (int)CmdArgs->FileInfoCRC, CmdArgs->Source1);
 
@@ -938,7 +960,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
             FM_GlobalData.ChildCmdWarnCounter++;
 
             /* Send CRC failure event (warning) */
-            CFE_EVS_SendEvent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_GET_FILE_INFO_OPEN_ERR_EID, CFE_EVS_ERROR,
                "%s warning: unable to compute CRC: OS_open result = %d, file = %s",
                 CmdText, (int)FileHandle, CmdArgs->Source1);
 
@@ -973,7 +995,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
                 /* Send CRC failure event (warning) */
                 FM_GlobalData.ChildCmdWarnCounter++;
-                CFE_EVS_SendEvent(FM_GET_FILE_INFO_WARNING_EID, CFE_EVS_INFORMATION,
+                CFE_EVS_SendEvent(FM_GET_FILE_INFO_READ_WARNING_EID, CFE_EVS_INFORMATION,
                    "%s warning: unable to compute CRC: OS_read result = %d, file = %s",
                     CmdText, (int)BytesRead, CmdArgs->Source1);
             }
@@ -1030,7 +1052,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildCreateDirCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Create Directory";
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -1074,9 +1096,9 @@ void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char *CmdText = "Delete Directory";
     boolean RemoveTheDir = TRUE;
-    os_dirp_t DirPtr;
-    os_dirent_t *DirEntry;
-    int32 OS_Status;
+    os_dirp_t DirPtr = NULL;
+    os_dirent_t *DirEntry = NULL;
+    int32 OS_Status = OS_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -1086,7 +1108,7 @@ void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs)
 
     if (DirPtr == NULL)
     {
-        CFE_EVS_SendEvent(FM_DELETE_DIR_OS_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(FM_DELETE_OPENDIR_OS_ERR_EID, CFE_EVS_ERROR,
            "%s error: OS_opendir failed: dir = %s",
             CmdText, CmdArgs->Source1);
 
@@ -1121,7 +1143,7 @@ void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs)
         if (OS_Status != OS_SUCCESS)
         {
             /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_DELETE_DIR_OS_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_DELETE_RMDIR_OS_ERR_EID, CFE_EVS_ERROR,
                "%s error: OS_rmdir failed: result = %d, dir = %s",
                 CmdText, (int)OS_Status, CmdArgs->Source1);
 
@@ -1156,9 +1178,9 @@ void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDirListFileCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char     *CmdText = "Directory List to File";
-    boolean   Result;
-    int32     FileHandle;
-    os_dirp_t DirPtr;
+    boolean   Result = FALSE;
+    int32     FileHandle = 0;
+    os_dirp_t DirPtr = NULL;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -1180,7 +1202,7 @@ void FM_ChildDirListFileCmd(FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdErrCounter++;
 
         /* Send command failure event (error) */
-        CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(FM_GET_DIR_FILE_OSOPENDIR_ERR_EID, CFE_EVS_ERROR,
            "%s error: OS_opendir failed: dir = %s",
             CmdText, CmdArgs->Source1);
     }
@@ -1221,14 +1243,14 @@ void FM_ChildDirListFileCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     char                     *CmdText = "Directory List to Packet";
-    char                      LogicalName[OS_MAX_PATH_LEN];
-    boolean                   StillProcessing;
-    os_dirp_t                 DirPtr;
-    os_dirent_t              *DirEntry;
-    int32                     ListIndex;
-    FM_DirListEntry_t        *ListEntry;
-    int32                     PathLength;
-    int32                     EntryLength;
+    char                      LogicalName[OS_MAX_PATH_LEN] = "\0";
+    boolean                   StillProcessing = TRUE;
+    os_dirp_t                 DirPtr = NULL;
+    os_dirent_t              *DirEntry = NULL;
+    int32                     ListIndex = 0;
+    FM_DirListEntry_t        *ListEntry = NULL;
+    int32                     PathLength = 0;
+    int32                     EntryLength = 0;
     int32                     FilesTillSleep = FM_CHILD_STAT_SLEEP_FILECOUNT;
 
     /* Report current child task activity */
@@ -1262,7 +1284,8 @@ void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs)
         CFE_SB_InitMsg(&FM_GlobalData.DirListPkt, FM_DIR_LIST_TLM_MID,
                         sizeof(FM_DirListPkt_t), TRUE);
 
-        strncpy(FM_GlobalData.DirListPkt.DirName, CmdArgs->Source1, OS_MAX_PATH_LEN);
+        strncpy(FM_GlobalData.DirListPkt.DirName, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
+	    FM_GlobalData.DirListPkt.DirName[OS_MAX_PATH_LEN - 1] = '\0';
         FM_GlobalData.DirListPkt.FirstFile = CmdArgs->DirListOffset;
 
         StillProcessing = TRUE;
@@ -1298,11 +1321,14 @@ void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs)
                        ((PathLength + EntryLength) < OS_MAX_PATH_LEN))
                     {
                         /* Add filename to directory listing telemetry packet */
-                        strcpy(ListEntry->EntryName, OS_DIRENTRY_NAME(*DirEntry));
+                        strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(*DirEntry), EntryLength);
+			            ListEntry->EntryName[EntryLength] = '\0';
 
                         /* Build filename - Directory already has path separator */
-                        strcpy(LogicalName, CmdArgs->Source2);
-                        strcat(LogicalName, OS_DIRENTRY_NAME(*DirEntry));
+                        strncpy(LogicalName, CmdArgs->Source2, PathLength);
+	             		LogicalName[PathLength] = '\0';
+                        
+                        strncat(LogicalName, OS_DIRENTRY_NAME(*DirEntry), (OS_MAX_PATH_LEN - PathLength));
 
                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
 
@@ -1352,7 +1378,7 @@ void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void FM_ChildSetPermissionsCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
-    int32 OS_Status;
+    int32 OS_Status = OS_SUCCESS;
     char *CmdText = "Set Permissions";
     
     OS_Status = OS_chmod(CmdArgs->Source1, CmdArgs->Mode);
@@ -1390,13 +1416,14 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
     char  *CmdText  = "Directory List to File";
     boolean            CommandResult = TRUE;
     CFE_FS_Header_t    FileHeader;
-    int32              FileHandle;
-    int32              BytesWritten;
+    int32              FileHandle = 0;
+    int32              BytesWritten = 0;
 
     /* Initialize the standard cFE File Header for the Directory Listing File */
     CFE_PSP_MemSet(&FileHeader, 0, sizeof(CFE_FS_Header_t));
     FileHeader.SubType = FM_DIR_LIST_FILE_SUBTYPE;
-    strcpy(FileHeader.Description, CmdText);
+    strncpy(FileHeader.Description, CmdText, sizeof(FileHeader.Description) - 1);
+    FileHeader.Description[sizeof(FileHeader.Description) - 1] = '\0';
 
     /* Create directory listing output file */
     FileHandle = OS_creat(Filename, OS_READ_WRITE);
@@ -1408,7 +1435,8 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
         {
             /* Initialize directory statistics structure */
             CFE_PSP_MemSet(&FM_GlobalData.DirListFileStats, 0, sizeof(FM_DirListFileStats_t));
-            strcpy(FM_GlobalData.DirListFileStats.DirName, Directory);
+            strncpy(FM_GlobalData.DirListFileStats.DirName, Directory, OS_MAX_PATH_LEN - 1);
+	        FM_GlobalData.DirListFileStats.DirName[OS_MAX_PATH_LEN - 1] = '\0';
 
             /* Write blank FM directory statistics structure as a place holder */
             BytesWritten = OS_write(FileHandle, &FM_GlobalData.DirListFileStats, sizeof(FM_DirListFileStats_t));
@@ -1423,7 +1451,7 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
                 FM_GlobalData.ChildCmdErrCounter++;
 
                 /* Send command failure event (error) */
-                CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+                CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRBLANK_ERR_EID, CFE_EVS_ERROR,
                    "%s error: OS_write blank stats failed: result = %d, expected = %d",
                     CmdText, (int)BytesWritten, sizeof(FM_DirListFileStats_t));
             }
@@ -1434,7 +1462,7 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
             FM_GlobalData.ChildCmdErrCounter++;
 
             /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRHDR_ERR_EID, CFE_EVS_ERROR,
                "%s error: CFE_FS_WriteHeader failed: result = %d, expected = %d",
                 CmdText, (int)BytesWritten, sizeof(CFE_FS_Header_t));
         }
@@ -1451,7 +1479,7 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
         FM_GlobalData.ChildCmdErrCounter++;
 
         /* Send command failure event (error) */
-        CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(FM_GET_DIR_FILE_OSCREAT_ERR_EID, CFE_EVS_ERROR,
            "%s error: OS_creat failed: result = %d, file = %s",
             CmdText, (int)FileHandle, Filename);
     }
@@ -1476,12 +1504,12 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
     boolean  CommandResult = TRUE;
     uint32   DirEntries = 0;
     uint32   FileEntries = 0;
-    int32    EntryLength;
-    int32    PathLength;
-    int32    BytesWritten;
+    int32    EntryLength = 0;
+    int32    PathLength = 0;
+    int32    BytesWritten = 0;
     int32    FilesTillSleep = FM_CHILD_STAT_SLEEP_FILECOUNT;
-    char     TempName[OS_MAX_PATH_LEN];
-    os_dirent_t *DirEntry;
+    char     TempName[OS_MAX_PATH_LEN] = "\0";
+    os_dirent_t *DirEntry = NULL;
     FM_DirListEntry_t  DirListData;
 
 
@@ -1512,11 +1540,14 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
                    ((PathLength + EntryLength) < OS_MAX_PATH_LEN))
                 {
                     /* Build qualified directory entry name */
-                    strcpy(TempName, DirWithSep);
-                    strcat(TempName, OS_DIRENTRY_NAME(*DirEntry));
+                    strncpy(TempName, DirWithSep, PathLength);
+	        	    TempName[PathLength] = '\0';
+                     
+                    strncat(TempName, OS_DIRENTRY_NAME(*DirEntry), (OS_MAX_PATH_LEN - PathLength));
 
                     /* Populate directory list file entry */
-                    strcpy(DirListData.EntryName, OS_DIRENTRY_NAME(*DirEntry));
+                    strncpy(DirListData.EntryName, OS_DIRENTRY_NAME(*DirEntry), EntryLength);
+		    DirListData.EntryName[EntryLength] = '\0';
 
                     FM_ChildSleepStat(TempName, (FM_DirListEntry_t *)&DirListData, &FilesTillSleep, getSizeTimeMode);
 
@@ -1533,7 +1564,7 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
                         FM_GlobalData.ChildCmdErrCounter++;
 
                         /* Send command failure event (error) */
-                        CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+                        CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRENTRY_ERR_EID, CFE_EVS_ERROR,
                            "%s error: OS_write entry failed: result = %d, expected = %d",
                             CmdText, (int)BytesWritten, (int)WriteLength);
                     }
@@ -1571,7 +1602,7 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
             FM_GlobalData.ChildCmdErrCounter++;
 
             /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_GET_DIR_FILE_OS_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(FM_GET_DIR_FILE_UPSTATS_ERR_EID, CFE_EVS_ERROR,
                "%s error: OS_write update stats failed: result = %d, expected = %d",
                 CmdText, (int)BytesWritten, (int)WriteLength);
         }
@@ -1599,9 +1630,9 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
 
 int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileTime, uint32 *FileMode)
 {
-    int32       Result;
+    int32       Result = OS_SUCCESS;
     os_fstat_t  FileStatus;
-    uint32      FileStatTime;
+    uint32      FileStatTime = 0;
 
     CFE_PSP_MemSet(&FileStatus, 0, sizeof(os_fstat_t));
 
@@ -1614,15 +1645,26 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     }
     else
     {
+#ifdef OS_FILESTAT_TIME
+        FileStatTime = OS_FILESTAT_TIME(FileStatus);
+#else
         FileStatTime = FileStatus.st_mtime;
-
+#endif
         /* Convert the file system time to spacecraft time */
         *FileTime = CFE_TIME_FS2CFESeconds(FileStatTime);
 
+#ifdef OS_FILESTAT_SIZE
+        *FileSize = OS_FILESTAT_SIZE(FileStatus);
+#else
         *FileSize = FileStatus.st_size;
-        
+#endif 
+
+#ifdef OS_FILESTAT_MODE
+        *FileMode = OS_FILESTAT_MODE(FileStatus);
+#else
         *FileMode = FileStatus.st_mode;
-        
+#endif
+
     }
 
     return(Result);

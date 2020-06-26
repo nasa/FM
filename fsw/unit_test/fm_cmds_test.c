@@ -1,15 +1,23 @@
  /*************************************************************************
- ** File:
- **   $Id: fm_cmds_test.c 1.6.1.2 2017/01/23 21:53:01EST sstrege Exp  $
+ ** Filename: fm_cmds_test.c 
  **
- **  Copyright (c) 2007-2014 United States Government as represented by the 
- **  Administrator of the National Aeronautics and Space Administration. 
- **  All Other Rights Reserved.  
+ ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+ ** File Manager Application Version 2.5.3
  **
- **  This software was created at NASA's Goddard Space Flight Center.
- **  This software is governed by the NASA Open Source Agreement and may be 
- **  used, distributed and modified only pursuant to the terms of that 
- **  agreement.
+ ** Copyright © 2020 United States Government as represented by the Administrator of
+ ** the National Aeronautics and Space Administration. All Rights Reserved. 
+ **
+ ** Licensed under the Apache License, Version 2.0 (the "License"); 
+ ** you may not use this file except in compliance with the License. 
+ **  
+ ** You may obtain a copy of the License at 
+ ** http://www.apache.org/licenses/LICENSE-2.0 
+ **
+ ** Unless required by applicable law or agreed to in writing, software 
+ ** distributed under the License is distributed on an "AS IS" BASIS, 
+ ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ ** See the License for the specific language governing permissions and 
+ ** limitations under the License. 
  **
  ** Purpose: 
  **   This file contains unit test cases for the functions contained in the file fm_cmds.c.
@@ -56,14 +64,29 @@
 
 int32 UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsDirectory(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_DIR;
+#else
     filestats->st_mode = S_IFDIR;
+#endif
 
     return CFE_SUCCESS;
 } /* end UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsDirectory */
 
 int32 UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_READ;
+#else
     filestats->st_mode = S_IFREG;
+#endif
+
+#ifdef OS_FILESTAT_SIZE
+    filestats->FileSize = 0;
+#else
+    filestats->st_size = 0;
+#endif
+
 
     return CFE_SUCCESS;
 } /* end UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile */
@@ -74,10 +97,21 @@ int32 UT_FM_CFE_OSFILEAPI_StatHook3(const char *path, os_fstat_t  *filestats)
     UT_FM_CFE_OSFILEAPI_StatStatHook3RunCount++;
 
     if (UT_FM_CFE_OSFILEAPI_StatStatHook3RunCount == 1)
-        filestats->st_mode = S_IFDIR;
+    {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_DIR;
+#else
+    filestats->st_mode = S_IFDIR;
+#endif
+    }
     else
-        filestats->st_mode = S_IFREG;
-
+    {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_READ;
+#else
+    filestats->st_mode = S_IFREG;
+#endif
+    }
     return CFE_SUCCESS;
 } /* end UT_FM_CFE_OSFILEAPI_StatHook3 */
 
@@ -151,6 +185,8 @@ void FM_CopyFileCmd_Test_OverwriteZero(void)
 
     CmdPacket.Overwrite = 0;
 
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
+
     /* Set target file to not exist */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_STAT_INDEX, -1, 2);
 
@@ -182,6 +218,8 @@ void FM_CopyFileCmd_Test_OverwriteNonzero(void)
     strncpy (CmdPacket.Target, "./temp_dest.txt", OS_MAX_PATH_LEN);
 
     CmdPacket.Overwrite = 1;
+    
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
     /* Execute the function being tested */
     Result = FM_CopyFileCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
@@ -209,6 +247,8 @@ void FM_MoveFileCmd_Test_OverwriteZero(void)
 
     strncpy (CmdPacket.Source, "./testfile.txt", OS_MAX_PATH_LEN);
     strncpy (CmdPacket.Target, "./temp_dest.txt", OS_MAX_PATH_LEN);
+
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
     CmdPacket.Overwrite = 0;
 
@@ -242,6 +282,8 @@ void FM_MoveFileCmd_Test_OverwriteNonzero(void)
     strncpy (CmdPacket.Source, "./testfile.txt", OS_MAX_PATH_LEN);
     strncpy (CmdPacket.Target, "./temp_dest.txt", OS_MAX_PATH_LEN);
 
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
+
     CmdPacket.Overwrite = 1;
 
     /* Execute the function being tested */
@@ -271,6 +313,8 @@ void FM_RenameFileCmd_Test(void)
     strncpy (CmdPacket.Source, "./testfile.txt", OS_MAX_PATH_LEN);
     strncpy (CmdPacket.Target, "./temp_dest.txt", OS_MAX_PATH_LEN);
 
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
+
     /* Set target file to not exist */
     Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_STAT_INDEX, -1, 2);
 
@@ -299,6 +343,8 @@ void FM_DeleteFileCmd_Test(void)
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, FM_DELETE_CC);
 
     strncpy (CmdPacket.Filename, "filename.txt", OS_MAX_PATH_LEN);
+
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMDS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
     /* Execute the function being tested */
     Result = FM_DeleteFileCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
@@ -774,7 +820,7 @@ void FM_SetTableStateCmd_Test_TableIndexOutOfRange(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_SET_TABLE_STATE_ARG_ERR_EID, CFE_EVS_ERROR, "Set Table State error: invalid command argument: index = 9"),  
+        (Ut_CFE_EVS_EventSent(FM_SET_TABLE_STATE_ARG_IDX_ERR_EID, CFE_EVS_ERROR, "Set Table State error: invalid command argument: index = 9"),  
         "Set Table State error: invalid command argument: index = 9");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -804,7 +850,7 @@ void FM_SetTableStateCmd_Test_InvalidState(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_SET_TABLE_STATE_ARG_ERR_EID, CFE_EVS_ERROR, "Set Table State error: invalid command argument: state = 99"),  
+        (Ut_CFE_EVS_EventSent(FM_SET_TABLE_STATE_ARG_STATE_ERR_EID, CFE_EVS_ERROR, "Set Table State error: invalid command argument: state = 99"),  
         "Set Table State error: invalid command argument: state = 99");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");

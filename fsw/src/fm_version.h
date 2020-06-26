@@ -1,21 +1,28 @@
 /*
-** $Id: fm_version.h 1.2.1.11 2017/01/30 15:45:30EST sstrege Exp  $
+** Filename: fm_version.h
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
 **
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+*
 ** Title: File Manager (FM) Version Information Header File
 **
 ** Purpose: Specification for the CFS FM application version label
 **          definitions
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
 **
 ** Notes:
 **
@@ -56,7 +63,7 @@
 */
 #define FM_MAJOR_VERSION     2
 #define FM_MINOR_VERSION     5
-#define FM_REVISION          2
+#define FM_REVISION          3
 
 #endif /* _fm_version_h_ */
 

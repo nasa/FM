@@ -1,15 +1,23 @@
  /*************************************************************************
- ** File:
- **   $Id: fm_tbl_test.c 1.4.1.2 2017/01/23 21:53:04EST sstrege Exp  $
+ ** Filename: fm_tbl_test.c
  **
- **  Copyright (c) 2007-2014 United States Government as represented by the 
- **  Administrator of the National Aeronautics and Space Administration. 
- **  All Other Rights Reserved.  
+ ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+ ** File Manager Application Version 2.5.3
  **
- **  This software was created at NASA's Goddard Space Flight Center.
- **  This software is governed by the NASA Open Source Agreement and may be 
- **  used, distributed and modified only pursuant to the terms of that 
- **  agreement.
+ ** Copyright © 2020 United States Government as represented by the Administrator of
+ ** the National Aeronautics and Space Administration. All Rights Reserved. 
+ **
+ ** Licensed under the Apache License, Version 2.0 (the "License"); 
+ ** you may not use this file except in compliance with the License. 
+ **  
+ ** You may obtain a copy of the License at 
+ ** http://www.apache.org/licenses/LICENSE-2.0 
+ **
+ ** Unless required by applicable law or agreed to in writing, software 
+ ** distributed under the License is distributed on an "AS IS" BASIS, 
+ ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ ** See the License for the specific language governing permissions and 
+ ** limitations under the License. 
  **
  ** Purpose: 
  **   This file contains unit test cases for the functions contained in the file fm_tbl.c.
@@ -74,6 +82,10 @@ void FM_ValidateTable_Test_NominalTableEntryEnabled(void)
     int32 Result;
     FM_FreeSpaceTable_t TableData;
     uint16 i;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
 
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
@@ -81,18 +93,23 @@ void FM_ValidateTable_Test_NominalTableEntryEnabled(void)
     }
 
     TableData.FileSys[0].State = FM_TABLE_ENTRY_ENABLED;
+    GoodEntries = 1;  /* Since one entry is assumed to be good, adjust the entry counts accordingly */
+    
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
 
     strncpy (TableData.FileSys[0].Name, "filename", OS_MAX_PATH_LEN);
 
     /* Execute the function being tested */
     Result = FM_ValidateTable(&TableData);
-    
+ 
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 1, bad = 0, unused = 7"),
-        "Free Space Table verify results: good entries = 1, bad = 0, unused = 7");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
 
@@ -103,6 +120,10 @@ void FM_ValidateTable_Test_NominalTableEntryDisabled(void)
     int32 Result;
     FM_FreeSpaceTable_t TableData;
     uint16 i;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
 
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
@@ -110,6 +131,9 @@ void FM_ValidateTable_Test_NominalTableEntryDisabled(void)
     }
 
     TableData.FileSys[0].State = FM_TABLE_ENTRY_DISABLED;
+
+    GoodEntries = 1;  /* Since one entry is assumed to be good, adjust the entry counts accordingly */
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
 
     strncpy (TableData.FileSys[0].Name, "filename", OS_MAX_PATH_LEN);
 
@@ -119,9 +143,11 @@ void FM_ValidateTable_Test_NominalTableEntryDisabled(void)
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 1, bad = 0, unused = 7"),
-        "Free Space Table verify results: good entries = 1, bad = 0, unused = 7");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
 
@@ -131,22 +157,35 @@ void FM_ValidateTable_Test_InvalidState(void)
 {
     int32 Result;
     FM_FreeSpaceTable_t TableData;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
+    
+    memset(&TableData, 0, sizeof(TableData));
 
     TableData.FileSys[0].State = 99;
+
+    BadEntries = FM_TABLE_ENTRY_COUNT;  /* Setting all entries bad, adjust unused accordingly */
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
 
     /* Execute the function being tested */
     Result = FM_ValidateTable(&TableData);
     
     /* Verify results */
-    UtAssert_True (Result == FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
+    UtAssert_True ((int32)Result == (int32)FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
 
+    /* Since index and state are explicitly set above, there is no dependency on external values, 
+       and therefore no need for an sprintf for this test. */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_ERR_EID, CFE_EVS_ERROR, "Table verify error: index = 0, invalid state = 99"),
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID, CFE_EVS_ERROR, "Table verify error: index = 0, invalid state = 99"),
         "Table verify error: index = 0, invalid state = 99");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 0, bad = 8, unused = 0"),
-        "Free Space Table verify results: good entries = 0, bad = 8, unused = 0");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
 
@@ -157,6 +196,10 @@ void FM_ValidateTable_Test_EmptyNameString(void)
     int32 Result;
     FM_FreeSpaceTable_t TableData;
     uint16 i;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
 
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
@@ -165,21 +208,26 @@ void FM_ValidateTable_Test_EmptyNameString(void)
 
     TableData.FileSys[0].State = FM_TABLE_ENTRY_ENABLED;
 
+    BadEntries = 1;  /* Since one entry is assumed to be bad, adjust the entry counts accordingly */
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
+
     strncpy (TableData.FileSys[0].Name, "", OS_MAX_PATH_LEN);
 
     /* Execute the function being tested */
     Result = FM_ValidateTable(&TableData);
     
     /* Verify results */
-    UtAssert_True (Result == FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
+    UtAssert_True ((int32)Result == (int32)FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, empty name string"),
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EMPTY_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, empty name string"),
         "Free Space Table verify error: index = 0, empty name string");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 0, bad = 1, unused = 7"),
-        "Free Space Table verify results: good entries = 0, bad = 1, unused = 7");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
 
@@ -190,6 +238,10 @@ void FM_ValidateTable_Test_NameTooLong(void)
     int32 Result;
     FM_FreeSpaceTable_t TableData;
     uint16 i;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
 
     for (i = 0; i < OS_MAX_PATH_LEN; i++)
     {
@@ -205,19 +257,24 @@ void FM_ValidateTable_Test_NameTooLong(void)
 
     TableData.FileSys[0].State = FM_TABLE_ENTRY_ENABLED;
 
+    BadEntries = 1;  /* Since one entry is assumed to be bad, adjust the entry counts accordingly */
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
+
     /* Execute the function being tested */
     Result = FM_ValidateTable(&TableData);
     
     /* Verify results */
-    UtAssert_True (Result == FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
+    UtAssert_True ((int32)Result == (int32)FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, name too long"),
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_TOOLONG_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, name too long"),
         "Free Space Table verify error: index = 0, name too long");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 0, bad = 1, unused = 7"),
-        "Free Space Table verify results: good entries = 0, bad = 1, unused = 7");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
 
@@ -228,6 +285,10 @@ void FM_ValidateTable_Test_InvalidName(void)
     int32 Result;
     FM_FreeSpaceTable_t TableData;
     uint16 i;
+    char ExpectedEventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+    uint32 GoodEntries = 0;
+    uint32 BadEntries = 0;
+    uint32 UnusedEntries = FM_TABLE_ENTRY_COUNT;
 
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
@@ -238,19 +299,24 @@ void FM_ValidateTable_Test_InvalidName(void)
 
     strncpy (TableData.FileSys[0].Name, "*12345", OS_MAX_PATH_LEN);
 
+    BadEntries = 1;  /* Since one entry is assumed to be bad, adjust the entry counts accordingly */
+    UnusedEntries = UnusedEntries - GoodEntries - BadEntries;
+
     /* Execute the function being tested */
     Result = FM_ValidateTable(&TableData);
     
     /* Verify results */
-    UtAssert_True (Result == FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
+    UtAssert_True ((int32)Result == (int32)FM_TABLE_VALIDATION_ERR, "Result == FM_TABLE_VALIDATION_ERR");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, invalid name = *12345"),
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_INVALID_ERR_EID, CFE_EVS_ERROR, "Free Space Table verify error: index = 0, invalid name = *12345"),
         "Free Space Table verify error: index = 0, invalid name = *12345");
 
+    sprintf(ExpectedEventText, "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+            (int)GoodEntries, (int)BadEntries, (int)UnusedEntries);
+
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, "Free Space Table verify results: good entries = 0, bad = 1, unused = 7"),
-        "Free Space Table verify results: good entries = 0, bad = 1, unused = 7");
+        (Ut_CFE_EVS_EventSent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION, ExpectedEventText), ExpectedEventText);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
 

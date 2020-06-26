@@ -1,14 +1,23 @@
 /*
-** $Id: fm_app.c 1.5.1.2 2017/01/23 21:53:08EST sstrege Exp  $
+** Filename: fm_app.c
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+** File Manager Application Version 2.5.3
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2020 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+**  
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
 **
 ** Title: Core Flight System (CFS) File Manager (FM) Application
 **
@@ -20,7 +29,6 @@
 **          (scheduled within the scheduler application), FM  reports it's housekeeping
 **          status values via telemetry messaging.
 **
-** Author: Susanne L. Strege, Code 582 NASA GSFC
 **
 ** Notes:
 **
@@ -62,8 +70,8 @@ FM_GlobalData_t  FM_GlobalData;
 void FM_AppMain(void)
 {
     uint32 RunStatus = CFE_ES_APP_RUN;
-    CFE_SB_MsgPtr_t MsgPtr;
-    int32  Result;
+    CFE_SB_MsgPtr_t MsgPtr = NULL;
+    int32  Result = CFE_SUCCESS;
 
     /* Register application */
     Result = CFE_ES_RegisterApp();
@@ -153,7 +161,7 @@ void FM_AppMain(void)
 int32 FM_AppInit(void)
 {
     char *ErrText = "Initialization error:";
-    int32 Result;
+    int32 Result = CFE_SUCCESS;
 
     /* Initialize global data  */
     CFE_PSP_MemSet(&FM_GlobalData, 0, sizeof(FM_GlobalData_t));
@@ -277,7 +285,9 @@ void FM_ProcessPkt(CFE_SB_MsgPtr_t MessagePtr)
 void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
 {
     boolean Result = TRUE;
-    uint16 CommandCode = CFE_SB_GetCmdCode(MessagePtr);
+    uint16 CommandCode = 0;
+
+    CommandCode = CFE_SB_GetCmdCode(MessagePtr);
 
     /* Invoke specific command handler */
     switch (CommandCode)
@@ -393,7 +403,7 @@ void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
 void FM_ReportHK(CFE_SB_MsgPtr_t MessagePtr)
 {
     char *CmdText = "HK Request";
-    boolean Result;
+    boolean Result = TRUE;
 
     /* Verify command packet length */
     Result = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_HousekeepingCmd_t),

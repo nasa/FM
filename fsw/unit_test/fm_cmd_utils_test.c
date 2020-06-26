@@ -1,15 +1,23 @@
  /*************************************************************************
- ** File:
- **   $Id: fm_cmd_utils_test.c 1.3.1.2 2017/01/23 21:53:06EST sstrege Exp  $
+ ** Filename: fm_cmd_utils_test.c 
  **
- **  Copyright (c) 2007-2014 United States Government as represented by the 
- **  Administrator of the National Aeronautics and Space Administration. 
- **  All Other Rights Reserved.  
+ ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+ ** File Manager Application Version 2.5.3
  **
- **  This software was created at NASA's Goddard Space Flight Center.
- **  This software is governed by the NASA Open Source Agreement and may be 
- **  used, distributed and modified only pursuant to the terms of that 
- **  agreement.
+ ** Copyright © 2020 United States Government as represented by the Administrator of
+ ** the National Aeronautics and Space Administration. All Rights Reserved. 
+ **
+ ** Licensed under the Apache License, Version 2.0 (the "License"); 
+ ** you may not use this file except in compliance with the License. 
+ **  
+ ** You may obtain a copy of the License at 
+ ** http://www.apache.org/licenses/LICENSE-2.0 
+ **
+ ** Unless required by applicable law or agreed to in writing, software 
+ ** distributed under the License is distributed on an "AS IS" BASIS, 
+ ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ ** See the License for the specific language governing permissions and 
+ ** limitations under the License. 
  **
  ** Purpose: 
  **   This file contains unit test cases for the functions contained in the file fm_cmd_utils.c.
@@ -50,39 +58,59 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+/* Global structure to set  */
+OS_FDTableEntry  fm_cmd_test_fd_prop;
+
 /*
  * Function Definitions
  */
 
 int32 UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_READ;
+#else
     filestats->st_mode = S_IFREG;
+#endif
 
     return CFE_SUCCESS;
 } /* end UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile */
 
 int32 UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsDirectory(const char *path, os_fstat_t  *filestats)
 {
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_DIR;
+#else
     filestats->st_mode = S_IFDIR;
+#endif
 
+#ifdef OS_FILESTAT_TIME
+    filestats->FileTime = 1;
+#else
     filestats->st_mtime = 1;
-    filestats->st_size = 2;
+#endif
 
+#ifdef OS_FILESTAT_SIZE
+    filestats->FileSize = 2;
+#else
+    filestats->st_size = 2;
+#endif
     return CFE_SUCCESS;
 } /* end UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsDirectory */
 
 int32 UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_FDGetInfoHook(int32 filedes, OS_FDTableEntry *fd_prop)
 {
-    fd_prop->IsValid = TRUE;
+    fd_prop->IsValid = fm_cmd_test_fd_prop.IsValid;
+    fd_prop->User    = fm_cmd_test_fd_prop.User;
 
-    strncpy (fd_prop->Path, "name", OS_MAX_PATH_LEN);
+    strncpy (fd_prop->Path, fm_cmd_test_fd_prop.Path, OS_MAX_PATH_LEN);
 
     return 0;
 } /* end UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_FDGetInfoHook */
 
 int32 UT_FM_CMD_UTILS_TEST_CFE_ES_GetTaskInfoHook(CFE_ES_TaskInfo_t *TaskInfo, uint32 TaskId)
 {
-    strncpy ((char *)TaskInfo->AppName, "appname", OS_MAX_PATH_LEN);
+    strncpy ((char *)TaskInfo->AppName, "appname", OS_MAX_API_NAME);
 
     return 0;
 } /* end UT_FM_CMD_UTILS_TEST_CFE_ES_GetTaskInfoHook */
@@ -139,6 +167,10 @@ void FM_GetOpenFilesData_Test(void)
 {
     uint32 Result;
     FM_OpenFilesEntry_t OpenFilesData[OS_MAX_NUM_OPEN_FILES];
+
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
 
     /* Satisfies condition "FDTableEntry.IsValid == TRUE", and causes LogicalName to be set to "name" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_FDGETINFO_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_FDGetInfoHook); 
@@ -263,7 +295,9 @@ void FM_VerifyFileClosed_Test_FileDoesNotExist(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file does not exist: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_DNE_EID_OFFSET), 
+                              CFE_EVS_ERROR, 
+                              "Command error: file does not exist: name = filename"),
         "Command error: file does not exist: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -276,6 +310,10 @@ void FM_VerifyFileClosed_Test_FileAlreadyOpen(void)
     char Filename[OS_MAX_PATH_LEN];
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
+
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
 
     /* Needed to satisfy condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
@@ -290,7 +328,9 @@ void FM_VerifyFileClosed_Test_FileAlreadyOpen(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file is already open: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISOPEN_EID_OFFSET), 
+                              CFE_EVS_ERROR, 
+                              "Command error: file is already open: name = name"),
         "Command error: file is already open: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -304,8 +344,15 @@ void FM_VerifyFileClosed_Test_FileClosed(void)
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
 
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = FALSE;
+    strncpy (fm_cmd_test_fd_prop.Path, "", OS_MAX_PATH_LEN);
+
     /* Needed to satisfy condition "FilenameState == FM_NAME_IS_FILE_CLOSED" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
+
+    /* Needed to satisfy condition "FilenameState == FM_NAME_IS_FILE_CLOSED" */
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_FDGETINFO_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_FDGetInfoHook);
 
     /* Execute the function being tested */
     Result = FM_VerifyFileClosed(Filename, OS_MAX_PATH_LEN, 1, "Command");
@@ -334,7 +381,9 @@ void FM_VerifyFileClosed_Test_IsDirectory(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: filename is a directory: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISDIR_EID_OFFSET), 
+                              CFE_EVS_ERROR, 
+                              "Command error: filename is a directory: name = name"),
         "Command error: filename is a directory: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -355,7 +404,7 @@ void FM_VerifyFileExists_Test_InvalidFilename(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: filename is invalid: name = ***filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_INVALID_EID_OFFSET), CFE_EVS_ERROR, "Command error: filename is invalid: name = ***filename"),
         "Command error: filename is invalid: name = ***filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -379,7 +428,9 @@ void FM_VerifyFileExists_Test_FileDoesNotExist(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file does not exist: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_DNE_EID_OFFSET), 
+                              CFE_EVS_ERROR, 
+                              "Command error: file does not exist: name = filename"),
         "Command error: file does not exist: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -392,6 +443,10 @@ void FM_VerifyFileExists_Test_FileOpen(void)
     char Filename[OS_MAX_PATH_LEN];
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
+
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
 
     /* Satisfies condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
@@ -446,7 +501,7 @@ void FM_VerifyFileExists_Test_IsDirectory(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: filename is a directory: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISDIR_EID_OFFSET), CFE_EVS_ERROR, "Command error: filename is a directory: name = name"),
         "Command error: filename is a directory: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -501,6 +556,10 @@ void FM_VerifyFileNoExist_Test_FileOpen(void)
 
     strncpy (Filename, "filename", OS_MAX_PATH_LEN);
 
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
+
     /* Satisfies condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
@@ -514,7 +573,7 @@ void FM_VerifyFileNoExist_Test_FileOpen(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file already exists: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISOPEN_EID_OFFSET), CFE_EVS_ERROR, "Command error: file already exists: name = filename"),
         "Command error: file already exists: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -538,7 +597,7 @@ void FM_VerifyFileNoExist_Test_FileClosed(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file already exists: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISOPEN_EID_OFFSET), CFE_EVS_ERROR, "Command error: file already exists: name = filename"),
         "Command error: file already exists: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -562,7 +621,7 @@ void FM_VerifyFileNoExist_Test_IsDirectory(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: filename is a directory: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISDIR_EID_OFFSET), CFE_EVS_ERROR, "Command error: filename is a directory: name = filename"),
         "Command error: filename is a directory: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -617,6 +676,10 @@ void FM_VerifyFileNotOpen_Test_FileOpen(void)
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
 
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
+
     /* Satisfies condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
@@ -630,7 +693,7 @@ void FM_VerifyFileNotOpen_Test_FileOpen(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: file exists as an open file: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISOPEN_EID_OFFSET), CFE_EVS_ERROR, "Command error: file exists as an open file: name = name"),
         "Command error: file exists as an open file: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -643,6 +706,13 @@ void FM_VerifyFileNotOpen_Test_FileClosed(void)
     char Filename[OS_MAX_PATH_LEN];
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
+
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = FALSE;
+    strncpy (fm_cmd_test_fd_prop.Path, "", OS_MAX_PATH_LEN);
+
+    /* Needed to satisfy condition "FilenameState == FM_NAME_IS_FILE_CLOSED" */
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_FDGETINFO_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_FDGetInfoHook);
 
     /* Satisfies condition "FilenameState == FM_NAME_IS_FILE_CLOSED" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
@@ -673,7 +743,7 @@ void FM_VerifyFileNotOpen_Test_IsDirectory(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: filename is a directory: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISDIR_EID_OFFSET), CFE_EVS_ERROR, "Command error: filename is a directory: name = filename"),
         "Command error: filename is a directory: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -694,7 +764,7 @@ void FM_VerifyDirExists_Test_InvalidName(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name is invalid: name = ***filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_INVALID_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name is invalid: name = ***filename"),
         "Command error: directory name is invalid: name = ***filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -718,7 +788,7 @@ void FM_VerifyDirExists_Test_NotInUse(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory does not exist: name = filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_DNE_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory does not exist: name = filename"),
         "Command error: directory does not exist: name = filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -731,6 +801,10 @@ void FM_VerifyDirExists_Test_FileOpen(void)
     char Filename[OS_MAX_PATH_LEN];
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
+
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
 
     /* Set to satisfy condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
@@ -745,7 +819,7 @@ void FM_VerifyDirExists_Test_FileOpen(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name exists as a file: name name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISFILE_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name exists as a file: name name"),
         "Command error: directory name exists as a file: name name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -769,7 +843,7 @@ void FM_VerifyDirExists_Test_FileClosed(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name exists as a file: name name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISFILE_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name exists as a file: name name"),
         "Command error: directory name exists as a file: name name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -810,7 +884,7 @@ void FM_VerifyDirNoExist_Test_InvalidName(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name is invalid: name = ***filename"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_INVALID_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name is invalid: name = ***filename"),
         "Command error: directory name is invalid: name = ***filename");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -844,6 +918,10 @@ void FM_VerifyDirNoExist_Test_FileOpen(void)
 
     strncpy (Filename, "name", OS_MAX_PATH_LEN);
 
+    /* Initialize File Descriptor properties for the FDGetInfo hook */
+    fm_cmd_test_fd_prop.IsValid = TRUE;
+    strncpy (fm_cmd_test_fd_prop.Path, "name", OS_MAX_PATH_LEN);
+
     /* Set to satisfy condition "FilenameState == FM_NAME_IS_FILE_OPEN" */
     Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_CMD_UTILS_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
@@ -857,7 +935,7 @@ void FM_VerifyDirNoExist_Test_FileOpen(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name exists as a file: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_DNE_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name exists as a file: name = name"),
         "Command error: directory name exists as a file: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -881,7 +959,7 @@ void FM_VerifyDirNoExist_Test_FileClosed(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory name exists as a file: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_DNE_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory name exists as a file: name = name"),
         "Command error: directory name exists as a file: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -905,7 +983,7 @@ void FM_VerifyDirNoExist_Test_DirectoryExists(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: directory already exists: name = name"),
+        (Ut_CFE_EVS_EventSent((1 + FM_FNAME_ISDIR_EID_OFFSET), CFE_EVS_ERROR, "Command error: directory already exists: name = name"),
         "Command error: directory already exists: name = name");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -925,7 +1003,7 @@ void FM_VerifyChildTask_Test_ChildDisabled(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: child task is disabled"),
+        (Ut_CFE_EVS_EventSent((1 + FM_CHILD_DISABLED_EID_OFFSET), CFE_EVS_ERROR, "Command error: child task is disabled"),
         "Command error: child task is disabled");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -945,7 +1023,7 @@ void FM_VerifyChildTask_Test_ChildQueueFull(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: child task queue is full"),
+        (Ut_CFE_EVS_EventSent((1 + FM_CHILD_Q_FULL_EID_OFFSET), CFE_EVS_ERROR, "Command error: child task queue is full"),
         "Command error: child task queue is full");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -966,7 +1044,7 @@ void FM_VerifyChildTask_Test_ChildInterfaceBrokenLocalQueueCount(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: child task interface is broken: count = 4, index = 1"),
+        (Ut_CFE_EVS_EventSent((1 + FM_CHILD_BROKEN_EID_OFFSET), CFE_EVS_ERROR, "Command error: child task interface is broken: count = 4, index = 1"),
         "Command error: child task interface is broken: count = 4, index = 1");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -987,7 +1065,7 @@ void FM_VerifyChildTask_Test_ChildInterfaceBrokenChildWriteIndex(void)
     UtAssert_True (Result == FALSE, "Result == FALSE");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(1, CFE_EVS_ERROR, "Command error: child task interface is broken: count = 1, index = 3"),
+        (Ut_CFE_EVS_EventSent((1 + FM_CHILD_BROKEN_EID_OFFSET), CFE_EVS_ERROR, "Command error: child task interface is broken: count = 1, index = 3"),
         "Command error: child task interface is broken: count = 1, index = 3");
     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");

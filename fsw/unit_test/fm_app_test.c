@@ -1,15 +1,23 @@
  /*************************************************************************
- ** File:
- **   $Id: fm_app_test.c 1.6.1.2 2017/01/23 21:53:25EST sstrege Exp  $
+ ** File: fm_app_test.c 
  **
- **  Copyright (c) 2007-2014 United States Government as represented by the 
- **  Administrator of the National Aeronautics and Space Administration. 
- **  All Other Rights Reserved.  
+ ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
+ ** File Manager Application Version 2.5.3
  **
- **  This software was created at NASA's Goddard Space Flight Center.
- **  This software is governed by the NASA Open Source Agreement and may be 
- **  used, distributed and modified only pursuant to the terms of that 
- **  agreement.
+ ** Copyright © 2020 United States Government as represented by the Administrator of
+ ** the National Aeronautics and Space Administration. All Rights Reserved. 
+ **
+ ** Licensed under the Apache License, Version 2.0 (the "License"); 
+ ** you may not use this file except in compliance with the License. 
+ **  
+ ** You may obtain a copy of the License at 
+ ** http://www.apache.org/licenses/LICENSE-2.0 
+ **
+ ** Unless required by applicable law or agreed to in writing, software 
+ ** distributed under the License is distributed on an "AS IS" BASIS, 
+ ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ ** See the License for the specific language governing permissions and 
+ ** limitations under the License. 
  **
  ** Purpose: 
  **   This file contains unit test cases for the functions contained in the file fm_app.c
@@ -48,6 +56,19 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+int32 UT_FM_APP_TEST_CFE_OSFILEAPI_StatHookIsFile(const char *path, os_fstat_t  *filestats)
+{
+#ifdef OS_FILESTAT_MODE
+    filestats->FileModeBits = OS_FILESTAT_MODE_READ;
+#else
+    filestats->st_mode = S_IFREG;
+#endif
+
+    return CFE_SUCCESS;
+} /* end UT_FM_APP_TEST_CFE_OSFILEAPI_StatHookIsFile */
+
+
 
 /*
  * Function Definitions
@@ -856,6 +877,11 @@ void FM_ProcessCmd_Test_GetOpenFiles(void)
 {
     FM_GetOpenFilesCmd_t   CmdPacket;
 
+    /* FM_GetOpenFiles calls OS_FDGetInfo, so need to set the return code so that FM_GetOpenFiles isn't 
+     * misled by a successful return from OS_FDGetInfo */
+    Ut_OSFILEAPI_SetReturnCode(UT_OSFILEAPI_FDGETINFO_INDEX, OS_FS_ERR_INVALID_FD, 0);
+    Ut_OSFILEAPI_ContinueReturnCodeAfterCountZero(UT_OSFILEAPI_FDGETINFO_INDEX);
+    
     CFE_SB_InitMsg (&CmdPacket, FM_CMD_MID, sizeof(FM_GetOpenFilesCmd_t), TRUE);
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, FM_GET_OPEN_FILES_CC);
 
@@ -1017,6 +1043,8 @@ void FM_ProcessCmd_Test_DeleteInt(void)
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, FM_DELETE_INT_CC);
 
     strncpy (CmdPacket.Filename, "filename.txt", OS_MAX_PATH_LEN);
+
+    Ut_OSFILEAPI_SetFunctionHook(UT_OSFILEAPI_STAT_INDEX, &UT_FM_APP_TEST_CFE_OSFILEAPI_StatHookIsFile);
 
     /* Execute the function being tested */
     FM_ProcessCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
