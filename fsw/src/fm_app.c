@@ -5,19 +5,19 @@
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Title: Core Flight System (CFS) File Manager (FM) Application
 **
@@ -51,15 +51,13 @@
 
 #include <string.h>
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application global data                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-FM_GlobalData_t  FM_GlobalData;
-
+FM_GlobalData_t FM_GlobalData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -69,12 +67,9 @@ FM_GlobalData_t  FM_GlobalData;
 
 void FM_AppMain(void)
 {
-    uint32 RunStatus = CFE_ES_APP_RUN;
-    CFE_SB_MsgPtr_t MsgPtr = NULL;
-    int32  Result = CFE_SUCCESS;
-
-    /* Register application */
-    Result = CFE_ES_RegisterApp();
+    uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
+    CFE_SB_Buffer_t *BufPtr    = NULL;
+    int32            Result    = CFE_SUCCESS;
 
     /* Performance Log (start time counter) */
     CFE_ES_PerfLogEntry(FM_APPMAIN_PERF_ID);
@@ -82,10 +77,7 @@ void FM_AppMain(void)
     /*
     ** Perform application specific initialization...
     */
-    if (Result == CFE_SUCCESS)
-    {
-        Result = FM_AppInit();
-    }
+    Result = FM_AppInit();
 
     /*
     ** Check for start-up error...
@@ -95,44 +87,64 @@ void FM_AppMain(void)
         /*
         ** Set request to terminate main loop...
         */
-        RunStatus = CFE_ES_APP_ERROR;
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
     }
 
     /*
     ** Main process loop...
     */
-    while (CFE_ES_RunLoop(&RunStatus) == TRUE)
+    while (CFE_ES_RunLoop(&RunStatus) == true)
     {
         /* Performance Log (stop time counter) */
         CFE_ES_PerfLogExit(FM_APPMAIN_PERF_ID);
 
         /* Wait for the next Software Bus message */
-        Result = CFE_SB_RcvMsg(&MsgPtr, FM_GlobalData.CmdPipe, CFE_SB_PEND_FOREVER);
+        Result = CFE_SB_ReceiveBuffer(&BufPtr, FM_GlobalData.CmdPipe, FM_SB_TIMEOUT);
 
         /* Performance Log (start time counter) */
         CFE_ES_PerfLogEntry(FM_APPMAIN_PERF_ID);
 
         if (Result == CFE_SUCCESS)
         {
-            /* Process Software Bus message */
-            FM_ProcessPkt(MsgPtr);
+            if (BufPtr != NULL)
+            {
+                /* Process Software Bus message */
+                FM_ProcessPkt(BufPtr);
+            }
+            else
+            {
+                /* Software Bus thought it succeeded but provided a bad pointer */
+                CFE_EVS_SendEvent(FM_SB_RECEIVE_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Main loop error: SB returned NULL pointer on success");
+
+                /* Set request to terminate main loop */
+                RunStatus = CFE_ES_RunStatus_APP_ERROR;
+            }
+        }
+        else if (Result == CFE_SB_TIME_OUT)
+        {
+            /* Allow cFE the chance to manage tables.  This is typically done
+             * during the housekeeping cycle, but if housekeeping is done at
+             * less than a 1Hz rate the table management is done here as well. */
+            FM_ReleaseTablePointers();
+            FM_AcquireTablePointers();
         }
         else
         {
             /* Process Software Bus error */
-            CFE_EVS_SendEvent(FM_SB_RECEIVE_ERR_EID, CFE_EVS_ERROR,
-               "Main loop error: SB receive: result = 0x%08X", (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_SB_RECEIVE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Main loop error: SB receive: result = 0x%08X", (unsigned int)Result);
 
             /* Set request to terminate main loop */
-            RunStatus = CFE_ES_APP_ERROR;
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
         }
     }
 
     /*
     ** Send an event describing the reason for the termination...
     */
-    CFE_EVS_SendEvent(FM_EXIT_ERR_EID, CFE_EVS_ERROR,
-       "Application terminating: result = 0x%08X", (unsigned int)Result);
+    CFE_EVS_SendEvent(FM_EXIT_ERR_EID, CFE_EVS_EventType_ERROR, "Application terminating: result = 0x%08X",
+                      (unsigned int)Result);
 
     /*
     ** In case cFE Event Services is not working...
@@ -151,7 +163,6 @@ void FM_AppMain(void)
 
 } /* End FM_AppMain */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application -- startup initialization processor              */
@@ -160,33 +171,32 @@ void FM_AppMain(void)
 
 int32 FM_AppInit(void)
 {
-    char *ErrText = "Initialization error:";
-    int32 Result = CFE_SUCCESS;
+    const char *ErrText = "Initialization error:";
+    int32       Result  = CFE_SUCCESS;
 
     /* Initialize global data  */
     CFE_PSP_MemSet(&FM_GlobalData, 0, sizeof(FM_GlobalData_t));
 
     /* Initialize child task semaphores */
-    FM_GlobalData.ChildSemaphore = FM_CHILD_SEM_INVALID;
+    FM_GlobalData.ChildSemaphore     = FM_CHILD_SEM_INVALID;
     FM_GlobalData.ChildQueueCountSem = FM_CHILD_SEM_INVALID;
 
     /* Register for event services */
-    Result = CFE_EVS_Register(NULL, 0, CFE_EVS_BINARY_FILTER);
+    Result = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
 
     if (Result != CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(FM_STARTUP_EVENTS_ERR_EID, CFE_EVS_ERROR,
-           "%s register for event services: result = 0x%08X", ErrText, (unsigned int)Result);
+        CFE_EVS_SendEvent(FM_STARTUP_EVENTS_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "%s register for event services: result = 0x%08X", ErrText, (unsigned int)Result);
     }
     else
     {
         /* Create Software Bus message pipe */
-        Result = CFE_SB_CreatePipe(&FM_GlobalData.CmdPipe,
-                                    FM_APP_PIPE_DEPTH, FM_APP_PIPE_NAME);
+        Result = CFE_SB_CreatePipe(&FM_GlobalData.CmdPipe, FM_APP_PIPE_DEPTH, FM_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(FM_STARTUP_CREAT_PIPE_ERR_EID, CFE_EVS_ERROR,
-               "%s create SB input pipe: result = 0x%08X", ErrText, (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_STARTUP_CREAT_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "%s create SB input pipe: result = 0x%08X", ErrText, (unsigned int)Result);
         }
         else
         {
@@ -195,8 +205,8 @@ int32 FM_AppInit(void)
 
             if (Result != CFE_SUCCESS)
             {
-                CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_HK_ERR_EID, CFE_EVS_ERROR,
-                   "%s subscribe to HK request: result = 0x%08X", ErrText, (unsigned int)Result);
+                CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "%s subscribe to HK request: result = 0x%08X", ErrText, (unsigned int)Result);
             }
         }
     }
@@ -209,8 +219,8 @@ int32 FM_AppInit(void)
 
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_GCMD_ERR_EID, CFE_EVS_ERROR,
-               "%s subscribe to FM commands: result = 0x%08X", ErrText, (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_GCMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "%s subscribe to FM commands: result = 0x%08X", ErrText, (unsigned int)Result);
         }
         else
         {
@@ -219,8 +229,8 @@ int32 FM_AppInit(void)
 
             if (Result != CFE_SUCCESS)
             {
-                CFE_EVS_SendEvent(FM_STARTUP_TABLE_INIT_ERR_EID, CFE_EVS_ERROR,
-                   "%s register free space table: result = 0x%08X", ErrText, (unsigned int)Result);
+                CFE_EVS_SendEvent(FM_STARTUP_TABLE_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "%s register free space table: result = 0x%08X", ErrText, (unsigned int)Result);
             }
             else
             {
@@ -228,17 +238,16 @@ int32 FM_AppInit(void)
                 FM_ChildInit();
 
                 /* Application startup event message */
-                CFE_EVS_SendEvent(FM_STARTUP_EID, CFE_EVS_INFORMATION,
-                   "Initialization complete: version %d.%d.%d.%d",
-                    FM_MAJOR_VERSION, FM_MINOR_VERSION, FM_REVISION, FM_MISSION_REV);
+                CFE_EVS_SendEvent(FM_STARTUP_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Initialization complete: version %d.%d.%d.%d", FM_MAJOR_VERSION, FM_MINOR_VERSION,
+                                  FM_REVISION, FM_MISSION_REV);
             }
         }
     }
 
-    return(Result);
+    return (Result);
 
 } /* End of FM_AppInit() */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -246,136 +255,133 @@ int32 FM_AppInit(void)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ProcessPkt(CFE_SB_MsgPtr_t MessagePtr)
+void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
 {
-    CFE_SB_MsgId_t MessageID;
+    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
 
-    MessageID = CFE_SB_GetMsgId(MessagePtr);
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
-    switch(MessageID)
+    switch (MessageID)
     {
         /* Housekeeping request */
         case FM_SEND_HK_MID:
-            FM_ReportHK(MessagePtr);
+            FM_ReportHK((CFE_MSG_CommandHeader_t *)BufPtr);
             break;
 
         /* FM ground commands */
         case FM_CMD_MID:
-            FM_ProcessCmd(MessagePtr);
+            FM_ProcessCmd(BufPtr);
             break;
 
         default:
-            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_ERROR,
-               "Main loop error: invalid message ID: mid = 0x%04X", MessageID);
+            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Main loop error: invalid message ID: mid = 0x%08X", MessageID);
             break;
-
     }
 
     return;
 
 } /* End of FM_ProcessPkt */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application -- command packet processor                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
+void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    boolean Result = TRUE;
-    uint16 CommandCode = 0;
+    bool              Result      = true;
+    CFE_MSG_FcnCode_t CommandCode = 0;
 
-    CommandCode = CFE_SB_GetCmdCode(MessagePtr);
+    CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
 
     /* Invoke specific command handler */
     switch (CommandCode)
     {
         case FM_NOOP_CC:
-            Result = FM_NoopCmd(MessagePtr);
+            Result = FM_NoopCmd(BufPtr);
             break;
 
         case FM_RESET_CC:
-            Result = FM_ResetCountersCmd(MessagePtr);
+            Result = FM_ResetCountersCmd(BufPtr);
             break;
 
         case FM_COPY_CC:
-            Result = FM_CopyFileCmd(MessagePtr);
+            Result = FM_CopyFileCmd(BufPtr);
             break;
 
         case FM_MOVE_CC:
-            Result = FM_MoveFileCmd(MessagePtr);
+            Result = FM_MoveFileCmd(BufPtr);
             break;
 
         case FM_RENAME_CC:
-            Result = FM_RenameFileCmd(MessagePtr);
+            Result = FM_RenameFileCmd(BufPtr);
             break;
 
         case FM_DELETE_CC:
-            Result = FM_DeleteFileCmd(MessagePtr);
+            Result = FM_DeleteFileCmd(BufPtr);
             break;
 
         case FM_DELETE_ALL_CC:
-            Result = FM_DeleteAllFilesCmd(MessagePtr);
+            Result = FM_DeleteAllFilesCmd(BufPtr);
             break;
-
+#ifdef FM_INCLUDE_DECOMPRESS
         case FM_DECOMPRESS_CC:
-            Result = FM_DecompressFileCmd(MessagePtr);
+            Result = FM_DecompressFileCmd(BufPtr);
             break;
-
+#endif
         case FM_CONCAT_CC:
-            Result = FM_ConcatFilesCmd(MessagePtr);
+            Result = FM_ConcatFilesCmd(BufPtr);
             break;
 
         case FM_GET_FILE_INFO_CC:
-            Result = FM_GetFileInfoCmd(MessagePtr);
+            Result = FM_GetFileInfoCmd(BufPtr);
             break;
 
         case FM_GET_OPEN_FILES_CC:
-            Result = FM_GetOpenFilesCmd(MessagePtr);
+            Result = FM_GetOpenFilesCmd(BufPtr);
             break;
 
         case FM_CREATE_DIR_CC:
-            Result = FM_CreateDirectoryCmd(MessagePtr);
+            Result = FM_CreateDirectoryCmd(BufPtr);
             break;
 
         case FM_DELETE_DIR_CC:
-            Result = FM_DeleteDirectoryCmd(MessagePtr);
+            Result = FM_DeleteDirectoryCmd(BufPtr);
             break;
 
         case FM_GET_DIR_FILE_CC:
-            Result = FM_GetDirListFileCmd(MessagePtr);
+            Result = FM_GetDirListFileCmd(BufPtr);
             break;
 
         case FM_GET_DIR_PKT_CC:
-            Result = FM_GetDirListPktCmd(MessagePtr);
+            Result = FM_GetDirListPktCmd(BufPtr);
             break;
 
         case FM_GET_FREE_SPACE_CC:
-            Result = FM_GetFreeSpaceCmd(MessagePtr);
+            Result = FM_GetFreeSpaceCmd(BufPtr);
             break;
 
         case FM_SET_TABLE_STATE_CC:
-            Result = FM_SetTableStateCmd(MessagePtr);
+            Result = FM_SetTableStateCmd(BufPtr);
             break;
 
         case FM_DELETE_INT_CC:
-            Result = FM_DeleteFileCmd(MessagePtr);
+            Result = FM_DeleteFileCmd(BufPtr);
             break;
-            
+
         case FM_SET_FILE_PERM_CC:
-            Result = FM_SetPermissionsCmd(MessagePtr);
+            Result = FM_SetPermissionsCmd(BufPtr);
             break;
 
         default:
-            Result = FALSE;
-            CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_ERROR,
-               "Main loop error: invalid command code: cc = %d", CommandCode);
+            Result = false;
+            CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Main loop error: invalid command code: cc = %d",
+                              CommandCode);
             break;
     }
 
-    if (Result == TRUE)
+    if (Result == true)
     {
         /* Increment command success counter */
         if ((CommandCode != FM_RESET_CC) && (CommandCode != FM_DELETE_INT_CC))
@@ -391,67 +397,58 @@ void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
 
     return;
 
-} /* End of FM_ProcessCmd */
-
+} // End of FM_ProcessCmd 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application -- housekeeping request packet processor         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ReportHK(CFE_SB_MsgPtr_t MessagePtr)
+void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
 {
-    char *CmdText = "HK Request";
-    boolean Result = TRUE;
+    const char *CmdText = "HK Request";
+    bool        Result  = true;
 
     /* Verify command packet length */
-    Result = FM_IsValidCmdPktLength(MessagePtr, sizeof(FM_HousekeepingCmd_t),
-                                    FM_HK_REQ_ERR_EID, CmdText);
+    Result = FM_IsValidCmdPktLength(&Msg->Msg, 
+		                            sizeof(FM_HousekeepingCmd_t),
+                                    FM_HK_REQ_ERR_EID, 
+				    CmdText);
 
-    /* Report FM housekeeping telemetry data */
-    if (Result == TRUE)
+    if (Result == true)
     {
-        /* Release table pointers */
         FM_ReleaseTablePointers();
 
-        /* Allow cFE chance to dump, update, etc. */
         FM_AcquireTablePointers();
 
         /* Initialize housekeeping telemetry message */
-        CFE_SB_InitMsg(&FM_GlobalData.HousekeepingPkt, FM_HK_TLM_MID,
-                       sizeof(FM_HousekeepingPkt_t), TRUE);
+        CFE_MSG_Init(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, FM_HK_TLM_MID, sizeof(FM_HousekeepingPkt_t));
 
         /* Report application command counters */
-        FM_GlobalData.HousekeepingPkt.CommandCounter = FM_GlobalData.CommandCounter;
+        FM_GlobalData.HousekeepingPkt.CommandCounter    = FM_GlobalData.CommandCounter;
         FM_GlobalData.HousekeepingPkt.CommandErrCounter = FM_GlobalData.CommandErrCounter;
 
-        /* Report current number of open files */
         FM_GlobalData.HousekeepingPkt.NumOpenFiles = FM_GetOpenFilesData(NULL);
 
         /* Report child task command counters */
-        FM_GlobalData.HousekeepingPkt.ChildCmdCounter = FM_GlobalData.ChildCmdCounter;
-        FM_GlobalData.HousekeepingPkt.ChildCmdErrCounter = FM_GlobalData.ChildCmdErrCounter;
+        FM_GlobalData.HousekeepingPkt.ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
+        FM_GlobalData.HousekeepingPkt.ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
         FM_GlobalData.HousekeepingPkt.ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
 
-        /* Report number of commands in child task queue */
         FM_GlobalData.HousekeepingPkt.ChildQueueCount = FM_GlobalData.ChildQueueCount;
 
         /* Report current and previous commands executed by the child task */
-        FM_GlobalData.HousekeepingPkt.ChildCurrentCC = FM_GlobalData.ChildCurrentCC;
+        FM_GlobalData.HousekeepingPkt.ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
         FM_GlobalData.HousekeepingPkt.ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
 
-        /* Timestamp and send housekeeping telemetry packet */
-        CFE_SB_TimeStampMsg((CFE_SB_Msg_t *) &FM_GlobalData.HousekeepingPkt);
-        CFE_SB_SendMsg((CFE_SB_Msg_t *) &FM_GlobalData.HousekeepingPkt);
+        CFE_SB_TimeStampMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg);
+        CFE_SB_TransmitMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, true);
     }
 
     return;
 
-} /* End of FM_ReportHK */
-
+} // End of FM_ReportHK 
 
 /************************/
 /*  End of File Comment */
 /************************/
-

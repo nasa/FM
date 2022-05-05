@@ -1,23 +1,23 @@
 /*
-** Filename: fm_cmds.h 
+** Filename: fm_cmds.h
 **
 ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 *
 ** Title: CFS File Manager (FM) Application Ground Commands Header File
 **
@@ -50,7 +50,7 @@
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -60,8 +60,7 @@
 **
 **  \sa #FM_NOOP_CC, #FM_Noop, #FM_NoopCmd_t
 **/
-boolean FM_NoopCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Reset Counters Command Handler Function
@@ -71,7 +70,7 @@ boolean FM_NoopCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -81,8 +80,7 @@ boolean FM_NoopCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_RESET_CC, #FM_Reset, #FM_ResetCmd_t
 **/
-boolean FM_ResetCountersCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Copy File Command Handler Function
@@ -100,7 +98,7 @@ boolean FM_ResetCountersCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -110,8 +108,7 @@ boolean FM_ResetCountersCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_COPY_CC, #FM_Copy, #FM_CopyFileCmd_t
 **/
-boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Move File Command Handler Function
@@ -122,7 +119,7 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -132,8 +129,7 @@ boolean FM_CopyFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_MOVE_CC, #FM_Move, #FM_MoveFileCmd_t
 **/
-boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Rename File Command Handler Function
@@ -144,7 +140,7 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -154,8 +150,7 @@ boolean FM_MoveFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_RENAME_CC, #FM_Rename, #FM_RenameFileCmd_t
 **/
-boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Delete File Command Handler Function
@@ -165,7 +160,7 @@ boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -175,8 +170,7 @@ boolean FM_RenameFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_DELETE_CC, #FM_Delete, #FM_DeleteFileCmd_t
 **/
-boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Delete All Files Command Handler Function
@@ -194,7 +188,7 @@ boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -204,8 +198,9 @@ boolean FM_DeleteFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_DELETE_ALL_CC, #FM_DeleteAll, #FM_DeleteAllCmd_t
 **/
-boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
+bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
+#ifdef FM_INCLUDE_DECOMPRESS
 
 /**
 **  \brief Decompress Files Command Handler Function
@@ -224,7 +219,7 @@ boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -234,8 +229,9 @@ boolean FM_DeleteAllFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_DECOMPRESS_CC, #FM_Decompress, #FM_DecompressCmd_t
 **/
-boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr);
+bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
+#endif
 
 /**
 **  \brief Concatenate Files Command Handler Function
@@ -255,7 +251,7 @@ boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -265,8 +261,7 @@ boolean FM_DecompressFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_CONCAT_CC, #FM_Concat, #FM_ConcatCmd_t
 **/
-boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Get File Information Command Handler Function
@@ -285,7 +280,7 @@ boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -295,8 +290,7 @@ boolean FM_ConcatFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_GET_FILE_INFO_CC, #FM_GetFileInfo, #FM_GetFileInfoCmd_t, #FM_FileInfoPkt_t
 **/
-boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Get Open Files List Command Handler Function
@@ -307,7 +301,7 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -317,8 +311,7 @@ boolean FM_GetFileInfoCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_GET_OPEN_FILES_CC, #FM_GetOpenFiles, #FM_GetOpenFilesCmd_t, #FM_OpenFilesPkt_t
 **/
-boolean FM_GetOpenFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Create Directory Command Handler Function
@@ -328,7 +321,7 @@ boolean FM_GetOpenFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -338,8 +331,7 @@ boolean FM_GetOpenFilesCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_CREATE_DIR_CC, #FM_CreateDir, #FM_CreateDirCmd_t
 **/
-boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Delete Directory Command Handler Function
@@ -349,7 +341,7 @@ boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -359,8 +351,7 @@ boolean FM_CreateDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_DELETE_DIR_CC, #FM_DeleteDir, #FM_DeleteDirCmd_t
 **/
-boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Get Directory List to Packet Command Handler Function
@@ -378,7 +369,7 @@ boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -389,8 +380,7 @@ boolean FM_DeleteDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \sa #FM_GET_DIR_FILE_CC, #FM_GetDirFile, #FM_GetDirFileCmd_t,
         #FM_DirListFileStats_t, FM_DirListEntry_t
 **/
-boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Get Directory List to Packet Command Handler Function
@@ -409,7 +399,7 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -419,8 +409,7 @@ boolean FM_GetDirListFileCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_GET_DIR_PKT_CC, #FM_GetDirPkt, #FM_GetDirPktCmd_t, #FM_DirListPkt_t
 **/
-boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Get Free Space Command Handler Function
@@ -432,7 +421,7 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -442,8 +431,7 @@ boolean FM_GetDirListPktCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_GET_FREE_SPACE_CC, #FM_GetFreeSpace, #FM_GetFreeSpaceCmd_t, #FM_FreeSpacePkt_t
 **/
-boolean FM_GetFreeSpaceCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Set Table Entry State Command Handler Function
@@ -454,7 +442,7 @@ boolean FM_GetFreeSpaceCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -464,8 +452,7 @@ boolean FM_GetFreeSpaceCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_SET_TABLE_STATE_CC, #FM_SetTableState, #FM_SetTableStateCmd_t, #FM_TableEntry_t
 **/
-boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Set File Permissions of a file
@@ -476,7 +463,7 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus command packet.
 **
 **  \returns
 **  \retcode #TRUE   \retdesc \copydoc TRUE    \endcode
@@ -486,11 +473,10 @@ boolean FM_SetTableStateCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \sa #FM_SET_PERM_CC, #FM_SetPermCmd_t, #FM_SET_PERM_CMD_EID, #FM_SET_PERM_ERR_EID
 **/
-boolean FM_SetPermissionsCmd(CFE_SB_MsgPtr_t MessagePtr);
+bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr);
 
 #endif /* _fm_cmds_h_ */
 
 /************************/
 /*  End of File Comment */
 /************************/
-

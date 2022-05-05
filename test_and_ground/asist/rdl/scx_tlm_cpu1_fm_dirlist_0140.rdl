@@ -1,0 +1,48 @@
+!==============================================================================
+!
+!                Originator: D. Stewart
+!                Responsible SC:  
+!                Responsible CSE: 
+!                Rev:  Last Change: Oct 24 2017
+
+!
+!                    Telemetry Packet # 0140 (dec)
+!                 =================================
+!
+!       Packet Application ID: 0140 (Hex '008C')
+!       Packet Title:  SCX CPU1 FM Directory Listing Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!
+!  2008/04/17  DDS	: Initial
+!
+!	2017/10/24	: Created from template 'template_tlm_FM_DIRLIST_TLM.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+! #include "osconfig.h"
+#include "cfe_mission_cfg.h"
+#include "fm_platform_cfg.h"
+
+PACKET P008C APID=0140, DESC="SCX CPU1 FM Directory Listing Packet"
+#include "ccsds_header.rdl"
+!
+  char SCX_CPU1_FM_DirName[CFE_MISSION_MAX_PATH_LEN]  DESC="SCX CPU1 FM Directory Name"
+!
+  ULI  SCX_CPU1_FM_TotalFiles                DESC="SCX CPU1 FM Total number of files in directory"
+!
+  ULI  SCX_CPU1_FM_PktFiles                  DESC="SCX CPU1 FM Number of files in this packet"
+!
+  ULI  SCX_CPU1_FM_DirOffset                 DESC="SCX CPU1 FM Offset of the first packet file"
+!
+  FM_FileDetails    SCX_CPU1_FM_DirList[FM_DIR_LIST_PKT_ENTRIES]
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END

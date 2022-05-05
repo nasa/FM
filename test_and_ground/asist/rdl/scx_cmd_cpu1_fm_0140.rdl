@@ -1,0 +1,115 @@
+!==============================================================================
+!                Originator:      D. Stewart
+!                Responsible SC:  ??
+!                Responsible CSE: ??
+!
+!                  SCX CPU1 FM Command Packet 008C
+!                  ================================
+!
+!       Packet Application ID: 0140 (Hex '008C')
+!       Packet Title:SCX CPU1 File Manager App Commands
+!       Packet Source:
+!
+!       HISTORY:
+!
+!  08APRIL08     DDS	: Initial
+!  17MAY10       WFM	: Removed the Close command and added the GetFreeSpace
+!			: and SetTblState commands
+!  30AUG11       WFM	: Added the Overwrite argument to the Copy and Move cmds
+!  15MAY12       WFM	: Removed the ForceDelete command
+!  18JAN17       WFM	: Added Set File Permissions command
+!  2017/10/24	: Created from template 'template_cmd_FM_CMD.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!  11Sep2020     WFM	: Added Set File Permissions command
+!=============================================================================
+!
+! #include "osconfig.h"
+
+CLASS P008C APID=0140, DESC="SCX CPU1 File Manager App Commands"
+!
+  CMD  SCX_CPU1_FM_NOOP              FCTN=0, DESC="SCX CPU1 FM no-op command code"
+!
+  CMD  SCX_CPU1_FM_ResetCtrs         FCTN=1, DESC="SCX CPU1 FM reset counters command code"
+!
+  CMDS  SCX_CPU1_FM_FileCopy         FCTN=2, DESC="SCX CPU1 FM File Copy command code"
+      UI Overwrite			DESC="Allow overwrite flag"
+      Ui Spare                          DESC="Spare for alignment",INVISIBLE,STATIC,DEFAULT=0
+      char File[CFE_MISSION_MAX_PATH_LEN]     DESC="Name of File to be Copied"
+      char DestName[CFE_MISSION_MAX_PATH_LEN] DESC="Destination File or Directory name"
+  END
+!
+  CMDS  SCX_CPU1_FM_FileMove         FCTN=3, DESC="SCX CPU1 FM File Move command code"
+      UI Overwrite			DESC="Allow overwrite flag"
+      Ui Spare                          DESC="Spare for alignment",INVISIBLE,STATIC,DEFAULT=0
+      char File[CFE_MISSION_MAX_PATH_LEN]     DESC="Name of File to be Moved"
+      char DestName[CFE_MISSION_MAX_PATH_LEN] DESC="Destination File or Directory name"
+  END
+!
+  CMDS  SCX_CPU1_FM_FileRename       FCTN=4, DESC="SCX CPU1 FM File Rename command code"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Name of File to be Renamed"
+      char DestName[CFE_MISSION_MAX_PATH_LEN]    DESC="Destination File or Directory name"
+  END
+!
+  CMDS  SCX_CPU1_FM_Delete           FCTN=5, DESC="SCX CPU1 FM File Delete command code"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Name of File to be Deleted"
+  END
+!
+  CMDS  SCX_CPU1_FM_DeleteAll        FCTN=7, DESC="SCX CPU1 FM Delete all Files in a Directory command code"
+      char DirName[CFE_MISSION_MAX_PATH_LEN]     DESC="Name of Directory to Delete All Files from"
+  END
+!
+  CMDS  SCX_CPU1_FM_Decompress       FCTN=8, DESC="SCX CPU1 FM File Decompress command code"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Name of File to be Decompressed"
+      char DestName[CFE_MISSION_MAX_PATH_LEN]    DESC="Destination File name"
+  END
+!
+  CMDS  SCX_CPU1_FM_FileCat          FCTN=9, DESC="SCX CPU1 FM File Concatenate command code"
+      char File1[CFE_MISSION_MAX_PATH_LEN]       DESC="Name of File to begin the new file"
+      char File2[CFE_MISSION_MAX_PATH_LEN]       DESC="Name of File to Concatenated to File1"
+      char DestName[CFE_MISSION_MAX_PATH_LEN]    DESC="Destination File name"
+  END
+!
+  CMDS  SCX_CPU1_FM_FileInfo         FCTN=10, DESC="SCX CPU1 FM Generates a telemetry packet with details on the specified File"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Name of the File to get the Status of"
+      ULI CRC_Method			DESC="The algorithm to use to calculate the File CRC"
+  END
+!
+  CMD  SCX_CPU1_FM_ListOpenFiles     FCTN=11, DESC="SCX CPU1 FM List Open Files command code"
+!
+  CMDS  SCX_CPU1_FM_DirCreate        FCTN=12, DESC="SCX CPU1 FM Dircectory Create command code"
+      char DirName[CFE_MISSION_MAX_PATH_LEN]     DESC="Directory name to be created"
+  END
+!
+  CMDS  SCX_CPU1_FM_DirDelete        FCTN=13, DESC="SCX CPU1 FM Directory Remove command code"
+      char DirName[CFE_MISSION_MAX_PATH_LEN]     DESC="Directory name to be Removed"
+  END
+!
+  CMDS  SCX_CPU1_FM_DirListFile      FCTN=14, DESC="SCX CPU1 FM Directory Listing to File command code"
+      char DirName[CFE_MISSION_MAX_PATH_LEN]     DESC="Name of Directory to List files of"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Destination File Name for Directory List"
+      UB GetStatFlag			DESC="New argument that specifies whether to return file stats (size,time.mode)"
+      UB Spare[3]       DESC="Spare for alignment",INVISIBLE,STATIC,DEFAULT=0
+  END
+!
+  CMDS  SCX_CPU1_FM_DirListTlm       FCTN=15, DESC="SCX CPU1 FM Directory Listing to Telemetry command code"
+      char DirName[CFE_MISSION_MAX_PATH_LEN]     DESC="Name of Directory to List files of"
+      ULI   Offset                      DESC="# of files in the Dir to skip before collecting filenames to send to the ground"
+      UB GetStatFlag			DESC="New argument that specifies whether to return file stats (size,time.mode)"
+      UB Spare[3]       DESC="Spare for alignment",INVISIBLE,STATIC,DEFAULT=0
+  END
+!
+  CMD  SCX_CPU1_FM_GetFreeSpace      FCTN=16, DESC="SCX CPU1 FM Get Free Space command"
+!
+  CMDS  SCX_CPU1_FM_SetTblState      FCTN=17, DESC="SCX CPU1 FM Set Table State command"
+      ULI tblEntry	DESC="The index of the table entry whose state is being set"
+      ULI newState	DESC="The State to set the table entry to"
+  END
+!
+  CMDS  SCX_CPU1_FM_SetFilePermissions  FCTN=19, DESC="SCX CPU1 FM Set File Permissions on the specified File"
+      char File[CFE_MISSION_MAX_PATH_LEN]        DESC="Name of the File to set the permissions on"
+      ULI NewPerms			DESC="The File permission mask to set for the specified file"
+  END
+!
+END       !END COMMANDS
+!
+!=============================================================================

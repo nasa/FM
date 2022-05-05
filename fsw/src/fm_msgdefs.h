@@ -1,23 +1,23 @@
 /*
-** Filename: fm_msgdefs.h 
+** Filename: fm_msgdefs.h
 **
 ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 *
 ** Title: CFS File Manager (FM) Application Command and Telemetry
 **        Packet Definitions Header File
@@ -69,8 +69,7 @@
 **  \par Criticality
 **       - There are no critical issues related to this command.
 */
-#define FM_NOOP_CC              0
-
+#define FM_NOOP_CC 0
 
 /** \fmcmd Reset Counters
 **
@@ -102,8 +101,7 @@
 **       - There are no critical issues related to this command.
 **
 */
-#define FM_RESET_CC             1
-
+#define FM_RESET_CC 1
 
 /** \fmcmd Copy File
 **
@@ -115,7 +113,7 @@
 **       an existing file, provided that the file is closed.
 **       If the Overwrite command argument is FALSE, then the target must not exist.
 **       The source and target may be on different file systems.
-**       
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       copying the file will be performed by a lower priority child task.
@@ -161,7 +159,7 @@
 **       - Error event #FM_COPY_TGT_UNKNOWN_ERR_EID may be sent
 **       - Error event #FM_COPY_CHILD_DISABLED_ERR_EID may be sent
 **       - Error event #FM_COPY_CHILD_FULL_ERR_EID may be sent
-**       - Error event #FM_COPY_CHILD_BROKEN_ERR_EID may be sent 
+**       - Error event #FM_COPY_CHILD_BROKEN_ERR_EID may be sent
 **       - Error event #FM_COPY_OS_ERR_EID may be sent
 **
 **  \par Criticality
@@ -171,8 +169,7 @@
 **
 **  \sa #FM_MOVE_CC, #FM_RENAME_CC
 */
-#define FM_COPY_CC              2
-
+#define FM_COPY_CC 2
 
 /** \fmcmd Move File
 **
@@ -240,8 +237,7 @@
 **
 **  \sa #FM_COPY_CC, #FM_RENAME_CC
 */
-#define FM_MOVE_CC              3
-
+#define FM_MOVE_CC 3
 
 /** \fmcmd Rename File
 **
@@ -302,8 +298,7 @@
 **
 **  \sa #FM_COPY_CC, #FM_MOVE_CC
 */
-#define FM_RENAME_CC            4
-
+#define FM_RENAME_CC 4
 
 /** \fmcmd Delete File
 **
@@ -355,8 +350,7 @@
 **
 **  \sa #FM_DELETE_ALL_CC, #FM_DELETE_DIR_CC
 */
-#define FM_DELETE_CC            5
-
+#define FM_DELETE_CC 5
 
 /** \fmcmd Delete All Files
 **
@@ -427,8 +421,7 @@
 **
 **  \sa #FM_DELETE_CC, #FM_DELETE_DIR_CC
 */
-#define FM_DELETE_ALL_CC        7
-
+#define FM_DELETE_ALL_CC 7
 
 /** \fmcmd Decompress File
 **
@@ -445,6 +438,8 @@
 **       As such, the return value for this function only refers to the result
 **       of command argument verification and being able to place the command on
 **       the child task interface queue.
+**
+**       This command is only valid if FM_INCLUDE_DECOMPRESS is defined.
 **
 **  \fmcmdmnemonic \FM_Decompress
 **
@@ -484,8 +479,7 @@
 **       Decompressing a very large file may consume more CPU resource than
 **       anticipated.
 */
-#define FM_DECOMPRESS_CC        8
-
+#define FM_DECOMPRESS_CC 8
 
 /** \fmcmd Concatenate Files
 **
@@ -494,7 +488,7 @@
 **       file.
 **       Sources must both be existing files and target must not exist.
 **       Sources and target may be on different file systems.
-**       
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       copying the first source file to the target file and then appending the
@@ -552,8 +546,7 @@
 **
 **  \sa #FM_COPY_CC
 */
-#define FM_CONCAT_CC            9
-
+#define FM_CONCAT_CC 9
 
 /** \fmcmd Get File Information
 **
@@ -565,7 +558,7 @@
 **       or does not exist.
 **       The file information data also includes a CRC, file size,
 **       last modify time and the source name.
-**       
+**
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
 **       collecting the status data and calculating the CRC will be performed by
@@ -616,8 +609,7 @@
 **
 **  \sa #FM_GET_OPEN_FILES_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
 */
-#define FM_GET_FILE_INFO_CC     10
-
+#define FM_GET_FILE_INFO_CC 10
 
 /** \fmcmd Get Open Files Listing
 **
@@ -648,8 +640,7 @@
 **
 **  \sa #FM_GET_FILE_INFO_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
 */
-#define FM_GET_OPEN_FILES_CC    11
-
+#define FM_GET_OPEN_FILES_CC 11
 
 /** \fmcmd Create Directory
 **
@@ -697,8 +688,7 @@
 **
 **  \sa #FM_DELETE_DIR_CC
 */
-#define FM_CREATE_DIR_CC        12
-
+#define FM_CREATE_DIR_CC 12
 
 /** \fmcmd Remove Directory
 **
@@ -752,8 +742,7 @@
 **
 **  \sa #FM_CREATE_DIR_CC
 */
-#define FM_DELETE_DIR_CC        13
-
+#define FM_DELETE_DIR_CC 13
 
 /** \fmcmd Get Directory Listing to a File
 **
@@ -825,8 +814,7 @@
 **
 **  \sa #FM_GET_DIR_PKT_CC
 */
-#define FM_GET_DIR_FILE_CC      14
-
+#define FM_GET_DIR_FILE_CC 14
 
 /** \fmcmd Get Directory Listing to a Packet
 **
@@ -901,8 +889,7 @@
 **
 **  \sa #FM_GET_DIR_FILE_CC
 */
-#define FM_GET_DIR_PKT_CC       15
-
+#define FM_GET_DIR_PKT_CC 15
 
 /** \fmcmd Get Free Space
 **
@@ -933,8 +920,7 @@
 **  \par Criticality
 **       - There are no critical issues related to this command.
 */
-#define FM_GET_FREE_SPACE_CC    16
-
+#define FM_GET_FREE_SPACE_CC 16
 
 /** \fmcmd Set Free Space Table Entry State
 **
@@ -971,8 +957,7 @@
 **  \par Criticality
 **       - There are no critical issues related to this command.
 */
-#define FM_SET_TABLE_STATE_CC   17
-
+#define FM_SET_TABLE_STATE_CC 17
 
 /** \fmcmd Delete File (internal)
 **
@@ -988,7 +973,7 @@
 **
 **  \sa #FM_DELETE_CC
 */
-#define FM_DELETE_INT_CC        18
+#define FM_DELETE_INT_CC 18
 
 /** \fmcmd Set Permissions of a file
 **
@@ -996,8 +981,8 @@
 **       This command sets the permissions for a file. This is a direct interface
 **       to OS_chmod in the OSAL. OS_chmod accepts a uint32 to set the file's mode.
 **       The mode value also contains the type of file (regular or directory, etc) so
-**       care should be taken to not change the file type from regular to directory 
-**       or vice-versa. 
+**       care should be taken to not change the file type from regular to directory
+**       or vice-versa.
 **
 **       Because of the possibility that this command might take a very long time
 **       to complete, command argument validation will be done immediately but
@@ -1007,16 +992,16 @@
 **       the child task interface queue.
 **
 **       Examples for a regular file:
-**       
+**
 **       0100700 (Decimal: 33216) - Read, Write and Execute
 **       0100600 (Decimal: 33152) - Read, and Write
 **       0100400 (Decimal: 33024) - Read Only
-** 
+**
 **       Examples for a directory:
 **       0040700 (Decimal: 16832) - Read, Write and Execute
 **       0040600 (Decimal: 16786) - Read, and Write
 **       0040400 (Decimal: 16640) - Read Only
-** 
+**
 **       S_IFMT     0170000   bit mask for the file type bit field
 **
 **       S_IFSOCK   0140000   socket
@@ -1050,7 +1035,7 @@
 **  \par Criticality
 **       - There are no critical issues related to this command.
 */
-#define FM_SET_FILE_PERM_CC   19
+#define FM_SET_FILE_PERM_CC 19
 
 #endif /* _fm_msgdefs_h_ */
 

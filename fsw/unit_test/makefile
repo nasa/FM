@@ -39,6 +39,7 @@ FM_PATH=../../
 #
 INCLUDES := -I.
 INCLUDES += -I$(UT_ASSERT_SRC)/inc
+INCLUDES += -I$(CFS_MISSION)/build/inc
 INCLUDES += -I$(CFS_MISSION)/build/pc-linux/inc
 INCLUDES += -I$(APP_DIR)/cfs_lib/fsw/public_inc
 INCLUDES += -I$(CFE_DIR)/fsw/cfe-core/os/inc

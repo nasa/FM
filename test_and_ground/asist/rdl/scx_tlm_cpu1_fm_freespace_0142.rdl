@@ -1,0 +1,48 @@
+!==============================================================================
+!
+!                Originator: W. Moleski
+!                Responsible SC:  
+!                Responsible CSE: 
+!                Rev:  Last Change: Oct 24 2017
+
+!
+!                    Telemetry Packet # 0142 (dec)
+!                 =================================
+!
+!       Packet Application ID: 0142 (Hex '008E')
+!       Packet Title:  SCX CPU1 FM FreeSpace Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!
+!  2010/02/26	WFM	: Initial
+!
+!	2017/10/24	: Created from template 'template_tlm_FM_FREESPACE_TLM.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+! #include "osconfig.h"
+#include "cfe_mission_cfg.h"
+#include "fm_platform_cfg.h"
+
+TYPES
+  RECORD SCX_CPU1_FM_FreeSpaceSizeEntry	DESC="The entry for the FreeSpace Telemetry Packet"
+!    ULI  Upper32	DESC="SCX CPU1 FM first 32 bits of 64 bit size"
+    ULI  Lower32	DESC="SCX CPU1 FM first 32 bits of 64 bit size"
+    char Name[CFE_MISSION_MAX_PATH_LEN]	DESC="The file system name whose size is being reported"
+  END
+END_TYPES
+
+PACKET P008E APID=0142, DESC="SCX CPU1 FM Free Space Packet"
+#include "ccsds_header.rdl"
+!
+  SCX_CPU1_FM_FreeSpaceSizeEntry  SCX_CPU1_FM_FreeSpacePkt[0 .. FM_TABLE_ENTRY_COUNT-1] DESC="Free Space Packet array"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END

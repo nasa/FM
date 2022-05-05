@@ -1,0 +1,62 @@
+!==============================================================================
+!
+!                Originator: D. Stewart
+!                Responsible SC:  
+!                Responsible CSE: 
+!                Rev:  Last Change: Jan 05 2015
+
+!
+!                    Telemetry Packet # 0138 (dec)
+!                 =================================
+!
+!       Packet Application ID: 0138 (Hex '008A')
+!       Packet Title:  SCX CPU1 FM Telemetry Data Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!
+!  2008/04/16  DDS	: Initial
+!  2010/01/12  WFM	: Updated for FM 2.1.0.0
+!  2011/07/05  WFM	: Updated according to pkt changes for FM
+!
+!	2015/01/05	: Created from template 'template_tlm_FM_HK_TLM.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+
+PACKET P008A APID=0138, DESC="SCX CPU1 FM Telemetry Data Packet",
+                        STALE = 36
+#include "ccsds_header.rdl"
+!
+  UB   SCX_CPU1_FM_CMDPC        DESC="SCX CPU1 FM Command Processed Counter",
+                                UNITS=Counts
+!
+  UB   SCX_CPU1_FM_CMDEC        DESC="SCX CPU1 FM Command Error Counter",
+                                UNITS=Counts, YH=1, DOLIMIT
+!
+  UB   SCX_CPU1_FM_Spare        DESC="SCX CPU1 FM Application Old Command Warning Counter"
+!
+  UB   SCX_CPU1_FM_NumOpen      DESC="SCX CPU1 FM Number of open files in the system"
+!
+  UB   SCX_CPU1_FM_ChildCMDPC   DESC="SCX CPU1 FM Child Task command counter"
+!
+  UB   SCX_CPU1_FM_ChildCMDEC   DESC="SCX CPU1 FM Child Task command counter"
+!
+  UB   SCX_CPU1_FM_ChildWarnCtr DESC="SCX CPU1 FM Child Task Warning Counter"
+!
+  UB   SCX_CPU1_FM_ChildQueCnt  DESC="SCX CPU1 FM Child Task Pending command Count"
+!
+  UB   SCX_CPU1_FM_ChildCurrCC  DESC="SCX CPU1 FM currently executing Cmd code"
+!
+  UB   SCX_CPU1_FM_ChildPrevCC  DESC="SCX CPU1 FM previously executed Cmd code"
+!
+!  UI   SCX_CPU1_FM_Spare2        DESC="SCX CPU1 FM Application Old Command Warning Counter"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END

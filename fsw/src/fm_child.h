@@ -1,23 +1,23 @@
 /*
-** Filename: fm_child.h 
+** Filename: fm_child.h
 **
 ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Title: CFS File Manager (FM) Child Task Header File
 **
@@ -36,6 +36,9 @@
 #include "cfe.h"
 #include "fm_msg.h"
 
+#ifdef FM_INCLUDE_DECOMPRESS
+#include "cfs_fs_lib.h"
+#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -66,7 +69,6 @@
 **/
 int32 FM_ChildInit(void);
 
-
 /**
 **  \brief Child Task Entry Point Function
 **
@@ -89,7 +91,6 @@ int32 FM_ChildInit(void);
 **  \sa #CFE_ES_DeleteChildTask, #FM_ChildLoop
 **/
 void FM_ChildTask(void);
-
 
 /**
 **  \brief Child Task Main Loop Processor Function
@@ -116,7 +117,6 @@ void FM_ChildTask(void);
 **/
 void FM_ChildLoop(void);
 
-
 /**
 **  \brief Child Task Command Queue Processor Function
 **
@@ -136,7 +136,6 @@ void FM_ChildLoop(void);
 **  \sa #FM_ChildQueueEntry_t, #FM_ChildTask
 **/
 void FM_ChildProcess(void);
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -163,8 +162,7 @@ void FM_ChildProcess(void);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Copy, #FM_CopyFileCmd_t
 **/
-void FM_ChildCopyCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Move File Command Handler
@@ -185,8 +183,7 @@ void FM_ChildCopyCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Move, #FM_MoveFileCmd_t
 **/
-void FM_ChildMoveCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Rename File Command Handler
@@ -207,8 +204,7 @@ void FM_ChildMoveCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Rename, #FM_RenameFileCmd_t
 **/
-void FM_ChildRenameCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Delete File Command Handler
@@ -229,8 +225,7 @@ void FM_ChildRenameCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Delete, #FM_DeleteFileCmd_t
 **/
-void FM_ChildDeleteCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Delete All Files Command Handler
@@ -253,6 +248,7 @@ void FM_ChildDeleteCmd(FM_ChildQueueEntry_t *CmdArgs);
 **/
 void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
 
+#ifdef FM_INCLUDE_DECOMPRESS
 
 /**
 **  \brief Child Task Decompress File Command Handler
@@ -273,8 +269,9 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Decompress, #FM_DecompressCmd_t
 **/
-void FM_ChildDecompressCmd(FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
+#endif
 
 /**
 **  \brief Child Task Concatenate Files Command Handler
@@ -295,8 +292,7 @@ void FM_ChildDecompressCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_Concat, #FM_ConcatCmd_t
 **/
-void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Get File Info Command Handler
@@ -319,7 +315,6 @@ void FM_ChildConcatCmd(FM_ChildQueueEntry_t *CmdArgs);
 **/
 void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs);
 
-
 /**
 **  \brief Child Task Create Directory Command Handler
 **
@@ -339,8 +334,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_CreateDir, #FM_CreateDirCmd_t
 **/
-void FM_ChildCreateDirCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Delete Directory Command Handler
@@ -361,8 +355,7 @@ void FM_ChildCreateDirCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_DeleteDir, #FM_DeleteDirCmd_t
 **/
-void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Get Dir List to File Command Handler
@@ -383,8 +376,7 @@ void FM_ChildDeleteDirCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_GetDirFile, #FM_GetDirFileCmd_t
 **/
-void FM_ChildDirListFileCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Get Dir List to Packet Command Handler
@@ -405,7 +397,7 @@ void FM_ChildDirListFileCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_GetDirPkt, #FM_GetDirPktCmd_t
 **/
-void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
 **  \brief Child Task Set Permissions Command Handler
@@ -426,8 +418,7 @@ void FM_ChildDirListPktCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_ChildQueueEntry_t, #FM_SetPermCmd_t
 **/
-void FM_ChildSetPermissionsCmd(FM_ChildQueueEntry_t *CmdArgs);
-
+void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -460,8 +451,7 @@ void FM_ChildSetPermissionsCmd(FM_ChildQueueEntry_t *CmdArgs);
 **
 **  \sa #FM_GetDirFile
 **/
-boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Filename);
-
+bool FM_ChildDirListFileInit(int32 *FileHandlePtr, const char *Directory, const char *Filename);
 
 /**
 **  \brief Child Task Get Dir List to File Loop Processor Function
@@ -485,9 +475,8 @@ boolean FM_ChildDirListFileInit(int32 *FileHandlePtr, char *Directory, char *Fil
 **
 **  \sa #FM_GetDirFile
 **/
-void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
-                             char *Directory, char *DirWithSep, char *Filename, uint8 GetSizeTimeMode);
-
+void FM_ChildDirListFileLoop(uint32 DirPtr, int32 FileHandle, const char *Directory, const char *DirWithSep,
+                             const char *Filename, uint8 GetSizeTimeMode);
 
 /**
 **  \brief Child Task File Size Time and Mode Utility Function
@@ -513,7 +502,6 @@ void FM_ChildDirListFileLoop(os_dirp_t DirPtr, int32 FileHandle,
 **/
 int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileTime, uint32 *FileMode);
 
-
 /**
 **  \brief Child Task Sleep and Stat Utility Function
 **
@@ -523,7 +511,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
 **       or Get Directory List to Packet commands.
 **       However it only will sleep if FM_CHILD_STAT_SLEEP_FILECOUNT reaches zero and call FM_ChildSizeTimeMode if
 **       getSizeTimeMode is TRUE, otherwise this function has no effect
-**  
+**
 **  \par Assumptions, External Events, and Notes:
 **
 **  \param [in] Filename - Pointer to the combined directory and entry names.
@@ -539,12 +527,11 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
 **
 **  \sa #FM_GetDirFile, #FM_GetDirPkt
 **/
-void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep, boolean GetSizeTimeMode);
-
+void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
+                       bool GetSizeTimeMode);
 
 #endif /* _fm_child_h_ */
 
 /************************/
 /*  End of File Comment */
 /************************/
-

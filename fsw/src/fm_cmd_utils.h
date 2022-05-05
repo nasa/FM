@@ -1,23 +1,23 @@
 /*
-** Filename: fm_cmd_utils.h 
+** Filename: fm_cmd_utils.h
 **
 ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Title: File Manager (FM) Application Command Utility Function
 **        Header File
@@ -36,7 +36,7 @@
 #define _fm_cmd_utils_h_
 
 #include "cfe.h"
-
+#include "fm_msg.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -66,8 +66,8 @@
 **
 **  \sa #CFE_SB_GetTotalMsgLength
 **/
-boolean FM_IsValidCmdPktLength(CFE_SB_MsgPtr_t CmdPacket, uint16 ExpectedLength, uint32 EventID, char *CmdText);
-
+bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID,
+                            const char *CmdText);
 
 /**
 **  \brief Verify Target File Overwrite Function
@@ -91,8 +91,7 @@ boolean FM_IsValidCmdPktLength(CFE_SB_MsgPtr_t CmdPacket, uint16 ExpectedLength,
 **
 **  \sa #FM_COPY_CC, #FM_MOVE_CC
 **/
-boolean FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, char *CmdText);
-
+bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Get Open Files Data Function
@@ -111,8 +110,7 @@ boolean FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, char *CmdText);
 **
 **  \sa #OS_FDGetInfo
 **/
-uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData);
-
+uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData);
 
 /**
 **  \brief Get Filename State Function
@@ -141,8 +139,7 @@ uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData);
 **
 **  \sa #CFS_IsValidFilename, #OS_stat, #OS_FDGetInfo
 **/
-uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, boolean FileInfoCmd);
-
+uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd);
 
 /**
 **  \brief Verify Name Function
@@ -168,8 +165,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, boolean FileInfoCm
 **
 **  \sa #FM_GetFilenameState
 **/
-uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify File is Closed Function
@@ -193,8 +189,7 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, char *C
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify File Exists Function
@@ -219,8 +214,7 @@ boolean FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, c
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify File Does Not Exist Function
@@ -245,8 +239,7 @@ boolean FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, c
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify File Is Not Open Function
@@ -270,8 +263,7 @@ boolean FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, char
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyFileNotOpen(char *Name, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyFileNotOpen(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify Directory Exists Function
@@ -295,8 +287,7 @@ boolean FM_VerifyFileNotOpen(char *Name, uint32 BufferSize, uint32 EventID, char
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify Directory Does Not Exist Function
@@ -320,8 +311,7 @@ boolean FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, c
 **
 **  \sa #FM_GetFilenameState
 **/
-boolean FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, char *CmdText);
-
+bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Verify Child Task Interface Function
@@ -341,8 +331,7 @@ boolean FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, char 
 **  \retstmt Boolean TRUE indicates the child task queue is available  \endcode
 **  \endreturns
 **/
-boolean FM_VerifyChildTask(uint32 EventID, char *CmdText);
-
+bool FM_VerifyChildTask(uint32 EventID, const char *CmdText);
 
 /**
 **  \brief Invoke Child Task Function
@@ -371,7 +360,6 @@ boolean FM_VerifyChildTask(uint32 EventID, char *CmdText);
 **/
 void FM_InvokeChildTask(void);
 
-
 /**
 **  \brief Append Path Separator Function
 **
@@ -394,7 +382,6 @@ void FM_InvokeChildTask(void);
 **  \sa #FM_GetFilenameState
 **/
 void FM_AppendPathSep(char *Directory, uint32 BufferSize);
-
 
 #endif /* _fm_cmd_utils_h_ */
 

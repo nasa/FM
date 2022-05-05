@@ -1,5 +1,5 @@
 /**
-  \mainpage CFS File Manager (FM) User's Guide
+    \mainpage CFS File Manager (FM) User's Guide    
 
        <UL>
            <LI> \subpage cfsfmrevhist
@@ -17,6 +17,7 @@
            <LI> \subpage fm_events.h "CFS File Manager Event Message Reference" <BR>
        </UL>
 **/
+
 
 /**
   \page cfsfmrevhist CFS File Manager User's Guide Revision History

@@ -1,0 +1,697 @@
+21-127-11:31:11.533 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-127-11:31:11.533 00     SPR-I:OPRO                 Checksum:    12545
+21-127-11:31:11.534 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-127-11:31:11.534 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-127-11:31:11.534 00     SPR-I:OPRO          
+21-127-11:31:11.539 00     SPR-I:OPRO                 Connection Status
+21-127-11:31:11.539 00     SPR-I:OPRO                 -----------------
+21-127-11:31:11.539 00     SPR-I:OPRO                 CFDP: DOWN
+21-127-11:31:11.539 00     SPR-I:OPRO                 UDP:  UP 
+21-127-11:31:11.539 00     SPR-I:OPRO                 SWTS:  UNK
+21-127-11:31:11.540 00     SPR-I:OPRO         
+21-127-11:31:11.540 00     SPR-I:OPRO                 CMD / TLM Path
+21-127-11:31:11.540 00     SPR-I:OPRO                 --------------
+21-127-11:31:11.540 00     SPR-I:OPRO                 UDP
+21-127-11:31:11.540 00     SPR-I:OPRO                 
+21-127-11:31:11.540 00     SPR-I:OPRO         
+21-127-11:31:11.540 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-127-11:31:11.540 00     SPR-I:OPRO                 -------------------------
+21-127-11:31:11.540 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-127-11:31:11.540 00     SPR-I:OPRO                 Account: cfs_test
+21-127-11:31:11.541 00     SPR-I:OPRO                 Version: 21.0.7
+21-127-11:31:11.542 00     SPR-I:OPRO                 Tlm DB:  Version: 1.975  Date: 05-07-21  Time: 06:34:55 AM.
+21-127-11:31:11.542 00     SPR-I:OPRO                 Cmd DB:  Version: 1.50  Date: 04-05-21  Time: 10:39:20 AM.EDT
+21-127-11:31:11.542 00     SPR-I:OPRO         
+21-127-11:31:11.542 00     SPR-I:OPRO                 Telemetry Info
+21-127-11:31:11.542 00     SPR-I:OPRO                 --------------
+21-127-11:31:11.542 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-127-11:31:11.542 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-127-11:31:11.542 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_fm_filedecom_basic
+21-127-11:31:11.663 00     SPR-I:OPRI     --> start scx_cpu1_fm_filedecom_basic
+21-127-11:31:11.664 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_filedecom_basic.i
+21-127-11:31:11.667 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEDECOM_BASIC started
+21-127-11:31:11.712 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:31:11.712 00     SPR-I:OPRO         ;  Step 1.0:  Initialize the CPU for this test. 
+21-127-11:31:11.713 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:31:11.713 00     SPR-I:OPRO         ;  Step 1.1:  Command a Power-On Reset on CPU1. 
+21-127-11:31:11.713 00     SPR-I:OPRO         ;********************************************************************
+21-127-11:31:11.713 00     CMH-I:CMD              Command is /SCX_CPU1_ES_POWERONRESET  ;;; (SCX CPU1 ES Power-On Reset command code)
+21-127-11:31:11.713 00     CMH-I:CMD             Command SFDU received:<1806C000000302220002> from gs582cfslab4:SPR
+21-127-11:31:11.714 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-127-11:31:21.724 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-127-11:31:21.725 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-127-11:31:21.731 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-127-11:31:21.749 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-127-11:32:21.810 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:32:27.771 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-127-11:32:31.822 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:32:31.823 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_read C%03X 1235 packet_only" ;;; ( )
+21-127-11:32:31.840 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_write CPKT cpu3 1234 ascii_pkt" ;;; ( )
+21-127-11:32:31.891 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-127-11:32:31.891 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-127-11:32:31.892 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-127-11:32:31.893 00     CMH-I:CMD              Command is /SCX_CPU1_TO_OUTPUT_ENA   GS582CFSLAB4 ;;; (SCX CPU1 Enables TO output)
+21-127-11:32:31.893 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-127-11:32:31.944 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-127-11:32:31.945 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:32:33.260 00    TLMH-I:STS          58-012-14:03:49.383 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-127-11:32:35.950 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:32:35.951 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-127-11:32:35.952 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-127-11:32:35.957 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-127-11:32:35.958 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:32:40.962 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:40.962 00     SPR-I:OPRO         ;  Step 1.2: Create the FreeSpace table load image, upload this image, 
+21-127-11:32:40.963 00     SPR-I:OPRO         ;  and start the File Manager (FM) and Test (TST_FM) Applications. 
+21-127-11:32:40.963 00     SPR-I:OPRO         ;********************************************************************
+21-127-11:32:40.963 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_tableloadfile.i
+21-127-11:32:40.969 00     SPR-I:STS          Procedure SCX_CPU1_FM_TABLELOADFILE started
+21-127-11:32:41.073 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:41.073 00     SPR-I:OPRO         ;  Create & upload the Free Space Table file.
+21-127-11:32:41.073 00     SPR-I:OPRO         ;********************************************************************
+21-127-11:32:41.078 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-127-11:32:41.079 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-127-11:32:41.082 00     SPR-I:OPRO         **********  cpu1_fmdevtbl_ld_1  **********
+21-127-11:32:41.082 00     SPR-I:OPRO         
+21-127-11:32:41.082 00     SPR-I:OPRO                Content Type: cFE1
+21-127-11:32:41.082 00     SPR-I:OPRO                    Sub Type: 8
+21-127-11:32:41.082 00     SPR-I:OPRO                      Length: 12
+21-127-11:32:41.082 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-127-11:32:41.082 00     SPR-I:OPRO                Processor Id: CPU3
+21-127-11:32:41.082 00     SPR-I:OPRO              Application Id: 0
+21-127-11:32:41.083 00     SPR-I:OPRO            Create Time Secs: 1620387161
+21-127-11:32:41.083 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-127-11:32:41.083 00     SPR-I:OPRO            File Description: FM FreeSpace Table Load 1
+21-127-11:32:41.083 00     SPR-I:OPRO         
+21-127-11:32:41.083 00     SPR-I:OPRO         **********  FM.FreeSpace  **********
+21-127-11:32:41.083 00     SPR-I:OPRO         
+21-127-11:32:41.083 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_FM_FreeSpaceTBL[0].State
+21-127-11:32:41.083 00     SPR-I:OPRO                 Byte Offset: 0
+21-127-11:32:41.083 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_FM_FreeSpaceTBL[7]
+21-127-11:32:41.083 00     SPR-I:OPRO             Number of Bytes: 544
+21-127-11:32:41.083 00     SPR-I:OPRO         
+21-127-11:32:41.091 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-127-11:32:41.091 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-127-11:32:41.092 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 659 P0FBA fm.freespace
+21-127-11:32:41.097 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-127-11:32:41.097 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat cpu1_fmdevtbl_ld_1.tmp fm.freespace > cpu1_fmdevtbl_ld_1
+21-127-11:32:41.103 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm fm.freespace cpu1_fmdevtbl_ld_1.tmp
+21-127-11:32:41.107 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-127-11:32:41.107 00     SPR-I:STS          Procedure SCX_CPU1_FM_TABLELOADFILE completed
+21-127-11:32:41.107 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:32:46.113 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-127-11:32:46.114 00     SPR-I:STS          Procedure FTP_FILE started
+21-127-11:32:46.385 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-127-11:32:46.386 00     SPR-I:STS          Procedure FTP_FILE completed
+21-127-11:32:46.387 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:32:51.392 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_startfmapps.i
+21-127-11:32:51.399 00     SPR-I:STS          Procedure SCX_CPU1_FM_STARTFMAPPS started
+21-127-11:32:51.482 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:51.482 00     SPR-I:OPRO         ;  Display all FM and TST_FM pages
+21-127-11:32:51.482 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:51.482 00     SPR-I:OPRO         Opening FM HK Page.
+21-127-11:32:51.583 00     DPD-I:STS          Page SCX_CPU1_FM_HK added (cid:1).
+21-127-11:32:51.587 00     SPR-I:OPRO         Opening FM File Info Page.
+21-127-11:32:51.652 00     DPD-I:STS          Page SCX_CPU1_FM_FILE_INFO added (cid:1).
+21-127-11:32:51.656 00     SPR-I:OPRO         Opening FM Dir List File Page.
+21-127-11:32:51.738 00     DPD-I:STS          Page SCX_CPU1_FM_DIR_LIST_FILE added (cid:1).
+21-127-11:32:51.742 00     SPR-I:OPRO         Opening FM Dir List Tlm Page.
+21-127-11:32:51.833 00     DPD-I:STS          Page SCX_CPU1_FM_DIR_LIST added (cid:1).
+21-127-11:32:51.837 00     SPR-I:OPRO         Opening FM Open File List Page.
+21-127-11:32:51.957 00     DPD-I:STS          Page SCX_CPU1_FM_OPEN_FILE_LIST added (cid:1).
+21-127-11:32:51.971 00     SPR-I:OPRO         Opening FM Free Space Pages
+21-127-11:32:52.095 00     DPD-I:STS          Page SCX_CPU1_FM_FREESPACE_TABLE added (cid:1).
+21-127-11:32:52.265 00     DPD-I:STS          Page SCX_CPU1_FM_FREESPACE_TLM added (cid:1).
+21-127-11:32:52.274 00     SPR-I:OPRO         Opening TST FM HK Page.
+21-127-11:32:52.395 00     DPD-I:STS          Page SCX_CPU1_TST_FM_HK added (cid:1).
+21-127-11:32:52.401 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:52.401 00     SPR-I:OPRO         ;  Determine if the applications are running.
+21-127-11:32:52.401 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:32:52.401 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_file_to_cvt.i
+21-127-11:32:52.404 00     SPR-I:STS          Procedure GET_FILE_TO_CVT started
+21-127-11:32:52.440 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_ES_WRITEAPPINFO2FILE APPFILENAME="/ram/cfe_es_app_info.log"
+21-127-11:32:52.441 00     CMH-I:CMD              Command is /SCX_CPU1_ES_WRITEAPPINFO2FILE  APPFILENAME="/ram/cfe_es_app_info.log" ;;; (SCX CPU1 ES Write App Info command code)
+21-127-11:32:52.441 00     CMH-I:CMD             Command SFDU received:<1806C0000041091B2F72616D2F6366655F65735F6170705F696E666F2E6C6F6700000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:32:52.453 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-127-11:33:07.466 00     SPR-I:OPRO         The APID is: P0F05
+21-127-11:33:07.467 00     SPR-I:OPRO         The CPU is: CPU3
+21-127-11:33:07.467 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-127-11:33:07.471 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cfe_es_app_info.log scx_cpu1_es_app_info.log binary 192.168.1.8
+21-127-11:33:07.643 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-127-11:33:07.644 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-127-11:33:17.908 00     DPD-I:STS          Deleting page SCX_CPU1_TST_FM_HK
+21-127-11:33:19.984 00     DPD-I:STS          Deleting page SCX_CPU1_FM_DIR_LIST
+21-127-11:33:21.278 00     DPD-I:STS          Deleting page SCX_CPU1_FM_OPEN_FILE_LIST
+21-127-11:33:22.658 00     SPR-I:OPRO         
+21-127-11:33:22.693 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3845].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/scx_cpu1_es_app_info.log`"
+21-127-11:33:22.693 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:33:24.421 00     DPD-I:STS          Deleting page SCX_CPU1_FM_FREESPACE_TABLE
+21-127-11:33:26.208 00     DPD-I:STS          Deleting page SCX_CPU1_FM_FREESPACE_TLM
+21-127-11:33:27.698 00     SPR-I:STS          Procedure GET_FILE_TO_CVT completed
+21-127-11:33:27.730 00     SPR-I:OPRO         At least one application is not running. They will be started.
+21-127-11:33:27.730 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-127-11:33:27.982 00     DPD-I:STS          Deleting page SCX_CPU1_FM_DIR_LIST_FILE
+21-127-11:33:37.738 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:37.738 00     SPR-I:OPRO         ;  Enable DEBUG Event Messages for the FM application 
+21-127-11:33:37.738 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:37.739 00     CMH-I:CMD              Command is /SCX_CPU1_EVS_ENAAPPEVTTYPE  APPLICATION="FM"  DEBUG ;;; (SCX CPU1 EVS Enable Event Type for the App)
+21-127-11:33:37.739 00     CMH-I:CMD          Or  Command is /SCX_CPU1_EVS_ENAAPPEVTTYPEMASK  APPLICATION="FM" BITMASK= 1 (x1) ;;; (SCX CPU1 EVS Enable Event Type for the App (mask))
+21-127-11:33:37.739 00     CMH-I:CMD             Command SFDU received:<1801C0000017053E464D0000000000000000000000000000000000000100> from gs582cfslab4:SPR
+21-127-11:33:37.752 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:33:40.756 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:33:40.758 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-127-11:33:40.758 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:33:40.759 00     SPR-I:OPRO         ;  Start the File Manager Test (TST_FM) Application and add any
+21-127-11:33:40.759 00     SPR-I:OPRO         ;  required subscriptions.  
+21-127-11:33:40.759 00     SPR-I:OPRO         ;********************************************************************
+21-127-11:33:40.762 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:40.762 00     SPR-I:OPRO         ; Setup event 1 with CFE_ES INFO 6
+21-127-11:33:40.762 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:40.764 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:40.764 00     SPR-I:OPRO         ; Setup event 2 with TST_FM INFO 1
+21-127-11:33:40.765 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:33:40.765 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_start_app.i
+21-127-11:33:40.765 00     SPR-I:STS          Procedure LOAD_START_APP started
+21-127-11:33:40.766 00     SPR-I:OPRO         Application Filename: tst_fm.o
+21-127-11:33:40.767 00     SPR-I:OPRO         The perl command is perl /s/opr/accounts/global/tools/fsw_ftp.pl 192.168.1.8 tst_fm.o RAM:0 3
+21-127-11:33:40.899 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-127-11:33:40.899 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_ES_STARTAPP APPLICATION="TST_FM" APP_ENTRY_PT="TST_FM_AppMain" APP_FILE_NAME="/ram/tst_fm.o" STACKSIZE=X'2000' PRIORITY=X'b7' RESTARTCPU 
+21-127-11:33:40.900 00     CMH-I:CMD              Command is /SCX_CPU1_ES_STARTAPP  APPLICATION="TST_FM" APP_ENTRY_PT="TST_FM_AppMain" APP_FILE_NAME="/ram/tst_fm.o" STACKSIZE= 8192 (x2000)  RESTARTCPU PRIORITY= 183 (xB7) ;;; (SCX CPU1 ES load and start single application command code)
+21-127-11:33:40.900 00     CMH-I:CMD             Command SFDU received:<1806C000007104EF5453545F464D00000000000000000000000000005453545F464D5F4170704D61696E0000000000002F72616D2F7473745F666D2E6F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000100B7> from gs582cfslab4:SPR
+21-127-11:33:40.913 00     SPR-I:STS          Procedure LOAD_START_APP completed
+21-127-11:33:40.918 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:33:41.752 00    TLMH-I:STS          58-012-14:04:58.383 ERROR CPU=CPU1 APPNAME=CFE_ES EVENT ID=26 Failed to start TST_FM from /ram/tst_fm.o, RC = 0xC8000005
+21-127-11:34:04.946 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:04.949 00     SPR-I:OPRO         <!> Failed - TST_FM Application start Event Message not received.
+21-127-11:34:04.949 00     SPR-I:OPRO         ;  There was a problem with this procedure
+21-127-11:34:04.949 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:04.949 00     SPR-I:OPRO         ;  End procedure scx_cpu1_fm_startfmapps 
+21-127-11:34:04.950 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:04.950 00     SPR-I:STS          Procedure SCX_CPU1_FM_STARTFMAPPS completed
+21-127-11:34:04.952 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:09.957 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:09.957 00     SPR-I:OPRO         ;  Step 1.3: Verify that the FM Housekeeping telemetry items are 
+21-127-11:34:09.957 00     SPR-I:OPRO         ;  initialized to zero (0). 
+21-127-11:34:09.957 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:09.972 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:15.980 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:15.982 00     SPR-I:OPRO         <*> Passed (4000) - Housekeeping packet is being generated.
+21-127-11:34:15.985 00     SPR-I:OPRO         <*> Passed (5000) - Housekeeping telemetry initialized properly.
+21-127-11:34:15.989 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:20.994 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:20.994 00     SPR-I:OPRO         ;  Step 2.0: File System Preparation.
+21-127-11:34:20.994 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:20.994 00     SPR-I:OPRO         ;  Step 2.1: Create Test Directory 1.
+21-127-11:34:20.995 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:21.003 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:21.003 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 55
+21-127-11:34:21.003 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:21.007 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRCREATE  DIRNAME="/ram/FMTEST1" ;;; (SCX CPU1 FM Dircectory Create command code)
+21-127-11:34:21.007 00     CMH-I:CMD             Command SFDU received:<188CC00000410CB42F72616D2F464D544553543100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:34:21.031 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:21.755 00    TLMH-I:STS          58-012-14:05:38.002 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=55 Create Directory command: src = /ram/FMTEST1
+21-127-11:34:24.034 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:24.036 00     SPR-I:OPRO         <*> Passed (1003) - Create Directory command sent properly.
+21-127-11:34:24.040 00     SPR-I:OPRO         <*> Passed (1003) - Event message 55 received
+21-127-11:34:24.044 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:29.049 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:29.049 00     SPR-I:OPRO         ;  Step 2.2: Create Test Directory 2.
+21-127-11:34:29.050 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:29.057 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:29.058 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 55
+21-127-11:34:29.058 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:29.062 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRCREATE  DIRNAME="/ram/FMTEST2" ;;; (SCX CPU1 FM Dircectory Create command code)
+21-127-11:34:29.062 00     CMH-I:CMD             Command SFDU received:<188CC00000410CB72F72616D2F464D544553543200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:34:29.087 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:29.757 00    TLMH-I:STS          58-012-14:05:46.002 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=55 Create Directory command: src = /ram/FMTEST2
+21-127-11:34:32.091 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:32.092 00     SPR-I:OPRO         <*> Passed (1003) - Create Directory command sent properly.
+21-127-11:34:32.096 00     SPR-I:OPRO         <*> Passed (1003) - Event message 55 received
+21-127-11:34:32.099 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:37.104 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:37.104 00     SPR-I:OPRO         ;  Step 2.3: Upload Test File to Source Directory.
+21-127-11:34:37.104 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:37.105 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-127-11:34:37.106 00     SPR-I:STS          Procedure FTP_FILE started
+21-127-11:34:37.198 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-127-11:34:37.198 00     SPR-I:STS          Procedure FTP_FILE completed
+21-127-11:34:37.198 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:42.203 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:42.203 00     SPR-I:OPRO         ;  Step 3.0:  File Decompress Test - Decompress File to Same Directory
+21-127-11:34:42.203 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:42.203 00     SPR-I:OPRO         ;  Step 3.1:  File Info Command to Verify Source File exists.
+21-127-11:34:42.203 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:42.205 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:42.205 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:34:42.205 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:42.206 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:34:42.206 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:34:42.210 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 8
+21-127-11:34:42.214 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:34:42.214 00     CMH-I:CMD             Command SFDU received:<188CC00000450A8F2F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A00000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:34:42.225 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:42.753 00    TLMH-I:STS          58-012-14:05:59.002 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:34:44.228 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:44.229 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:34:44.229 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:34:44.230 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:34:44.231 00     SPR-I:OPRO         
+21-127-11:34:44.232 00     SPR-I:OPRO           Sequence Counter = 1
+21-127-11:34:44.233 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:34:44.233 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:34:44.234 00     SPR-I:OPRO           File Size        = 160
+21-127-11:34:44.234 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:34:44.234 00     SPR-I:OPRO           CRC              = 0
+21-127-11:34:44.235 00     SPR-I:OPRO           last Mod Time    = 315532972
+21-127-11:34:44.236 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:34:44.236 00     SPR-I:OPRO         
+21-127-11:34:44.237 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:34:44.238 00     SPR-I:OPRO         <*> Passed (2011) - File Info Command Completed.
+21-127-11:34:44.243 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:34:44.246 00     SPR-I:OPRO         <*> Passed - File status indicates that the file exists.
+21-127-11:34:44.265 00     SPR-I:OPRO         <*> Passed (2011) - File Info Telemetry Matches expected file: /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:34:44.267 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:49.273 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:49.273 00     SPR-I:OPRO         ;  Step 3.2:  File Info Command to Verify Destination File does not
+21-127-11:34:49.273 00     SPR-I:OPRO         ;  exist in Directory.
+21-127-11:34:49.274 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:49.279 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:49.279 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:34:49.279 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:49.280 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:34:49.280 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:34:49.289 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 1
+21-127-11:34:49.290 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOM.TST" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:34:49.290 00     CMH-I:CMD             Command SFDU received:<188CC00000450AAF2F72616D2F464D54455354312F464D4445434F4D2E5453540000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:34:49.302 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:49.757 00    TLMH-I:STS          58-012-14:06:06.002 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOM.TST
+21-127-11:34:52.307 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:52.307 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:34:52.308 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:34:52.309 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:34:52.310 00     SPR-I:OPRO         
+21-127-11:34:52.310 00     SPR-I:OPRO           Sequence Counter = 2
+21-127-11:34:52.311 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOM.TST
+21-127-11:34:52.311 00     SPR-I:OPRO           File Status      = Not Used
+21-127-11:34:52.312 00     SPR-I:OPRO           File Size        = 0
+21-127-11:34:52.312 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:34:52.312 00     SPR-I:OPRO           CRC              = 0
+21-127-11:34:52.312 00     SPR-I:OPRO           last Mod Time    = 0
+21-127-11:34:52.312 00     SPR-I:OPRO           Permissions      = 0
+21-127-11:34:52.312 00     SPR-I:OPRO         
+21-127-11:34:52.312 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:34:52.313 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:34:52.313 00     SPR-I:OPRO         <*> Passed (2011) - File Info command sent properly
+21-127-11:34:52.315 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:34:52.315 00     SPR-I:OPRO         <*> Passed - File status indicates that the file does not exist.
+21-127-11:34:52.320 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:34:57.325 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:57.325 00     SPR-I:OPRO         ;  Step 3.3: Perform FM_FileDecompress Command to Decompress Source
+21-127-11:34:57.325 00     SPR-I:OPRO         ;  File to Destination File in the same directory.
+21-127-11:34:57.326 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:34:57.335 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:57.335 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 36
+21-127-11:34:57.335 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:34:57.336 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DECOMPRESS  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" DESTNAME="/ram/FMTEST1/FMDECOM.TST" ;;; (SCX CPU1 FM File Decompress command code)
+21-127-11:34:57.336 00     CMH-I:CMD             Command SFDU received:<188CC000008108022F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A0000000000000000000000000000000000000000000000000000000000000000002F72616D2F464D54455354312F464D4445434F4D2E54535400000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:34:57.352 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:34:57.752 00    TLMH-I:STS          58-012-14:06:14.004 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=36 Decompress File command: src = /ram/FMTEST1/FMDECOMORIG.TST.gz, tgt = /ram/FMTEST1/FMDECOM.TST
+21-127-11:35:00.355 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:00.357 00     SPR-I:OPRO         <*> Passed (1003;2009) - File Decompress command sent properly.
+21-127-11:35:00.362 00     SPR-I:OPRO         <*> Passed (1003) - Event message 36 received
+21-127-11:35:00.363 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:05.367 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:05.367 00     SPR-I:OPRO         ;  Step 3.4: File Info Command to Verify Source File Still Exists.
+21-127-11:35:05.368 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:05.373 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:05.373 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:35:05.373 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:05.374 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:35:05.374 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:35:05.378 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 2
+21-127-11:35:05.382 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:35:05.382 00     CMH-I:CMD             Command SFDU received:<188CC00000450A8F2F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A00000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:05.394 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:06.257 00    TLMH-I:STS          58-012-14:06:22.501 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:08.398 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:08.399 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:35:08.399 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:35:08.400 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:35:08.401 00     SPR-I:OPRO         
+21-127-11:35:08.401 00     SPR-I:OPRO           Sequence Counter = 3
+21-127-11:35:08.402 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:08.402 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:35:08.402 00     SPR-I:OPRO           File Size        = 160
+21-127-11:35:08.402 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:35:08.402 00     SPR-I:OPRO           CRC              = 0
+21-127-11:35:08.403 00     SPR-I:OPRO           last Mod Time    = 315532972
+21-127-11:35:08.403 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:35:08.403 00     SPR-I:OPRO         
+21-127-11:35:08.403 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:35:08.403 00     SPR-I:OPRO         <*> Passed (2011) - File Info Command Completed.
+21-127-11:35:08.405 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:35:08.406 00     SPR-I:OPRO         <*> Passed - File status indicates that the file exists.
+21-127-11:35:08.413 00     SPR-I:OPRO         <*> Passed (2011) - File Info Telemetry Matches expected file: /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:08.414 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:13.420 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:13.420 00     SPR-I:OPRO         ;  Step 3.5:  File Info Command to Verify Destination File exists.
+21-127-11:35:13.420 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:13.425 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:13.425 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:35:13.426 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:13.426 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:35:13.427 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:35:13.431 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 3
+21-127-11:35:13.435 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOM.TST" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:35:13.435 00     CMH-I:CMD             Command SFDU received:<188CC00000450AAF2F72616D2F464D54455354312F464D4445434F4D2E5453540000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:13.446 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:14.258 00    TLMH-I:STS          58-012-14:06:30.501 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOM.TST
+21-127-11:35:16.450 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:16.451 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:35:16.452 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:35:16.453 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:35:16.453 00     SPR-I:OPRO         
+21-127-11:35:16.454 00     SPR-I:OPRO           Sequence Counter = 4
+21-127-11:35:16.454 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOM.TST
+21-127-11:35:16.454 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:35:16.455 00     SPR-I:OPRO           File Size        = 1277
+21-127-11:35:16.455 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:35:16.455 00     SPR-I:OPRO           CRC              = 0
+21-127-11:35:16.455 00     SPR-I:OPRO           last Mod Time    = 315532992
+21-127-11:35:16.455 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:35:16.455 00     SPR-I:OPRO         
+21-127-11:35:16.455 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:35:16.456 00     SPR-I:OPRO         <*> Passed (2011) - File Info Command Completed.
+21-127-11:35:16.457 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received (Cmd received)
+21-127-11:35:16.459 00     SPR-I:OPRO         <*> Passed - File status indicates that the file exists.
+21-127-11:35:16.464 00     SPR-I:OPRO         <*> Passed (2009;2011) - File Info Telemetry Matches expected file: /ram/FMTEST1/FMDECOM.TST
+21-127-11:35:16.466 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:21.471 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:21.472 00     SPR-I:OPRO         ;  Step 3.6:  Verify that the decompressed file is larger than the
+21-127-11:35:21.472 00     SPR-I:OPRO         ;  compressed file.
+21-127-11:35:21.472 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:21.473 00     SPR-I:OPRO         <*> Passed (2009) - Decompressed file larger than Compressed File.
+21-127-11:35:21.476 00     SPR-I:OPRO           File Size of Compressed   = 160
+21-127-11:35:21.477 00     SPR-I:OPRO           File Size of Decompressed = 1277
+21-127-11:35:21.477 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:26.482 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:26.482 00     SPR-I:OPRO         ;  Step 4.0:  File Decompress Test - Decompress File to Different
+21-127-11:35:26.483 00     SPR-I:OPRO         ;  Directory.
+21-127-11:35:26.483 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:26.483 00     SPR-I:OPRO         ;  Step 4.1:  File Info Command to Verify Destination File does not
+21-127-11:35:26.483 00     SPR-I:OPRO         ;  exist in Destination Directory.
+21-127-11:35:26.483 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:26.488 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:26.489 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:35:26.489 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:26.489 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:35:26.489 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:35:26.494 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 4
+21-127-11:35:26.495 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST2/FMDECOM.TST" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:35:26.495 00     CMH-I:CMD             Command SFDU received:<188CC00000450AAC2F72616D2F464D54455354322F464D4445434F4D2E5453540000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:26.506 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:27.256 00    TLMH-I:STS          58-012-14:06:43.501 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:28.509 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:28.510 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:35:28.510 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:35:28.511 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:35:28.512 00     SPR-I:OPRO         
+21-127-11:35:28.512 00     SPR-I:OPRO           Sequence Counter = 5
+21-127-11:35:28.512 00     SPR-I:OPRO           File Name        = /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:28.513 00     SPR-I:OPRO           File Status      = Not Used
+21-127-11:35:28.513 00     SPR-I:OPRO           File Size        = 0
+21-127-11:35:28.513 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:35:28.513 00     SPR-I:OPRO           CRC              = 0
+21-127-11:35:28.514 00     SPR-I:OPRO           last Mod Time    = 0
+21-127-11:35:28.514 00     SPR-I:OPRO           Permissions      = 0
+21-127-11:35:28.514 00     SPR-I:OPRO         
+21-127-11:35:28.516 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:35:28.516 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:28.516 00     SPR-I:OPRO         <*> Passed (2011) - File Info command sent properly
+21-127-11:35:28.517 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:35:28.517 00     SPR-I:OPRO         <*> Passed - File status indicates that the file does not exist.
+21-127-11:35:28.520 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:33.525 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:33.525 00     SPR-I:OPRO         ;  Step 4.2: Perform FM_FileDecompress Command to Decompress Source
+21-127-11:35:33.525 00     SPR-I:OPRO         ;  File to Destination File in a different directory.
+21-127-11:35:33.525 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:33.530 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:33.530 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 36
+21-127-11:35:33.530 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:33.531 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DECOMPRESS  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" DESTNAME="/ram/FMTEST2/FMDECOM.TST" ;;; (SCX CPU1 FM File Decompress command code)
+21-127-11:35:33.532 00     CMH-I:CMD             Command SFDU received:<188CC000008108012F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A0000000000000000000000000000000000000000000000000000000000000000002F72616D2F464D54455354322F464D4445434F4D2E54535400000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:33.546 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:34.257 00    TLMH-I:STS          58-012-14:06:50.503 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=36 Decompress File command: src = /ram/FMTEST1/FMDECOMORIG.TST.gz, tgt = /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:36.550 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:36.552 00     SPR-I:OPRO         <*> Passed (1003;2009) - File Decompress command sent properly.
+21-127-11:35:36.556 00     SPR-I:OPRO         <*> Passed (1003) - Event message 36 received
+21-127-11:35:36.557 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:41.562 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:41.562 00     SPR-I:OPRO         ;  Step 4.3: File Info Command to Verify Source File Still Exists.
+21-127-11:35:41.562 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:41.567 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:41.568 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:35:41.568 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:41.568 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:35:41.569 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:35:41.573 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 5
+21-127-11:35:41.577 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:35:41.577 00     CMH-I:CMD             Command SFDU received:<188CC00000450A8F2F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A00000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:41.588 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:42.255 00    TLMH-I:STS          58-012-14:06:58.501 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:44.592 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:44.593 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:35:44.594 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:35:44.595 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:35:44.596 00     SPR-I:OPRO         
+21-127-11:35:44.596 00     SPR-I:OPRO           Sequence Counter = 6
+21-127-11:35:44.596 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:44.597 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:35:44.597 00     SPR-I:OPRO           File Size        = 160
+21-127-11:35:44.597 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:35:44.597 00     SPR-I:OPRO           CRC              = 0
+21-127-11:35:44.597 00     SPR-I:OPRO           last Mod Time    = 315532972
+21-127-11:35:44.597 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:35:44.597 00     SPR-I:OPRO         
+21-127-11:35:44.598 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:35:44.598 00     SPR-I:OPRO         <*> Passed (2011) - File Info Command Completed.
+21-127-11:35:44.599 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:35:44.600 00     SPR-I:OPRO         <*> Passed - File status indicates that the file exists.
+21-127-11:35:44.600 00     SPR-I:OPRO         <*> Passed (2009;2011) - File Info Telemetry Matches expected file: /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:35:44.604 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:49.609 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:49.609 00     SPR-I:OPRO         ;  Step 4.4:  File Info Command to Verify Destination File exists
+21-127-11:35:49.609 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:49.615 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:49.616 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:35:49.616 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:35:49.616 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:35:49.616 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:35:49.622 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 6
+21-127-11:35:49.623 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST2/FMDECOM.TST" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:35:49.623 00     CMH-I:CMD             Command SFDU received:<188CC00000450AAC2F72616D2F464D54455354322F464D4445434F4D2E5453540000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:35:49.633 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:35:50.254 00    TLMH-I:STS          58-012-14:07:06.501 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:52.637 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:35:52.638 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:35:52.638 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:35:52.639 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:35:52.640 00     SPR-I:OPRO         
+21-127-11:35:52.640 00     SPR-I:OPRO           Sequence Counter = 7
+21-127-11:35:52.640 00     SPR-I:OPRO           File Name        = /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:52.641 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:35:52.641 00     SPR-I:OPRO           File Size        = 1277
+21-127-11:35:52.641 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:35:52.641 00     SPR-I:OPRO           CRC              = 0
+21-127-11:35:52.642 00     SPR-I:OPRO           last Mod Time    = 315533028
+21-127-11:35:52.642 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:35:52.642 00     SPR-I:OPRO         
+21-127-11:35:52.643 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:35:52.643 00     SPR-I:OPRO         <*> Passed (2009;2011) - File Info Command Completed.
+21-127-11:35:52.645 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:35:52.646 00     SPR-I:OPRO         <*> Passed - File status indicates that the file exists.
+21-127-11:35:52.646 00     SPR-I:OPRO         <*> Passed (2009;2011) - File Info Telemetry Matches expected file: /ram/FMTEST2/FMDECOM.TST
+21-127-11:35:52.653 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:35:57.658 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:57.658 00     SPR-I:OPRO         ;  Step 4.5:  Verify that the decompressed file is larger than the
+21-127-11:35:57.658 00     SPR-I:OPRO         ;  compressed file.
+21-127-11:35:57.659 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:35:57.659 00     SPR-I:OPRO         <*> Passed (2009) - Decompressed file larger than Compressed File.
+21-127-11:35:57.663 00     SPR-I:OPRO           File Size of Compressed   = 160
+21-127-11:35:57.663 00     SPR-I:OPRO           File Size of Decompressed = 1277
+21-127-11:35:57.663 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:36:02.669 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:02.669 00     SPR-I:OPRO         ;  Step 4.6: Test that Decompress an open file is blocked.
+21-127-11:36:02.669 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:02.669 00     SPR-I:OPRO         ;  Step 4.6.1: Open Test File.
+21-127-11:36:02.669 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:02.673 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:02.673 00     SPR-I:OPRO         ; Setup event 1 with TST_FM INFO 4
+21-127-11:36:02.673 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:02.674 00     CMH-I:CMD              Command is /SCX_CPU1_TST_FM_OPEN  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" ;;; (SCX CPU1 TST FM Opens the specified file indefinately)
+21-127-11:36:02.675 00     CMH-I:CMD             Command SFDU received:<191FC000004102112F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:36:02.685 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:36:22.712 00     SPR-E:STS          WAIT UNTIL directive has timed out
+21-127-11:36:22.712 00     SPR-I:STS          Error - stopped in SCX_CPU1_FM_FILEDECOM_BASIC at line 678
+21-127-11:36:22.713 00     SPR-I:OPRO         SCX_CPU1_FM_FILEDECOM_BASIC/678: Enter GO to continue...
+21-127-11:36:25.089 00     SPR-I:OPRI     --> g
+21-127-11:36:25.090 00     SPR-I:OPRO         <!> Failed - File Open command not sent properly to test app.
+21-127-11:36:25.090 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:36:30.096 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:30.096 00     SPR-I:OPRO         ;  Step 4.6.2:  Verify File is open.
+21-127-11:36:30.096 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:30.100 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:30.100 00     SPR-I:OPRO         ; Setup event 1 with FM DEBUG 46
+21-127-11:36:30.100 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:30.101 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_fileinfodisplay.i
+21-127-11:36:30.101 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY started
+21-127-11:36:30.104 00     SPR-I:OPRO           Packet Sequence Counter before cmd = 7
+21-127-11:36:30.108 00     CMH-I:CMD              Command is /SCX_CPU1_FM_FILEINFO  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" CRC_METHOD= 0 (x0) ;;; (SCX CPU1 FM Generates a telemetry packet with details on the specified File)
+21-127-11:36:30.108 00     CMH-I:CMD             Command SFDU received:<188CC00000450A8F2F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A00000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:36:30.119 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:36:30.759 00    TLMH-I:STS          58-012-14:07:47.002 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=46 Get File Info command: file = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:36:32.122 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:36:32.122 00     SPR-I:OPRO         <*> Passed - File Info command accepted.
+21-127-11:36:32.123 00     SPR-I:OPRO         <*> Passed - Child CMDPC incremented as expected.
+21-127-11:36:32.124 00     SPR-I:OPRO         Contents of the File Info Packet:
+21-127-11:36:32.124 00     SPR-I:OPRO         
+21-127-11:36:32.125 00     SPR-I:OPRO           Sequence Counter = 8
+21-127-11:36:32.125 00     SPR-I:OPRO           File Name        = /ram/FMTEST1/FMDECOMORIG.TST.gz
+21-127-11:36:32.125 00     SPR-I:OPRO           File Status      = Closed
+21-127-11:36:32.126 00     SPR-I:OPRO           File Size        = 160
+21-127-11:36:32.126 00     SPR-I:OPRO           Compute CRC Flag = 0
+21-127-11:36:32.126 00     SPR-I:OPRO           CRC              = 0
+21-127-11:36:32.126 00     SPR-I:OPRO           last Mod Time    = 315532972
+21-127-11:36:32.127 00     SPR-I:OPRO           Permissions      = 7
+21-127-11:36:32.127 00     SPR-I:OPRO         
+21-127-11:36:32.127 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEINFODISPLAY completed
+21-127-11:36:32.129 00     SPR-I:OPRO         <*> Passed (2011) - File Info Command Completed.
+21-127-11:36:32.134 00     SPR-I:OPRO         <*> Passed (1003) - Event message 46 received
+21-127-11:36:32.138 00     SPR-I:OPRO         <!> Failed - Expected file status 'Open'. Rcv'd 'Closed'
+21-127-11:36:32.139 00     SPR-I:OPRO         <!> Failed - Expected 3 open files. TLM reports 2
+21-127-11:36:32.154 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:36:37.159 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:37.159 00     SPR-I:OPRO         ;  Step 4.6.3: Perform Decompress File Command attempting to Decompress
+21-127-11:36:37.159 00     SPR-I:OPRO         ;  a Source File that is open. This should fail.
+21-127-11:36:37.160 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:37.167 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:37.168 00     SPR-I:OPRO         ; Setup event 1 with FM ERROR 217
+21-127-11:36:37.168 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:37.171 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DECOMPRESS  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" DESTNAME="/ram/FMTEST2/openSrc.tst" ;;; (SCX CPU1 FM File Decompress command code)
+21-127-11:36:37.172 00     CMH-I:CMD             Command SFDU received:<188CC0000081083C2F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A0000000000000000000000000000000000000000000000000000000000000000002F72616D2F464D54455354322F6F70656E5372632E74737400000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:36:37.186 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:36:37.758 00    TLMH-I:STS          58-012-14:07:54.004 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=36 Decompress File command: src = /ram/FMTEST1/FMDECOMORIG.TST.gz, tgt = /ram/FMTEST2/openSrc.tst
+21-127-11:36:40.190 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:36:40.191 00     SPR-I:OPRO         <!> Failed (1004;2009) - Decompress Command accepted with an open source file.
+21-127-11:36:40.199 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:36:45.202 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:45.202 00     SPR-I:OPRO         ;  Step 4.6.4: Close the Source file
+21-127-11:36:45.202 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:36:45.204 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:45.205 00     SPR-I:OPRO         ; Setup event 1 with TST_FM INFO 5
+21-127-11:36:45.205 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:36:45.206 00     CMH-I:CMD              Command is /SCX_CPU1_TST_FM_CLOSE  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" ;;; (SCX CPU1 TST FM Close File command code)
+21-127-11:36:45.206 00     CMH-I:CMD             Command SFDU received:<191FC000004103102F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:36:45.217 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:37:05.239 00     SPR-E:STS          WAIT UNTIL directive has timed out
+21-127-11:37:05.239 00     SPR-I:STS          Error - stopped in SCX_CPU1_FM_FILEDECOM_BASIC at line 776
+21-127-11:37:05.239 00     SPR-I:OPRO         SCX_CPU1_FM_FILEDECOM_BASIC/776: Enter GO to continue...
+21-127-11:37:05.885 00     SPR-I:OPRI     --> g
+21-127-11:37:05.886 00     SPR-I:OPRO         <!> Failed - File Close command not sent properly to test app.
+21-127-11:37:05.887 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:37:10.892 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:37:10.892 00     SPR-I:OPRO         ;  Step 4.7: Perform FM_FileDecompress Command to an existing 
+21-127-11:37:10.892 00     SPR-I:OPRO         ;  Destination File.
+21-127-11:37:10.892 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:37:10.898 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:37:10.898 00     SPR-I:OPRO         ; Setup event 1 with FM ERROR 221
+21-127-11:37:10.898 00     SPR-I:OPRO         ;***********************************************************************
+21-127-11:37:10.899 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DECOMPRESS  FILE="/ram/FMTEST1/FMDECOMORIG.TST.gz" DESTNAME="/ram/FMTEST1/FMDECOM.TST" ;;; (SCX CPU1 FM File Decompress command code)
+21-127-11:37:10.899 00     CMH-I:CMD             Command SFDU received:<188CC000008108022F72616D2F464D54455354312F464D4445434F4D4F5249472E5453542E677A0000000000000000000000000000000000000000000000000000000000000000002F72616D2F464D54455354312F464D4445434F4D2E54535400000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-127-11:37:10.914 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:37:11.752 00    TLMH-I:STS          58-012-14:08:28.004 ERROR CPU=CPU1 APPNAME=FM EVENT ID=221 Decompress File error: file already exists: name = /ram/FMTEST1/FMDECOM.TST
+21-127-11:37:11.915 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:37:11.918 00     SPR-I:OPRO         <*> Passed (1004;2009.1) - File Decompress command failed as expected.
+21-127-11:37:11.926 00     SPR-I:OPRO         <*> Passed (1004) - Event message 221 received
+21-127-11:37:11.930 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:37:16.935 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:37:16.935 00     SPR-I:OPRO         ;  Step 5.0:  Perform a Power-on Reset to clean-up from this test.
+21-127-11:37:16.935 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:37:16.937 00     CMH-I:CMD              Command is /SCX_CPU1_ES_POWERONRESET  ;;; (SCX CPU1 ES Power-On Reset command code)
+21-127-11:37:16.938 00     CMH-I:CMD             Command SFDU received:<1806C000000302220002> from gs582cfslab4:SPR
+21-127-11:37:16.950 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-127-11:37:26.961 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-127-11:37:26.962 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-127-11:37:26.978 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-127-11:37:27.044 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-127-11:38:27.104 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:38:33.066 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-127-11:38:37.117 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:38:37.119 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_read C%03X 1235 packet_only" ;;; ( )
+21-127-11:38:37.136 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_write CPKT cpu3 1234 ascii_pkt" ;;; ( )
+21-127-11:38:37.188 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-127-11:38:37.188 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-127-11:38:37.190 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-127-11:38:37.191 00     CMH-I:CMD              Command is /SCX_CPU1_TO_OUTPUT_ENA   GS582CFSLAB4 ;;; (SCX CPU1 Enables TO output)
+21-127-11:38:37.191 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-127-11:38:37.241 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-127-11:38:37.241 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-127-11:38:38.282 00    TLMH-I:STS          58-012-14:03:48.933 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-127-11:38:42.248 00     SPR-I:STTE         WAIT UNTIL completed
+21-127-11:38:42.248 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-127-11:38:42.250 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-127-11:38:42.260 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-127-11:38:42.261 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:38:47.266 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-127-11:38:47.267 00     SPR-I:OPRO         --------------------------
+21-127-11:38:47.267 00     SPR-I:OPRO            Requirement(s) Report
+21-127-11:38:47.267 00     SPR-I:OPRO         --------------------------
+21-127-11:38:47.268 00     SPR-I:OPRO         FSW Requirement: FM_1003                          P/F: P
+21-127-11:38:47.272 00     SPR-I:OPRO         FSW Requirement: FM_1004                          P/F: F
+21-127-11:38:47.275 00     SPR-I:OPRO         FSW Requirement: FM_2009                          P/F: F
+21-127-11:38:47.278 00     SPR-I:OPRO         FSW Requirement: FM_2009.1                        P/F: P
+21-127-11:38:47.281 00     SPR-I:OPRO         FSW Requirement: FM_2011                          P/F: P
+21-127-11:38:47.283 00     SPR-I:OPRO         FSW Requirement: FM_4000                          P/F: P
+21-127-11:38:47.303 00     SPR-I:OPRO         FSW Requirement: FM_5000                          P/F: P
+21-127-11:38:47.304 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-127-11:38:47.304 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-127-11:38:47.304 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_fm_clearallpages.i
+21-127-11:38:47.311 00     SPR-I:STS          Procedure SCX_CPU1_FM_CLEARALLPAGES started
+21-127-11:38:47.317 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:47.317 00     SPR-I:OPRO         ;  Clear all FM and TST_FM pages
+21-127-11:38:47.317 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:47.317 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-127-11:38:52.322 00     SPR-I:OPRO         Clearing FM HK Page.
+21-127-11:38:52.465 00     DPD-I:STS          Page SCX_CPU1_FM_HK removed (cid:1)
+21-127-11:38:52.465 00     SPR-I:OPRO         Clearing FM File Info Page.
+21-127-11:38:52.558 00     DPD-I:STS          Page SCX_CPU1_FM_FILE_INFO removed (cid:1)
+21-127-11:38:52.559 00     SPR-I:OPRO         Clearing FM Dir List File Page.
+21-127-11:38:52.591 00     SPR-I:OPRO         Clearing FM Dir List Tlm Page.
+21-127-11:38:52.628 00     SPR-I:OPRO         Clearing FM Open File List Page.
+21-127-11:38:52.659 00     SPR-I:OPRO         Clearing FM Free Space Table Page.
+21-127-11:38:52.692 00     SPR-I:OPRO         Clearing FM Free Space TLM Page.
+21-127-11:38:52.731 00     SPR-I:OPRO         Clearing TST FM HK Page.
+21-127-11:38:52.762 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:52.762 00     SPR-I:OPRO         ;  End procedure scx_cpu1_fm_clearallpages  
+21-127-11:38:52.762 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:52.762 00     SPR-I:STS          Procedure SCX_CPU1_FM_CLEARALLPAGES completed
+21-127-11:38:52.762 00     SPR-I:OPRO         
+21-127-11:38:52.762 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:52.763 00     SPR-I:OPRO         ;  End procedure scx_cpu1_fm_filedecom_basic                          
+21-127-11:38:52.763 00     SPR-I:OPRO         ;*********************************************************************
+21-127-11:38:52.763 00     SPR-I:STS          Procedure SCX_CPU1_FM_FILEDECOM_BASIC completed
+21-127-11:38:52.763 00     SPR-I:OPRO         *** Telemetry Info ***
+21-127-11:38:52.763 00     SPR-I:OPRO         
+21-127-11:38:52.767 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-127-11:38:52.767 00     SPR-I:OPRO         
+21-127-11:38:52.767 00     SPR-I:OPRO         ******************
+21-127-11:38:52.767 00     SPR-I:OPRO         
+21-127-11:38:52.767 00     SPR-I:OPRO         Elapsed time:  461.224 seconds
+21-127-11:38:52.767 00     SPR-I:OPRO         Elapsed time:  7.68707 minutes
+21-127-11:38:52.767 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-127-11:39:02.777 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.logf
+21-127-11:39:02.777 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.logp
+21-127-11:39:02.777 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.logs
+21-127-11:39:02.778 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.loge
+21-127-11:39:02.778 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.logr
+21-127-11:39:02.870 00     SPR-I:OPRI     --> newlog scx_cpu1_fm_filedecom_basic-2021-127-11h31m11s.log

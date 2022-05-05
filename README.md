@@ -4,10 +4,9 @@ core Flight System (cFS) File Manager Application (FM)
 Open Source Release Readme
 ==========================
 
-FM Release 2.5.3
+FM Release Candidate 2.6.0
 
-Date: 
-3/19/2020
+Date: 9/8/2021
 
 Introduction
 ---------------
@@ -23,27 +22,24 @@ Introduction
 
   The FM application is written in C and depends on the cFS Operating System 
   Abstraction Layer (OSAL) and cFE components. There is additional FM application 
-  specific configuration information contained in the application user's guide
-  available in https://github.com/nasa/FM/tree/master/docs/users_guide
+  specific configuration information contained in the application user's guide.
+ 
+  Developer's guide information can be generated using Doxygen:
+  doxygen fm_doxygen_config.txt
 
-  This software is licensed under the NASA Open Source Agreement. 
-  http://ti.arc.nasa.gov/opensource/nosa
+  This software is licensed under the Apache 2.0 license.
  
  
 Software Included
 --------------------
 
-  File Manager application (FM) 2.5.3
+  File Manager application (FM) 2.6.0
   
  
 Software Required
 --------------------
 
-  Operating System Abstraction Layer 5.0 or higher can be 
-  obtained at https://github.com/nasa/osal
- 
-  core Flight Executive 6.7.0 or higher can be obtained at
-  https://github.com/nasa/cfe
+  cFS Caelum
 
   Note: An integrated bundle including the cFE, OSAL, and PSP can 
   be obtained at https://github.com/nasa/cfs

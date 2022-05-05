@@ -5,19 +5,19 @@
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 **
 ** Title: File Manager (FM) Platform Configuration Header File
@@ -34,7 +34,6 @@
 
 #ifndef _fm_platform_cfg_h_
 #define _fm_platform_cfg_h_
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -56,8 +55,7 @@
 **       no limits on the definition.  Refer to CFE Executive Services
 **       for specific information on limits related to application names.
 */
-#define FM_APP_NAME                     "FM"
-
+#define FM_APP_NAME "FM"
 
 /** \fmcfg File Manager Command Pipe Name
 **
@@ -70,8 +68,7 @@
 **       no limits on the definition.  Refer to CFE Software Bus Services
 **       for specific information on limits related to pipe names.
 */
-#define FM_APP_PIPE_NAME                "FM_CMD_PIPE"
-
+#define FM_APP_PIPE_NAME "FM_CMD_PIPE"
 
 /** \fmcfg File Manager Command Pipe Depth
 **
@@ -85,11 +82,10 @@
 **       It is recommended that this value be no less than 4 and
 **       no greater than 20 packets, but this is not enforced by FM.
 */
-#define FM_APP_PIPE_DEPTH               10
-
+#define FM_APP_PIPE_DEPTH 10
 
 /** \sccfg Mission specific version number for FM application
-**  
+**
 **  \par Description:
 **       An application version number consists of four parts:
 **       major version number, minor version number, revision
@@ -101,8 +97,7 @@
 **       Must be defined as a numeric value that is greater than
 **       or equal to zero.
 */
-#define FM_MISSION_REV      0
-
+#define FM_MISSION_REV 0
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -125,8 +120,7 @@
 **       filename.  Set this parameter to the empty string if no default
 **       filename is desired.
 */
-#define FM_DIR_LIST_FILE_DEFNAME        "/ram/fm_dirlist.out"
-
+#define FM_DIR_LIST_FILE_DEFNAME "/ram/fm_dirlist.out"
 
 /** \fmcfg Maximum Directory List Output File Entries
 **
@@ -144,8 +138,7 @@
 **       The FM application limits this value to be no less than 100 and
 **       no greater than 10000.
 */
-#define FM_DIR_LIST_FILE_ENTRIES        3000
-
+#define FM_DIR_LIST_FILE_ENTRIES 3000
 
 /** \fmcfg Directory List Output File Header Sub-Type
 **
@@ -157,8 +150,7 @@
 **  \par Limits:
 **       The FM application places no limits on this unsigned 32 bit value.
 */
-#define FM_DIR_LIST_FILE_SUBTYPE        12345
-
+#define FM_DIR_LIST_FILE_SUBTYPE 12345
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -182,8 +174,7 @@
 **       and no greater than 100. The number of directory entries in the
 **       telemetry packet will in large part determine the packet size.
 */
-#define FM_DIR_LIST_PKT_ENTRIES         20
-
+#define FM_DIR_LIST_PKT_ENTRIES 20
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -230,33 +221,33 @@
 **       no greater than 100 ms.  The value zero generally means a very short
 **       task delay - refer to the target platform documentation for specifics.
 */
-#define FM_CHILD_FILE_BLOCK_SIZE        2048
-#define FM_CHILD_FILE_LOOP_COUNT        16
-#define FM_CHILD_FILE_SLEEP_MS          20
+#define FM_CHILD_FILE_BLOCK_SIZE 2048
+#define FM_CHILD_FILE_LOOP_COUNT 16
+#define FM_CHILD_FILE_SLEEP_MS   20
 
 /** \fmcfg Child file stat sleep
 **
 **  \par Description:
-**       OS_stat is a CPU intensive call. FM uses the OS_stat call to query a 
-**       file’s size, date, and mode when setting up directory listings. 
-**       Querying a large number of files and/or files large in size when 
+**       OS_stat is a CPU intensive call. FM uses the OS_stat call to query a
+**       file’s size, date, and mode when setting up directory listings.
+**       Querying a large number of files and/or files large in size when
 **       processing directory listing commands can cause FM to hog the CPU. To
-**       mitigate this, options to sleep a configurable number of milliseconds 
+**       mitigate this, options to sleep a configurable number of milliseconds
 **       between calls to OS_stat for a configurable number of files
 **       in a directory listing is provided. A large sleep cycle will not hang the CPU
 **       but it may take a long time for directory listing to complete. A shorter
 **       sleep cycle will speed up the directory listing commands but may cause
 **       FM to hog the CPU.
-**       
+**
 **       FM_CHILD_STAT_SLEEP_MS: The number of milliseconds to sleep each
 **       cycle. One cycle is FM_CHILD_STAT_SLEEP_FILECOUNT.
-**       
-**       FM_CHILD_STAT_SLEEP_FILECOUNT: The number of files to process (OS_stat) before 
+**
+**       FM_CHILD_STAT_SLEEP_FILECOUNT: The number of files to process (OS_stat) before
 **       sleeping FM_CHILD_STAT_SLEEP_MS.
 **       Works in tandem with FM_CHILD_STAT_SLEEP_MS to reduce CPU hogging
 **       while allowing slightly more customization to balance time the operator is waiting to
 **       get data back from a directory listing versus FM hogging the CPU with calls to OS_stat
-**        
+**
 **       In short:
 **       High SLEEP_MS means less CPU hogging by FM but a longer time to process a dir listing command
 **       Low SLEEP_MS means more potential CPU hogging by FM but shorter time to process a dir listing command
@@ -266,7 +257,7 @@
 **       The default is zero unless the mission needs require them to be changed.
 **
 */
-#define FM_CHILD_STAT_SLEEP_MS 0
+#define FM_CHILD_STAT_SLEEP_MS        0
 #define FM_CHILD_STAT_SLEEP_FILECOUNT 0
 
 /** \fmcfg Child Task Command Queue Entry Count
@@ -285,8 +276,7 @@
 **       passing command arguments from the parent to the child task.  The upper
 **       limit is arbitrary.
 */
-#define FM_CHILD_QUEUE_DEPTH            3
-
+#define FM_CHILD_QUEUE_DEPTH 3
 
 /** \fmcfg Child Task Name - cFE object name
 **
@@ -299,8 +289,7 @@
 **       no limits on the definition.  Refer to CFE Executive Services
 **       for specific information on limits related to object names.
 */
-#define FM_CHILD_TASK_NAME              "FM_CHILD_TASK"
-
+#define FM_CHILD_TASK_NAME "FM_CHILD_TASK"
 
 /** \fmcfg Child Task Stack Size
 **
@@ -315,20 +304,19 @@
 **       and no greater than 20480.  These limits are purely arbitrary
 **       and may need to be modified for specific platforms.
 */
-#define FM_CHILD_TASK_STACK_SIZE        20480
-
+#define FM_CHILD_TASK_STACK_SIZE 20480
 
 /** \fmcfg Child Task Execution Priority
 **
 **  \par Description:
-**	This parameter sets the execution priority for the FM child task. 
-**	It is highly recommended that this assignment be made by someone 
-**	familiar with the system requirements for tasks running on the 
-** 	target platform. Note: This parameter is VxWorks® specific. Not 
+**	This parameter sets the execution priority for the FM child task.
+**	It is highly recommended that this assignment be made by someone
+**	familiar with the system requirements for tasks running on the
+** 	target platform. Note: This parameter is VxWorks® specific. Not
 **	all operating systems set task priority this way.
 **
 **  \par Limits:
-**       Value to be no less than 1 and no greater than 255.  
+**       Value to be no less than 1 and no greater than 255.
 **
 **  \par Priority Values:
 **       Note that a small value has higher priority than a large value.
@@ -338,8 +326,7 @@
 **       parent defeats the purpose of having a child task to run in
 **       the background.
 */
-#define FM_CHILD_TASK_PRIORITY          205
-
+#define FM_CHILD_TASK_PRIORITY 205
 
 /** \fmcfg Child Task Semaphore Name - cFE object name
 **
@@ -353,8 +340,7 @@
 **       no limits on the definition.  Refer to CFE Executive Services
 **       for specific information on limits related to object names.
 */
-#define FM_CHILD_SEM_NAME               "FM_CHILD_SEM"
-
+#define FM_CHILD_SEM_NAME "FM_CHILD_SEM"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -372,8 +358,7 @@
 **       no limits on the definition.  Refer to CFE Table Services
 **       for specific information on limits related to table names.
 */
-#define FM_TABLE_CFE_NAME               "FreeSpace"
-
+#define FM_TABLE_CFE_NAME "FreeSpace"
 
 /** \fmcfg Free Space Table Name - filename with path
 **
@@ -385,8 +370,7 @@
 **       no limits on the definition.  If the named table does not
 **       exist or fails validation, the table load will fail.
 */
-#define FM_TABLE_DEF_NAME               "/cf/fm_freespace.tbl"
-
+#define FM_TABLE_DEF_NAME "/cf/fm_freespace.tbl"
 
 /** \fmcfg Free Space Table Name - filename without path
 **
@@ -400,8 +384,7 @@
 **       valid then the make process may fail, or the table file may
 **       be unloadable to the target hardware.
 */
-#define FM_TABLE_FILENAME               "fm_freespace.tbl"
-
+#define FM_TABLE_FILENAME "fm_freespace.tbl"
 
 /** \fmcfg Free Space Table Description
 **
@@ -415,8 +398,7 @@
 **       no limits on the definition.  Refer to cFE Table Services
 **       for limits related to table descriptive text.
 */
-#define FM_TABLE_DEF_DESC               "FM File System Free Space Table"
-
+#define FM_TABLE_DEF_DESC "FM File System Free Space Table"
 
 /** \fmcfg Number of Free Space Table Entries
 **
@@ -430,14 +412,13 @@
 **  \par Limits:
 **       FM limits this value to be not less than 1 and not greater than 32.
 */
-#define FM_TABLE_ENTRY_COUNT            8
-
+#define FM_TABLE_ENTRY_COUNT 8
 
 /** \fmcfg Table Data Validation Error Code
 **
 **  \par Description:
 **       Table data is verified during the table load process.  Should
-**       the validation process fail, this value will be returned by 
+**       the validation process fail, this value will be returned by
 **       FM to cFE Table Services and displayed in an event message.
 **
 **  \par Limits:
@@ -445,8 +426,19 @@
 **       no limits on the definition.  Refer to cFE Table Services
 **       for limits related to error return values.
 */
-#define FM_TABLE_VALIDATION_ERR         (0xCF000080L)
+#define FM_TABLE_VALIDATION_ERR (-1)
 
+/** \fmcfg Include Decompress
+**
+**  \par Description:
+**       If this setting is defined, FM will be built with the Decompress
+**       command.  Otherwise Decompress will not be built into the application.
+**       If this setting is defined, FM will depend on an external FS_Lib.
+**
+**  \par Limits:
+**       N/A
+*/
+/*#define FM_INCLUDE_DECOMPRESS */
 
 #endif /* _fm_platform_cfg_h_ */
 

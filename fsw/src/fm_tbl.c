@@ -1,23 +1,23 @@
 /*
-** Filename: fm_tbl.c 
+** Filename: fm_tbl.c
 **
 ** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 *
 ** Title: File Manager (FM) Application Table Definitions
 **
@@ -29,7 +29,6 @@
 **
 */
 
-#include "cfe.h"
 #include "fm_platform_cfg.h"
 #include "fm_msg.h"
 #include "fm_tbl.h"
@@ -37,7 +36,6 @@
 #include "cfs_utils.h"
 
 #include <string.h>
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -50,28 +48,25 @@ int32 FM_TableInit(void)
     int32 Status = CFE_SUCCESS;
 
     /* Initialize file system free space table pointer */
-    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *) NULL;
+    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
 
     /* Register the file system free space table - this must succeed! */
-    Status = CFE_TBL_Register(&FM_GlobalData.FreeSpaceTableHandle,
-                               FM_TABLE_CFE_NAME, sizeof(FM_FreeSpaceTable_t),
-                             (CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP),
-                             (CFE_TBL_CallbackFuncPtr_t) FM_ValidateTable);
+    Status = CFE_TBL_Register(&FM_GlobalData.FreeSpaceTableHandle, FM_TABLE_CFE_NAME, sizeof(FM_FreeSpaceTable_t),
+                              (CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP),
+                              (CFE_TBL_CallbackFuncPtr_t)FM_ValidateTable);
 
     if (Status == CFE_SUCCESS)
     {
         /* Make an attempt to load the default table data - OK if this fails */
-        CFE_TBL_Load(FM_GlobalData.FreeSpaceTableHandle,
-                     CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+        CFE_TBL_Load(FM_GlobalData.FreeSpaceTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
 
         /* Allow cFE a chance to dump, update, etc. */
         FM_AcquireTablePointers();
     }
 
-    return(Status);
+    return (Status);
 
 } /* End FM_TableInit */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -81,13 +76,22 @@ int32 FM_TableInit(void)
 
 int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
 {
-    int32  Result = CFE_SUCCESS;
-    int32  NameLength = 0;
-    int32  i 	      = 0;
+    int32 Result     = CFE_SUCCESS;
+    int32 NameLength = 0;
+    int32 i          = 0;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
     int32 CountUnused = 0;
+
+    /* Verify the table pointer is valid */
+    if (TablePtr == NULL)
+    {
+        CFE_EVS_SendEvent(FM_TABLE_VERIFY_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Free Space Table verify error - null pointer detected");
+
+        return (FM_TABLE_VALIDATION_ERR);
+    }
 
     /*
     ** Free space table data verification
@@ -125,8 +129,8 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
                 /* Send event describing first error only*/
                 if (CountBad == 1)
                 {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EMPTY_ERR_EID, CFE_EVS_ERROR,
-                       "Free Space Table verify error: index = %d, empty name string", (int)i);
+                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EMPTY_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Free Space Table verify error: index = %d, empty name string", (int)i);
                 }
             }
             else if (NameLength == OS_MAX_PATH_LEN)
@@ -137,8 +141,8 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
                 /* Send event describing first error only*/
                 if (CountBad == 1)
                 {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_TOOLONG_ERR_EID, CFE_EVS_ERROR,
-                       "Free Space Table verify error: index = %d, name too long", (int)i);
+                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_TOOLONG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Free Space Table verify error: index = %d, name too long", (int)i);
                 }
             }
             else if (!CFS_IsValidFilename(TablePtr->FileSys[i].Name, NameLength))
@@ -149,9 +153,9 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
                 /* Send event describing first error only*/
                 if (CountBad == 1)
                 {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_INVALID_ERR_EID, CFE_EVS_ERROR,
-                       "Free Space Table verify error: index = %d, invalid name = %s",
-                                      (int)i, TablePtr->FileSys[i].Name);
+                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_INVALID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Free Space Table verify error: index = %d, invalid name = %s", (int)i,
+                                      TablePtr->FileSys[i].Name);
                 }
             }
             else
@@ -173,27 +177,26 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
             /* Send event describing first error only*/
             if (CountBad == 1)
             {
-                CFE_EVS_SendEvent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID, CFE_EVS_ERROR,
-                   "Table verify error: index = %d, invalid state = %d",
-                                  (int)i, (int)TablePtr->FileSys[i].State);
+                CFE_EVS_SendEvent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Table verify error: index = %d, invalid state = %d", (int)i,
+                                  (int)TablePtr->FileSys[i].State);
             }
         }
     }
 
     /* Display verify results */
-    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EID, CFE_EVS_INFORMATION,
-       "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
-                      (int)CountGood, (int)CountBad, (int)CountUnused);
+    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EID, CFE_EVS_EventType_INFORMATION,
+                      "Free Space Table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
+                      (int)CountBad, (int)CountUnused);
 
     if (CountBad != 0)
     {
         Result = FM_TABLE_VALIDATION_ERR;
     }
 
-    return(Result);
+    return (Result);
 
 } /* End FM_ValidateTable */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -203,25 +206,23 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
 
 void FM_AcquireTablePointers(void)
 {
-    int32  Status = CFE_TBL_ERR_NEVER_LOADED;
+    int32 Status = CFE_TBL_ERR_NEVER_LOADED;
 
     /* Allow cFE an opportunity to make table updates */
     CFE_TBL_Manage(FM_GlobalData.FreeSpaceTableHandle);
 
     /* Acquire pointer to file system free space table */
-    Status = CFE_TBL_GetAddress((void *) &FM_GlobalData.FreeSpaceTablePtr,
-                                          FM_GlobalData.FreeSpaceTableHandle);
+    Status = CFE_TBL_GetAddress((void *)&FM_GlobalData.FreeSpaceTablePtr, FM_GlobalData.FreeSpaceTableHandle);
 
     if (Status == CFE_TBL_ERR_NEVER_LOADED)
     {
         /* Make sure we don't try to use the empty table buffer */
-        FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *) NULL;
+        FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
     }
 
     return;
 
 } /* End FM_AcquireTablePointers */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -235,14 +236,12 @@ void FM_ReleaseTablePointers(void)
     CFE_TBL_ReleaseAddress(FM_GlobalData.FreeSpaceTableHandle);
 
     /* Prevent table pointer use while released */
-    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *) NULL;
+    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
 
     return;
 
 } /* End FM_ReleaseTablePointers */
 
-
 /************************/
 /*  End of File Comment */
 /************************/
-

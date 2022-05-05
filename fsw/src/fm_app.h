@@ -5,19 +5,19 @@
 ** File Manager Application Version 2.5.3
 **
 ** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved. 
+** the National Aeronautics and Space Administration. All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-**  
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Title: CFS File Manager (FM) Application Header File
 **
@@ -35,12 +35,20 @@
 
 #include "cfe.h"
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application global function prototypes                       */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+** \brief Wakeup for FM
+**
+** \par Description
+**      Wakes up FM every 1 second for routine maintenance whether a
+**      message was received or not.
+*/
+#define FM_SB_TIMEOUT 1000
 
 /**
 **  \brief Application entry point and main process loop
@@ -60,7 +68,6 @@
 **  \sa #FM_AppInit, #CFE_ES_RunLoop, #CFE_SB_RcvMsg, #FM_ProcessPkt
 **/
 void FM_AppMain(void);
-
 
 /**
 **  \brief FM Application Initialization Function
@@ -88,7 +95,6 @@ void FM_AppMain(void);
 **/
 int32 FM_AppInit(void);
 
-
 /**
 **  \brief Process Input Command Packets
 **
@@ -98,12 +104,11 @@ int32 FM_AppInit(void);
 **
 **  \par Assumptions, External Events, and Notes: None
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus message buffer.
 **
 **  \sa #FM_ReportHK, #FM_ProcessCmd
 **/
-void FM_ProcessPkt(CFE_SB_MsgPtr_t MessagePtr);
-
+void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr);
 
 /**
 **  \brief Process FM Ground Commands
@@ -114,15 +119,14 @@ void FM_ProcessPkt(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes: None
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  BufPtr - Pointer to Software Bus message buffer.
 **
 **  \sa #FM_Noop, #FM_Reset, #FM_Copy, #FM_Move, #FM_Rename, #FM_Delete,
 **      #FM_DeleteAll, #FM_Decompress, #FM_Concat, #FM_GetFileInfo,
 **      #FM_GetOpenFiles, #FM_CreateDir, #FM_DeleteDir, #FM_GetDirFile,
 **      #FM_GetDirPkt, #FM_GetFreeSpace
 **/
-void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr);
-
+void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
 **  \brief Housekeeping Request Command Handler
@@ -131,18 +135,17 @@ void FM_ProcessCmd(CFE_SB_MsgPtr_t MessagePtr);
 **
 **       Allow CFE Table Services the opportunity to manage the File System
 **       Free Space Table.  This provides a mechanism to receive table updates.
-**       
+**
 **       Populate the FM application Housekeeping Telemetry packet.  Timestamp
 **       the packet and send it to ground via the Software Bus.
 **
 **  \par Assumptions, External Events, and Notes: None
 **
-**  \param [in]  MessagePtr - Pointer to Software Bus command packet.
+**  \param [in]  Msg - Pointer to Software Bus command packet.
 **
 **  \sa #FM_HousekeepingCmd_t, #FM_HousekeepingPkt_t
 **/
-void FM_ReportHK(CFE_SB_MsgPtr_t MessagePtr);
-
+void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg);
 
 #endif /* _fm_app_h_ */
 

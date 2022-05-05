@@ -1,0 +1,52 @@
+21-127-13:19:28.053 00    TLMH-I:STS          58-012-14:03:48.933 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-127-13:20:36.555 00    TLMH-I:STS          58-012-14:04:57.882 ERROR CPU=CPU1 APPNAME=CFE_ES EVENT ID=26 Failed to start TST_FM from /ram/tst_fm.o, RC = 0xC8000005
+21-127-13:21:12.551 00    TLMH-I:STS          58-012-14:05:33.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'FM.FreeSpace' to '/ram/cpu1_fmfreespacetbl'
+21-127-13:21:56.556 00    TLMH-I:STS          58-012-14:06:17.500 INFO CPU=CPU1 APPNAME=FM EVENT ID=12 No-op command: FM version 2.5.4.0
+21-127-13:22:05.548 00    TLMH-I:STS          58-012-14:06:26.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=13 No-op error: invalid command packet length: expected = 8, actual = 9
+21-127-13:22:13.054 00    TLMH-I:STS          58-012-14:06:34.001 ERROR CPU=CPU1 APPNAME=FM EVENT ID=13 No-op error: invalid command packet length: expected = 8, actual = 7
+21-127-13:22:21.047 00    TLMH-I:STS          58-012-14:06:42.001 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=14 Reset Counters command
+21-127-13:22:31.051 00    TLMH-I:STS          58-012-14:06:52.003 ERROR CPU=CPU1 APPNAME=FM EVENT ID=15 Reset Counters error: invalid command packet length: expected = 8, actual = 9
+21-127-13:22:37.048 00    TLMH-I:STS          58-012-14:06:58.001 ERROR CPU=CPU1 APPNAME=FM EVENT ID=15 Reset Counters error: invalid command packet length: expected = 8, actual = 7
+21-127-13:22:45.055 00    TLMH-I:STS          58-012-14:07:06.001 DEBUG CPU=CPU1 APPNAME=FM EVENT ID=76 Get Free Space command
+21-127-13:22:53.047 00    TLMH-I:STS          58-012-14:07:14.001 ERROR CPU=CPU1 APPNAME=FM EVENT ID=77 Get Free Space error: invalid command packet length: expected = 8, actual = 9
+21-127-13:23:01.049 00    TLMH-I:STS          58-012-14:07:22.001 ERROR CPU=CPU1 APPNAME=FM EVENT ID=77 Get Free Space error: invalid command packet length: expected = 8, actual = 7
+21-127-13:23:09.556 00    TLMH-I:STS          58-012-14:07:30.500 INFO CPU=CPU1 APPNAME=FM EVENT ID=79 Set Table State command: index = 0, state = 0
+21-127-13:23:12.547 00    TLMH-I:STS          58-012-14:07:33.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=13 Successfully overwrote '/ram/cpu1_fmfreespacetbl' with Table 'FM.FreeSpace'
+21-127-13:23:52.550 00    TLMH-I:STS          58-012-14:08:13.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=80 Set Table State error: invalid command packet length: expected = 16, actual = 17
+21-127-13:24:01.550 00    TLMH-I:STS          58-012-14:08:22.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=80 Set Table State error: invalid command packet length: expected = 16, actual = 15
+21-127-13:24:09.553 00    TLMH-I:STS          58-012-14:08:30.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=82 Set Table State error: invalid command argument: index = 8
+21-127-13:24:17.552 00    TLMH-I:STS          58-012-14:08:38.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=84 Set Table State error: cannot modify unused table entry: index = 2
+21-127-13:24:24.553 00    TLMH-I:STS          58-012-14:08:45.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=83 Set Table State error: invalid command argument: state = 3
+21-127-13:24:33.049 00    TLMH-I:STS          58-012-14:08:54.001 ERROR CPU=CPU1 APPNAME=CFE_ES EVENT ID=36 Stop Application TST_FM, GetAppIDByName failed. RC = 0xC4000002.
+21-127-13:24:35.052 00    TLMH-I:STS          58-012-14:08:56.004 ERROR CPU=CPU1 APPNAME=FM EVENT ID=8 Application terminating: result = 0x00000000
+21-127-13:24:35.053 00    TLMH-I:STS          58-012-14:08:56.008 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=8 Stop Application FM Completed.
+21-127-13:25:34.046 00    TLMH-I:STS          58-012-14:09:55.012 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=6 Started FM from /ram/fm.o, AppID = 1114124
+21-127-13:25:34.047 00    TLMH-I:STS          58-012-14:09:55.066 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=53 FM: Unable to open file (FileDescriptor=-1)
+21-127-13:25:34.049 00    TLMH-I:STS          58-012-14:09:55.067 INFO CPU=CPU1 APPNAME=FM EVENT ID=1 Initialization complete: version 2.5.4.0
+21-127-13:25:34.050 00    TLMH-I:STS          58-012-14:09:55.116 INFO CPU=CPU1 APPNAME=FM EVENT ID=89 Child Task initialization complete
+21-127-13:25:35.550 00    TLMH-I:STS          58-012-14:09:56.434 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88a0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-127-13:25:35.552 00    TLMH-I:STS          58-012-14:09:56.434 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88a0000 status -905969661
+21-127-13:25:40.554 00    TLMH-I:STS          58-012-14:10:01.433 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88b0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-127-13:25:40.555 00    TLMH-I:STS          58-012-14:10:01.433 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88b0000 status -905969661
+21-127-13:25:45.545 00    TLMH-I:STS          58-012-14:10:06.433 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88c0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-127-13:25:45.547 00    TLMH-I:STS          58-012-14:10:06.433 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88c0000 status -905969661
+21-127-13:25:50.553 00    TLMH-I:STS          58-012-14:10:11.433 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88d0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-127-13:25:50.555 00    TLMH-I:STS          58-012-14:10:11.433 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88d0000 status -905969661
+21-127-13:25:55.553 00    TLMH-I:STS          58-012-14:10:16.434 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88e0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-127-13:25:55.554 00    TLMH-I:STS          58-012-14:10:16.434 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88e0000 status -905969661
+21-127-13:26:04.550 00    TLMH-I:STS          58-012-14:10:25.882 ERROR CPU=CPU1 APPNAME=CFE_ES EVENT ID=26 Failed to start TST_FM from /ram/tst_fm.o, RC = 0xC8000005
+21-127-13:26:33.546 00    TLMH-I:STS          58-012-14:10:54.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=81 Set Table State error: file system free space table is not loaded
+21-127-13:26:41.547 00    TLMH-I:STS          58-012-14:11:02.500 ERROR CPU=CPU1 APPNAME=FM EVENT ID=10 Main loop error: invalid command code: cc = 127
+21-127-13:26:54.553 00    TLMH-I:STS          58-012-14:11:15.500 INFO CPU=CPU1 APPNAME=FM EVENT ID=12 No-op command: FM version 2.5.4.0
+21-127-13:27:07.043 00    TLMH-I:STS          58-012-14:11:28.004 ERROR CPU=CPU1 APPNAME=FM EVENT ID=8 Application terminating: result = 0x00000000
+21-127-13:27:10.551 00    TLMH-I:STS          58-012-14:11:31.765 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application FM Completed, AppID=1114126
+21-127-13:27:10.553 00    TLMH-I:STS          58-012-14:11:31.831 INFO CPU=CPU1 APPNAME=FM EVENT ID=97 Free Space Table verify results: good entries = 2, bad = 0, unused = 6
+21-127-13:27:10.554 00    TLMH-I:STS          58-012-14:11:31.831 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=35 Successfully loaded 'FM.FreeSpace' from '/cf/fm_freespace.tbl'
+21-127-13:27:10.555 00    TLMH-I:STS          58-012-14:11:31.832 INFO CPU=CPU1 APPNAME=FM EVENT ID=1 Initialization complete: version 2.5.4.0
+21-127-13:27:10.556 00    TLMH-I:STS          58-012-14:11:31.866 INFO CPU=CPU1 APPNAME=FM EVENT ID=89 Child Task initialization complete
+21-127-13:27:27.049 00    TLMH-I:STS          58-012-14:11:48.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/cpu1_fmbadtbl_ld_1' into 'FM.FreeSpace' working buffer
+21-127-13:27:33.053 00    TLMH-I:STS          58-012-14:11:54.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'FM.FreeSpace'
+21-127-13:27:35.047 00    TLMH-I:STS          58-012-14:11:56.003 ERROR CPU=CPU1 APPNAME=FM EVENT ID=85 Free Space Table verify error: index = 3, empty name string
+21-127-13:27:35.048 00    TLMH-I:STS          58-012-14:11:56.003 INFO CPU=CPU1 APPNAME=FM EVENT ID=97 Free Space Table verify results: good entries = 3, bad = 2, unused = 3
+21-127-13:27:35.049 00    TLMH-I:STS          58-012-14:11:56.003 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 FM validation failed for Inactive 'FM.FreeSpace', Status=0xFFFFFFFF
+21-127-13:29:02.068 00    TLMH-I:STS          58-012-14:03:49.433 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
