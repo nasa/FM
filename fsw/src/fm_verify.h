@@ -1,38 +1,28 @@
-/*
-** Filename: fm_verify.h
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Title: File Manager (FM) Configuration Parameter Verification Header File
-**
-** Purpose:
-**   Verification of cFS File Manager (FM) configuration parameters
-**
-** Notes:
-**
-** References:
-**    Flight Software Branch C Coding Standard Version 1.0a
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
-#ifndef _fm_verify_h_
-#define _fm_verify_h_
+/**
+ * @file
+ *   Verification of cFS File Manager (FM) configuration parameters
+ */
+#ifndef FM_VERIFY_H
+#define FM_VERIFY_H
 
 /* Need definition of OS_MAX_NUM_OPEN_FILES */
 #include "cfe.h"
@@ -210,8 +200,4 @@
 #error FM_TABLE_VALIDATION_ERR must be defined!
 #endif
 
-#endif /* _fm_verify_h_ */
-
-/************************/
-/*  End of File Comment */
-/************************/
+#endif

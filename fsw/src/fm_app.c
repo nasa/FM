@@ -1,38 +1,34 @@
-/*
-** Filename: fm_app.c
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-**
-** Title: Core Flight System (CFS) File Manager (FM) Application
-**
-** Purpose: The File Manager (FM) Application provides onboard file system
-**          management services by processing commands for copying and moving
-**          files, decompressing files, concatenating files, creating directories,
-**          deleting files and directories, and providing file and directory status.
-**          When the File Manager application receives a housekeeping request
-**          (scheduled within the scheduler application), FM  reports it's housekeeping
-**          status values via telemetry messaging.
-**
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Core Flight System (CFS) File Manager (FM) Application
+ *
+ *  The File Manager (FM) Application provides onboard file system
+ *  management services by processing commands for copying and moving
+ *  files, decompressing files, concatenating files, creating directories,
+ *  deleting files and directories, and providing file and directory status.
+ *  When the File Manager application receives a housekeeping request
+ *  (scheduled within the scheduler application), FM  reports it's housekeeping
+ *  status values via telemetry messaging.
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -177,10 +173,6 @@ int32 FM_AppInit(void)
     /* Initialize global data  */
     CFE_PSP_MemSet(&FM_GlobalData, 0, sizeof(FM_GlobalData_t));
 
-    /* Initialize child task semaphores */
-    FM_GlobalData.ChildSemaphore     = FM_CHILD_SEM_INVALID;
-    FM_GlobalData.ChildQueueCountSem = FM_CHILD_SEM_INVALID;
-
     /* Register for event services */
     Result = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
 
@@ -201,7 +193,7 @@ int32 FM_AppInit(void)
         else
         {
             /* Subscribe to Housekeeping request commands */
-            Result = CFE_SB_Subscribe(FM_SEND_HK_MID, FM_GlobalData.CmdPipe);
+            Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(FM_SEND_HK_MID), FM_GlobalData.CmdPipe);
 
             if (Result != CFE_SUCCESS)
             {
@@ -215,7 +207,7 @@ int32 FM_AppInit(void)
     if (Result == CFE_SUCCESS)
     {
         /* Subscribe to FM ground command packets */
-        Result = CFE_SB_Subscribe(FM_CMD_MID, FM_GlobalData.CmdPipe);
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(FM_CMD_MID), FM_GlobalData.CmdPipe);
 
         if (Result != CFE_SUCCESS)
         {
@@ -261,7 +253,7 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
 
     CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
-    switch (MessageID)
+    switch (CFE_SB_MsgIdToValue(MessageID))
     {
         /* Housekeeping request */
         case FM_SEND_HK_MID:
@@ -275,7 +267,8 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
 
         default:
             CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Main loop error: invalid message ID: mid = 0x%08X", MessageID);
+                              "Main loop error: invalid message ID: mid = 0x%08lX",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
             break;
     }
 
@@ -397,7 +390,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 
     return;
 
-} // End of FM_ProcessCmd 
+} // End of FM_ProcessCmd
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -410,10 +403,7 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
     bool        Result  = true;
 
     /* Verify command packet length */
-    Result = FM_IsValidCmdPktLength(&Msg->Msg, 
-		                            sizeof(FM_HousekeepingCmd_t),
-                                    FM_HK_REQ_ERR_EID, 
-				    CmdText);
+    Result = FM_IsValidCmdPktLength(&Msg->Msg, sizeof(FM_HousekeepingCmd_t), FM_HK_REQ_ERR_EID, CmdText);
 
     if (Result == true)
     {
@@ -422,7 +412,8 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         FM_AcquireTablePointers();
 
         /* Initialize housekeeping telemetry message */
-        CFE_MSG_Init(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, FM_HK_TLM_MID, sizeof(FM_HousekeepingPkt_t));
+        CFE_MSG_Init(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
+                     sizeof(FM_HousekeepingPkt_t));
 
         /* Report application command counters */
         FM_GlobalData.HousekeepingPkt.CommandCounter    = FM_GlobalData.CommandCounter;
@@ -447,7 +438,7 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
 
     return;
 
-} // End of FM_ReportHK 
+} // End of FM_ReportHK
 
 /************************/
 /*  End of File Comment */

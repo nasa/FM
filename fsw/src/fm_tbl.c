@@ -1,39 +1,34 @@
-/*
-** Filename: fm_tbl.c
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Title: File Manager (FM) Application Table Definitions
-**
-** Purpose: Provides functions for the initialization, validation, and
-**          management of the FM File System Free Space Table
-**
-** Notes:
-**
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Application Table Definitions
+ *
+ *  Provides functions for the initialization, validation, and
+ *  management of the FM File System Free Space Table
+ */
 
 #include "fm_platform_cfg.h"
 #include "fm_msg.h"
 #include "fm_tbl.h"
 #include "fm_events.h"
-#include "cfs_utils.h"
 
 #include <string.h>
 
@@ -143,19 +138,6 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
                 {
                     CFE_EVS_SendEvent(FM_TABLE_VERIFY_TOOLONG_ERR_EID, CFE_EVS_EventType_ERROR,
                                       "Free Space Table verify error: index = %d, name too long", (int)i);
-                }
-            }
-            else if (!CFS_IsValidFilename(TablePtr->FileSys[i].Name, NameLength))
-            {
-                /* Error - file system name has invalid characters */
-                CountBad++;
-
-                /* Send event describing first error only*/
-                if (CountBad == 1)
-                {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_INVALID_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Free Space Table verify error: index = %d, invalid name = %s", (int)i,
-                                      TablePtr->FileSys[i].Name);
                 }
             }
             else

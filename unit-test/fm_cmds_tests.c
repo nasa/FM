@@ -1,22 +1,26 @@
-/*
-** $Id: fm_child.c 1.16.1.5 2017/01/24 23:53:32EST mdeschu Exp  $
-**
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
-**
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
-**
-** Purpose: File Manager (FM) Child task (low priority command handler)
-**
-** Author: Scott Walling (Microtel)
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Child task (low priority command handler)
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -35,7 +39,7 @@
 /*
  * UT Assert
  */
-#include "fm_test_utils.c"
+#include "fm_test_utils.h"
 
 /*
  * UT includes
@@ -57,18 +61,13 @@ uint8 call_count_CFE_EVS_SendEvent;
 
 void Test_FM_NoopCmd_Success(void)
 {
-    CFE_SB_Buffer_t   DummyBuf;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command: FM version %%d.%%d.%%d.%%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command: FM version %%d.%%d.%%d.%%d");
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
 
-    bool Result = FM_NoopCmd(&DummyBuf);
+    bool Result = FM_NoopCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -77,23 +76,21 @@ void Test_FM_NoopCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_NOOP_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_NOOP_CMD_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
-
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
 void Test_FM_NoopCmd_BadLength(void)
 {
-    CFE_SB_Buffer_t   DummyBuf;
-     
+
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
-    bool Result = FM_NoopCmd(&DummyBuf);
+    bool Result = FM_NoopCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -105,13 +102,9 @@ void Test_FM_NoopCmd_BadLength(void)
 
 void add_FM_NoopCmd_tests(void)
 {
-    UtTest_Add(Test_FM_NoopCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_NoopCmd_Success");
+    UtTest_Add(Test_FM_NoopCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_NoopCmd_Success");
 
-    UtTest_Add(Test_FM_NoopCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_NoopCmd_BadLength");
+    UtTest_Add(Test_FM_NoopCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_NoopCmd_BadLength");
 }
 
 /****************************/
@@ -120,24 +113,19 @@ void add_FM_NoopCmd_tests(void)
 
 void Test_FM_ResetCountersCmd_Success(void)
 {
-    CFE_SB_Buffer_t   DummyBuf;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
 
-    FM_GlobalData.CommandCounter = 1;
-    FM_GlobalData.CommandErrCounter = 1;
-    FM_GlobalData.ChildCmdCounter = 1;
-    FM_GlobalData.ChildCmdErrCounter = 1;
+    FM_GlobalData.CommandCounter      = 1;
+    FM_GlobalData.CommandErrCounter   = 1;
+    FM_GlobalData.ChildCmdCounter     = 1;
+    FM_GlobalData.ChildCmdErrCounter  = 1;
     FM_GlobalData.ChildCmdWarnCounter = 1;
 
-    bool Result = FM_ResetCountersCmd(&DummyBuf);
+    bool Result = FM_ResetCountersCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -146,13 +134,13 @@ void Test_FM_ResetCountersCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_RESET_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RESET_CMD_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 0);
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
@@ -163,17 +151,15 @@ void Test_FM_ResetCountersCmd_Success(void)
 
 void Test_FM_ResetCountersCmd_BadLength(void)
 {
-    CFE_SB_Buffer_t   DummyBuf;
-     
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
-    
-    FM_GlobalData.CommandCounter = 1;
-    FM_GlobalData.CommandErrCounter = 1;
-    FM_GlobalData.ChildCmdCounter = 1;
-    FM_GlobalData.ChildCmdErrCounter = 1;
+
+    FM_GlobalData.CommandCounter      = 1;
+    FM_GlobalData.CommandErrCounter   = 1;
+    FM_GlobalData.ChildCmdCounter     = 1;
+    FM_GlobalData.ChildCmdErrCounter  = 1;
     FM_GlobalData.ChildCmdWarnCounter = 1;
 
-    bool Result = FM_ResetCountersCmd(&DummyBuf);
+    bool Result = FM_ResetCountersCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -181,23 +167,19 @@ void Test_FM_ResetCountersCmd_BadLength(void)
     UtAssert_True(Result == false, "FM_NoopCmd returned false");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    
+
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.ChildCmdCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.ChildCmdErrCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.ChildCmdWarnCounter, 1);
-
 }
 
 void add_FM_ResetCountersCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ResetCountersCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_ResetCountersCmd_Success");
+    UtTest_Add(Test_FM_ResetCountersCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ResetCountersCmd_Success");
 
-    UtTest_Add(Test_FM_ResetCountersCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_ResetCountersCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ResetCountersCmd_BadLength");
 }
 
@@ -207,11 +189,9 @@ void add_FM_ResetCountersCmd_tests(void)
 
 void Test_FM_CopyFileCmd_Success(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    strncpy(CmdPkt.Source, "src1", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Target, "tgt", OS_MAX_PATH_LEN);
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.CopyFileCmd.Source, "src1", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.CopyFileCmd.Target, "tgt", OS_MAX_PATH_LEN);
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -221,7 +201,7 @@ void Test_FM_CopyFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -234,9 +214,8 @@ void Test_FM_CopyFileCmd_Success(void)
 
 void Test_FM_CopyFileCmd_BadLength(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -246,7 +225,7 @@ void Test_FM_CopyFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -259,9 +238,8 @@ void Test_FM_CopyFileCmd_BadLength(void)
 
 void Test_FM_CopyFileCmd_BadOverwrite(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -271,7 +249,7 @@ void Test_FM_CopyFileCmd_BadOverwrite(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -280,14 +258,12 @@ void Test_FM_CopyFileCmd_BadOverwrite(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_CopyFileCmd_SourceNotExist(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -297,7 +273,7 @@ void Test_FM_CopyFileCmd_SourceNotExist(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -306,14 +282,12 @@ void Test_FM_CopyFileCmd_SourceNotExist(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -323,7 +297,7 @@ void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -332,14 +306,13 @@ void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 1;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    UT_CmdBuf.CopyFileCmd.Overwrite         = 1;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -349,7 +322,7 @@ void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -358,14 +331,12 @@ void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_CopyFileCmd_NoChildTask(void)
 {
-    FM_CopyFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -375,7 +346,7 @@ void Test_FM_CopyFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_CopyFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CopyFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -384,40 +355,26 @@ void Test_FM_CopyFileCmd_NoChildTask(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
-
 }
 
 void add_FM_CopyFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_CopyFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_CopyFileCmd_Success");
+    UtTest_Add(Test_FM_CopyFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_CopyFileCmd_Success");
 
-    UtTest_Add(Test_FM_CopyFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_CopyFileCmd_BadLength");
+    UtTest_Add(Test_FM_CopyFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_CopyFileCmd_BadLength");
 
-    UtTest_Add(Test_FM_CopyFileCmd_BadOverwrite,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_CopyFileCmd_BadOverwrite");
-    
-    UtTest_Add(Test_FM_CopyFileCmd_SourceNotExist,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CopyFileCmd_BadOverwrite, FM_Test_Setup, FM_Test_Teardown, "Test_FM_CopyFileCmd_BadOverwrite");
+
+    UtTest_Add(Test_FM_CopyFileCmd_SourceNotExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CopyFileCmd_SourceNotExist");
 
-    UtTest_Add(Test_FM_CopyFileCmd_NoOverwriteTargetExists,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CopyFileCmd_NoOverwriteTargetExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CopyFileCmd_NoOverwriteTargetExists");
 
-    UtTest_Add(Test_FM_CopyFileCmd_OverwriteFileOpen,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CopyFileCmd_OverwriteFileOpen, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CopyFileCmd_OverwriteFileOpen");
 
-    UtTest_Add(Test_FM_CopyFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_CopyFileCmd_NoChildTask");
-
+    UtTest_Add(Test_FM_CopyFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_CopyFileCmd_NoChildTask");
 }
 
 /****************************/
@@ -426,9 +383,8 @@ void add_FM_CopyFileCmd_tests(void)
 
 void Test_FM_MoveFileCmd_Success(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -438,7 +394,7 @@ void Test_FM_MoveFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -451,9 +407,8 @@ void Test_FM_MoveFileCmd_Success(void)
 
 void Test_FM_MoveFileCmd_BadLength(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -463,7 +418,7 @@ void Test_FM_MoveFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -476,9 +431,7 @@ void Test_FM_MoveFileCmd_BadLength(void)
 
 void Test_FM_MoveFileCmd_BadOverwrite(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -488,7 +441,7 @@ void Test_FM_MoveFileCmd_BadOverwrite(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -497,14 +450,11 @@ void Test_FM_MoveFileCmd_BadOverwrite(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_MoveFileCmd_SourceNotExist(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -514,7 +464,7 @@ void Test_FM_MoveFileCmd_SourceNotExist(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -523,14 +473,11 @@ void Test_FM_MoveFileCmd_SourceNotExist(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_MoveFileCmd_NoOverwriteTargetExists(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -540,7 +487,7 @@ void Test_FM_MoveFileCmd_NoOverwriteTargetExists(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -549,14 +496,12 @@ void Test_FM_MoveFileCmd_NoOverwriteTargetExists(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_MoveFileCmd_OverwriteFileOpen(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 1;
-    FM_GlobalData.ChildWriteIndex = 0;
+    UT_CmdBuf.MoveFileCmd.Overwrite         = 1;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -566,7 +511,7 @@ void Test_FM_MoveFileCmd_OverwriteFileOpen(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -575,14 +520,11 @@ void Test_FM_MoveFileCmd_OverwriteFileOpen(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_MoveFileCmd_NoChildTask(void)
 {
-    FM_MoveFileCmd_t  CmdPkt;
-    CmdPkt.Overwrite = 0;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -592,7 +534,7 @@ void Test_FM_MoveFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_MoveFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -601,42 +543,27 @@ void Test_FM_MoveFileCmd_NoChildTask(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
-
 }
 
 void add_FM_MoveFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_MoveFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_MoveFileCmd_Success");
+    UtTest_Add(Test_FM_MoveFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_MoveFileCmd_Success");
 
-    UtTest_Add(Test_FM_MoveFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_MoveFileCmd_BadLength");
+    UtTest_Add(Test_FM_MoveFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_MoveFileCmd_BadLength");
 
-    UtTest_Add(Test_FM_MoveFileCmd_BadOverwrite,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_MoveFileCmd_BadOverwrite");
-    
-    UtTest_Add(Test_FM_MoveFileCmd_SourceNotExist,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_MoveFileCmd_BadOverwrite, FM_Test_Setup, FM_Test_Teardown, "Test_FM_MoveFileCmd_BadOverwrite");
+
+    UtTest_Add(Test_FM_MoveFileCmd_SourceNotExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_MoveFileCmd_SourceNotExist");
 
-    UtTest_Add(Test_FM_MoveFileCmd_NoOverwriteTargetExists,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_MoveFileCmd_NoOverwriteTargetExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_MoveFileCmd_NoOverwriteTargetExists");
 
-    UtTest_Add(Test_FM_MoveFileCmd_OverwriteFileOpen,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_MoveFileCmd_OverwriteFileOpen, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_MoveFileCmd_OverwriteFileOpen");
 
-    UtTest_Add(Test_FM_MoveFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_MoveFileCmd_NoChildTask");
-
+    UtTest_Add(Test_FM_MoveFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_MoveFileCmd_NoChildTask");
 }
-
 
 /****************************/
 /* Rename File Tests        */
@@ -644,11 +571,10 @@ void add_FM_MoveFileCmd_tests(void)
 
 void Test_FM_RenameFileCmd_Success(void)
 {
-    FM_RenameFileCmd_t  CmdPkt;
-    strncpy(CmdPkt.Source, "src1", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Target, "tgt", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.RenameFileCmd.Source, "src1", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.RenameFileCmd.Target, "tgt", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -656,7 +582,7 @@ void Test_FM_RenameFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_RenameFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_RenameFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -669,8 +595,7 @@ void Test_FM_RenameFileCmd_Success(void)
 
 void Test_FM_RenameFileCmd_BadLength(void)
 {
-    FM_RenameFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -678,7 +603,7 @@ void Test_FM_RenameFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_RenameFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_RenameFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -691,8 +616,7 @@ void Test_FM_RenameFileCmd_BadLength(void)
 
 void Test_FM_RenameFileCmd_SourceNotExist(void)
 {
-    FM_RenameFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -700,7 +624,7 @@ void Test_FM_RenameFileCmd_SourceNotExist(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_RenameFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_RenameFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -709,13 +633,11 @@ void Test_FM_RenameFileCmd_SourceNotExist(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_RenameFileCmd_TargetExists(void)
 {
-    FM_RenameFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -723,7 +645,7 @@ void Test_FM_RenameFileCmd_TargetExists(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_MoveFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_RenameFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -732,13 +654,11 @@ void Test_FM_RenameFileCmd_TargetExists(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
 }
 
 void Test_FM_RenameFileCmd_NoChildTask(void)
 {
-    FM_RenameFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -746,7 +666,7 @@ void Test_FM_RenameFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_RenameFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_RenameFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -755,31 +675,21 @@ void Test_FM_RenameFileCmd_NoChildTask(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, 0);
-
-
 }
 
 void add_FM_RenameFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_RenameFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_RenameFileCmd_Success");
+    UtTest_Add(Test_FM_RenameFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_RenameFileCmd_Success");
 
-    UtTest_Add(Test_FM_RenameFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_RenameFileCmd_BadLength");
-    
-    UtTest_Add(Test_FM_RenameFileCmd_SourceNotExist,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_RenameFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_RenameFileCmd_BadLength");
+
+    UtTest_Add(Test_FM_RenameFileCmd_SourceNotExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_RenameFileCmd_SourceNotExist");
 
-    UtTest_Add(Test_FM_RenameFileCmd_TargetExists,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_RenameFileCmd_TargetExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_RenameFileCmd_TargetExists");
 
-    UtTest_Add(Test_FM_RenameFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_RenameFileCmd_NoChildTask");
+    UtTest_Add(Test_FM_RenameFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_RenameFileCmd_NoChildTask");
 }
 
 /****************************/
@@ -788,8 +698,7 @@ void add_FM_RenameFileCmd_tests(void)
 
 void Test_FM_DeleteFileCmd_Success(void)
 {
-    FM_DeleteFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
@@ -799,7 +708,7 @@ void Test_FM_DeleteFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileClosed), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -812,8 +721,7 @@ void Test_FM_DeleteFileCmd_Success(void)
 
 void Test_FM_DeleteFileCmd_BadLength(void)
 {
-    FM_DeleteFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
@@ -823,7 +731,7 @@ void Test_FM_DeleteFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileClosed), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -836,8 +744,7 @@ void Test_FM_DeleteFileCmd_BadLength(void)
 
 void Test_FM_DeleteFileCmd_FileNotClosed(void)
 {
-    FM_DeleteFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
@@ -847,7 +754,7 @@ void Test_FM_DeleteFileCmd_FileNotClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileClosed), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -860,8 +767,7 @@ void Test_FM_DeleteFileCmd_FileNotClosed(void)
 
 void Test_FM_DeleteFileCmd_NoChildTask(void)
 {
-    FM_DeleteFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
@@ -871,7 +777,7 @@ void Test_FM_DeleteFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileClosed), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_DeleteFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -884,21 +790,14 @@ void Test_FM_DeleteFileCmd_NoChildTask(void)
 
 void add_FM_DeleteFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_DeleteFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_DeleteFileCmd_Success");
+    UtTest_Add(Test_FM_DeleteFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_DeleteFileCmd_Success");
 
-    UtTest_Add(Test_FM_DeleteFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_DeleteFileCmd_BadLength");
-    
-    UtTest_Add(Test_FM_DeleteFileCmd_FileNotClosed,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_DeleteFileCmd_BadLength");
+
+    UtTest_Add(Test_FM_DeleteFileCmd_FileNotClosed, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteFileCmd_FileNotClosed");
 
-    UtTest_Add(Test_FM_DeleteFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_DeleteFileCmd_NoChildTask");
+    UtTest_Add(Test_FM_DeleteFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_DeleteFileCmd_NoChildTask");
 }
 
 /****************************/
@@ -907,17 +806,16 @@ void add_FM_DeleteFileCmd_tests(void)
 
 void Test_FM_DeleteAllFilesCmd_Success(void)
 {
-    FM_DeleteAllCmd_t  CmdPkt;
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.DeleteAllCmd.Directory, "dir", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteAllFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteAllFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -930,15 +828,14 @@ void Test_FM_DeleteAllFilesCmd_Success(void)
 
 void Test_FM_DeleteAllFilesCmd_BadLength(void)
 {
-    FM_DeleteAllCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteAllFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteAllFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -951,15 +848,14 @@ void Test_FM_DeleteAllFilesCmd_BadLength(void)
 
 void Test_FM_DeleteAllFilesCmd_DirNoExist(void)
 {
-    FM_DeleteAllCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteAllFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteAllFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -972,16 +868,15 @@ void Test_FM_DeleteAllFilesCmd_DirNoExist(void)
 
 void Test_FM_DeleteAllFilesCmd_NoChildTask(void)
 {
-    FM_DeleteAllCmd_t  CmdPkt;
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.DeleteAllCmd.Directory, "dir", OS_MAX_PATH_LEN);
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_DeleteAllFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteAllFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -994,20 +889,15 @@ void Test_FM_DeleteAllFilesCmd_NoChildTask(void)
 
 void add_FM_DeleteAllFilesCmd_tests(void)
 {
-    UtTest_Add(Test_FM_DeleteAllFilesCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_DeleteAllFilesCmd_Success");
+    UtTest_Add(Test_FM_DeleteAllFilesCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_DeleteAllFilesCmd_Success");
 
-    UtTest_Add(Test_FM_DeleteAllFilesCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteAllFilesCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteAllFilesCmd_BadLength");
-    
-    UtTest_Add(Test_FM_DeleteAllFilesCmd_DirNoExist,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_DeleteAllFilesCmd_DirNoExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteAllFilesCmd_DirNoExist");
 
-    UtTest_Add(Test_FM_DeleteAllFilesCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteAllFilesCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteAllFilesCmd_NoChildTask");
 }
 
@@ -1018,9 +908,8 @@ void add_FM_DeleteAllFilesCmd_tests(void)
 
 void Test_FM_DecompressFileCmd_Success(void)
 {
-    FM_DecompressCmd_t  CmdPkt;
 
-        FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1028,7 +917,7 @@ void Test_FM_DecompressFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DecompressFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DecompressFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1041,8 +930,7 @@ void Test_FM_DecompressFileCmd_Success(void)
 
 void Test_FM_DecompressFileCmd_BadLength(void)
 {
-    FM_DecompressCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -1050,7 +938,7 @@ void Test_FM_DecompressFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DecompressFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DecompressFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1063,8 +951,7 @@ void Test_FM_DecompressFileCmd_BadLength(void)
 
 void Test_FM_DecompressFileCmd_SourceFileOpen(void)
 {
-    FM_DecompressCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1072,7 +959,7 @@ void Test_FM_DecompressFileCmd_SourceFileOpen(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DecompressFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DecompressFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1085,8 +972,7 @@ void Test_FM_DecompressFileCmd_SourceFileOpen(void)
 
 void Test_FM_DecompressFileCmd_TargetFileExists(void)
 {
-    FM_DecompressCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1094,7 +980,7 @@ void Test_FM_DecompressFileCmd_TargetFileExists(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DecompressFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DecompressFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1107,8 +993,7 @@ void Test_FM_DecompressFileCmd_TargetFileExists(void)
 
 void Test_FM_DecompressFileCmd_NoChildTask(void)
 {
-    FM_DecompressCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1116,7 +1001,7 @@ void Test_FM_DecompressFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_DecompressFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DecompressFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1129,24 +1014,18 @@ void Test_FM_DecompressFileCmd_NoChildTask(void)
 
 void add_FM_DecompressFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_DecompressFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_DecompressFileCmd_Success");
+    UtTest_Add(Test_FM_DecompressFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_DecompressFileCmd_Success");
 
-    UtTest_Add(Test_FM_DecompressFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DecompressFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DecompressFileCmd_BadLength");
-    
-    UtTest_Add(Test_FM_DecompressFileCmd_SourceFileOpen,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_DecompressFileCmd_SourceFileOpen, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DecompressFileCmd_SourceFileOpen");
- 
-    UtTest_Add(Test_FM_DecompressFileCmd_TargetFileExists,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_DecompressFileCmd_TargetFileExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DecompressFileCmd_TargetFileExists");
 
-    UtTest_Add(Test_FM_DecompressFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DecompressFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DecompressFileCmd_NoChildTask");
 }
 
@@ -1158,12 +1037,11 @@ void add_FM_DecompressFileCmd_tests(void)
 
 void Test_FM_ConcatFilesCmd_Success(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    strncpy(CmdPkt.Source1, "src1", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Source2, "src2", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Target, "tgt", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.ConcatCmd.Source1, "src1", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.ConcatCmd.Source2, "src2", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.ConcatCmd.Target, "tgt", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1171,7 +1049,7 @@ void Test_FM_ConcatFilesCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1184,8 +1062,7 @@ void Test_FM_ConcatFilesCmd_Success(void)
 
 void Test_FM_ConcatFilesCmd_BadLength(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -1193,7 +1070,7 @@ void Test_FM_ConcatFilesCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result                  = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Assert */
@@ -1205,8 +1082,7 @@ void Test_FM_ConcatFilesCmd_BadLength(void)
 
 void Test_FM_ConcatFilesCmd_SourceFile1NotClosed(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1214,7 +1090,7 @@ void Test_FM_ConcatFilesCmd_SourceFile1NotClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result                  = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Assert */
@@ -1226,8 +1102,7 @@ void Test_FM_ConcatFilesCmd_SourceFile1NotClosed(void)
 
 void Test_FM_ConcatFilesCmd_SourceFile2NotClosed(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1236,7 +1111,7 @@ void Test_FM_ConcatFilesCmd_SourceFile2NotClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result                  = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Assert */
@@ -1248,8 +1123,7 @@ void Test_FM_ConcatFilesCmd_SourceFile2NotClosed(void)
 
 void Test_FM_ConcatFilesCmd_TargetFileExists(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1257,7 +1131,7 @@ void Test_FM_ConcatFilesCmd_TargetFileExists(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result                  = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Assert */
@@ -1269,8 +1143,7 @@ void Test_FM_ConcatFilesCmd_TargetFileExists(void)
 
 void Test_FM_ConcatFilesCmd_NoChildTask(void)
 {
-    FM_ConcatCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1278,7 +1151,7 @@ void Test_FM_ConcatFilesCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_ConcatFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result                  = FM_ConcatFilesCmd(&UT_CmdBuf.Buf);
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Assert */
@@ -1290,28 +1163,20 @@ void Test_FM_ConcatFilesCmd_NoChildTask(void)
 
 void add_FM_ConcatFilesCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ConcatFilesCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_ConcatFilesCmd_Success");
+    UtTest_Add(Test_FM_ConcatFilesCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ConcatFilesCmd_Success");
 
-    UtTest_Add(Test_FM_ConcatFilesCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_ConcatFilesCmd_BadLength");
-    
-    UtTest_Add(Test_FM_ConcatFilesCmd_SourceFile1NotClosed,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_ConcatFilesCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ConcatFilesCmd_BadLength");
+
+    UtTest_Add(Test_FM_ConcatFilesCmd_SourceFile1NotClosed, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ConcatFilesCmd_SourceFile1NotClosed");
- 
-    UtTest_Add(Test_FM_ConcatFilesCmd_SourceFile2NotClosed,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_ConcatFilesCmd_SourceFile2NotClosed, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ConcatFilesCmd_SourceFile2NotClosed");
 
-    UtTest_Add(Test_FM_ConcatFilesCmd_TargetFileExists,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_ConcatFilesCmd_TargetFileExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ConcatFilesCmd_TargetFileExists");
 
-    UtTest_Add(Test_FM_ConcatFilesCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_ConcatFilesCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ConcatFilesCmd_NoChildTask");
 }
 
@@ -1321,17 +1186,16 @@ void add_FM_ConcatFilesCmd_tests(void)
 
 void Test_FM_GetFileInfoCmd_Success(void)
 {
-    FM_GetFileInfoCmd_t  CmdPkt;
-    strncpy(CmdPkt.Filename, "file", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetFileInfoCmd.Filename, "file", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetFileInfoCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1344,15 +1208,14 @@ void Test_FM_GetFileInfoCmd_Success(void)
 
 void Test_FM_GetFileInfoCmd_BadLength(void)
 {
-    FM_GetFileInfoCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetFileInfoCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1365,15 +1228,14 @@ void Test_FM_GetFileInfoCmd_BadLength(void)
 
 void Test_FM_GetFileInfoCmd_InvalidName(void)
 {
-    FM_GetFileInfoCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetFileInfoCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1386,15 +1248,14 @@ void Test_FM_GetFileInfoCmd_InvalidName(void)
 
 void Test_FM_GetFileInfoCmd_NoChildTask(void)
 {
-    FM_GetFileInfoCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_GetFileInfoCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1407,23 +1268,16 @@ void Test_FM_GetFileInfoCmd_NoChildTask(void)
 
 void add_FM_GetFileInfoCmd_tests(void)
 {
-    UtTest_Add(Test_FM_GetFileInfoCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetFileInfoCmd_Success");
+    UtTest_Add(Test_FM_GetFileInfoCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFileInfoCmd_Success");
 
-    UtTest_Add(Test_FM_GetFileInfoCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetFileInfoCmd_BadLength");
-   
-    UtTest_Add(Test_FM_GetFileInfoCmd_InvalidName,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetFileInfoCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFileInfoCmd_BadLength");
+
+    UtTest_Add(Test_FM_GetFileInfoCmd_InvalidName, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetFileInfoCmd_InvalidName");
 
-    UtTest_Add(Test_FM_GetFileInfoCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetFileInfoCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetFileInfoCmd_NoChildTask");
 }
-
 
 /****************************/
 /* Get Open Files Tests     */
@@ -1431,19 +1285,13 @@ void add_FM_GetFileInfoCmd_tests(void)
 
 void Test_FM_GetOpenFilesCmd_Success(void)
 {
-    FM_GetOpenFilesCmd_t  CmdPkt;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command");
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
- 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
 
-    bool Result = FM_GetOpenFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetOpenFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1452,24 +1300,21 @@ void Test_FM_GetOpenFilesCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_GET_OPEN_FILES_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_OPEN_FILES_CMD_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
-
-
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
 void Test_FM_GetOpenFilesCmd_BadLength(void)
 {
-    FM_GetOpenFilesCmd_t  CmdPkt;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
-    bool Result = FM_GetOpenFilesCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetOpenFilesCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1481,15 +1326,10 @@ void Test_FM_GetOpenFilesCmd_BadLength(void)
 
 void add_FM_GetOpenFilesCmd_tests(void)
 {
-    UtTest_Add(Test_FM_GetOpenFilesCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetOpenFilesCmd_Success");
+    UtTest_Add(Test_FM_GetOpenFilesCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetOpenFilesCmd_Success");
 
-    UtTest_Add(Test_FM_GetOpenFilesCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetOpenFilesCmd_BadLength");
+    UtTest_Add(Test_FM_GetOpenFilesCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetOpenFilesCmd_BadLength");
 }
-
 
 /****************************/
 /* Create Directory Tests   */
@@ -1497,17 +1337,15 @@ void add_FM_GetOpenFilesCmd_tests(void)
 
 void Test_FM_CreateDirectoryCmd_Success(void)
 {
-    FM_CreateDirCmd_t  CmdPkt;
-
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.CreateDirCmd.Directory, "dir", OS_MAX_PATH_LEN);
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CreateDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CreateDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1520,15 +1358,14 @@ void Test_FM_CreateDirectoryCmd_Success(void)
 
 void Test_FM_CreateDirectoryCmd_BadLength(void)
 {
-    FM_CreateDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CreateDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CreateDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1541,15 +1378,14 @@ void Test_FM_CreateDirectoryCmd_BadLength(void)
 
 void Test_FM_CreateDirectoryCmd_DirExists(void)
 {
-    FM_CreateDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirNoExist), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_CreateDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CreateDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1562,15 +1398,14 @@ void Test_FM_CreateDirectoryCmd_DirExists(void)
 
 void Test_FM_CreateDirectoryCmd_NoChildTask(void)
 {
-    FM_CreateDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirNoExist), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_CreateDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_CreateDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1583,23 +1418,18 @@ void Test_FM_CreateDirectoryCmd_NoChildTask(void)
 
 void add_FM_CreateDirectoryCmd_tests(void)
 {
-    UtTest_Add(Test_FM_CreateDirectoryCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CreateDirectoryCmd_Success, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CreateDirectoryCmd_Success");
 
-    UtTest_Add(Test_FM_CreateDirectoryCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CreateDirectoryCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CreateDirectoryCmd_BadLength");
-    
-    UtTest_Add(Test_FM_CreateDirectoryCmd_DirExists,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_CreateDirectoryCmd_DirExists, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CreateDirectoryCmd_DirExists");
 
-    UtTest_Add(Test_FM_CreateDirectoryCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_CreateDirectoryCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_CreateDirectoryCmd_NoChildTask");
 }
-
 
 /****************************/
 /* Delete Directory Tests   */
@@ -1607,16 +1437,15 @@ void add_FM_CreateDirectoryCmd_tests(void)
 
 void Test_FM_DeleteDirectoryCmd_Success(void)
 {
-    FM_DeleteDirCmd_t  CmdPkt;
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.DeleteDirCmd.Directory, "dir", OS_MAX_PATH_LEN);
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1629,15 +1458,14 @@ void Test_FM_DeleteDirectoryCmd_Success(void)
 
 void Test_FM_DeleteDirectoryCmd_BadLength(void)
 {
-    FM_DeleteDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1650,15 +1478,14 @@ void Test_FM_DeleteDirectoryCmd_BadLength(void)
 
 void Test_FM_DeleteDirectoryCmd_DirNoExist(void)
 {
-    FM_DeleteDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_DeleteDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1671,15 +1498,14 @@ void Test_FM_DeleteDirectoryCmd_DirNoExist(void)
 
 void Test_FM_DeleteDirectoryCmd_NoChildTask(void)
 {
-    FM_DeleteDirCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_DeleteDirectoryCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_DeleteDirectoryCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1692,20 +1518,16 @@ void Test_FM_DeleteDirectoryCmd_NoChildTask(void)
 
 void add_FM_DeleteDirectoryCmd_tests(void)
 {
-    UtTest_Add(Test_FM_DeleteDirectoryCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteDirectoryCmd_Success, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteDirectoryCmd_Success");
 
-    UtTest_Add(Test_FM_DeleteDirectoryCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteDirectoryCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteDirectoryCmd_BadLength");
-    
-    UtTest_Add(Test_FM_DeleteDirectoryCmd_DirNoExist,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_DeleteDirectoryCmd_DirNoExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteDirectoryCmd_DirNoExist");
 
-    UtTest_Add(Test_FM_DeleteDirectoryCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_DeleteDirectoryCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DeleteDirectoryCmd_NoChildTask");
 }
 
@@ -1715,11 +1537,9 @@ void add_FM_DeleteDirectoryCmd_tests(void)
 
 void Test_FM_GetDirListFileCmd_Success(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-
-    strncpy(CmdPkt.Filename, "file", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", OS_MAX_PATH_LEN);
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1727,7 +1547,7 @@ void Test_FM_GetDirListFileCmd_Success(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1740,11 +1560,9 @@ void Test_FM_GetDirListFileCmd_Success(void)
 
 void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
-    CmdPkt.Filename[0] = '\0';
-    FM_GlobalData.ChildWriteIndex = 0;
+    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", OS_MAX_PATH_LEN);
+    UT_CmdBuf.GetDirFileCmd.Filename[0]     = '\0';
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1752,7 +1570,7 @@ void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1765,8 +1583,7 @@ void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
 
 void Test_FM_GetDirListFileCmd_BadLength(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -1774,7 +1591,7 @@ void Test_FM_GetDirListFileCmd_BadLength(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1787,8 +1604,7 @@ void Test_FM_GetDirListFileCmd_BadLength(void)
 
 void Test_FM_GetDirListFileCmd_SourceNotExist(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1796,7 +1612,7 @@ void Test_FM_GetDirListFileCmd_SourceNotExist(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1809,11 +1625,10 @@ void Test_FM_GetDirListFileCmd_SourceNotExist(void)
 
 void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-    strncpy(CmdPkt.Filename, "file", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1821,7 +1636,7 @@ void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1834,11 +1649,10 @@ void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 
 void Test_FM_GetDirListFileCmd_NoChildTask(void)
 {
-    FM_GetDirFileCmd_t  CmdPkt;
-    strncpy(CmdPkt.Filename, "file", OS_MAX_PATH_LEN);
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -1846,7 +1660,7 @@ void Test_FM_GetDirListFileCmd_NoChildTask(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_GetDirListFileCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListFileCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1859,31 +1673,23 @@ void Test_FM_GetDirListFileCmd_NoChildTask(void)
 
 void add_FM_GetDirListFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_GetDirListFileCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetDirListFileCmd_Success");
+    UtTest_Add(Test_FM_GetDirListFileCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetDirListFileCmd_Success");
 
-    UtTest_Add(Test_FM_GetDirListFileCmd_SuccessDefaultPath,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListFileCmd_SuccessDefaultPath, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListFileCmd_SuccessDefaultPath");
 
-    UtTest_Add(Test_FM_GetDirListFileCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListFileCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListFileCmd_BadLength");
-    
-    UtTest_Add(Test_FM_GetDirListFileCmd_SourceNotExist,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_GetDirListFileCmd_SourceNotExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListFileCmd_SourceNotExist");
 
-    UtTest_Add(Test_FM_GetDirListFileCmd_TargetFileOpen,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListFileCmd_TargetFileOpen, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListFileCmd_TargetFileOpen");
 
-    UtTest_Add(Test_FM_GetDirListFileCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListFileCmd_NoChildTask");
 }
-
 
 /****************************/
 /* Get Dir List Pkt Tests  */
@@ -1891,17 +1697,16 @@ void add_FM_GetDirListFileCmd_tests(void)
 
 void Test_FM_GetDirListPktCmd_Success(void)
 {
-    FM_GetDirPktCmd_t  CmdPkt;
-    strncpy(CmdPkt.Directory, "dir", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.GetDirPktCmd.Directory, "dir", OS_MAX_PATH_LEN);
 
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListPktCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListPktCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1914,15 +1719,14 @@ void Test_FM_GetDirListPktCmd_Success(void)
 
 void Test_FM_GetDirListPktCmd_BadLength(void)
 {
-    FM_GetDirPktCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListPktCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListPktCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1935,15 +1739,14 @@ void Test_FM_GetDirListPktCmd_BadLength(void)
 
 void Test_FM_GetDirListPktCmd_SourceNotExist(void)
 {
-    FM_GetDirPktCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetDirListPktCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListPktCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1956,15 +1759,14 @@ void Test_FM_GetDirListPktCmd_SourceNotExist(void)
 
 void Test_FM_GetDirListPktCmd_NoChildTask(void)
 {
-    FM_GetDirPktCmd_t  CmdPkt;
-    FM_GlobalData.ChildWriteIndex = 0;
+    FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), false);
 
-    bool Result = FM_GetDirListPktCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_GetDirListPktCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1977,23 +1779,17 @@ void Test_FM_GetDirListPktCmd_NoChildTask(void)
 
 void add_FM_GetDirListPktCmd_tests(void)
 {
-    UtTest_Add(Test_FM_GetDirListPktCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetDirListPktCmd_Success");
+    UtTest_Add(Test_FM_GetDirListPktCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetDirListPktCmd_Success");
 
-    UtTest_Add(Test_FM_GetDirListPktCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListPktCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListPktCmd_BadLength");
-    
-    UtTest_Add(Test_FM_GetDirListPktCmd_SourceNotExist,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_GetDirListPktCmd_SourceNotExist, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListPktCmd_SourceNotExist");
 
-    UtTest_Add(Test_FM_GetDirListPktCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetDirListPktCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetDirListPktCmd_NoChildTask");
 }
-
 
 /****************************/
 /* Get Free Space Tests     */
@@ -2001,20 +1797,15 @@ void add_FM_GetDirListPktCmd_tests(void)
 
 void Test_FM_GetFreeSpaceCmd_Success(void)
 {
-    CFE_SB_Buffer_t     DummyBuf;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
     FM_FreeSpaceTable_t DummyTable;
     OS_statvfs_t        forced_FileStats;
     forced_FileStats.blocks_free = 10;
 
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
         strncpy(DummyTable.FileSys[i].Name, "sys", OS_MAX_PATH_LEN);
@@ -2023,24 +1814,22 @@ void Test_FM_GetFreeSpaceCmd_Success(void)
 
     FM_GlobalData.FreeSpaceTablePtr = &DummyTable;
 
-    UT_SetDataBuffer(UT_KEY(OS_FileSysStatVolume), &forced_FileStats,
-                     sizeof(forced_FileStats), false);
+    UT_SetDataBuffer(UT_KEY(OS_FileSysStatVolume), &forced_FileStats, sizeof(forced_FileStats), false);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_GetFreeSpaceCmd(&DummyBuf);
+    bool Result = FM_GetFreeSpaceCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_GET_FREE_SPACE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FREE_SPACE_CMD_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
-
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     uint8 call_count_CFE_SB_TransmitMsg = UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg));
 
@@ -2054,12 +1843,11 @@ void Test_FM_GetFreeSpaceCmd_Success(void)
 
 void Test_FM_GetFreeSpaceCmd_BadLength(void)
 {
-    CFE_SB_Buffer_t     DummyBuf;
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
-    
-    bool Result = FM_GetFreeSpaceCmd(&DummyBuf);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    bool Result = FM_GetFreeSpaceCmd(&UT_CmdBuf.Buf);
+
+    call_count_CFE_EVS_SendEvent        = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
     uint8 call_count_CFE_SB_TransmitMsg = UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg));
 
     /* Assert */
@@ -2071,59 +1859,47 @@ void Test_FM_GetFreeSpaceCmd_BadLength(void)
 
 void Test_FM_GetFreeSpaceCmd_NullFreeSpaceTable(void)
 {
-    CFE_SB_Buffer_t     DummyBuf;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: file system free space table is not loaded");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
 
     FM_GlobalData.FreeSpaceTablePtr = NULL;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
 
-    bool Result = FM_GetFreeSpaceCmd(&DummyBuf);
+    bool Result = FM_GetFreeSpaceCmd(&UT_CmdBuf.Buf);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    call_count_CFE_EVS_SendEvent        = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
     uint8 call_count_CFE_SB_TransmitMsg = UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg));
 
     /* Assert */
     UtAssert_True(Result == false, "FM_GetFreeSpaceCmd returned false");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_GET_FREE_SPACE_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FREE_SPACE_TBL_ERR_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
-
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(call_count_CFE_SB_TransmitMsg, 0);
-
 }
 
 void Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails(void)
 {
-    CFE_SB_Buffer_t     DummyBuf;
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    char            ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Could not get file system free space for %%s. Returned 0x%%08X");
-    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
     FM_FreeSpaceTable_t DummyTable;
-    
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
         strncpy(DummyTable.FileSys[i].Name, "sys", OS_MAX_PATH_LEN);
@@ -2135,7 +1911,7 @@ void Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(OS_FileSysStatVolume), OS_ERROR);
 
-    bool Result = FM_GetFreeSpaceCmd(&DummyBuf);
+    bool Result = FM_GetFreeSpaceCmd(&UT_CmdBuf.Buf);
 
     /* Assert */
     UtAssert_True(Result == true, "FM_GetFreeSpaceCmd returned true");
@@ -2166,22 +1942,15 @@ void Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails(void)
 
 void add_FM_GetFreeSpaceCmd_tests(void)
 {
-    UtTest_Add(Test_FM_GetFreeSpaceCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetFreeSpaceCmd_Success");
+    UtTest_Add(Test_FM_GetFreeSpaceCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFreeSpaceCmd_Success");
 
-    UtTest_Add(Test_FM_GetFreeSpaceCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_GetFreeSpaceCmd_BadLength");
-    
-    UtTest_Add(Test_FM_GetFreeSpaceCmd_NullFreeSpaceTable,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetFreeSpaceCmd_BadLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFreeSpaceCmd_BadLength");
+
+    UtTest_Add(Test_FM_GetFreeSpaceCmd_NullFreeSpaceTable, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetFreeSpaceCmd_NullFreeSpaceTable");
 
-    UtTest_Add(Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_GetFreeSpaceCmd_OSFileSysStatVolumeFails");
-
 }
 
 /****************************/
@@ -2190,57 +1959,50 @@ void add_FM_GetFreeSpaceCmd_tests(void)
 
 void Test_FM_SetTableStateCmd_Success(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    CmdPkt.TableEntryIndex = 0;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
 
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
-             "%%s command: index = %%d, state = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command: index = %%d, state = %%d");
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
-   
+
     FM_FreeSpaceTable_t DummyTable;
 
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
     }
 
     FM_GlobalData.FreeSpaceTablePtr = &DummyTable;
 
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     /* Assert */
     UtAssert_True(Result == true, "FM_SetTableStateCmd returned true");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_SET_TABLE_STATE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_TABLE_STATE_CMD_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(FM_GlobalData.FreeSpaceTablePtr->FileSys[0].State,
-                      FM_TABLE_ENTRY_ENABLED);
+    UtAssert_INT32_EQ(FM_GlobalData.FreeSpaceTablePtr->FileSys[0].State, FM_TABLE_ENTRY_ENABLED);
 }
 
 void Test_FM_SetTableStateCmd_BadLength(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    CmdPkt.TableEntryIndex = 0;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
-    
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2252,23 +2014,19 @@ void Test_FM_SetTableStateCmd_BadLength(void)
 
 void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    CmdPkt.TableEntryIndex = 0;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
 
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: file system free space table is not loaded");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     FM_GlobalData.FreeSpaceTablePtr = NULL;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
 
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2276,119 +2034,106 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
     UtAssert_True(Result == false, "FM_SetTableStateCmd returned false");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_SET_TABLE_STATE_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_TABLE_STATE_TBL_ERR_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
-
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
 void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    CmdPkt.TableEntryIndex = FM_TABLE_ENTRY_COUNT;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = FM_TABLE_ENTRY_COUNT;
 
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: invalid command argument: index = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
-   
+
     FM_FreeSpaceTable_t DummyTable;
 
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
     }
 
     FM_GlobalData.FreeSpaceTablePtr = &DummyTable;
 
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     /* Assert */
     UtAssert_True(Result == false, "FM_SetTableStateCmd returned false");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_SET_TABLE_STATE_ARG_IDX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_TABLE_STATE_ARG_IDX_ERR_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
 void Test_FM_SetTableStateCmd_BadNewState(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_UNUSED;
-    CmdPkt.TableEntryIndex = 0;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_UNUSED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
 
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: invalid command argument: state = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
-   
+
     FM_FreeSpaceTable_t DummyTable;
 
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
     }
 
     FM_GlobalData.FreeSpaceTablePtr = &DummyTable;
 
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     /* Assert */
     UtAssert_True(Result == false, "FM_SetTableStateCmd returned false");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_SET_TABLE_STATE_ARG_STATE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_TABLE_STATE_ARG_STATE_ERR_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
 void Test_FM_SetTableStateCmd_BadCurrentState(void)
 {
-    FM_SetTableStateCmd_t CmdPkt;
-    CmdPkt.TableEntryState = FM_TABLE_ENTRY_DISABLED;
-    CmdPkt.TableEntryIndex = 0;
+    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_DISABLED;
+    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
 
-    int32           strCmpResult;
-    char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: cannot modify unused table entry: index = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
-   
+
     FM_FreeSpaceTable_t DummyTable;
 
-    for(int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
+    for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         DummyTable.FileSys[i].State = FM_TABLE_ENTRY_DISABLED;
     }
@@ -2397,50 +2142,42 @@ void Test_FM_SetTableStateCmd_BadCurrentState(void)
 
     FM_GlobalData.FreeSpaceTablePtr = &DummyTable;
 
-    bool Result = FM_SetTableStateCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
     /* Assert */
     UtAssert_True(Result == false, "FM_SetTableStateCmd returned false");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, FM_SET_TABLE_STATE_UNUSED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_TABLE_STATE_UNUSED_ERR_EID);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
 void add_FM_SetTableStateCmd_tests(void)
 {
-    UtTest_Add(Test_FM_SetTableStateCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_SetTableStateCmd_Success");
+    UtTest_Add(Test_FM_SetTableStateCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_SetTableStateCmd_Success");
 
-    UtTest_Add(Test_FM_SetTableStateCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_SetTableStateCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetTableStateCmd_BadLength");
-    
-    UtTest_Add(Test_FM_SetTableStateCmd_NullFreeSpaceTable,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_SetTableStateCmd_NullFreeSpaceTable, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetTableStateCmd_NullFreeSpaceTable");
 
-    UtTest_Add(Test_FM_SetTableStateCmd_TableEntryIndexTooLarge,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_SetTableStateCmd_TableEntryIndexTooLarge, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetTableStateCmd_TableEntryIndexTooLarge");
 
-    UtTest_Add(Test_FM_SetTableStateCmd_BadNewState,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_SetTableStateCmd_BadNewState, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetTableStateCmd_BadNewState");
 
-    UtTest_Add(Test_FM_SetTableStateCmd_BadCurrentState,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_SetTableStateCmd_BadCurrentState, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetTableStateCmd_BadCurrentState");
 }
-
 
 /****************************/
 /* Set Permissions Tests    */
@@ -2448,14 +2185,12 @@ void add_FM_SetTableStateCmd_tests(void)
 
 void Test_FM_SetPermissionsCmd_Success(void)
 {
-    FM_SetPermCmd_t  CmdPkt;
-
-    strncpy(CmdPkt.FileName, "file", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.SetPermCmd.FileName, "file", OS_MAX_PATH_LEN);
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_SetPermissionsCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetPermissionsCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2468,13 +2203,11 @@ void Test_FM_SetPermissionsCmd_Success(void)
 
 void Test_FM_SetPermissionsCmd_BadLength(void)
 {
-    FM_SetPermCmd_t  CmdPkt;
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_SetPermissionsCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetPermissionsCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2487,13 +2220,11 @@ void Test_FM_SetPermissionsCmd_BadLength(void)
 
 void Test_FM_SetPermissionsCmd_BadName(void)
 {
-    FM_SetPermCmd_t  CmdPkt;
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_SetPermissionsCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetPermissionsCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2506,13 +2237,11 @@ void Test_FM_SetPermissionsCmd_BadName(void)
 
 void Test_FM_SetPermissionsCmd_NoChildTask(void)
 {
-    FM_SetPermCmd_t  CmdPkt;
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
 
-    bool Result = FM_SetPermissionsCmd((CFE_SB_Buffer_t*)&CmdPkt);
+    bool Result = FM_SetPermissionsCmd(&UT_CmdBuf.Buf);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -2525,24 +2254,16 @@ void Test_FM_SetPermissionsCmd_NoChildTask(void)
 
 void add_FM_SetPermissionsCmd_tests(void)
 {
-    UtTest_Add(Test_FM_SetPermissionsCmd_Success,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_SetPermissionsCmd_Success");
+    UtTest_Add(Test_FM_SetPermissionsCmd_Success, FM_Test_Setup, FM_Test_Teardown, "Test_FM_SetPermissionsCmd_Success");
 
-    UtTest_Add(Test_FM_SetPermissionsCmd_BadLength,
-               fm_tests_Setup, fm_tests_Teardown,
+    UtTest_Add(Test_FM_SetPermissionsCmd_BadLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetPermissionsCmd_BadLength");
- 
-    UtTest_Add(Test_FM_SetPermissionsCmd_BadName,
-               fm_tests_Setup, fm_tests_Teardown,
-               "Test_FM_SetPermissionsCmd_BadName");
-  
-    UtTest_Add(Test_FM_SetPermissionsCmd_NoChildTask,
-               fm_tests_Setup, fm_tests_Teardown,
+
+    UtTest_Add(Test_FM_SetPermissionsCmd_BadName, FM_Test_Setup, FM_Test_Teardown, "Test_FM_SetPermissionsCmd_BadName");
+
+    UtTest_Add(Test_FM_SetPermissionsCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_SetPermissionsCmd_NoChildTask");
 }
-
-
 
 /*
  * Register the test cases to execute with the unit test tool
@@ -2552,9 +2273,9 @@ void UtTest_Setup(void)
     add_FM_NoopCmd_tests();
     add_FM_ResetCountersCmd_tests();
     add_FM_CopyFileCmd_tests();
-    //add_FM_MoveFileCmd_tests();
+    // add_FM_MoveFileCmd_tests();
     add_FM_RenameFileCmd_tests();
-    //add_FM_DeleteFileCmd_tests();
+    // add_FM_DeleteFileCmd_tests();
     add_FM_DeleteAllFilesCmd_tests();
 
 #ifdef FM_INCLUDE_DECOMPRESS

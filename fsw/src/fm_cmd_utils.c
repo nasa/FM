@@ -1,32 +1,29 @@
-/*
-** Filename: fm_cmd_utils.c
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Title: File Manager (FM) Command Utility Functions
-**
-** Purpose: Provides file manager utility function definitions for
-**          processing file manager commands
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Command Utility Functions
+ *
+ *  Provides file manager utility function definitions for
+ *  processing file manager commands
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -34,7 +31,6 @@
 #include "fm_child.h"
 #include "fm_perfids.h"
 #include "fm_events.h"
-#include "cfs_utils.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -97,7 +93,7 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-static void LoadOpenFileData(uint32 ObjId, void *CallbackArg)
+static void LoadOpenFileData(osal_id_t ObjId, void *CallbackArg)
 {
     FM_OpenFilesEntry_t *OpenFilesData = (FM_OpenFilesEntry_t *)CallbackArg;
     OS_task_prop_t       TaskInfo;
@@ -112,7 +108,7 @@ static void LoadOpenFileData(uint32 ObjId, void *CallbackArg)
                 strncpy(OpenFilesData[OpenFileCount].LogicalName, FdProp.Path, OS_MAX_PATH_LEN);
 
                 /* Get the name of the application that opened the file */
-                memset(&TaskInfo, 0, sizeof(CFE_ES_TaskInfo_t));
+                memset(&TaskInfo, 0, sizeof(TaskInfo));
 
                 if (OS_TaskGetInfo(FdProp.User, &TaskInfo) == OS_SUCCESS)
                 {
@@ -130,7 +126,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 {
     OpenFileCount = 0;
 
-    OS_ForEachObject(0, LoadOpenFileData, (void *)OpenFilesData);
+    OS_ForEachObject(OS_OBJECT_CREATOR_ANY, LoadOpenFileData, (void *)OpenFilesData);
 
     return (OpenFileCount);
 
@@ -142,7 +138,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-static void SearchOpenFileData(uint32 ObjId, void *CallbackArg)
+static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
 {
     char *         Fname = (char *)CallbackArg;
     OS_file_prop_t FdProp;
@@ -189,8 +185,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
         /* Verify that Filename is not empty and has a terminator */
         if ((StringLength > 0) && (StringLength < BufferSize))
         {
-            /* Verify that the string characters are OK for a filename */
-            FilenameIsValid = CFS_IsValidFilename(Filename, StringLength);
+            FilenameIsValid = true;
         }
     }
 
@@ -201,11 +196,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
         if (OS_stat(Filename, &FileStatus) == OS_SUCCESS)
         {
             /* Filename is in use, is it also a directory? */
-#ifdef OS_FILESTAT_ISDIR
             if (OS_FILESTAT_ISDIR(FileStatus))
-#else
-            if (S_ISDIR(FileStatus.st_mode))
-#endif
             {
                 /* Filename is a directory */
                 FilenameState = FM_NAME_IS_DIRECTORY;
@@ -216,7 +207,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
                 FilenameState = FM_NAME_IS_FILE_CLOSED;
                 FileIsOpen    = false;
 
-                OS_ForEachObject(0, SearchOpenFileData, Filename);
+                OS_ForEachObject(OS_OBJECT_CREATOR_ANY, SearchOpenFileData, Filename);
 
                 if (FileIsOpen == true)
                 {
@@ -227,21 +218,9 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
             /* Save the last modify time and file size for File Info commands */
             if (FileInfoCmd)
             {
-#ifdef OS_FILESTAT_TIME
                 FM_GlobalData.FileStatTime = OS_FILESTAT_TIME(FileStatus);
-#else
-                FM_GlobalData.FileStatTime = FileStatus.st_mtime;
-#endif
-#ifdef OS_FILESTAT_SIZE
                 FM_GlobalData.FileStatSize = OS_FILESTAT_SIZE(FileStatus);
-#else
-                FM_GlobalData.FileStatSize = FileStatus.st_size;
-#endif
-#ifdef OS_FILESTAT_MODE
                 FM_GlobalData.FileStatMode = OS_FILESTAT_MODE(FileStatus);
-#else
-                FM_GlobalData.FileStatMode = FileStatus.st_mode;
-#endif
             }
         }
         else
@@ -586,7 +565,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
     uint8 LocalQueueCount = FM_GlobalData.ChildQueueCount;
 
     /* Verify child task is active and queue interface is healthy */
-    if (FM_GlobalData.ChildSemaphore == FM_CHILD_SEM_INVALID)
+    if (!OS_ObjectIdDefined(FM_GlobalData.ChildSemaphore))
     {
         CFE_EVS_SendEvent((EventID + FM_CHILD_DISABLED_EID_OFFSET), CFE_EVS_EventType_ERROR,
                           "%s error: child task is disabled", CmdText);
@@ -645,7 +624,7 @@ void FM_InvokeChildTask(void)
     OS_MutSemGive(FM_GlobalData.ChildQueueCountSem);
 
     /* Does the child task still have a semaphore? */
-    if (FM_GlobalData.ChildSemaphore != FM_CHILD_SEM_INVALID)
+    if (OS_ObjectIdDefined(FM_GlobalData.ChildSemaphore))
     {
         /* Signal child task to call command handler */
         OS_CountSemGive(FM_GlobalData.ChildSemaphore);
@@ -678,7 +657,11 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
         /* Verify that string buffer has room for a path separator */
         if (StringLength < (BufferSize - 1))
         {
-            strncat(Directory, "/", 1);
+            /*
+             * gcc 8+ will warn on strncat with constant of the same size as n
+             * OK to use strcat since available space already confirmed
+             */
+            strcat(Directory, "/");
         }
     }
 

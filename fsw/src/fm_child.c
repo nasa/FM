@@ -1,29 +1,26 @@
-/*
-** Filename: fm_child.c
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-**
-** Purpose: File Manager (FM) Child task (low priority command handler)
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Child task (low priority command handler)
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -131,8 +128,8 @@ void FM_ChildTask(void)
     /* Child task process loop */
     FM_ChildLoop();
 
-    /* Stop the parent from invoking the child task */
-    FM_GlobalData.ChildSemaphore = FM_CHILD_SEM_INVALID;
+    /* Clear the semaphore ID */
+    FM_GlobalData.ChildSemaphore = OS_OBJECT_ID_UNDEFINED;
 
     /* This call allows cFE to clean-up system resources */
     CFE_ES_ExitChildTask();
@@ -474,15 +471,15 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText = "Delete All Files";
-    uint32      DirId   = 0;
+    osal_id_t   DirId   = OS_OBJECT_ID_UNDEFINED;
     os_dirent_t DirEntry;
-    int32       OS_Status                 = OS_SUCCESS;
-    uint32      FilenameState             = FM_NAME_IS_INVALID;
-    uint32      NameLength                = 0;
-    uint32      DeleteCount               = 0;
-    uint32      FilesNotDeletedCount      = 0;
-    uint32      DirectoriesSkippedCount   = 0;
-    char        Filename[OS_MAX_PATH_LEN] = "\0";
+    int32       OS_Status                     = OS_SUCCESS;
+    uint32      FilenameState                 = FM_NAME_IS_INVALID;
+    uint32      NameLength                    = 0;
+    uint32      DeleteCount                   = 0;
+    uint32      FilesNotDeletedCount          = 0;
+    uint32      DirectoriesSkippedCount       = 0;
+    char        Filename[2 * OS_MAX_PATH_LEN] = "";
 
     /*
     ** Command argument useage for this command:
@@ -521,7 +518,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
                 (strcmp(OS_DIRENTRY_NAME(DirEntry), FM_PARENT_DIRECTORY) != 0))
             {
                 /* Construct full path filename */
-                NameLength = strlen(DirWithSep) + strlen(OS_DIRENTRY_NAME(DirEntry));
+                NameLength = snprintf(Filename, sizeof(Filename), "%s%s", DirWithSep, OS_DIRENTRY_NAME(DirEntry));
 
                 if (NameLength >= OS_MAX_PATH_LEN)
                 {
@@ -529,9 +526,6 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
                 }
                 else
                 {
-                    /* Note: Directory name already has trailing "/" appended */
-                    snprintf(Filename, sizeof(Filename), "%s%s", DirWithSep, OS_DIRENTRY_NAME(DirEntry));
-
                     /* What kind of directory entry is this? */
                     FilenameState = FM_GetFilenameState(Filename, OS_MAX_PATH_LEN, false);
 
@@ -683,8 +677,8 @@ void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
     bool        OpenedTgtFile  = false;
     int32       LoopCount      = 0;
     int32       OS_Status      = OS_SUCCESS;
-    osal_id_t   FileHandleSrc  = 0;
-    osal_id_t   FileHandleTgt  = 0;
+    osal_id_t   FileHandleSrc  = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t   FileHandleTgt  = OS_OBJECT_ID_UNDEFINED;
     int32       BytesRead      = 0;
     int32       BytesWritten   = 0;
 
@@ -857,7 +851,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     uint32      CurrentCRC = 0;
     int32       LoopCount  = 0;
     int32       BytesRead  = 0;
-    osal_id_t   FileHandle = 0;
+    osal_id_t   FileHandle = OS_OBJECT_ID_UNDEFINED;
     int32       Status     = 0;
 
     /* Report current child task activity */
@@ -874,7 +868,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     */
 
     /* Initialize file info packet (set all data to zero) */
-    CFE_MSG_Init(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg, FM_FILE_INFO_TLM_MID, sizeof(FM_FileInfoPkt_t));
+    CFE_MSG_Init(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FILE_INFO_TLM_MID),
+                 sizeof(FM_FileInfoPkt_t));
 
     /* Report directory or filename state, name, size and time */
     FM_GlobalData.FileInfoPkt.FileStatus = (uint8)CmdArgs->FileInfoState;
@@ -1056,7 +1051,7 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText      = "Delete Directory";
     bool        RemoveTheDir = true;
-    uint32      DirId        = 0;
+    osal_id_t   DirId        = OS_OBJECT_ID_UNDEFINED;
     os_dirent_t DirEntry;
     int32       OS_Status = OS_SUCCESS;
 
@@ -1135,8 +1130,8 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText    = "Directory List to File";
     bool        Result     = false;
-    int32       FileHandle = 0;
-    uint32      DirId      = 0;
+    osal_id_t   FileHandle = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t   DirId      = OS_OBJECT_ID_UNDEFINED;
     int32       Status     = 0;
 
     /* Report current child task activity */
@@ -1199,7 +1194,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     const char *       CmdText                      = "Directory List to Packet";
     char               LogicalName[OS_MAX_PATH_LEN] = "\0";
     bool               StillProcessing              = true;
-    uint32             DirId                        = 0;
+    osal_id_t          DirId                        = OS_OBJECT_ID_UNDEFINED;
     os_dirent_t        DirEntry;
     int32              ListIndex      = 0;
     FM_DirListEntry_t *ListEntry      = NULL;
@@ -1235,7 +1230,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     else
     {
         /* Initialize the directory list telemetry packet */
-        CFE_MSG_Init(&FM_GlobalData.DirListPkt.TlmHeader.Msg, FM_DIR_LIST_TLM_MID, sizeof(FM_DirListPkt_t));
+        CFE_MSG_Init(&FM_GlobalData.DirListPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_DIR_LIST_TLM_MID),
+                     sizeof(FM_DirListPkt_t));
 
         strncpy(FM_GlobalData.DirListPkt.DirName, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
         FM_GlobalData.DirListPkt.DirName[OS_MAX_PATH_LEN - 1] = '\0';
@@ -1364,12 +1360,12 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_ChildDirListFileInit(int32 *FileHandlePtr, const char *Directory, const char *Filename)
+bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, const char *Filename)
 {
     const char *    CmdText       = "Directory List to File";
     bool            CommandResult = true;
     CFE_FS_Header_t FileHeader;
-    osal_id_t       FileHandle   = 0;
+    osal_id_t       FileHandle   = OS_OBJECT_ID_UNDEFINED;
     int32           BytesWritten = 0;
     int32           Status       = 0;
 
@@ -1448,7 +1444,7 @@ bool FM_ChildDirListFileInit(int32 *FileHandlePtr, const char *Directory, const 
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildDirListFileLoop(uint32 DirId, int32 FileHandle, const char *Directory, const char *DirWithSep,
+void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *Directory, const char *DirWithSep,
                              const char *Filename, uint8 getSizeTimeMode)
 {
     const char *      CmdText                   = "Directory List to File";
@@ -1596,23 +1592,9 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     }
     else
     {
-#ifdef OS_FILESTAT_TIME
         *FileTime = OS_FILESTAT_TIME(FileStatus);
-#else
-        *FileTime = FileStatus.st_mtime;
-#endif
-
-#ifdef OS_FILESTAT_SIZE
         *FileSize = OS_FILESTAT_SIZE(FileStatus);
-#else
-        *FileSize = FileStatus.st_size;
-#endif
-
-#ifdef OS_FILESTAT_MODE
         *FileMode = OS_FILESTAT_MODE(FileStatus);
-#else
-        *FileMode = FileStatus.st_mode;
-#endif
     }
 
     return (Result);

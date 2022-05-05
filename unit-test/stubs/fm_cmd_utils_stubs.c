@@ -1,25 +1,26 @@
-/*
-** $Id: fm_cmd_utils.c 1.3.1.2 2017/01/23 21:53:21EST sstrege Exp  $
-**
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
-**
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
-**
-** Title: File Manager (FM) Command Utility Functions
-**
-** Purpose: Provides file manager utility function definitions for
-**          processing file manager commands
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Provides file manager utility function definitions for processing file manager commands
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -27,7 +28,6 @@
 #include "fm_child.h"
 #include "fm_perfids.h"
 #include "fm_events.h"
-#include "cfs_utils.h"
 #include "fm_test_utils.h"
 
 /************************************************************************
@@ -53,8 +53,7 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, 
-					uint32 EventID, const char *CmdText)
+bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID, const char *CmdText)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(FM_IsValidCmdPktLength), MsgPtr);
     UT_Stub_RegisterContextGenericArg(UT_KEY(FM_IsValidCmdPktLength), ExpectedLength);
@@ -68,7 +67,6 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
     return status;
 } /* FM_IsValidCmdPktLength */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- verify state is not invalid              */
@@ -80,19 +78,11 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
     return UT_DEFAULT_IMPL(FM_VerifyOverwrite);
 } /* End FM_VerifyOverwrite */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- get open files data                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-/*
-static void LoadOpenFileData(uint32 ObjId, void* CallbackArg)
-{
-    unimplemented(__func__, __FILE__, __LINE__);
-} // End LoadOpenFileData() 
-*/
 
 uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 {
@@ -104,23 +94,14 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*
-static void SearchOpenFileData(uint32 ObjId, void* CallbackArg)
-{
-    unimplemented(__func__, __FILE__, __LINE__);
-} // End SearchOpenFileData() 
-*/
-
-
 uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
 {
-    UT_Stub_RegisterContext(UT_KEY(FM_GetFilenameState),Filename);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_GetFilenameState),BufferSize);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_GetFilenameState),FileInfoCmd);
+    UT_Stub_RegisterContext(UT_KEY(FM_GetFilenameState), Filename);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_GetFilenameState), BufferSize);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_GetFilenameState), FileInfoCmd);
 
     return UT_DEFAULT_IMPL(FM_GetFilenameState);
 } /* End FM_GetFilenameState */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -133,7 +114,6 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
     return UT_DEFAULT_IMPL(FM_VerifyNameValid);
 } /* End FM_VerifyNameValid */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- verify state is closed file              */
@@ -144,7 +124,6 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileClosed);
 } /* End FM_VerifyFileClosed */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -157,7 +136,6 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
     return UT_DEFAULT_IMPL(FM_VerifyFileExists);
 } /* End FM_VerifyFileExists */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- verify state is unused                   */
@@ -168,7 +146,6 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileNoExist);
 } /* End FM_VerifyFileNoExist */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -181,7 +158,6 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
     return UT_DEFAULT_IMPL(FM_VerifyFileNotOpen);
 } /* End FM_VerifyFileNotOpen */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- verify state is directory                */
@@ -192,7 +168,6 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
 {
     return UT_DEFAULT_IMPL(FM_VerifyDirExists);
 } /* End FM_VerifyDirExists */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -206,7 +181,6 @@ bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const ch
     return UT_DEFAULT_IMPL(FM_VerifyDirNoExist);
 } /* End FM_VerifyDirNoExist */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- verify child task interface is alive     */
@@ -218,7 +192,6 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
 
     return UT_DEFAULT_IMPL(FM_VerifyChildTask);
 } /* End FM_VerifyChildTask */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -232,7 +205,6 @@ void FM_InvokeChildTask(void)
     UT_DEFAULT_IMPL(FM_InvokeChildTask);
 } /* End of FM_InvokeChildTask */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- add path separator to directory name     */
@@ -243,7 +215,6 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
 {
     UT_DEFAULT_IMPL(FM_AppendPathSep);
 } /* End of FM_AppendPathSep */
-
 
 /************************/
 /*  End of File Comment */

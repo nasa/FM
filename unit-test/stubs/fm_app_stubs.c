@@ -1,30 +1,32 @@
-/*
-** $Id: fm_app.c 1.5.1.2 2017/01/23 21:53:08EST sstrege Exp  $
-**
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
-**
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
-**
-** Title: Core Flight System (CFS) File Manager (FM) Application
-**
-** Purpose: The File Manager (FM) Application provides onboard file system
-**          management services by processing commands for copying and moving
-**          files, decompressing files, concatenating files, creating directories,
-**          deleting files and directories, and providing file and directory status.
-**          When the File Manager application receives a housekeeping request
-**          (scheduled within the scheduler application), FM  reports it's housekeeping
-**          status values via telemetry messaging.
-**
-** Author: Susanne L. Strege, Code 582 NASA GSFC
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The File Manager (FM) Application provides onboard file system
+ *  management services by processing commands for copying and moving
+ *  files, decompressing files, concatenating files, creating directories,
+ *  deleting files and directories, and providing file and directory status.
+ *  When the File Manager application receives a housekeeping request
+ *  (scheduled within the scheduler application), FM  reports it's housekeeping
+ *  status values via telemetry messaging.
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -55,8 +57,7 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-FM_GlobalData_t  FM_GlobalData;
-
+FM_GlobalData_t FM_GlobalData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -66,9 +67,8 @@ FM_GlobalData_t  FM_GlobalData;
 
 void FM_AppMain(void)
 {
-    unimplemented(__func__, __FILE__, __LINE__);
+    UT_DEFAULT_IMPL(FM_AppMain);
 } /* End FM_AppMain */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -78,9 +78,8 @@ void FM_AppMain(void)
 
 int32 FM_AppInit(void)
 {
-    return UT_DEFAULT_IMPL(FM_AppInit); 
+    return UT_DEFAULT_IMPL(FM_AppInit);
 } /* End of FM_AppInit() */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -92,7 +91,6 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr)
 {
     UT_DEFAULT_IMPL(FM_ProcessPkt);
 } /* End of FM_ProcessPkt */
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -106,7 +104,6 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *MessagePtr)
     UT_Stub_CopyFromLocal(UT_KEY(FM_ProcessCmd), &MessagePtr, sizeof(MessagePtr));
 } /* End of FM_ProcessCmd */
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM application -- housekeeping request packet processor         */
@@ -118,8 +115,6 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
     UT_DEFAULT_IMPL(FM_ReportHK);
 } /* End of FM_ReportHK */
 
-
 /************************/
 /*  End of File Comment */
 /************************/
-

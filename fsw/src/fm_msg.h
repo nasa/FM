@@ -1,38 +1,28 @@
-/*
-** Filename: fm_msg.h
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Title: CFS File Manager (FM) Application Command and Telemetry
-**        Packet Header File
-**
-** Purpose: Specification for the CFS FM command and telemetry messages.
-**
-** Notes:
-**
-** References:
-**    Flight Software Branch C Coding Standard Version 1.0a
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
-#ifndef _fm_msg_h_
-#define _fm_msg_h_
+/**
+ * @file
+ *   Specification for the CFS FM command and telemetry messages.
+ */
+#ifndef FM_MSG_H
+#define FM_MSG_H
 
 #include "cfe.h"
 #include "fm_platform_cfg.h"
@@ -48,48 +38,53 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*
-**  \brief Housekeeping Request command packet structure
-*/
+/**
+ * \defgroup cfsfmcmdstructs CFS File Manager Command Structures
+ * \{
+ */
+
+/**
+ *  \brief Housekeeping Request command packet structure
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
 } FM_HousekeepingCmd_t;
 
-/*
-**  \brief No-Operation command packet structure
-**
-**  For command details see #FM_NOOP_CC
-*/
+/**
+ *  \brief No-Operation command packet structure
+ *
+ *  For command details see #FM_NOOP_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
 } FM_NoopCmd_t;
 
-/*
-**  \brief Reset Counters command packet structure
-**
-**  For command details see #FM_RESET_CC
-*/
+/**
+ *  \brief Reset Counters command packet structure
+ *
+ *  For command details see #FM_RESET_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
 } FM_ResetCmd_t;
 
-/*
-**  \brief Copy File command packet structure
-**
-**  For command details see #FM_COPY_CC
-*/
+/**
+ *  \brief Copy File command packet structure
+ *
+ *  For command details see #FM_COPY_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     uint16 Overwrite;               /**< \brief Allow overwrite */
     char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
@@ -97,14 +92,14 @@ typedef struct
 
 } FM_CopyFileCmd_t;
 
-/*
-**  \brief Move File command packet structure
-**
-**  For command details see #FM_MOVE_CC
-*/
+/**
+ *  \brief Move File command packet structure
+ *
+ *  For command details see #FM_MOVE_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     uint16 Overwrite;               /**< \brief Allow overwrite */
     char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
@@ -112,65 +107,65 @@ typedef struct
 
 } FM_MoveFileCmd_t;
 
-/*
-**  \brief Rename File command packet structure
-**
-**  For command details see #FM_RENAME_CC
-*/
+/**
+ *  \brief Rename File command packet structure
+ *
+ *  For command details see #FM_RENAME_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
 
 } FM_RenameFileCmd_t;
 
-/*
-**  \brief Delete File command packet structure
-**
-**  For command details see #FM_DELETE_CC
-*/
+/**
+ *  \brief Delete File command packet structure
+ *
+ *  For command details see #FM_DELETE_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;                 /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader;                 /**< \brief Command header */
     char                    Filename[OS_MAX_PATH_LEN]; /**< \brief Delete filename */
 
 } FM_DeleteFileCmd_t;
 
-/*
-**  \brief Delete All command packet structure
-**
-**  For command details see #FM_DELETE_ALL_CC
-*/
+/**
+ *  \brief Delete All command packet structure
+ *
+ *  For command details see #FM_DELETE_ALL_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;                  /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader;                  /**< \brief Command header */
     char                    Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
 
 } FM_DeleteAllCmd_t;
 
-/*
-**  \brief Decompress File command packet structure
-**
-**  For command details see #FM_DECOMPRESS_CC
-*/
+/**
+ *  \brief Decompress File command packet structure
+ *
+ *  For command details see #FM_DECOMPRESS_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;               /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader;               /**< \brief Command header */
     char                    Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char                    Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
 
 } FM_DecompressCmd_t;
 
-/*
-**  \brief Concatenate Files command packet structure
-**
-**  For command details see #FM_CONCAT_CC
-*/
+/**
+ *  \brief Concatenate Files command packet structure
+ *
+ *  For command details see #FM_CONCAT_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Source1[OS_MAX_PATH_LEN]; /**< \brief Source 1 filename */
     char Source2[OS_MAX_PATH_LEN]; /**< \brief Source 2 filename */
@@ -178,66 +173,66 @@ typedef struct
 
 } FM_ConcatCmd_t;
 
-/*
-**  \brief Get File Info command packet structure
-**
-**  For command details see #FM_GET_FILE_INFO_CC
-*/
+/**
+ *  \brief Get File Info command packet structure
+ *
+ *  For command details see #FM_GET_FILE_INFO_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char   Filename[OS_MAX_PATH_LEN]; /**< \brief Filename */
     uint32 FileInfoCRC;               /**< \brief File info CRC method */
 
 } FM_GetFileInfoCmd_t;
 
-/*
-**  \brief Get Open Files command packet structure
-**
-**  For command details see #FM_GET_OPEN_FILES_CC
-*/
+/**
+ *  \brief Get Open Files command packet structure
+ *
+ *  For command details see #FM_GET_OPEN_FILES_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
 } FM_GetOpenFilesCmd_t;
 
-/*
-**  \brief Create Directory command packet structure
-**
-**  For command details see #FM_CREATE_DIR_CC
-*/
+/**
+ *  \brief Create Directory command packet structure
+ *
+ *  For command details see #FM_CREATE_DIR_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
 
 } FM_CreateDirCmd_t;
 
-/*
-**  \brief Delete Directory command packet structure
-**
-**  For command details see #FM_DELETE_DIR_CC
-*/
+/**
+ *  \brief Delete Directory command packet structure
+ *
+ *  For command details see #FM_DELETE_DIR_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
 
 } FM_DeleteDirCmd_t;
 
-/*
-**  \brief Get DIR List to File command packet structure
-**
-**  For command details see #FM_GET_DIR_FILE_CC
-*/
+/**
+ *  \brief Get DIR List to File command packet structure
+ *
+ *  For command details see #FM_GET_DIR_FILE_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char  Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
     char  Filename[OS_MAX_PATH_LEN];  /**< \brief Filename */
@@ -246,15 +241,15 @@ typedef struct
 
 } FM_GetDirFileCmd_t;
 
-/*
-**  \brief Get DIR List to Packet command packet structure
-**
-**  For command details see #FM_GET_DIR_PKT_CC
-*/
+/**
+ *  \brief Get DIR List to Packet command packet structure
+ *
+ *  For command details see #FM_GET_DIR_PKT_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char   Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
     uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
@@ -263,45 +258,52 @@ typedef struct
 
 } FM_GetDirPktCmd_t;
 
-/*
-**  \brief Get Free Space command packet structure
-**
-**  For command details see #FM_GET_FREE_SPACE_CC
-*/
+/**
+ *  \brief Get Free Space command packet structure
+ *
+ *  For command details see #FM_GET_FREE_SPACE_CC
+ */
 typedef struct
 {
 
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
 } FM_GetFreeSpaceCmd_t;
 
-/*
-**  \brief Set Table State command packet structure
-**
-**  For command details see #FM_SET_TABLE_STATE_CC
-*/
+/**
+ *  \brief Set Table State command packet structure
+ *
+ *  For command details see #FM_SET_TABLE_STATE_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     uint32 TableEntryIndex; /**< \brief Table entry index */
     uint32 TableEntryState; /**< \brief New table entry state */
 
 } FM_SetTableStateCmd_t;
 
-/*
-**  \brief Set Permissions for a file
-**
-**  For command details see #FM_SET_PERM_CC
-*/
+/**
+ *  \brief Set Permissions for a file
+ *
+ *  For command details see #FM_SET_FILE_PERM_CC
+ */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE SB cmd hdr */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char   FileName[OS_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
     uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
 
 } FM_SetPermCmd_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfsfmtlm CFS File Manager Telemetry
+ * \{
+ */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -310,37 +312,28 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \fmtlm Get Directory Listing entry structure
-**/
+ *  \brief Get Directory Listing entry structure
+ */
 typedef struct
 {
-    char EntryName[OS_MAX_PATH_LEN]; /**< \fmtlmmnemonic \FM_DLFileName
-                                          \brief Directory Listing Filename */
-    uint32 EntrySize;                /**< \fmtlmmnemonic \FM_DLFileSize
-                                          \brief Directory Listing File Size */
-    uint32 ModifyTime;               /**< \fmtlmmnemonic \FM_DLModTime
-                                          \brief Directory Listing File Last Modification Times */
-    uint32 Mode;                     /**< \fmtlmmnemonic \FM_DLMode
-                                          \brief Mode of the file (Permissions) */
+    char   EntryName[OS_MAX_PATH_LEN]; /**< \brief Directory Listing Filename */
+    uint32 EntrySize;                  /**< \brief Directory Listing File Size */
+    uint32 ModifyTime;                 /**< \brief Directory Listing File Last Modification Times */
+    uint32 Mode;                       /**< \brief Mode of the file (Permissions from #OS_FILESTAT_MODE) */
 } FM_DirListEntry_t;
 
 /**
-**  \fmtlm Get Directory Listing telemetry packet
-**/
+ *  \brief Get Directory Listing telemetry packet
+ */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE SB tlm hdr */
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    char DirName[OS_MAX_PATH_LEN];                       /**< \fmtlmmnemonic \FM_DirName
-                                                              \brief Directory Name */
-    uint32 TotalFiles;                                   /**< \fmtlmmnemonic \FM_TotalFiles
-                                                              \brief Number of files in the directory */
-    uint32 PacketFiles;                                  /**< \fmtlmmnemonic \FM_PacketFiles
-                                                              \brief Number of files in this packet */
-    uint32 FirstFile;                                    /**< \fmtlmmnemonic \FM_FirstFile
-                                                              \brief Index into directory files of first packet file */
-    FM_DirListEntry_t FileList[FM_DIR_LIST_PKT_ENTRIES]; /**< \fmtlmmnemonic \FM_DLFileList
-                                               \brief Directory listing file data */
+    char              DirName[OS_MAX_PATH_LEN];          /**< \brief Directory Name */
+    uint32            TotalFiles;                        /**< \brief Number of files in the directory */
+    uint32            PacketFiles;                       /**< \brief Number of files in this packet */
+    uint32            FirstFile;                         /**< \brief Index into directory files of first packet file */
+    FM_DirListEntry_t FileList[FM_DIR_LIST_PKT_ENTRIES]; /**< \brief Directory listing file data */
 } FM_DirListPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -350,8 +343,8 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \brief Get Directory Listing file statistics structure
-**/
+ *  \brief Get Directory Listing file statistics structure
+ */
 typedef struct
 {
     char   DirName[OS_MAX_PATH_LEN]; /**< \brief Directory name */
@@ -367,29 +360,20 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \fmtlm Get File Info telemetry packet
-**/
+ *  \brief Get File Info telemetry packet
+ */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE SB tlm hdr */
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    uint8 FileStatus;        /**< \fmtlmmnemonic \FM_FileStatus
-                                  \brief Status indicating whether the file is open or closed */
-    uint8 CRC_Computed;      /**< \fmtlmmnemonic \FM_ComputeCRC
-                                  \brief Flag indicating whether a CRC was computed or not */
-    uint8 Spare[2];          /**< \fmtlmmnemonic \FM_InfoPad
-                                  \brief Structure padding */
-    uint32 CRC;              /**< \fmtlmmnemonic \FM_CRC
-                                  \brief CRC value if computed */
-    uint32 FileSize;         /**< \fmtlmmnemonic \FM_InfoFileSize
-                                  \brief File Size */
-    uint32 LastModifiedTime; /**< \fmtlmmnemonic \FM_ModTime
-                                  \brief Last Modification Time of File */
-    uint32 Mode;             /**< \fmtlmmnemonic \FM_Mode
-                                  \brief Mode of the file (Permissions) */
-
-    char Filename[OS_MAX_PATH_LEN]; /**< \fmtlmmnemonic \FM_InfoFileName
-                                         \brief Name of File */
+    uint8  FileStatus;                /**< \brief Status indicating whether the file is open or closed */
+    uint8  CRC_Computed;              /**< \brief Flag indicating whether a CRC was computed or not */
+    uint8  Spare[2];                  /**< \brief Structure padding */
+    uint32 CRC;                       /**< \brief CRC value if computed */
+    uint32 FileSize;                  /**< \brief File Size */
+    uint32 LastModifiedTime;          /**< \brief Last Modification Time of File */
+    uint32 Mode;                      /**< \brief Mode of the file (Permissions) */
+    char   Filename[OS_MAX_PATH_LEN]; /**< \brief Name of File */
 } FM_FileInfoPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -399,8 +383,8 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \brief Get Open Files list entry structure
-**/
+ *  \brief Get Open Files list entry structure
+ */
 typedef struct
 {
     char LogicalName[OS_MAX_PATH_LEN]; /**< \brief Logical filename */
@@ -409,16 +393,14 @@ typedef struct
 } FM_OpenFilesEntry_t;
 
 /**
-**  \fmtlm Get Open Files telemetry packet
-**/
+ *  \brief Get Open Files telemetry packet
+ */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE SB tlm hdr */
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    uint32 NumOpenFiles;                                      /**< \fmtlmmnemonic \FM_TotalOpenFiles
-                                                             \brief Number of files opened via cFE */
-    FM_OpenFilesEntry_t OpenFilesList[OS_MAX_NUM_OPEN_FILES]; /**< \fmtlmmnemonic \FM_OpenFilesList
-                                               \brief List of files opened via cFE */
+    uint32              NumOpenFiles;                         /**< \brief Number of files opened via cFE */
+    FM_OpenFilesEntry_t OpenFilesList[OS_MAX_NUM_OPEN_FILES]; /**< \brief List of files opened via cFE */
 } FM_OpenFilesPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -428,25 +410,22 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \brief Get Free Space list entry structure
-**/
+ *  \brief Get Free Space list entry structure
+ */
 typedef struct
 {
-    osal_blockcount_t FreeSpace; /**< \fmtlmmnemonic \FM_FreeSpace
-                                      \brief Blocks free in filesystem */
-    char Name[OS_MAX_PATH_LEN];  /**< \fmtlmmnemonic \FM_PktFsName
-                                      \brief File system name */
+    osal_blockcount_t FreeSpace;             /**< \brief Blocks free in filesystem */
+    char              Name[OS_MAX_PATH_LEN]; /**< \brief File system name */
 } FM_FreeSpacePktEntry_t;
 
 /**
-**  \fmtlm Get Free Space telemetry packet
-**/
+ *  \brief Get Free Space telemetry packet
+ */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE SB tlm hdr */
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    FM_FreeSpacePktEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \fmtlmmnemonic \FM_PktFsList
-                                                \brief Array of file system free space entries */
+    FM_FreeSpacePktEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
 } FM_FreeSpacePkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -456,37 +435,30 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-** \fmtlm Housekeeping telemetry packet
-**/
+ * \brief Housekeeping telemetry packet
+ */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE SB tlm hdr */
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    uint8 CommandCounter;    /**< \fmtlmmnemonic \FM_CMDPC
-                          \brief Application command counter */
-    uint8 CommandErrCounter; /**< \fmtlmmnemonic \FM_CMDEC
-                          \brief Application command error counter */
+    uint8 CommandCounter;    /**< \brief Application command counter */
+    uint8 CommandErrCounter; /**< \brief Application command error counter */
     uint8 Spare;             /**< \brief Placeholder for unused command warning counter */
 
-    uint8 NumOpenFiles; /**< \fmtlmmnemonic \FM_NumOpen
-                             \brief Number of open files in the system */
+    uint8 NumOpenFiles; /**< \brief Number of open files in the system */
 
-    uint8 ChildCmdCounter;     /**< \fmtlmmnemonic \FM_ChildCMDPC
-                                    \brief Child task command counter */
-    uint8 ChildCmdErrCounter;  /**< \fmtlmmnemonic \FM_ChildCMDEC
-                                    \brief Child task command error counter */
-    uint8 ChildCmdWarnCounter; /**< \fmtlmmnemonic \FM_ChildWarnCtr
-                                    \brief Child task command warning counter */
+    uint8 ChildCmdCounter;     /**< \brief Child task command counter */
+    uint8 ChildCmdErrCounter;  /**< \brief Child task command error counter */
+    uint8 ChildCmdWarnCounter; /**< \brief Child task command warning counter */
 
-    uint8 ChildQueueCount; /**< \fmtlmmnemonic \FM_ChildQueueCount
-                                \brief Number of pending commands in queue */
+    uint8 ChildQueueCount; /**< \brief Number of pending commands in queue */
 
-    uint8 ChildCurrentCC;  /**< \fmtlmmnemonic \FM_ChildCurrCC
-                                \brief Command code currently executing */
-    uint8 ChildPreviousCC; /**< \fmtlmmnemonic \FM_ChildPrevCC
-                                \brief Command code previously executed */
+    uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
+    uint8 ChildPreviousCC; /**< \brief Command code previously executed */
 
 } FM_HousekeepingPkt_t;
+
+/**\}*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -495,8 +467,8 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \brief Get Free Space table entry
-**/
+ *  \brief Get Free Space table entry
+ */
 typedef struct
 {
     uint32 State;                 /**< \brief Table entry enable/disable state */
@@ -505,8 +477,8 @@ typedef struct
 } FM_TableEntry_t;
 
 /**
-**  \brief Get Free Space table definition
-**/
+ *  \brief Get Free Space table definition
+ */
 typedef struct
 {
     FM_TableEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief One entry for each file system */
@@ -520,8 +492,8 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \brief Child Task Interface command queue entry structure
-**/
+ *  \brief Child Task Interface command queue entry structure
+ */
 typedef struct
 {
     CFE_MSG_FcnCode_t CommandCode;              /**< \brief Command code - identifies the command */
@@ -544,8 +516,8 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-**  \fmtlm Application global data structure
-**/
+ *  \brief Application global data structure
+ */
 typedef struct
 {
     FM_FreeSpaceTable_t *FreeSpaceTablePtr;    /**< \brief File System Table Pointer */
@@ -553,9 +525,9 @@ typedef struct
 
     CFE_SB_PipeId_t CmdPipe; /**< \brief cFE software bus command pipe */
 
-    CFE_ES_TaskId_t ChildTaskID;  /**< \brief Child task ID */
-    uint32 ChildSemaphore;     /**< \brief Child task wakeup counting semaphore */
-    uint32 ChildQueueCountSem; /**< \brief Child queue counter mutex semaphore */
+    CFE_ES_TaskId_t ChildTaskID;        /**< \brief Child task ID */
+    osal_id_t       ChildSemaphore;     /**< \brief Child task wakeup counting semaphore */
+    osal_id_t       ChildQueueCountSem; /**< \brief Child queue counter mutex semaphore */
 
     uint8 ChildCmdCounter;     /**< \brief Child task command success counter */
     uint8 ChildCmdErrCounter;  /**< \brief Child task command error counter */
@@ -575,7 +547,7 @@ typedef struct
 
     uint32 FileStatTime; /**< \brief Modify time from most recent OS_stat */
     uint32 FileStatSize; /**< \brief File size from most recent OS_stat */
-    uint32 FileStatMode; /**< \brief File mode from most recent OS_stat */
+    uint32 FileStatMode; /**< \brief File mode from most recent OS_stat (OS_FILESTAT_MODE) */
 
     FM_DirListFileStats_t DirListFileStats; /**< \brief Get dir list to file statistics structure */
 
@@ -600,16 +572,7 @@ typedef struct
 
 } FM_GlobalData_t;
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM -- access to global data structure (defined in fm_app.c)     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/** \brief File Manager global */
 extern FM_GlobalData_t FM_GlobalData;
 
-#endif /* _fm_msg_h_ */
-
-/************************/
-/*  End of File Comment */
-/************************/
+#endif

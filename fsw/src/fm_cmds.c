@@ -1,31 +1,28 @@
-/*
-** Filename: fm_cmds.c
-**
-** NASA Docket No. GSC-18,475-1, identified as “Core Flight Software System (CFS)
-** File Manager Application Version 2.5.3
-**
-** Copyright © 2020 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-**
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-**
-** Title: File Manager (FM) Application Ground Commands
-**
-** Purpose: Provides functions for the execution of the FM ground commands
-**
-** Notes:
-**
-*/
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Application Ground Commands
+ *
+ *  Provides functions for the execution of the FM ground commands
+ */
 
 #include "cfe.h"
 #include "fm_msg.h"
@@ -594,7 +591,8 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     if (CommandResult == true)
     {
         /* Initialize open files telemetry packet */
-        CFE_MSG_Init(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg, FM_OPEN_FILES_TLM_MID, sizeof(FM_OpenFilesPkt_t));
+        CFE_MSG_Init(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_OPEN_FILES_TLM_MID),
+                     sizeof(FM_OpenFilesPkt_t));
 
         /* Get list of open files and count */
         NumOpenFiles                            = FM_GetOpenFilesData(FM_GlobalData.OpenFilesPkt.OpenFilesList);
@@ -875,7 +873,8 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
         else
         {
             /* Initialize the file system free space telemetry packet */
-            CFE_MSG_Init(&FM_GlobalData.FreeSpacePkt.TlmHeader.Msg, FM_FREE_SPACE_TLM_MID, sizeof(FM_FreeSpacePkt_t));
+            CFE_MSG_Init(&FM_GlobalData.FreeSpacePkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FREE_SPACE_TLM_MID),
+                         sizeof(FM_FreeSpacePkt_t));
 
             /* Process enabled file system table entries */
             for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
