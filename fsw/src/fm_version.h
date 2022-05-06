@@ -1,6 +1,6 @@
 /************************************************************************
  * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
- * Software System (cFS) File Manager Application Version 2.6.0”
+ * Software System (cFS) File Manager Application Version 2.6.1”
  *
  * Copyright (c) 2021 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
@@ -32,9 +32,9 @@
  * \{
  */
 
-#define FM_MAJOR_VERSION 2  /**< \brief Major version number */
-#define FM_MINOR_VERSION 6  /**< \brief Minor version number */
-#define FM_REVISION      99 /**< \brief Revision number */
+#define FM_MAJOR_VERSION 2 /**< \brief Major version number */
+#define FM_MINOR_VERSION 6 /**< \brief Minor version number */
+#define FM_REVISION      1 /**< \brief Revision number */
 
 /**\}*/
 
