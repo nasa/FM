@@ -32,9 +32,9 @@
  * \{
  */
 
-#define FM_MAJOR_VERSION 2 /**< \brief Major version number */
-#define FM_MINOR_VERSION 6 /**< \brief Minor version number */
-#define FM_REVISION      1 /**< \brief Revision number */
+#define FM_MAJOR_VERSION 2  /**< \brief Major version number */
+#define FM_MINOR_VERSION 6  /**< \brief Minor version number */
+#define FM_REVISION      99 /**< \brief Revision number */
 
 /**\}*/
 
