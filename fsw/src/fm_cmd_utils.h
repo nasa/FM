@@ -200,7 +200,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *
  *  \par Assumptions, External Events, and Notes:
  *
- *  \param [in]  Name       Pointer to buffer containing name
+ *  \param [in]  Filename   Pointer to buffer containing name
  *  \param [in]  BufferSize Size of name character buffer
  *  \param [in]  EventID    Error event ID (command specific)
  *  \param [in]  CmdText    Error event text (command specific)
@@ -211,7 +211,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *
  *  \sa #FM_GetFilenameState
  */
-bool FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify File Is Not Open Function
@@ -222,7 +222,7 @@ bool FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, const c
  *
  *  \par Assumptions, External Events, and Notes:
  *
- *  \param [in]  Name       Pointer to buffer containing name
+ *  \param [in]  Filename   Pointer to buffer containing name
  *  \param [in]  BufferSize Size of name character buffer
  *  \param [in]  EventID    Error event ID (command specific)
  *  \param [in]  CmdText    Error event text (command specific)
@@ -233,7 +233,7 @@ bool FM_VerifyFileNoExist(char *Name, uint32 BufferSize, uint32 EventID, const c
  *
  *  \sa #FM_GetFilenameState
  */
-bool FM_VerifyFileNotOpen(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify Directory Exists Function
