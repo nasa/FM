@@ -62,7 +62,7 @@ int32 FM_TableInit(void);
  *
  *  \par Assumptions, External Events, and Notes:
  *
- *  \param [in]  TableData - Pointer to table data for verification.
+ *  \param [in]  TablePtr - Pointer to table data for verification.
  *
  *  \return Validation status
  *  \retval #CFE_SUCCESS             \copydoc CFE_SUCCESS
@@ -70,7 +70,7 @@ int32 FM_TableInit(void);
  *
  *  \sa /FM_AppInit
  */
-int32 FM_ValidateTable(FM_FreeSpaceTable_t *TableData);
+int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr);
 
 /**
  *  \brief Acquire Table Data Pointer Function

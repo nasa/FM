@@ -40,7 +40,7 @@
 
 int32 FM_TableInit(void)
 {
-    int32 Status = CFE_SUCCESS;
+    int32 Status;
 
     /* Initialize file system free space table pointer */
     FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
@@ -188,7 +188,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
 
 void FM_AcquireTablePointers(void)
 {
-    int32 Status = CFE_TBL_ERR_NEVER_LOADED;
+    int32 Status;
 
     /* Allow cFE an opportunity to make table updates */
     CFE_TBL_Manage(FM_GlobalData.FreeSpaceTableHandle);
