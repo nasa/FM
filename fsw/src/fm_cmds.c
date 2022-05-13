@@ -857,6 +857,8 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
     uint32       i             = 0;
     OS_statvfs_t FileStats;
 
+    memset(&FileStats, 0, sizeof(FileStats));
+
     /* Verify command packet length */
     CommandResult =
         FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetFreeSpaceCmd_t), FM_GET_FREE_SPACE_PKT_ERR_EID, CmdText);
