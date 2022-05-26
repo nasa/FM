@@ -1,11 +1,11 @@
 Summary,Custom field (Requirement ID),Description,Custom field (Requirement Rationale)
 FM1000,FM1000,"Upon receipt of a No-Op command, FM shall increment the Valid Command Counter and generate an event message.",Debug command to verify application is alive
 FM1001,FM1001,"Upon receipt of a Reset Counters command,  FM shall reset the following housekeeping variables to a value of zero:      
-a) Valid Command Counter          
-b) Command Rejected Counter",Important for testing and on-orbit in order to start with a “clean slate”
+a) Valid Command Counter(s)
+b) Command Rejected Counter(s)","Important for testing and on-orbit in order to start with a “clean slate”.  Note for implementations where commands are processed in different contexts (tasks) and have separate counters, they all need to be reset."
 FM1002,FM1002,"If the computed length of any FM command is not equal to the length contained in the message header, FM shall reject the command",Basic command verification in the event of SEU or memory corruption
-FM1003,FM1003,"If FM accepts any command as valid, FM shall execute the command, increment the FM Valid Command  Counter and issue an event message",Operators require positive feedback from successful commands
-FM1004,FM1004,"If FM rejects any command, FM shall abort the command execution, increment the FM Command Rejected Counter and issue an error event message",Operators require notification of command failures
+FM1003,FM1003,"If FM accepts any command as valid, FM shall execute the command, increment the FM Valid Command Counter and issue an event message","Operators require positive feedback from successful commands.  Note for implementations where commands are processed in different contexts (tasks), the command may be accepted in one context but rejected in another.  For example a main task could except a command, increment it's valid command counter, pass the command to a child task, which then could reject the command and increment it's invalid command counter.  These behavior details are implementation/design specific but still meet the intent of the requirement."
+FM1004,FM1004,"If FM rejects any command, FM shall abort the command execution, increment the FM Command Rejected Counter and issue an error event message","Operators require notification of command failures.  Note for implementations where commands are processed in different contexts (tasks), the command may be accepted in one context but rejected in another.  For example a main task could except a command, increment it's valid command counter, pass the command to a child task, which then could reject the command and increment it's invalid command counter.  These behavior details are implementation/design specific but still meet the intent of the requirement."
 FM1005,FM1005,"If the filename specified in any FM command is not valid, FM shall reject the command",If the filename is not valid then want to reject the command. Non-fully qualified filenames will be considered invalid.
 FM1006,FM1006,"If the directory specified in any FM command is not valid, FM shall reject the command",If an invalid directory is specified than want to reject the command
 FM1008,FM1008,The CFS FM FSW shall utilize full path specifications having a maximum length of <PLATFORM_DEFINED> characters for all command input arguments requiring a file or pathname.,Fully qualified filenames or paths help ensure the correct files/directories are being manipulated. This requirement is intended to prevent “assumed” pathnames from being used by CFS FM.
@@ -82,9 +82,9 @@ c) last modification time of each file
 e) Mode (permissions), as a 4-byte value, of each file
 Note: the lettering of the listed values is kept in sync with parent requirement",
 FM4000,FM4000,"FM shall generate a housekeeping message containing the following:    
-a) Valid Command Counter                
-b) Command Rejected Counter    
-c) Total number of open files",Housekeeping telemetry to indicate basic FM status.
+a) Valid Command Counter(s)
+b) Command Rejected Counter(s)
+c) Total number of open files","Housekeeping telemetry to indicate basic FM status.  Note for implementations where commands are processed in different contexts (tasks) and have separate counters, they all need to be included."
 FM4001,FM4001,"Upon receipt of a Report Device Free Space command, FM shall generate a message containing for each enabled device in the FM device table the amount of available free space.",
 FM5000,FM5000,"Upon initialization of the FM Application,   FM shall initialize the following data to Zero    
 a) Valid Command Counter                    
