@@ -668,11 +668,9 @@ void Test_FM_VerifyChildTask_ChildSemaphoreIsInvalid(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_pspmemset, 0);
     UtAssert_INT32_EQ(count_sendevent, 1);
     UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_DISABLED_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
     UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
@@ -690,11 +688,9 @@ void Test_FM_VerifyChildTask_LocalQueueCountEqualToQueueDepth(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_pspmemset, 0);
     UtAssert_INT32_EQ(count_sendevent, 1);
     UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_Q_FULL_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
     UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
@@ -712,11 +708,9 @@ void Test_FM_VerifyChildTask_LocalQueueCountGreaterQueueDepth(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_pspmemset, 0);
     UtAssert_INT32_EQ(count_sendevent, 1);
     UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
     UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
@@ -735,11 +729,9 @@ void Test_FM_VerifyChildTask_ChildWriteIndexGreaterChildQDepth(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_pspmemset, 0);
     UtAssert_INT32_EQ(count_sendevent, 1);
     UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
     UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
@@ -758,11 +750,9 @@ void Test_FM_VerifyChildTask_ChildWriteIndexEqualChildQDepth(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_pspmemset, 0);
     UtAssert_INT32_EQ(count_sendevent, 1);
     UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
     UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
@@ -781,11 +771,9 @@ void Test_FM_VerifyChildTask_Default(void)
     bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
 
     uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_pspmemset = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result_verifychildtask, true);
-    UtAssert_INT32_EQ(count_pspmemset, 1);
     UtAssert_INT32_EQ(count_sendevent, 0);
 }
 

@@ -3003,14 +3003,12 @@ void Test_FM_ChildDirListFileInit_OSWriteSameSizeDirListFileStatst(void)
     uint8 count_osclose                  = UT_GetStubCount(UT_KEY(OS_close));
     uint8 count_fswriteheader            = UT_GetStubCount(UT_KEY(CFE_FS_WriteHeader));
     uint8 count_oswrite                  = UT_GetStubCount(UT_KEY(OS_write));
-    uint8 count_pspmemset                = UT_GetStubCount(UT_KEY(CFE_PSP_MemSet));
 
     // Assert
     UtAssert_INT32_EQ(result, true);
     UtAssert_INT32_EQ(count_sendevent, 0);
     UtAssert_INT32_EQ(count_osopencreate, 1);
     UtAssert_INT32_EQ(count_fswriteheader, 1);
-    UtAssert_INT32_EQ(count_pspmemset, 2);
     UtAssert_INT32_EQ(count_oswrite, 1);
     UtAssert_INT32_EQ(count_osclose, 0);
     UtAssert_INT32_EQ(count_childcmderrcounter_before, count_childcmderrcounter_after);
@@ -3346,10 +3344,6 @@ void Test_FM_ChildSizeTimeMode_OsStatNoSuccess(void)
     uint32      dummy_filemode = UT_Utils_Any_uint32();
 
     UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-    OS_time_t  dummy_ostime     = {.ticks = UT_Utils_Any_int32()};
-    os_fstat_t dummy_filestatus = {
-        .FileModeBits = UT_Utils_Any_uint32(), .FileTime = dummy_ostime, .FileSize = UT_Utils_Any_uint32()};
-    UT_SetDataBuffer(UT_KEY(CFE_PSP_MemSet), &dummy_filestatus, sizeof(dummy_filestatus), false);
 
     // Act
     int32 result = FM_ChildSizeTimeMode(dummy_filename, &dummy_filesize, &dummy_filetime, &dummy_filemode);

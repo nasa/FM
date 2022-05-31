@@ -598,7 +598,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
     }
     else
     {
-        CFE_PSP_MemSet(&FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex], 0, sizeof(FM_ChildQueueEntry_t));
+        memset(&FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex], 0, sizeof(FM_GlobalData.ChildQueue[0]));
 
         /* OK to add another command to the queue */
         Result = true;

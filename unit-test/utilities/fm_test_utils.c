@@ -135,7 +135,7 @@ void FM_Test_Setup(void)
 
     UT_ResetState(0);
 
-    memset(&FM_GlobalData, 0, sizeof(FM_GlobalData_t));
+    memset(&FM_GlobalData, 0, sizeof(FM_GlobalData));
     memset(context_CFE_EVS_SendEvent, 0, sizeof(context_CFE_EVS_SendEvent));
     memset(&UT_CmdBuf, 0, sizeof(UT_CmdBuf));
 

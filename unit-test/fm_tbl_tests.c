@@ -317,8 +317,8 @@ void Test_FM_ValidateTable_NameTooLong(void)
         snprintf(DummyTable.FileSys[i].Name, OS_MAX_PATH_LEN, "Test");
     }
 
-    memset(DummyTable.FileSys[0].Name, 'A', OS_MAX_PATH_LEN);
-    memset(DummyTable.FileSys[1].Name, 'A', OS_MAX_PATH_LEN);
+    memset(DummyTable.FileSys[0].Name, 'A', sizeof(DummyTable.FileSys[0].Name));
+    memset(DummyTable.FileSys[1].Name, 'A', sizeof(DummyTable.FileSys[1].Name));
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
