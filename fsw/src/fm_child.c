@@ -491,6 +491,8 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
     char *Directory  = CmdArgs->Source1;
     char *DirWithSep = CmdArgs->Source2;
 
+    memset(&DirEntry, 0, sizeof(DirEntry));
+
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
@@ -1055,6 +1057,8 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
     os_dirent_t DirEntry;
     int32       OS_Status = OS_SUCCESS;
 
+    memset(&DirEntry, 0, sizeof(DirEntry));
+
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
@@ -1202,6 +1206,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     int32              EntryLength    = 0;
     int32              FilesTillSleep = FM_CHILD_STAT_SLEEP_FILECOUNT;
     int32              Status;
+
+    memset(&DirEntry, 0, sizeof(DirEntry));
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
@@ -1462,6 +1468,8 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
     os_dirent_t       DirEntry;
     FM_DirListEntry_t DirListData;
 
+    memset(&DirEntry, 0, sizeof(DirEntry));
+
     PathLength = strlen(DirWithSep);
 
     /* Until end of directory entries or output file write error */
@@ -1581,7 +1589,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     int32      Result = OS_SUCCESS;
     os_fstat_t FileStatus;
 
-    CFE_PSP_MemSet(&FileStatus, 0, sizeof(os_fstat_t));
+    memset(&FileStatus, 0, sizeof(os_fstat_t));
 
     Result = OS_stat(Filename, &FileStatus);
 

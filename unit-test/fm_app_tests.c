@@ -53,11 +53,6 @@
 #include <stdlib.h>
 #include "cfe.h"
 
-/* fm_app_tests globals */
-int32  result;
-uint16 EventID;
-uint8  call_count_FM_Command;
-
 typedef struct
 {
     uint16      ExpectedEvent;

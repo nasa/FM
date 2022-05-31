@@ -99,6 +99,8 @@ static void LoadOpenFileData(osal_id_t ObjId, void *CallbackArg)
     OS_task_prop_t       TaskInfo;
     OS_file_prop_t       FdProp;
 
+    memset(&FdProp, 0, sizeof(FdProp));
+
     if (OS_IdentifyObject(ObjId) == OS_OBJECT_TYPE_OS_STREAM)
     {
         if (OpenFilesData != (FM_OpenFilesEntry_t *)NULL)
@@ -143,6 +145,8 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
     char *         Fname = (char *)CallbackArg;
     OS_file_prop_t FdProp;
 
+    memset(&FdProp, 0, sizeof(FdProp));
+
     if (Fname == NULL)
     {
         return;
@@ -170,6 +174,8 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
     uint32     FilenameState   = FM_NAME_IS_INVALID;
     bool       FilenameIsValid = false;
     int32      StringLength    = 0;
+
+    memset(&FileStatus, 0, sizeof(FileStatus));
 
     if (Filename != NULL)
     {
