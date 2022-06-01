@@ -1,19 +1,19 @@
 Summary,Custom field (Requirement ID),Description,Custom field (Requirement Rationale)
 FM1000,FM1000,"Upon receipt of a No-Op command, FM shall increment the Valid Command Counter and generate an event message.",Debug command to verify application is alive
 FM1001,FM1001,"Upon receipt of a Reset Counters command,  FM shall reset the following housekeeping variables to a value of zero:      
-a) Valid Command Counter          
-b) Command Rejected Counter",Important for testing and on-orbit in order to start with a “clean slate”
+a) Valid Command Counter(s)
+b) Command Rejected Counter(s)","Important for testing and on-orbit in order to start with a “clean slate”.  Note for implementations where commands are processed in different contexts (tasks) and have separate counters, they all need to be reset."
 FM1002,FM1002,"If the computed length of any FM command is not equal to the length contained in the message header, FM shall reject the command",Basic command verification in the event of SEU or memory corruption
-FM1003,FM1003,"If FM accepts any command as valid, FM shall execute the command, increment the FM Valid Command  Counter and issue an event message",Operators require positive feedback from successful commands
-FM1004,FM1004,"If FM rejects any command, FM shall abort the command execution, increment the FM Command Rejected Counter and issue an error event message",Operators require notification of command failures
+FM1003,FM1003,"If FM accepts any command as valid, FM shall execute the command, increment the FM Valid Command Counter and issue an event message","Operators require positive feedback from successful commands.  Note for implementations where commands are processed in different contexts (tasks), the command may be accepted in one context but rejected in another.  For example a main task could except a command, increment it's valid command counter, pass the command to a child task, which then could reject the command and increment it's invalid command counter.  These behavior details are implementation/design specific but still meet the intent of the requirement."
+FM1004,FM1004,"If FM rejects any command, FM shall abort the command execution, increment the FM Command Rejected Counter and issue an error event message","Operators require notification of command failures.  Note for implementations where commands are processed in different contexts (tasks), the command may be accepted in one context but rejected in another.  For example a main task could except a command, increment it's valid command counter, pass the command to a child task, which then could reject the command and increment it's invalid command counter.  These behavior details are implementation/design specific but still meet the intent of the requirement."
 FM1005,FM1005,"If the filename specified in any FM command is not valid, FM shall reject the command",If the filename is not valid then want to reject the command. Non-fully qualified filenames will be considered invalid.
 FM1006,FM1006,"If the directory specified in any FM command is not valid, FM shall reject the command",If an invalid directory is specified than want to reject the command
 FM1008,FM1008,The CFS FM FSW shall utilize full path specifications having a maximum length of <PLATFORM_DEFINED> characters for all command input arguments requiring a file or pathname.,Fully qualified filenames or paths help ensure the correct files/directories are being manipulated. This requirement is intended to prevent “assumed” pathnames from being used by CFS FM.
-FM1009,FM1009,"Upon receipt of the Set Table Entry State Command, FM will set the enable/disable state for the specified entry in the File System Free Space Table.",
-FM1009.1,FM1009.1,If the File System Free Space table has not been loaded FM will reject the command and send an event message,
-FM1009.2,FM1009.2,If the command-specified entry in the File System Free Space Table is invalid FM will reject the command and send an event message,
-FM1009.3,FM1009.3,If the command-specified state is invalid FM will reject the command and send an event message,
-FM1009.4,FM1009.4,If the command-specified entry in the File System Free Space Table is unused FM will reject the command and send an event message,
+FM1009,FM1009,"Upon receipt of the Set Table Entry State Command, FM will set the enable/disable state for the specified entry in the File System Free Space Table.",Supports operational awareness of table entry states by dumping the table.
+FM1009.1,FM1009.1,If the File System Free Space table has not been loaded FM will reject the command and send an event message,Operational notification that changing the state within a table that hasn't been loaded isn't supported.
+FM1009.2,FM1009.2,If the command-specified entry in the File System Free Space Table is invalid FM will reject the command and send an event message,Operational notification that changing the state for an invalid entry in the table is not supported.
+FM1009.3,FM1009.3,If the command-specified state is invalid FM will reject the command and send an event message,Operational notification of an invalid state request.
+FM1009.4,FM1009.4,If the command-specified entry in the File System Free Space Table is unused FM will reject the command and send an event message,Operational notification of an invalid state request.
 FM2002,FM2002,"Upon receipt of a File Copy command, FM shall copy the command-specified file to the command-specified destination file",Copy of a fully-qualified file to another fully-qualified file (copy a file to another directory and rename it)
 FM2002.1,FM2002.1,"If the command-specified destination file exists and the command-specified overwrite flag is set to FALSE, FM shall reject the command","Want to prevent files from being accidentally overwritten.
 "
@@ -23,11 +23,11 @@ FM2005,FM2005,"Upon receipt of a Rename command, FM shall rename the command-spe
 FM2005.1,FM2005.1,"If the command-specified destination file exists, FM shall reject the command.",Want to prevent files from being overwritten.  Users must delete the file first before performing this operation.
 FM2007,FM2007,"Upon receipt of a Delete All Files command, FM shall delete all the files in the command-specified directory",Typical delete *.* command
 FM2007.1,FM2007.1,"If the command-specified directory contains an open file, FM shall not delete the open file.","The command was a success, however, want to notify the ground that there were files that were not deleted."
-FM2007.1.1,FM2007.1.1,"For any open files that are not deleted, FM shall issue one event message.",
+FM2007.1.1,FM2007.1.1,"For any open files that are not deleted, FM shall issue one event message.",Operational notification of files not deleted.
 FM2007.2,FM2007.2,"If the command-specified directory contains a subdirectory, FM shall not delete the subdirectory",This requirement protects against accidental deletion of subdirectories. Operator may want to remove files in directories and subdirectories but leave the directory structure in place. Operators should use the Delete Directory command in order to delete a directory.
 FM2007.2.1,FM2007.2.1,"For any subdirectories are not deleted, FM shall issue one event message.","The command was a success, however, want to notify the ground that there were subdirectories that were not deleted"
 FM2008,FM2008,"Upon receipt of a Delete command, FM shall delete the command-specified file.",Command file operation
-FM2008.1,FM2008.1,"If the command-specified file is open, FM shall reject the command to delete the file.",
+FM2008.1,FM2008.1,"If the command-specified file is open, FM shall reject the command to delete the file.",Avoids possible data corruption or processing errors due to deleting an open file.
 FM2008.2,FM2008.2,"If the command-specified file is a directory, FM shall reject the command","This requirement protects against accidental deletion of a directory. Operators
 should use the Delete Directory command in order to delete a directory."
 FM2009,FM2009,"Upon receipt of a Decompress command, FM shall decompress the command-specified file to the command-specified file.",Need to be able to decompress compressed files. Fully-qualified path must be specified. Should prevent the case where user tries to uncompress to file of same name.
@@ -44,9 +44,8 @@ f) command-specified filename",Obtain basic file information
 FM2012,FM2012,"Upon receipt of a List Open Files command, FM shall generate a message containing:
 a) the number of open files  
 b) Up to <PLATFORM_DEFINED> names/paths (of each open file) and the application name that has opened the file","Provides operators info about open files - Files that are open should not be deleted or downlinked. If too many files are open at once, the system could run slower than expected, or decline another file from being opened. Note that the <MISSION_DEFINED> limit is imposed in support of fixed size telemetry messages."
-FM2013,FM2013,"Upon receipt of a Set File Permissions command, FM shall set the command-specified file's permissions to the command-specified mode.
-Note: The mode is defined as a 4-byte value",
-FM2014,FM2014,"Upon receipt of a Verify File Signature command, FM shall verify the signature of the command-specified file. ",
+FM2013,FM2013,"Upon receipt of a Set File Permissions command, FM shall set the command-specified file's permissions to the command-specified mode.",Support operational management of file permissions
+FM2014,FM2014,"Upon receipt of a Verify File Signature command, FM shall verify the signature of the command-specified file. ",Support operational verification of file signature
 FM3000,FM3000,"Upon receipt of a Create Directory command,  FM shall create the command-specified directory on the command-specified filesystem",Create directories and subdirectories on the file system.
 FM3001,FM3001,"Upon receipt of a Delete command, FM shall remove the command-specified directory from the command-specified filesystem.",Remove directories from the file system.
 FM3001.1,FM3001.1,"If the specified directory contains at least one file or subdirectory, the command shall be rejected",Require operators to explicitly remove all files before deleting the directory. Protection against accidentally deleting of a non-empty directory.
@@ -59,7 +58,7 @@ e) Mode (permissions), as a 4-byte value, of each file",Get a directory listing 
 FM3002.1,FM3002.1,"FM shall issue an event message that reports:                
 a) The number of filenames written to the specified file  
 b) The total number of files in the directory                  
-c) The command-specified file's filename",
+c) The command-specified file's filename",Operational notification of directory listing to file action.
 FM3002.2,FM3002.2,FM shall use the <PLATFORM_DEFINED> default filename if a file is not specified,"cFE/CFS standard.
 Want to provide flexibility to either use the same filename everytime you get a
 directory listing or specify a new filename."
@@ -67,7 +66,7 @@ FM3002.3,FM3002.3,"If the command-specified GetSizeTimeMode flag is set to FALSE
 b) file size in bytes of each file
 c) last modification time of each file
 e) Mode (permissions), as a 4-byte value, of each file
-Note: the lettering of the listed values is kept in sync with parent requirement",
+Note: the lettering of the listed values is kept in sync with parent requirement","Supports ability to skip size, time and mode information in request."
 FM3003,FM3003,"Upon receipt of a Directory Listing command, FM shall generate a message containing the following for up to <PLATFORM_DEFINED> consecutive files starting at the command specified offset:                                                                                                                                                                          
 a) Directory name                                                              
 b) file size in bytes of each file                                            
@@ -80,12 +79,12 @@ FM3003.1,FM3003.1,"If the command-specified GetSizeTimeMode flag is set to FALSE
 b) file size in bytes of each file
 c) last modification time of each file
 e) Mode (permissions), as a 4-byte value, of each file
-Note: the lettering of the listed values is kept in sync with parent requirement",
+Note: the lettering of the listed values is kept in sync with parent requirement","Supports ability to skip size, time, and mode information in request"
 FM4000,FM4000,"FM shall generate a housekeeping message containing the following:    
-a) Valid Command Counter                
-b) Command Rejected Counter    
-c) Total number of open files",Housekeeping telemetry to indicate basic FM status.
-FM4001,FM4001,"Upon receipt of a Report Device Free Space command, FM shall generate a message containing for each enabled device in the FM device table the amount of available free space.",
+a) Valid Command Counter(s)
+b) Command Rejected Counter(s)
+c) Total number of open files","Housekeeping telemetry to indicate basic FM status.  Note for implementations where commands are processed in different contexts (tasks) and have separate counters, they all need to be included."
+FM4001,FM4001,"Upon receipt of a Report Device Free Space command, FM shall generate a message containing for each enabled device in the FM device table the amount of available free space.",Operational notification of free space by request
 FM5000,FM5000,"Upon initialization of the FM Application,   FM shall initialize the following data to Zero    
 a) Valid Command Counter                    
 b) Command Rejected Counter",No information is preserved across an FM initialization. Note that the file system is preserved by the cFE across a processor reset.
