@@ -171,7 +171,7 @@ int32 FM_AppInit(void)
     int32       Result  = CFE_SUCCESS;
 
     /* Initialize global data  */
-    CFE_PSP_MemSet(&FM_GlobalData, 0, sizeof(FM_GlobalData_t));
+    memset(&FM_GlobalData, 0, sizeof(FM_GlobalData));
 
     /* Register for event services */
     Result = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);

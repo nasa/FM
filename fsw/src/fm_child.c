@@ -1376,7 +1376,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
     int32           Status       = 0;
 
     /* Initialize the standard cFE File Header for the Directory Listing File */
-    CFE_PSP_MemSet(&FileHeader, 0, sizeof(CFE_FS_Header_t));
+    memset(&FileHeader, 0, sizeof(FileHeader));
     FileHeader.SubType = FM_DIR_LIST_FILE_SUBTYPE;
     strncpy(FileHeader.Description, CmdText, sizeof(FileHeader.Description) - 1);
     FileHeader.Description[sizeof(FileHeader.Description) - 1] = '\0';
@@ -1391,7 +1391,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
         if (BytesWritten == sizeof(CFE_FS_Header_t))
         {
             /* Initialize directory statistics structure */
-            CFE_PSP_MemSet(&FM_GlobalData.DirListFileStats, 0, sizeof(FM_DirListFileStats_t));
+            memset(&FM_GlobalData.DirListFileStats, 0, sizeof(FM_GlobalData.DirListFileStats));
             strncpy(FM_GlobalData.DirListFileStats.DirName, Directory, OS_MAX_PATH_LEN - 1);
             FM_GlobalData.DirListFileStats.DirName[OS_MAX_PATH_LEN - 1] = '\0';
 
@@ -1589,7 +1589,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     int32      Result = OS_SUCCESS;
     os_fstat_t FileStatus;
 
-    memset(&FileStatus, 0, sizeof(os_fstat_t));
+    memset(&FileStatus, 0, sizeof(FileStatus));
 
     Result = OS_stat(Filename, &FileStatus);
 

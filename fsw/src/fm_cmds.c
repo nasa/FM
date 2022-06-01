@@ -736,12 +736,12 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
         /* Use default filename if not specified in the command */
         if (CmdPtr->Filename[0] == '\0')
         {
-            strncpy(Filename, FM_DIR_LIST_FILE_DEFNAME, OS_MAX_PATH_LEN - 1);
-            Filename[OS_MAX_PATH_LEN - 1] = '\0';
+            strncpy(Filename, FM_DIR_LIST_FILE_DEFNAME, sizeof(Filename) - 1);
+            Filename[sizeof(Filename) - 1] = '\0';
         }
         else
         {
-            CFE_PSP_MemCpy(Filename, CmdPtr->Filename, OS_MAX_PATH_LEN);
+            memcpy(Filename, CmdPtr->Filename, sizeof(Filename));
         }
 
         /* Note: it is OK for this file to overwrite a previous version of the file */
