@@ -2176,37 +2176,25 @@ void Test_FM_ChildDeleteDirCmd_OSDirectoryReadNoSuccess(void)
 void Test_FM_ChildDeleteDirCmd_StrCmpThisDirectoryZero(void)
 {
     // Arrange
-    FM_ChildQueueEntry_t dummy_CC    = {.CommandCode = UT_Utils_Any_uint8()};
-    FM_GlobalData.ChildCmdCounter    = UT_Utils_Any_uint8();
-    FM_GlobalData.ChildCmdErrCounter = UT_Utils_Any_uint8();
+    FM_ChildQueueEntry_t dummy_CC                     = {.CommandCode = 0};
+    os_dirent_t          dummy_direntry               = {.FileName = FM_THIS_DIRECTORY};
+    uint8                count_childcmdcounter_before = FM_GlobalData.ChildCmdCounter;
+    FM_GlobalData.ChildCmdCounter                     = 0;
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), OS_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_SUCCESS);
-    UT_SetDefaultReturnValue(UT_KEY(strcmp), 0);
-    UT_SetDeferredRetcode(UT_KEY(strcmp), 1, 1);
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &dummy_direntry, sizeof(dummy_direntry), false);
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(OS_rmdir), OS_SUCCESS);
-
-    uint8 count_childcmdcounter_before    = FM_GlobalData.ChildCmdCounter;
-    uint8 count_childcmderrcounter_before = FM_GlobalData.ChildCmdErrCounter;
-    uint8 commandcode_before              = dummy_CC.CommandCode;
 
     // Act
     FM_ChildDeleteDirCmd(&dummy_CC);
 
-    uint8 count_childcmdcounter_after    = FM_GlobalData.ChildCmdCounter;
-    uint8 count_childcmderrcounter_after = FM_GlobalData.ChildCmdErrCounter;
-    uint8 count_sendevent                = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osdiropen                = UT_GetStubCount(UT_KEY(OS_DirectoryOpen));
-    uint8 count_osdirread                = UT_GetStubCount(UT_KEY(OS_DirectoryRead));
-
     // Assert
-    UtAssert_INT32_EQ(count_osdiropen, 1);
-    UtAssert_INT32_EQ(count_osdirread, 2);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_EMPTY_ERR_EID);
-    UtAssert_INT32_EQ(count_childcmderrcounter_before + 1, count_childcmderrcounter_after);
-    UtAssert_INT32_EQ(count_childcmdcounter_before, count_childcmdcounter_after);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildPreviousCC, commandcode_before);
+    UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
+    UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(count_childcmdcounter_before + 1, FM_GlobalData.ChildCmdCounter);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildPreviousCC, dummy_CC.CommandCode);
     UtAssert_INT32_EQ(FM_GlobalData.ChildCurrentCC, 0);
 }
 
@@ -2684,22 +2672,22 @@ void Test_FM_ChildDirListPktCmd_EntryLengthGreaterListEntryName(void)
 {
     /*
     // Arrange
-    FM_ChildQueueEntry_t dummy_CC = {.CommandCode   = FM_DELETE_ALL_CC,
+    FM_ChildQueueEntry_t dummy_CC     = {.CommandCode   = FM_DELETE_ALL_CC,
                                      .Source1       = "dummy_source1",
                                      .Source2       = "dummy_source2",
                                      .DirListOffset = UT_Utils_Any_uint8_LessThan(MAX_UINT8)};
-    FM_GlobalData.ChildCmdCounter       = UT_Utils_Any_uint8_LessThan(MAX_UINT8);
-    FM_GlobalData.ChildCmdWarnCounter   = UT_Utils_Any_uint8_LessThan(MAX_UINT8);
+    FM_GlobalData.ChildCmdCounter     = UT_Utils_Any_uint8_LessThan(MAX_UINT8);
+    FM_GlobalData.ChildCmdWarnCounter = UT_Utils_Any_uint8_LessThan(MAX_UINT8);
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), OS_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
-    os_dirent_t dummy_direntry = {.FileName="MaxCharactersIs20"};
+    os_dirent_t dummy_direntry = {.FileName = "MaxCharactersIs20"};
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &dummy_direntry, sizeof(dummy_direntry), false);
-    FM_DirListEntry_t dummy_listentry = {.EntryName="short"};
-    FM_GlobalData.DirListPkt.TotalFiles = dummy_CC.DirListOffset + 1;
-    uint32 temp_packetfiles = FM_DIR_LIST_PKT_ENTRIES - 1;
-    FM_GlobalData.DirListPkt.PacketFiles = temp_packetfiles;
+    FM_DirListEntry_t dummy_listentry                   = {.EntryName = "short"};
+    FM_GlobalData.DirListPkt.TotalFiles                 = dummy_CC.DirListOffset + 1;
+    uint32 temp_packetfiles                             = FM_DIR_LIST_PKT_ENTRIES - 1;
+    FM_GlobalData.DirListPkt.PacketFiles                = temp_packetfiles;
     FM_GlobalData.DirListPkt.FileList[temp_packetfiles] = dummy_listentry;
 
     uint8 childcmdcounter_before    = FM_GlobalData.ChildCmdCounter;
@@ -2709,9 +2697,9 @@ void Test_FM_ChildDirListPktCmd_EntryLengthGreaterListEntryName(void)
     // Act
     FM_ChildDirListPktCmd(&dummy_CC);
 
-    uint8 count_sendevent   = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osdiropen   = UT_GetStubCount(UT_KEY(OS_DirectoryOpen));
-    uint8 count_osdirread   = UT_GetStubCount(UT_KEY(OS_DirectoryRead));
+    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    uint8 count_osdiropen = UT_GetStubCount(UT_KEY(OS_DirectoryOpen));
+    uint8 count_osdirread = UT_GetStubCount(UT_KEY(OS_DirectoryRead));
 
     // Assert
     UtAssert_INT32_EQ(count_osdiropen, 1);
@@ -3150,44 +3138,32 @@ void Test_FM_ChildDirListFileLoop_PathLengthAndEntryLengthGreaterMaxPathLen(void
     const char *dummy_filename  = "dummy_filename";
     const char *dummy_dirwithstep =
         "dummy_dirwithstep_length_is_long_too_long_like_really_long_wish_i_knew_how_to_Make_this_easy";
-    uint8 dummy_getsizetimemode = UT_Utils_Any_uint8();
-
-    FM_GlobalData.ChildCmdErrCounter  = UT_Utils_Any_uint8();
-    FM_GlobalData.ChildCmdCounter     = UT_Utils_Any_uint8();
-    FM_GlobalData.ChildCmdWarnCounter = UT_Utils_Any_uint8();
-    UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_SUCCESS);
     os_dirent_t dummy_direntry = {.FileName = "dummy_directory_nam"};
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &dummy_direntry, sizeof(dummy_direntry), false);
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
 
-    uint8 count_childcmderrcounter_before  = FM_GlobalData.ChildCmdErrCounter;
-    uint8 count_childcmdcounter_before     = FM_GlobalData.ChildCmdCounter;
-    uint8 count_childcmdwarncounter_before = FM_GlobalData.ChildCmdWarnCounter;
-
     // Act
-    FM_ChildDirListFileLoop(dirid, fileid, dummy_directory, dummy_dirwithstep, dummy_filename, dummy_getsizetimemode);
+    FM_ChildDirListFileLoop(dirid, fileid, dummy_directory, dummy_dirwithstep, dummy_filename, 0);
 
-    uint8 count_sendevent   = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osdirread   = UT_GetStubCount(UT_KEY(OS_DirectoryRead));
-    uint8 count_oswrite     = UT_GetStubCount(UT_KEY(OS_write));
-    uint8 count_oslseek     = UT_GetStubCount(UT_KEY(OS_lseek));
-    uint8 count_direntries  = FM_GlobalData.DirListFileStats.DirEntries;
-    uint8 count_fileentries = FM_GlobalData.DirListFileStats.FileEntries;
+    /* Assert */
+    UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
+    UtAssert_STUB_COUNT(OS_write, 1);
+    UtAssert_STUB_COUNT(OS_lseek, 1);
 
-    // Assert
-    UtAssert_INT32_EQ(count_sendevent, 2);
-    UtAssert_INT32_EQ(count_osdirread, 2);
-    UtAssert_INT32_EQ(count_oswrite, 1);
-    UtAssert_INT32_EQ(count_oslseek, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_WARNING_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_DIR_FILE_CMD_EID);
-    UtAssert_INT32_EQ(count_childcmderrcounter_before, FM_GlobalData.ChildCmdErrCounter);
-    UtAssert_INT32_EQ(count_childcmdcounter_before + 1, FM_GlobalData.ChildCmdCounter);
-    UtAssert_INT32_EQ(count_childcmdwarncounter_before + 1, FM_GlobalData.ChildCmdWarnCounter);
-    UtAssert_INT32_EQ(count_direntries, 1);
-    UtAssert_INT32_EQ(count_fileentries, 0);
+
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdErrCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdCounter, 1);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdWarnCounter, 1);
+
+    UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.DirEntries, 1);
+    UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.FileEntries, 0);
 }
 
 void Test_FM_ChildDirListFileLoop_FileEntriesGreaterFMDirListFileEntries(void)
@@ -3284,6 +3260,40 @@ void Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLength(void)
     UtAssert_INT32_EQ(count_childcmdwarncounter_before, FM_GlobalData.ChildCmdWarnCounter);
     UtAssert_INT32_EQ(count_direntries, 1);
     UtAssert_INT32_EQ(count_fileentries, 1);
+}
+
+void Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLengthInLoop(void)
+{
+    // Arrange
+    osal_id_t   dirid                 = FM_UT_OBJID_1;
+    osal_id_t   fileid                = FM_UT_OBJID_2;
+    os_dirent_t dummy_direntry        = {.FileName = "dummy_directory_nam"};
+    const char *dummy_directory       = "dummy_directory";
+    const char *dummy_filename        = "dummy_filename";
+    const char *dummy_dirwithstep     = "dummy_dirwithstep";
+    uint8       dummy_getsizetimemode = 1;
+
+    FM_GlobalData.ChildCmdErrCounter  = 0;
+    FM_GlobalData.ChildCmdCounter     = 0;
+    FM_GlobalData.ChildCmdWarnCounter = 0;
+    UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_SUCCESS);
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &dummy_direntry, sizeof(dummy_direntry), false);
+    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(FM_DirListEntry_t));
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(FM_DirListEntry_t) - 1);
+
+    // Act
+    FM_ChildDirListFileLoop(dirid, fileid, dummy_directory, dummy_dirwithstep, dummy_filename, dummy_getsizetimemode);
+
+    // Assert
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(OS_DirectoryRead, 1);
+    UtAssert_STUB_COUNT(OS_write, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_WRENTRY_ERR_EID);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdErrCounter, 1);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdWarnCounter, 0);
 }
 
 void Test_FM_ChildDirListFileLoop_WritelengthEqualToBytesWritten(void)
@@ -3511,6 +3521,52 @@ void Test_FM_ChildLoop_CountSemTakeSuccessDefault(void)
 /* ****************
  * ChildSleepStat Tests
  * ***************/
+
+void Test_FM_ChildSleepStat_getSizeTimeModeFalse(void)
+{
+    // Arrange
+    const char *      dummy_filename        = "dummy_filename";
+    FM_DirListEntry_t dummy_DirListData     = {.EntrySize = 1, .ModifyTime = 1, .Mode = 1};
+    int32             dummy_FilesTillSleep  = 1;
+    uint8             dummy_getSizeTimeMode = 0;
+
+    // Assert
+    UtAssert_VOIDCALL(
+        FM_ChildSleepStat(dummy_filename, &dummy_DirListData, &dummy_FilesTillSleep, dummy_getSizeTimeMode));
+    UtAssert_INT32_EQ(dummy_DirListData.EntrySize, 0);
+    UtAssert_INT32_EQ(dummy_DirListData.ModifyTime, 0);
+    UtAssert_INT32_EQ(dummy_DirListData.Mode, 0);
+}
+
+void Test_FM_ChildSleepStat_FilesTillSleepPositive(void)
+{
+    // Arrange
+    const char *      dummy_filename              = "dummy_filename";
+    FM_DirListEntry_t dummy_DirListData           = {.EntrySize = 1, .ModifyTime = 1, .Mode = 1};
+    int32             dummy_FilesTillSleep        = FM_CHILD_STAT_SLEEP_FILECOUNT + 1;
+    uint8             dummy_getSizeTimeMode       = 1;
+    int32             dummy_FilesTillSleep_before = dummy_FilesTillSleep;
+
+    // Assert
+    UtAssert_VOIDCALL(
+        FM_ChildSleepStat(dummy_filename, &dummy_DirListData, &dummy_FilesTillSleep, dummy_getSizeTimeMode));
+    UtAssert_INT32_EQ(dummy_FilesTillSleep, dummy_FilesTillSleep_before - 1);
+}
+
+void Test_FM_ChildSleepStat_FilesTillSleepLTEQZero(void)
+{
+    // Arrange
+    const char *      dummy_filename        = "dummy_filename";
+    FM_DirListEntry_t dummy_DirListData     = {.EntrySize = 1, .ModifyTime = 1, .Mode = 1};
+    int32             dummy_FilesTillSleep  = FM_CHILD_STAT_SLEEP_FILECOUNT;
+    uint8             dummy_getSizeTimeMode = 1;
+
+    // Assert
+    UtAssert_VOIDCALL(
+        FM_ChildSleepStat(dummy_filename, &dummy_DirListData, &dummy_FilesTillSleep, dummy_getSizeTimeMode));
+    UtAssert_STUB_COUNT(OS_TaskDelay, 1);
+    UtAssert_INT32_EQ(dummy_FilesTillSleep, FM_CHILD_STAT_SLEEP_FILECOUNT - 1);
+}
 
 /* * * * * * * * * * * * * *
  * Add Method Tests
@@ -3841,6 +3897,9 @@ void add_FM_ChildDirListFileLoop_tests(void)
     UtTest_Add(Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLength, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLength");
 
+    UtTest_Add(Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLengthInLoop, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDirListFileLoop_BytesWrittenNotEqualWriteLengthInLoop");
+
     UtTest_Add(Test_FM_ChildDirListFileLoop_WritelengthEqualToBytesWritten, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildDirListFileLoop_WritelengthEqualToBytesWritten");
 }
@@ -3854,7 +3913,17 @@ void add_FM_ChildSizeTimeMode_tests(void)
                "Test_FM_ChildSizeTimeMode_OSFilestateTimeDefined");
 }
 
-void add_FM_ChildSleepStat_tests(void) {}
+void add_FM_ChildSleepStat_tests(void)
+{
+    UtTest_Add(Test_FM_ChildSleepStat_getSizeTimeModeFalse, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildSleepStat_getSizeTimeModeFalse");
+
+    UtTest_Add(Test_FM_ChildSleepStat_FilesTillSleepPositive, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildSleepStat_FilesTillSleepPositive");
+
+    UtTest_Add(Test_FM_ChildSleepStat_FilesTillSleepLTEQZero, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildSleepStat_FilesTillSleepLTEQZero");
+}
 
 void add_FM_ChildLoop_tests(void)
 {
