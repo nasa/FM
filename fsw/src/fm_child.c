@@ -1272,7 +1272,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                     EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
 
                     /* Verify combined directory plus filename length */
-                    if ((EntryLength < sizeof(ListEntry->EntryName)) && ((PathLength + EntryLength) < OS_MAX_PATH_LEN))
+                    if ((PathLength + EntryLength) < OS_MAX_PATH_LEN)
                     {
                         /* Add filename to directory listing telemetry packet */
                         strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
@@ -1282,7 +1282,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                         strncpy(LogicalName, CmdArgs->Source2, PathLength);
                         LogicalName[PathLength] = '\0';
 
-                        strncat(LogicalName, OS_DIRENTRY_NAME(DirEntry), (OS_MAX_PATH_LEN - PathLength));
+                        strncat(LogicalName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
 
                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
 
