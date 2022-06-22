@@ -2273,9 +2273,9 @@ void UtTest_Setup(void)
     add_FM_NoopCmd_tests();
     add_FM_ResetCountersCmd_tests();
     add_FM_CopyFileCmd_tests();
-    // add_FM_MoveFileCmd_tests();
+    add_FM_MoveFileCmd_tests();
     add_FM_RenameFileCmd_tests();
-    // add_FM_DeleteFileCmd_tests();
+    add_FM_DeleteFileCmd_tests();
     add_FM_DeleteAllFilesCmd_tests();
 
 #ifdef FM_INCLUDE_DECOMPRESS
