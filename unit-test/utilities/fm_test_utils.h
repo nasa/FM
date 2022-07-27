@@ -68,27 +68,6 @@ extern UT_CmdBuf_t UT_CmdBuf;
 #define FM_UT_OBJID_1 OS_ObjectIdFromInteger(1)
 #define FM_UT_OBJID_2 OS_ObjectIdFromInteger(2)
 
-#define MAX_UINT8  255                  /* pow(2, 8) - 1 */
-#define MAX_UINT16 65535                /* pow(2, 16) - 1 */
-#define MAX_INT    2147484647           /* pow(2, 31) - 1 */
-#define MIN_INT32  -2147484648          /* negative pow(2, 31)*/
-#define MAX_UINT32 4294967295           /* pow(2, 32) - 1 */
-#define MAX_UINT64 18446744073709551615 /* pow(2, 64) - 1 */
-
-uint32 UT_Utils_Any_uint32(void);
-
-uint32 UT_Utils_Any_uint32_GreaterThan(uint32 floor);
-
-uint8 UT_Utils_Any_uint8(void);
-
-uint8 UT_Utils_Any_uint8_BetweenInclusive(uint8 floor, uint8 ceiling);
-
-uint8 UT_Utils_Any_uint8_LessThan(uint8 ceiling);
-
-int32 UT_Utils_Any_int32(void);
-
-int32 UT_Utils_Any_int32_BetweenInclusive(int32 floor, int32 ceiling);
-
 void FM_Test_Setup(void);
 
 void FM_Test_Teardown(void);
