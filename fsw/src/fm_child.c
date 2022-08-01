@@ -1597,6 +1597,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     {
         *FileSize = 0;
         *FileTime = 0;
+        *FileMode = 0;
     }
     else
     {
