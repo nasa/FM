@@ -258,10 +258,6 @@ void FM_ChildProcess(void)
             FM_ChildDirListPktCmd(CmdArgs);
             break;
 
-        case FM_DELETE_INT_CC:
-            FM_ChildDeleteCmd(CmdArgs);
-            break;
-
         case FM_SET_FILE_PERM_CC:
             FM_ChildSetPermissionsCmd(CmdArgs);
             break;
@@ -446,12 +442,9 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
     {
         FM_GlobalData.ChildCmdCounter++;
 
-        if (CmdArgs->CommandCode != FM_DELETE_INT_CC)
-        {
-            /* Send command completion event (info) */
-            CFE_EVS_SendEvent(FM_DELETE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: file = %s", CmdText,
-                              CmdArgs->Source1);
-        }
+        /* Send command completion event (info) */
+        CFE_EVS_SendEvent(FM_DELETE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: file = %s", CmdText,
+                          CmdArgs->Source1);
     }
 
     /* Report previous child task activity */

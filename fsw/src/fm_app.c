@@ -359,10 +359,6 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             Result = FM_SetTableStateCmd(BufPtr);
             break;
 
-        case FM_DELETE_INT_CC:
-            Result = FM_DeleteFileCmd(BufPtr);
-            break;
-
         case FM_SET_FILE_PERM_CC:
             Result = FM_SetPermissionsCmd(BufPtr);
             break;
@@ -377,7 +373,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
     if (Result == true)
     {
         /* Increment command success counter */
-        if ((CommandCode != FM_RESET_CC) && (CommandCode != FM_DELETE_INT_CC))
+        if (CommandCode != FM_RESET_CC)
         {
             FM_GlobalData.CommandCounter++;
         }

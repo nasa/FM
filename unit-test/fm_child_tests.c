@@ -399,26 +399,6 @@ void Test_FM_ChildProcess_FMGetDirListsPktCC(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
 }
 
-void Test_FM_ChildProcess_FMDeleteIntCC(void)
-{
-    // Arrange
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_INT_CC;
-    FM_GlobalData.ChildCurrentCC            = 1;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_remove), !OS_SUCCESS);
-
-    // Act
-    UtAssert_VOIDCALL(FM_ChildProcess());
-
-    // Assert
-    UT_FM_Child_Cmd_Assert(0, 1, 0, FM_GlobalData.ChildQueue[0].CommandCode);
-
-    UtAssert_STUB_COUNT(OS_remove, 1);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_OS_ERR_EID);
-}
-
 void Test_FM_ChildProcess_FMSetFilePermCC(void)
 {
     // Arrange
@@ -605,21 +585,6 @@ void Test_FM_ChildDeleteCmd_OSRemoveNotSuccess(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_OS_ERR_EID);
-}
-
-void Test_FM_ChildDeleteCmd_CommandCodeIsDeleteIntCC(void)
-{
-    // Arrange
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_INT_CC};
-
-    // Act
-    UtAssert_VOIDCALL(FM_ChildDeleteCmd(&queue_entry));
-
-    // Assert
-    UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
-
-    UtAssert_STUB_COUNT(OS_remove, 1);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
 /* ****************
@@ -2321,9 +2286,6 @@ void add_FM_ChildProcess_tests(void)
     UtTest_Add(Test_FM_ChildProcess_FMGetDirListsPktCC, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildProcess_FMGetDirListsPktCC");
 
-    UtTest_Add(Test_FM_ChildProcess_FMDeleteIntCC, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildProcess_FMDeleteIntCC");
-
     UtTest_Add(Test_FM_ChildProcess_FMSetFilePermCC, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildProcess_FMSetFilePermCC");
 
@@ -2362,9 +2324,6 @@ void add_FM_ChildRenameCmd_tests(void)
 
 void add_FM_ChildDeleteCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildDeleteCmd_CommandCodeIsDeleteIntCC, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteCmd_CommandCodeIsDeleteIntCC");
-
     UtTest_Add(Test_FM_ChildDeleteCmd_OSRemoveSuccess, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildDeleteCmd_OSRemoveSuccess");
 

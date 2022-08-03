@@ -921,23 +921,6 @@
 #define FM_SET_TABLE_STATE_CC 17
 
 /**
- * \brief Delete File (internal)
- *
- *  \par Description
- *       This is a special version of the #FM_DELETE_CC command for
- *       use when the command is sent by another application, rather
- *       than from the ground.  This version of the command will not
- *       generate a success event, nor will the command increment the
- *       command success counter.  The intent is to avoid confusion
- *       resulting from telemetry representing the results of delete
- *       commands sent by other applications and those sent from the
- *       ground.  Refer to #FM_DELETE_CC command for use details.
- *
- *  \sa #FM_DELETE_CC
- */
-#define FM_DELETE_INT_CC 18
-
-/**
  * \brief Set Permissions of a file
  *
  *  \par Description
