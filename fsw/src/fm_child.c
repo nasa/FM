@@ -1493,7 +1493,11 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
             {
                 EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
 
-                if ((EntryLength < sizeof(DirListData.EntryName)) && ((PathLength + EntryLength) < OS_MAX_PATH_LEN))
+                /*
+                 * DirListData.EntryName and TempName are both OS_MAX_PATH_LEN, DirEntry name is OS_MAX_FILE_NAME,
+                 * so limiting test is PathLength and EntryLength together
+                 */
+                if ((PathLength + EntryLength) < OS_MAX_PATH_LEN)
                 {
                     /* Build qualified directory entry name */
                     strncpy(TempName, DirWithSep, PathLength);
@@ -1597,6 +1601,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     {
         *FileSize = 0;
         *FileTime = 0;
+        *FileMode = 0;
     }
     else
     {

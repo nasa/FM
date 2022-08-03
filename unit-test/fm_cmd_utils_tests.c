@@ -41,1864 +41,531 @@
 #include "utassert.h"
 #include "utstubs.h"
 
-/*
-**********************************************************************************
-**          TEST CASE FUNCTIONS
-**********************************************************************************
-*/
-/* ****************
+/*********************************************************************************
+ *          TEST CASE FUNCTIONS
+ *********************************************************************************/
+
+/*****************
  * IsValidCmdPktLength Tests
- * ***************/
-void Test_FM_IsValidCmdPktLength_ActualLengthSuccess(void)
+ ****************/
+void Test_FM_IsValidCmdPktLength(void)
 {
-    // Arrange
-    CFE_MSG_Message_t *dummy_msgptr    = NULL;
-    size_t             dummy_length    = UT_Utils_Any_uint8();
-    size_t             expected_length = dummy_length;
-    uint32             dummy_eventid   = 1;
-    const char *       CmdText         = "Text";
+    size_t length  = 5;
+    uint32 eventid = 1;
 
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &dummy_length, sizeof(dummy_length), false);
+    /* Matching length */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
+    UtAssert_BOOL_TRUE(FM_IsValidCmdPktLength(NULL, length, 1, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    // Act
-    bool function_result = FM_IsValidCmdPktLength(dummy_msgptr, expected_length, dummy_eventid, CmdText);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(count_sendevent, 0);
-    UtAssert_INT32_EQ(function_result, true);
-}
-
-void Test_FM_IsValidCmdPktLength_ActualLengthNotExpected(void)
-{
-    // Arrange
-    CFE_MSG_Message_t *dummy_msgptr    = NULL;
-    size_t             dummy_length    = UT_Utils_Any_uint8();
-    size_t             expected_length = dummy_length + 1;
-    uint32             dummy_eventid   = UT_Utils_Any_uint32();
-    const char *       CmdText         = "dummy_text";
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &dummy_length, sizeof(dummy_length), false);
-
-    // Act
-    bool function_result = FM_IsValidCmdPktLength(dummy_msgptr, expected_length, dummy_eventid, CmdText);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, (uint16)dummy_eventid);
+    /* Mismatched length */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
+    UtAssert_BOOL_FALSE(FM_IsValidCmdPktLength(NULL, length + 1, eventid, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(function_result, false);
 }
 
 /* **************************
  * VerifyOverwrite Tests
  * *************************/
-void Test_FM_VerifyOverwrite_OverwriteIsNeitherFalseNorTrue(void)
+void Test_FM_VerifyOverwrite(void)
 {
-    // Arrange
-    uint16      dummy_overwrite = 3;
-    uint32      eventid         = 1;
-    const char *dummy_text      = "Text";
+    uint32 eventid = 1;
 
-    // Act
-    bool function_result = FM_VerifyOverwrite(dummy_overwrite, eventid, dummy_text);
+    /* Overwrite true (aka 1) */
+    UtAssert_BOOL_TRUE(FM_VerifyOverwrite(1, eventid, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    uint8 call_count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    /* Overwrite false (aka 0) */
+    UtAssert_BOOL_TRUE(FM_VerifyOverwrite(0, eventid, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    // Assert
-    UtAssert_True(call_count_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s) and hsould be 1",
-                  call_count_SendEvent);
-    UtAssert_True(function_result == false, "FM_VerifyOverwrite returned %s and should be false",
-                  function_result ? "true" : "false");
-}
-
-void Test_FM_VerifyOverwrite_OverwriteIsTrue(void)
-{
-    // Arrange
-    uint16      dummy_overwrite = 1;
-    uint32      eventid         = 1;
-    const char *dummy_text      = "Text";
-
-    // Act
-    bool function_result = FM_VerifyOverwrite(dummy_overwrite, eventid, dummy_text);
-
-    uint8 call_count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_True(call_count_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s) and hsould be 0",
-                  call_count_SendEvent);
-    UtAssert_True(function_result == true, "FM_VerifyOverwrite returned %s and should be true",
-                  function_result ? "true" : "false");
-}
-
-void Test_FM_VerifyOverwrite_OverwriteIsFalse(void)
-{
-    // Arrange
-    uint16      dummy_overwrite = 0;
-    uint32      eventid         = 1;
-    const char *dummy_text      = "Text";
-
-    // Act
-    bool function_result = FM_VerifyOverwrite(dummy_overwrite, eventid, dummy_text);
-
-    uint8 call_count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_True(call_count_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s) and hsould be 0",
-                  call_count_SendEvent);
-    UtAssert_True(function_result == true, "FM_VerifyOverwrite returned %s and should be true",
-                  function_result ? "true" : "false");
+    /* Overwrite not true or false */
+    UtAssert_BOOL_FALSE(FM_VerifyOverwrite(3, eventid, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
 /* **************************
  * GetOpenFilesData Tests
  * *************************/
-void Test_FM_GetOpenFilesData_OSForEachObjectCalled(void)
+void Test_FM_GetOpenFilesData(void)
 {
-    // Arrange
-    FM_OpenFilesEntry_t *dummy_files_data = NULL;
+    osal_id_t           id = OS_OBJECT_ID_UNDEFINED;
+    FM_OpenFilesEntry_t files_entry;
+    OS_task_prop_t      task_prop;
+    OS_file_prop_t      file_prop;
 
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 0);
-}
+    memset(&files_entry, 0, sizeof(files_entry));
+    memset(&task_prop, 0, sizeof(task_prop));
+    memset(&file_prop, 0, sizeof(file_prop));
 
-void Test_FM_GetOpenFilesData_IncrementOpenFileCount(void)
-{
-    // Arrange
-    osal_id_t           id                           = OS_OBJECT_ID_UNDEFINED;
-    char                InitialName[OS_MAX_API_NAME] = "OpenFilesData_test";
-    FM_OpenFilesEntry_t dummy_files_data[1];
+    strncpy(file_prop.Path, "FilePath", sizeof(file_prop.Path));
+    strncpy(task_prop.name, "AppName", sizeof(task_prop.name));
 
-    memset(dummy_files_data, 0, sizeof(dummy_files_data));
-    strncpy(dummy_files_data[0].LogicalName, InitialName, OS_MAX_API_NAME);
-    strncpy(dummy_files_data[0].AppName, InitialName, OS_MAX_API_NAME);
+    /* NULL without any id's for OS_ForEachObject */
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(NULL), 0);
 
+    /* Undefined object id */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(NULL), 0);
+
+    /* NULL with OS_STREAM id */
     OS_OpenCreate(&id, NULL, 0, 0);
     UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(NULL), 1);
+    UtAssert_STUB_COUNT(OS_FDGetInfo, 0);
 
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 1);
+    /* Fail OS_FDGetInfo */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDeferredRetcode(UT_KEY(OS_FDGetInfo), 1, !OS_SUCCESS);
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(&files_entry), 1);
     UtAssert_STUB_COUNT(OS_FDGetInfo, 1);
+
+    /* Fail OS_TaskGetInfo */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetInfo), 1, !OS_SUCCESS);
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(&files_entry), 1);
     UtAssert_STUB_COUNT(OS_TaskGetInfo, 1);
-    UtAssert_NONZERO(strncmp(dummy_files_data[0].LogicalName, InitialName, OS_MAX_API_NAME));
-    UtAssert_NONZERO(strncmp(dummy_files_data[0].AppName, InitialName, OS_MAX_API_NAME));
-}
+    UtAssert_STRINGBUF_EQ(files_entry.LogicalName, sizeof(files_entry.LogicalName), file_prop.Path,
+                          sizeof(file_prop.Path));
 
-void Test_FM_GetOpenFilesData_ObjIdIsUndefined(void)
-{
-    // Arrange
-    osal_id_t           id = OS_OBJECT_ID_UNDEFINED;
-    FM_OpenFilesEntry_t dummy_files_data[1];
-
-    memset(dummy_files_data, 0, sizeof(dummy_files_data));
+    /* All pass */
+    memset(&files_entry, 0, sizeof(files_entry));
     UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 0);
-    UtAssert_STUB_COUNT(OS_FDGetInfo, 0);
-    UtAssert_STUB_COUNT(OS_TaskGetInfo, 0);
-}
-
-void Test_FM_GetOpenFilesData_OpenFilesDataIsNull(void)
-{
-    // Arrange
-    osal_id_t            id               = OS_OBJECT_ID_UNDEFINED;
-    FM_OpenFilesEntry_t *dummy_files_data = NULL;
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 1);
-    UtAssert_NULL(dummy_files_data);
-    UtAssert_STUB_COUNT(OS_FDGetInfo, 0);
-    UtAssert_STUB_COUNT(OS_TaskGetInfo, 0);
-}
-
-void Test_FM_GetOpenFilesData_FDGetInfoFail(void)
-{
-    // Arrange
-    osal_id_t           id                            = OS_OBJECT_ID_UNDEFINED;
-    char                ExpectedName[OS_MAX_API_NAME] = "OpenFilesData_test";
-    FM_OpenFilesEntry_t dummy_files_data[1];
-
-    memset(dummy_files_data, 0, sizeof(dummy_files_data));
-    strncpy(dummy_files_data[0].LogicalName, ExpectedName, OS_MAX_API_NAME);
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_FDGetInfo), !OS_SUCCESS);
-
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 1);
-    UtAssert_STUB_COUNT(OS_TaskGetInfo, 0);
-    UtAssert_STRINGBUF_EQ(dummy_files_data[0].LogicalName, OS_MAX_API_NAME, ExpectedName, OS_MAX_API_NAME);
-}
-
-void Test_FM_GetOpenFilesData_TaskGetInfoFail(void)
-{
-    // Arrange
-    osal_id_t           id = OS_OBJECT_ID_UNDEFINED;
-    FM_OpenFilesEntry_t dummy_files_data[1];
-    char                ExpectedName[OS_MAX_API_NAME] = "OpenFilesData_test";
-
-    memset(dummy_files_data, 0, sizeof(dummy_files_data));
-    strncpy(dummy_files_data[0].AppName, ExpectedName, OS_MAX_API_NAME);
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_TaskGetInfo), !OS_SUCCESS);
-
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetOpenFilesData(dummy_files_data), 1);
-    UtAssert_STRINGBUF_EQ(dummy_files_data[0].AppName, OS_MAX_API_NAME, ExpectedName, OS_MAX_API_NAME);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UT_SetDataBuffer(UT_KEY(OS_TaskGetInfo), &task_prop, sizeof(task_prop), false);
+    UtAssert_UINT32_EQ(FM_GetOpenFilesData(&files_entry), 1);
+    UtAssert_STRINGBUF_EQ(files_entry.LogicalName, sizeof(files_entry.LogicalName), file_prop.Path,
+                          sizeof(file_prop.Path));
+    UtAssert_STRINGBUF_EQ(files_entry.AppName, sizeof(files_entry.AppName), task_prop.name, sizeof(task_prop.name));
 }
 
 /* **************************
  * GetFilenameState Tests
  * *************************/
-void Test_FM_GetFilenameState_FileNameIsNull(void)
+void Test_FM_GetFilenameState(void)
 {
-    // Arrange
-    char * dummy_filename = NULL;
-    uint32 dummy_bufsize  = 32;
-    bool   dummy_fileinfo = false;
+    char           filename[OS_MAX_FILE_NAME] = {0};
+    os_fstat_t     fstat;
+    osal_id_t      id = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
 
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
+    memset(&fstat, 0, sizeof(fstat));
+    memset(&file_prop, 0, sizeof(file_prop));
 
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_INVALID, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_INVALID);
-}
+    /* NULL filename */
+    UtAssert_UINT32_EQ(FM_GetFilenameState(NULL, 0, false), FM_NAME_IS_INVALID);
 
-void Test_FM_GetFilenameState_FileNameNotNullButNotValid(void)
-{
-    // Arrange
-    char   dummy_filename[16];
-    uint32 dummy_bufsize  = 16;
-    bool   dummy_fileinfo = false;
+    /* Empty string */
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, 1, false), FM_NAME_IS_INVALID);
 
-    memset(dummy_filename, 0xff, sizeof(dummy_filename));
+    /* Unterminated string */
+    strncpy(filename, "File", sizeof(filename));
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, 1, false), FM_NAME_IS_INVALID);
 
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
+    /* OS_stat failure, file info false */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    FM_GlobalData.FileStatSize = 1;
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_NOT_IN_USE);
+    UtAssert_UINT32_EQ(FM_GlobalData.FileStatSize, 1);
 
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_INVALID, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_INVALID);
-}
+    /* OS_stat failure, file info true */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), true), FM_NAME_IS_NOT_IN_USE);
+    UtAssert_UINT32_EQ(FM_GlobalData.FileStatSize, 0);
 
-void Test_FM_GetFilenameState_FileNameNotNullButEmpty(void)
-{
-    // Arrange
-    uint32 dummy_bufsize      = 16;
-    char   dummy_filename[16] = "";
-    bool   dummy_fileinfo     = false;
+    /* File is directory, file info true */
+    fstat.FileModeBits = OS_FILESTAT_MODE_DIR;
+    fstat.FileSize     = 2;
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), true), FM_NAME_IS_DIRECTORY);
+    UtAssert_UINT32_EQ(FM_GlobalData.FileStatSize, 2);
 
-    // Assert
-    UtAssert_INT32_EQ(FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo), FM_NAME_IS_INVALID);
-}
+    /* File is file, file info false, no objects */
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_FILE_CLOSED);
+    UtAssert_UINT32_EQ(FM_GlobalData.FileStatSize, 2);
 
-void Test_FM_GetFilenameState_FileNameIsValidButNotInUse_FileInfoCmdFalse(void)
-{
-    // Arrange
-    uint32 dummy_bufsize      = 16;
-    char   dummy_filename[16] = "FileName_Test";
-    bool   dummy_fileinfo     = false;
-    // os_fstat_t dummy_fstat;
+    /* File is file, undefined object */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_FILE_CLOSED);
 
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-    // UT_SetDataBuffer(UT_KEY(OS_stat),&dummy_fstat,sizeof(dummy_fstat),false);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_NOT_IN_USE, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_NOT_IN_USE);
-}
-
-void Test_FM_GetFilenameState_FileNameIsValidButNOtINUse_FileINfoCmdTrue(void)
-{
-    // Arrange
-    uint32 dummy_bufsize      = 16;
-    char   dummy_filename[16] = "FileName_Test";
-    bool   dummy_fileinfo     = true;
-    // os_fstat_t dummy_fstat;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_NOT_IN_USE, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_NOT_IN_USE);
-    /* add ut_assert for FM_GlobalData reset */
-}
-
-void Test_FM_GetFilenameState_FilenameInUse_OSFilestatDefine_FILESTAT_ISDIR(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x10000};
-
-    //#define OS_FILESTAT_ISDIR
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_DIRECTORY, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_DIRECTORY);
-}
-
-void Test_FM_GetFilenameState_FilenameInUse_OSFilestatNOTDefine_FileInfoFalse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x10000};
-
-#undef OS_FILESTAT_ISDIR
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_MIR("Need to figure out how to undefine OS_FILESTAT_ISDIR to check other if statement %u", filename_state);
-}
-
-void Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdFalse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_FILE_CLOSED, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_FILE_CLOSED);
-    UtAssert_True(dummy_fileinfo == false, "The FileInfo should be false and it is %s",
-                  dummy_fileinfo ? "true" : "false");
-}
-
-void Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdTrue(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = true;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Act
-    uint32 filename_state = FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo);
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_FILE_CLOSED, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_FILE_CLOSED);
-    UtAssert_True(dummy_fileinfo == true, "The FileInfo should be false and it is %s",
-                  dummy_fileinfo ? "true" : "false");
-    UtAssert_True(FM_GlobalData.FileStatTime == OS_FILESTAT_TIME(dummy_fstat), "The file system should be this?");
-}
-
-void Test_FM_GetFilenameState_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize      = 16;
-    char           dummy_filename[16] = "FileName_Test";
-    bool           dummy_fileinfo     = false;
-    os_fstat_t     dummy_fstat        = {.FileModeBits = 0x00000};
-    osal_id_t      id                 = OS_OBJECT_ID_UNDEFINED;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_filename, dummy_bufsize);
+    /* File is file, OS_FDGetInfo fail */
     OS_OpenCreate(&id, NULL, 0, 0);
     UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDeferredRetcode(UT_KEY(OS_FDGetInfo), 1, !OS_SUCCESS);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_FILE_CLOSED);
 
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_UINT32_EQ(FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo), FM_NAME_IS_FILE_OPEN);
-}
-
-void Test_FM_GetFilenameState_ObjIdIsUndefined(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x00000};
-    osal_id_t  id                 = OS_OBJECT_ID_UNDEFINED;
-
+    /* File is file, strcmp fail */
     UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_FILE_CLOSED);
 
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Assert
-    UtAssert_STUB_COUNT(OS_FDGetInfo, 0);
-    UtAssert_UINT32_NEQ(FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo), FM_NAME_IS_FILE_OPEN);
-}
-
-void Test_FM_GetFilenameState_FDGetInfoFail(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x00000};
-    osal_id_t  id                 = OS_OBJECT_ID_UNDEFINED;
-
-    OS_OpenCreate(&id, NULL, 0, 0);
+    /* File is file, strcmp match */
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
     UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_FDGetInfo), !OS_SUCCESS);
-
-    // Assert
-    UtAssert_UINT32_NEQ(FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo), FM_NAME_IS_FILE_OPEN);
-}
-
-void Test_FM_GetFilenameState_FDTableEntryInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize      = 16;
-    char       dummy_filename[16] = "FileName_Test";
-    bool       dummy_fileinfo     = false;
-    os_fstat_t dummy_fstat        = {.FileModeBits = 0x00000};
-    osal_id_t  id                 = OS_OBJECT_ID_UNDEFINED;
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &dummy_fstat, sizeof(dummy_fstat), false);
-
-    // Assert
-    UtAssert_UINT32_NEQ(FM_GetFilenameState(dummy_filename, dummy_bufsize, dummy_fileinfo), FM_NAME_IS_FILE_OPEN);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_UINT32_EQ(FM_GetFilenameState(filename, sizeof(filename), false), FM_NAME_IS_FILE_OPEN);
 }
 
 /* **************************
  * VerifyNameValid Tests
  * *************************/
-void Test_FM_VerifyNameValid_FilenameStateNotValid(void)
+void Test_FM_VerifyNameValid(void)
 {
-// Arrange
-#define filename_size 16
-    uint32     dummy_bufsize = filename_size;
-    uint32     dummy_eventid = 999;
-    char       dummy_name[filename_size];
-    const char dummy_cmdtext;
+    char   filename[OS_MAX_FILE_NAME] = "Filename";
+    uint32 eventid                    = 1;
 
-    memset(dummy_name, 0xff, sizeof(dummy_name));
+    /* Filename not in use */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_UINT32_EQ(FM_VerifyNameValid(filename, sizeof(filename), 0, NULL), FM_NAME_IS_NOT_IN_USE);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    // Act
-    uint32 filename_state = FM_VerifyNameValid(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_True(filename_state == FM_NAME_IS_INVALID, "The FilenameState returned is %u and should be %u",
-                  filename_state, FM_NAME_IS_INVALID);
-    UtAssert_True(count_SendEvent == 1, "SendEvent was called %u time(s) and should be 1", count_SendEvent);
-}
-
-void Test_FM_VerifyNameValid_FilenameStateIsValid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = 999;
-    char       dummy_name[32] = "Dummy_Name";
-    const char dummy_cmdtext;
-
-    // Act
-    uint32 filename_state = FM_VerifyNameValid(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_True(filename_state != FM_NAME_IS_INVALID, "The FilenameState returned is not FM_NAME_IS_INVALID");
-    UtAssert_True(count_SendEvent == 0, "SendEvent was called %u time(s) and should be 0", count_SendEvent);
+    /* Invalid filename */
+    UtAssert_UINT32_EQ(FM_VerifyNameValid(filename, 1, eventid, "Cmd text"), FM_NAME_IS_INVALID);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
 /* **************************
  * VerifyFileClosed Tests
  * *************************/
-void Test_FM_VerifyFileClosed_FilenameInvalid(void)
+void Test_FM_VerifyFileClosed(void)
 {
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
 
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_fileclosed = FM_VerifyFileClosed(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileclosed, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileClosed_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_fileclosed = FM_VerifyFileClosed(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileclosed, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_DNE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileClosed_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat       = {.FileModeBits = 0x00000};
-    osal_id_t      id             = OS_OBJECT_ID_UNDEFINED;
-    uint32         eventid_before = dummy_eventid;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
     OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
 
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyFileClosed(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), false);
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_FALSE(FM_VerifyFileClosed(filename, sizeof(filename), 0, "Cmd Text"));
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_STUB_COUNT(OS_ForEachObject, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISOPEN_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_DNE_EID_OFFSET);
+
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileClosed(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_ISDIR_EID_OFFSET);
+
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_TRUE(FM_VerifyFileClosed(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileClosed(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_ISOPEN_EID_OFFSET);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyFileClosed(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[3].EventID, FM_FNAME_INVALID_EID_OFFSET);
 }
 
-void Test_FM_VerifyFileClosed_FilenameClosed(void)
+/* **************************
+ * VerifyFileExists Tests
+ * *************************/
+void Test_FM_VerifyFileExists(void)
 {
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
 
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
 
-    // Act
-    bool result_fileclosed = FM_VerifyFileClosed(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_FALSE(FM_VerifyFileExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_DNE_EID_OFFSET);
 
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_ISDIR_EID_OFFSET);
 
-    // Assert
-    UtAssert_INT32_EQ(result_fileclosed, true);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_TRUE(FM_VerifyFileExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_TRUE(FM_VerifyFileExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyFileExists(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_INVALID_EID_OFFSET);
 }
 
-void Test_FM_VerifyFileClosed_FilenameIsDirectory(void)
+/* **************************
+ * VerifyFileNoExist Tests
+ * *************************/
+void Test_FM_VerifyFileNoExist(void)
 {
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
 
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
 
-    uint32 eventid_before = dummy_eventid;
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_TRUE(FM_VerifyFileNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    // Act
-    bool result_fileclosed = FM_VerifyFileClosed(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_ISDIR_EID_OFFSET);
 
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_FALSE(FM_VerifyFileNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_EXIST_EID_OFFSET);
 
-    // Assert
-    UtAssert_INT32_EQ(result_fileclosed, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISDIR_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_EXIST_EID_OFFSET);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyFileNoExist(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[3].EventID, FM_FNAME_INVALID_EID_OFFSET);
 }
 
-void Test_FM_VerifyFileClosed_FilenameDefault(void)
+/* **************************
+ * VerifyFileNotOpen Tests
+ * *************************/
+void Test_FM_VerifyFileNotOpen(void)
 {
-    UtAssert_MIR("Not sure how to forcefail function in the same file, otherwise this will not happen");
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
+
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
+
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_TRUE(FM_VerifyFileNotOpen(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileNotOpen(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_ISDIR_EID_OFFSET);
+
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_TRUE(FM_VerifyFileNotOpen(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileNotOpen(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_ISOPEN_EID_OFFSET);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyFileNotOpen(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_INVALID_EID_OFFSET);
+}
+
+/* **************************
+ * VerifyDirExist Tests
+ * *************************/
+void Test_FM_VerifyDirExists(void)
+{
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
+
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
+
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_FALSE(FM_VerifyDirExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_DNE_EID_OFFSET);
+
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_TRUE(FM_VerifyDirExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_FALSE(FM_VerifyDirExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_ISFILE_EID_OFFSET);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyDirExists(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_ISFILE_EID_OFFSET);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyDirExists(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[3].EventID, FM_FNAME_INVALID_EID_OFFSET);
+}
+
+/* **************************
+ * VerifyDirNoExist Tests
+ * *************************/
+void Test_FM_VerifyDirNoExist(void)
+{
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    os_fstat_t     fstat                      = {.FileModeBits = OS_FILESTAT_MODE_DIR};
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
+
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
+
+    /* FM_NAME_IS_NOT_IN_USE */
+    UT_SetDeferredRetcode(UT_KEY(OS_stat), 1, !OS_SUCCESS);
+    UtAssert_BOOL_TRUE(FM_VerifyDirNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* FM_NAME_IS_DIRECTORY */
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+    UtAssert_BOOL_FALSE(FM_VerifyDirNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_ISDIR_EID_OFFSET);
+
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_FALSE(FM_VerifyDirNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_FNAME_DNE_EID_OFFSET);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyDirNoExist(filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_FNAME_DNE_EID_OFFSET);
+
+    /* FM_NAME_IS_INVALID */
+    UtAssert_BOOL_FALSE(FM_VerifyDirNoExist(filename, 1, 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[3].EventID, FM_FNAME_INVALID_EID_OFFSET);
 }
 
 /* **********************
  * VerifyChildTask tests
  * *********************/
-void Test_FM_VerifyChildTask_ChildSemaphoreIsInvalid(void)
+void Test_FM_VerifyChildTask(void)
 {
-    // Arrange
-    uint32      dummy_eventid    = UT_Utils_Any_uint8();
-    const char *dummy_textptr    = "dummy_text";
-    FM_GlobalData.ChildSemaphore = OS_OBJECT_ID_UNDEFINED;
+    /* ChildSemaphore not defined */
+    UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CHILD_DISABLED_EID_OFFSET);
 
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_DISABLED_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
-    UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
-}
-
-void Test_FM_VerifyChildTask_LocalQueueCountEqualToQueueDepth(void)
-{
-    // Arrange
-    uint32      dummy_eventid     = UT_Utils_Any_uint8();
-    const char *dummy_textptr     = "dummy_text";
+    /* LocalQueueCount equal to FM_CHILD_QUEUE_DEPTH */
     FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
     FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH;
+    UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_CHILD_Q_FULL_EID_OFFSET);
 
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_Q_FULL_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
-    UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
-}
-
-void Test_FM_VerifyChildTask_LocalQueueCountGreaterQueueDepth(void)
-{
-    // Arrange
-    uint32      dummy_eventid     = UT_Utils_Any_uint8();
-    const char *dummy_textptr     = "dummy_text";
-    FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
+    /* LocalQueueCount greater than FM_CHILD_QUEUE_DEPTH */
     FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH + 1;
+    UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_CHILD_BROKEN_EID_OFFSET);
 
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
-    UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
-}
-
-void Test_FM_VerifyChildTask_ChildWriteIndexGreaterChildQDepth(void)
-{
-    // Arrange
-    uint32      dummy_eventid     = UT_Utils_Any_uint8();
-    const char *dummy_textptr     = "dummy_text";
-    FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
-    FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH - 1;
-    FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH + 1;
-
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
-    UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
-}
-
-void Test_FM_VerifyChildTask_ChildWriteIndexEqualChildQDepth(void)
-{
-    // Arrange
-    uint32      dummy_eventid     = UT_Utils_Any_uint8();
-    const char *dummy_textptr     = "dummy_text";
-    FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
+    /* ChildWriteIndex equal to FM_CHILD_QUEUE_DEPTH */
     FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH - 1;
     FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH;
+    UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[3].EventID, FM_CHILD_BROKEN_EID_OFFSET);
 
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, false);
-    UtAssert_INT32_EQ(count_sendevent, 1);
-    UtAssert_INT32_EQ(dummy_eventid + FM_CHILD_BROKEN_EID_OFFSET, context_CFE_EVS_SendEvent[0].EventID);
-    UtAssert_INT32_EQ(CFE_EVS_EventType_ERROR, context_CFE_EVS_SendEvent[0].EventType);
-}
-
-void Test_FM_VerifyChildTask_Default(void)
-{
-    // Arrange
-    uint32      dummy_eventid     = UT_Utils_Any_uint8();
-    const char *dummy_textptr     = "dummy_text";
-    FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
-    FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH - 1;
+    /* Success */
     FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH - 1;
-
-    // Act
-    bool result_verifychildtask = FM_VerifyChildTask(dummy_eventid, dummy_textptr);
-
-    uint8 count_sendevent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    // Assert
-    UtAssert_INT32_EQ(result_verifychildtask, true);
-    UtAssert_INT32_EQ(count_sendevent, 0);
+    UtAssert_BOOL_TRUE(FM_VerifyChildTask(0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
 }
 
 /* **********************
  * InvokeChildTask tests
  * *********************/
-void FM_InvokeChildTask_WriteIndexGreaterThanChildQueue(void)
+void Test_FM_InvokeChildTask(void)
 {
-    FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH;
-    FM_GlobalData.ChildQueueCount = 1;
+    /* Conditions true */
+    FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH - 1;
     FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
-
-    FM_InvokeChildTask();
-
+    UtAssert_VOIDCALL(FM_InvokeChildTask());
     UtAssert_INT32_EQ(FM_GlobalData.ChildWriteIndex, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueueCount, 1);
+    UtAssert_STUB_COUNT(OS_CountSemGive, 1);
+
+    /* Conditions false */
+    FM_GlobalData.ChildSemaphore = OS_OBJECT_ID_UNDEFINED;
+    UtAssert_VOIDCALL(FM_InvokeChildTask());
+    UtAssert_INT32_EQ(FM_GlobalData.ChildWriteIndex, 1);
     UtAssert_INT32_EQ(FM_GlobalData.ChildQueueCount, 2);
-
-    uint8 call_count_OS_CountSemGive = UT_GetStubCount(UT_KEY(OS_CountSemGive));
-
-    UtAssert_INT32_EQ(call_count_OS_CountSemGive, 1);
-}
-
-void FM_InvokeChildTask_ChildSemaphoreNotEqualToSEMINVALID(void)
-{
-    FM_GlobalData.ChildWriteIndex = 1;
-    FM_GlobalData.ChildQueueCount = 1;
-    FM_GlobalData.ChildSemaphore  = OS_OBJECT_ID_UNDEFINED;
-
-    FM_InvokeChildTask();
-
-    UtAssert_INT32_EQ(FM_GlobalData.ChildWriteIndex, 2);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueueCount, 2);
-
-    uint8 call_count_OS_CountSemGive = UT_GetStubCount(UT_KEY(OS_CountSemGive));
-
-    UtAssert_INT32_EQ(call_count_OS_CountSemGive, 0);
-}
-
-/* **********************
- * VerifyFileExists Tests
- * *********************/
-void Test_FM_VerifyFileExists_FilenameInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
-
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_fileexist = FM_VerifyFileExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileexist, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileExists_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_fileexist = FM_VerifyFileExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileexist, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_DNE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileExists_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat = {.FileModeBits = 0x00000};
-    osal_id_t      id       = OS_OBJECT_ID_UNDEFINED;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyFileExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), true);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_STUB_COUNT(OS_ForEachObject, 1);
-}
-
-void Test_FM_VerifyFileExists_FilenameClosed(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    // Act
-    bool result_fileexist = FM_VerifyFileExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileexist, true);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyFileExists_FilenameIsDirectory(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_fileexist = FM_VerifyFileExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_fileexist, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISDIR_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileExists_FilenameDefault(void)
-{
-    UtAssert_MIR("Unable to stub helper function, LoadOpenFileData, in fm_cmd_utils.c");
-}
-
-/* **********************
- * VerifyFileNoExist Tests
- * *********************/
-void Test_FM_VerifyFileNoExist_FilenameInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
-
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_filenoexist = FM_VerifyFileNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenoexist, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNoExist_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    // Act
-    bool result_filenoexist = FM_VerifyFileNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenoexist, true);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyFileNoExist_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat       = {.FileModeBits = 0x00000};
-    osal_id_t      id             = OS_OBJECT_ID_UNDEFINED;
-    uint32         eventid_before = dummy_eventid;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyFileNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), false);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_STUB_COUNT(OS_ForEachObject, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_EXIST_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNoExist_FilenameClosed(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_filenoexist = FM_VerifyFileNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenoexist, false);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_EXIST_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNoExist_FilenameIsDirectory(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_filenoexist = FM_VerifyFileNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenoexist, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISDIR_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNoExist_FilenameDefault(void)
-{
-    UtAssert_MIR("Unable to stub helper function, LoadOpenFileData, in fm_cmd_utils.c");
-}
-
-/* **********************
- * VerifyFileNotOpen Tests
- * *********************/
-void Test_FM_VerifyFileNotOpen_FilenameInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
-
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_filenotopen = FM_VerifyFileNotOpen(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenotopen, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNotOpen_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    // Act
-    bool result_filenotopen = FM_VerifyFileNotOpen(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenotopen, true);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyFileNotOpen_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat       = {.FileModeBits = 0x00000};
-    osal_id_t      id             = OS_OBJECT_ID_UNDEFINED;
-    uint32         eventid_before = dummy_eventid;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyFileNotOpen(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), false);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISOPEN_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNotOpen_FilenameClosed(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    // Act
-    bool result_filenotopen = FM_VerifyFileNotOpen(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenotopen, true);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyFileNotOpen_FilenameIsDirectory(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_filenotopen = FM_VerifyFileNotOpen(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_filenotopen, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISDIR_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyFileNotOpen_FilenameDefault(void)
-{
-    UtAssert_MIR("Unable to stub helper function, LoadOpenFileData, in fm_cmd_utils.c");
-}
-
-/* **********************
- * VerifyDirExists Tests
- * *********************/
-void Test_FM_VerifyDirExists_FilenameInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
-
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_direxists = FM_VerifyDirExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_direxists, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirExists_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_direxists = FM_VerifyDirExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_direxists, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_DNE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirExists_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat       = {.FileModeBits = 0x00000};
-    osal_id_t      id             = OS_OBJECT_ID_UNDEFINED;
-    uint32         eventid_before = dummy_eventid;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyDirExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), false);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_STUB_COUNT(OS_ForEachObject, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISFILE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirExists_FilenameClosed(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_direxists = FM_VerifyDirExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
-
-    // Assert
-    UtAssert_INT32_EQ(result_direxists, false);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISFILE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirExists_FilenameIsDirectory(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    // Act
-    bool result_direxists = FM_VerifyDirExists(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_direxists, true);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyDirExists_FilenameDefault(void)
-{
-    UtAssert_MIR("Unable to stub helper function, LoadOpenFileData, in fm_cmd_utils.c");
-}
-
-/* **********************
- * VerifyDirNoExist Tests
- * *********************/
-void Test_FM_VerifyDirNoExist_FilenameInvalid(void)
-{
-    // Arrange
-    uint32     dummy_bufsize = 32;
-    uint32     dummy_eventid = UT_Utils_Any_uint8();
-    char       dummy_name[32];
-    const char dummy_cmdtext;
-
-    memset(dummy_name, 0xff, sizeof(dummy_name));
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_dirnoexist = FM_VerifyDirNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_dirnoexist, false);
-    UtAssert_INT32_EQ(count_osstat, 0);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_INVALID_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirNoExist_FilenameNotInUse(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "dummy_filename";
-    const char dummy_cmdtext;
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), !OS_SUCCESS);
-
-    // Act
-    bool result_dirnoexist = FM_VerifyDirNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_dirnoexist, true);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 0);
-}
-
-void Test_FM_VerifyDirNoExist_FilenameOpen(void)
-{
-    // Arrange
-    uint32         dummy_bufsize  = 32;
-    uint32         dummy_eventid  = UT_Utils_Any_uint8();
-    char           dummy_name[32] = "Dummy_Message";
-    const char     dummy_cmdtext;
-    os_fstat_t     filestat       = {.FileModeBits = 0x00000};
-    osal_id_t      id             = OS_OBJECT_ID_UNDEFINED;
-    uint32         eventid_before = dummy_eventid;
-    OS_file_prop_t fdProp;
-
-    memset(&fdProp, 0, sizeof(fdProp));
-    strncpy(fdProp.Path, dummy_name, dummy_bufsize);
-
-    OS_OpenCreate(&id, NULL, 0, 0);
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
-    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &fdProp, sizeof(fdProp), false);
-
-    // Assert
-    UtAssert_INT32_EQ(FM_VerifyDirNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext), false);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_STUB_COUNT(OS_stat, 1);
-    UtAssert_STUB_COUNT(OS_ForEachObject, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_DNE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirNoExist_FilenameClosed(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x00000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_dirnoexist = FM_VerifyDirNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent       = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat          = UT_GetStubCount(UT_KEY(OS_stat));
-    uint8 count_osforeachobject = UT_GetStubCount(UT_KEY(OS_ForEachObject));
-
-    // Assert
-    UtAssert_INT32_EQ(result_dirnoexist, false);
-    UtAssert_INT32_EQ(count_osforeachobject, 1);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_DNE_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirNoExist_FilenameIsDirectory(void)
-{
-    // Arrange
-    uint32     dummy_bufsize  = 32;
-    uint32     dummy_eventid  = UT_Utils_Any_uint8();
-    char       dummy_name[32] = "Dummy_Message";
-    const char dummy_cmdtext;
-    os_fstat_t filestat = {.FileModeBits = 0x10000};
-
-    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_stat), &filestat, sizeof(filestat), false);
-
-    uint32 eventid_before = dummy_eventid;
-
-    // Act
-    bool result_dirnoexist = FM_VerifyDirNoExist(dummy_name, dummy_bufsize, dummy_eventid, &dummy_cmdtext);
-
-    uint8 count_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    uint8 count_osstat    = UT_GetStubCount(UT_KEY(OS_stat));
-
-    // Assert
-    UtAssert_INT32_EQ(result_dirnoexist, false);
-    UtAssert_INT32_EQ(count_osstat, 1);
-    UtAssert_INT32_EQ(count_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid_before + FM_FNAME_ISDIR_EID_OFFSET);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void Test_FM_VerifyDirNoExist_FilenameDefault(void)
-{
-    UtAssert_MIR("Unable to stub helper function, LoadOpenFileData, in fm_cmd_utils.c");
+    UtAssert_STUB_COUNT(OS_CountSemGive, 1);
 }
 
 /* **********************
  * AppendPathSep Tests
  * *********************/
-void FM_AppendPathSep_StringLengthZero(void)
+void Test_FM_AppendPathSep(void)
 {
-    // Arrange
-    uint32 dummy_bufsize       = 32;
-    char   dummy_directory[32] = "";
-
-    // Act
-    FM_AppendPathSep(dummy_directory, dummy_bufsize);
-
-    // Assert
-    uint32 StringLength = strlen(dummy_directory);
-    UtAssert_INT32_EQ(StringLength, 0);
-}
-
-void FM_AppendPathSep_StringLengthSmallerThanBuffer(void)
-{
-    // Arrange
-    uint32 dummy_bufsize       = 1;
-    char   dummy_directory[32] = "dummy_directory";
-
-    uint32 StringLength_before = strlen(dummy_directory);
-
-    // Act
-    FM_AppendPathSep(dummy_directory, dummy_bufsize);
-
-    uint32 StringLength = strlen(dummy_directory);
-
-    // Assert
-    UtAssert_INT32_EQ(StringLength_before, StringLength);
-    UtAssert_INT32_EQ(dummy_directory[StringLength - 1] == '/', false);
-}
-
-void FM_AppendPathSep_StringEndWithPathSeparator(void)
-{
-    // Arrange
-    uint32 dummy_bufsize       = 32;
-    char   dummy_directory[32] = "dummy_directory/";
-
-    uint32 StringLength_before = strlen(dummy_directory);
-
-    // Act
-    FM_AppendPathSep(dummy_directory, dummy_bufsize);
-
-    uint32 StringLength = strlen(dummy_directory);
-
-    // Assert
-    UtAssert_INT32_EQ(StringLength_before, StringLength);
-    UtAssert_INT32_EQ(dummy_directory[StringLength - 1], '/');
-}
-
-void FM_AppendPathSep_StringEndWithoutSeparator(void)
-{
-    // Arrange
-    uint32 dummy_bufsize       = 32;
-    char   dummy_directory[32] = "dummy_directory";
-
-    uint32 StringLength_before = strlen(dummy_directory);
-
-    // Act
-    FM_AppendPathSep(dummy_directory, dummy_bufsize);
-
-    uint32 StringLength = strlen(dummy_directory);
-
-    // Assert
-    UtAssert_INT32_EQ(StringLength_before != StringLength, true);
-    UtAssert_INT32_EQ(dummy_directory[StringLength - 1], '/');
-}
-
-/* * * * * * * * * * * * * *
- * Add Method Tests
- * * * * * * * * * * * * * */
-void add_FM_IsValidCmdPktLength_tests(void)
-{
-    UtTest_Add(Test_FM_IsValidCmdPktLength_ActualLengthSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_IsValidCmdPktLength_ActualLengthSuccess");
-
-    UtTest_Add(Test_FM_IsValidCmdPktLength_ActualLengthNotExpected, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_IsValidCmdPktLength_ActualLengthSuccess");
-}
-
-void add_FM_VerifyOverwrite_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyOverwrite_OverwriteIsNeitherFalseNorTrue, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyOverwrite_OverwriteIsNeitherFalseNorTrue");
-
-    UtTest_Add(Test_FM_VerifyOverwrite_OverwriteIsTrue, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyOverwrite_OverwriteIsTrue");
-
-    UtTest_Add(Test_FM_VerifyOverwrite_OverwriteIsFalse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyOverwite_OverwriteIsFalse");
-}
-
-void add_FM_GetOpenFilesData_tests(void)
-{
-    UtTest_Add(Test_FM_GetOpenFilesData_OSForEachObjectCalled, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_OSForEachObjectCalled");
-
-    UtTest_Add(Test_FM_GetOpenFilesData_IncrementOpenFileCount, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_IncrementOpenFileCount");
-
-    UtTest_Add(Test_FM_GetOpenFilesData_ObjIdIsUndefined, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_ObjIdIsUndefined");
-
-    UtTest_Add(Test_FM_GetOpenFilesData_OpenFilesDataIsNull, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_OpenFilesDataIsNull");
-
-    UtTest_Add(Test_FM_GetOpenFilesData_FDGetInfoFail, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_FDGetInfoFail");
-
-    UtTest_Add(Test_FM_GetOpenFilesData_TaskGetInfoFail, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetOpenFilesData_TaskGetInfoFail");
-}
-
-void add_FM_GetFilenameState_tests(void)
-{
-    UtTest_Add(Test_FM_GetFilenameState_FileNameIsNull, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FileNameIsNull");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameNotNullButNotValid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FileNameNotNullButNotValid");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameNotNullButEmpty, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FileNameNotNullButEmpty");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameIsValidButNotInUse_FileInfoCmdFalse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FileNameIsValidButNotInUse_FileInfoCmdFalse");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameIsValidButNOtINUse_FileINfoCmdTrue, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FileNameIsValidButNOtINUse_FileINfoCmdTrue");
-
-    UtTest_Add(Test_FM_GetFilenameState_FilenameInUse_OSFilestatDefine_FILESTAT_ISDIR, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FilenameInUse_OSFilestatDefine_FILESTAT_ISDIR");
-
-    UtTest_Add(Test_FM_GetFilenameState_FilenameInUse_OSFilestatNOTDefine_FileInfoFalse, FM_Test_Setup,
-               FM_Test_Teardown, " Test_FM_GetFilenameState_FilenameInUse_OSFilestatNOTDefine_FileInfoFalse");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdFalse, FM_Test_Setup,
-               FM_Test_Teardown, "Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdFalse");
-
-    UtTest_Add(Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdTrue, FM_Test_Setup,
-               FM_Test_Teardown, "Test_FM_GetFilenameState_FileNameInUseandValidNotDirectory_FileInfoCmdTrue");
-
-    UtTest_Add(Test_FM_GetFilenameState_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FilenameOpen");
-
-    UtTest_Add(Test_FM_GetFilenameState_ObjIdIsUndefined, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_ObjIdIsUndefined");
-
-    UtTest_Add(Test_FM_GetFilenameState_FDGetInfoFail, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FDGetInfoFail");
-
-    UtTest_Add(Test_FM_GetFilenameState_FDTableEntryInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_GetFilenameState_FDTableEntryInvalid");
-}
-
-void add_FM_VerifyNameValid_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyNameValid_FilenameStateNotValid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyNameValid_FilenameStateNotValid");
-
-    UtTest_Add(Test_FM_VerifyNameValid_FilenameStateIsValid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyNameValid_FilenameStateIsValid");
-}
-
-void add_FM_VerifyFileClosed_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyFileClosed_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileClosed_FilenameDefault");
-}
-
-void add_FM_VerifyFileExists_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyFileExists_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileExists_FilenameDefault");
-}
-
-void add_FM_VerifyFileNoExist_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyFileNoExist_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNoExist_FilenameDefault");
-}
-
-void add_FM_VerifyFileNotOpen_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyFileNotOpen_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyFileNotOpen_FilenameDefault");
-}
-
-void add_FM_VerifyDirExists_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyDirExists_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirExists_FilenameDefault");
-}
-
-void add_FM_VerifyDirNoExist_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameInvalid");
-
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameNotInUse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameNotInUse");
-
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameOpen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameOpen");
-
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameClosed, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameClosed");
-
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameIsDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameIsDirectory");
-
-    UtTest_Add(Test_FM_VerifyDirNoExist_FilenameDefault, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyDirNoExist_FilenameDefault");
-}
-
-void add_FM_VerifyChildTask_tests(void)
-{
-    UtTest_Add(Test_FM_VerifyChildTask_ChildSemaphoreIsInvalid, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyChildTask_ChildSemaphoreIsInvalid");
-
-    UtTest_Add(Test_FM_VerifyChildTask_LocalQueueCountEqualToQueueDepth, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyChildTask_LocalQueueCountEqualToQueueDepth");
-
-    UtTest_Add(Test_FM_VerifyChildTask_LocalQueueCountGreaterQueueDepth, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyChildTask_LocalQueueCountGreaterQueueDepth");
-
-    UtTest_Add(Test_FM_VerifyChildTask_ChildWriteIndexGreaterChildQDepth, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyChildTask_ChildWriteIndexGreaterChildQDepth");
-
-    UtTest_Add(Test_FM_VerifyChildTask_ChildWriteIndexEqualChildQDepth, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_VerifyChildTask_ChildWriteIndexEqualChildQDepth");
-
-    UtTest_Add(Test_FM_VerifyChildTask_Default, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyChildTask_Default");
-}
-
-void add_FM_InvokeChildTask_tests(void)
-{
-    UtTest_Add(FM_InvokeChildTask_WriteIndexGreaterThanChildQueue, FM_Test_Setup, FM_Test_Teardown,
-               "FM_InvokeChildTask_WriteIndexGreaterThanChildQueue");
-
-    UtTest_Add(FM_InvokeChildTask_ChildSemaphoreNotEqualToSEMINVALID, FM_Test_Setup, FM_Test_Teardown,
-               "FM_InvokeChildTask_ChildSemaphoreNotEqualToSEMINVALID");
-}
-
-void add_FM_AppendPathSep_tests(void)
-{
-    UtTest_Add(FM_AppendPathSep_StringLengthZero, FM_Test_Setup, FM_Test_Teardown, "FM_AppendPathSep_StringLengthZero");
-
-    UtTest_Add(FM_AppendPathSep_StringLengthSmallerThanBuffer, FM_Test_Setup, FM_Test_Teardown,
-               "FM_AppendPathSep_StringLengthSmallerThanBuffer");
-
-    UtTest_Add(FM_AppendPathSep_StringEndWithPathSeparator, FM_Test_Setup, FM_Test_Teardown,
-               "FM_AppendPathSep_StringEndWithPathSeparator");
-
-    UtTest_Add(FM_AppendPathSep_StringEndWithoutSeparator, FM_Test_Setup, FM_Test_Teardown,
-               "FM_AppendPathSep_StringEndWithoutSeparator");
+    char directory[3] = "";
+
+    /* Empty directory */
+    UtAssert_VOIDCALL(FM_AppendPathSep(directory, sizeof(directory)));
+    UtAssert_UINT32_EQ(directory[0], 0);
+
+    /* Ends with directory separator */
+    strncpy(directory, "/", sizeof(directory));
+    UtAssert_VOIDCALL(FM_AppendPathSep(directory, sizeof(directory)));
+    UtAssert_UINT32_EQ(strncmp(directory, "/", sizeof(directory)), 0);
+
+    /* No room */
+    strncpy(directory, "a", sizeof(directory));
+    UtAssert_VOIDCALL(FM_AppendPathSep(directory, sizeof(directory) - 1));
+    UtAssert_UINT32_EQ(strncmp(directory, "a", sizeof(directory)), 0);
+
+    UtAssert_VOIDCALL(FM_AppendPathSep(directory, sizeof(directory)));
+    UtAssert_UINT32_EQ(strncmp(directory, "a/", sizeof(directory)), 0);
 }
 
 /*
@@ -1906,18 +573,18 @@ void add_FM_AppendPathSep_tests(void)
  */
 void UtTest_Setup(void)
 {
-    add_FM_IsValidCmdPktLength_tests();
-    add_FM_VerifyOverwrite_tests();
-    add_FM_GetOpenFilesData_tests();
-    add_FM_GetFilenameState_tests();
-    add_FM_VerifyNameValid_tests();
-    add_FM_VerifyFileClosed_tests();
-    add_FM_VerifyFileExists_tests();
-    add_FM_VerifyFileNoExist_tests();
-    add_FM_VerifyFileNotOpen_tests();
-    add_FM_VerifyDirExists_tests();
-    add_FM_VerifyDirNoExist_tests();
-    add_FM_VerifyChildTask_tests();
-    add_FM_InvokeChildTask_tests();
-    add_FM_AppendPathSep_tests();
+    UtTest_Add(Test_FM_IsValidCmdPktLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_IsValidCmdPktLength");
+    UtTest_Add(Test_FM_VerifyOverwrite, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyOverwrite");
+    UtTest_Add(Test_FM_GetOpenFilesData, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetOpenFilesData");
+    UtTest_Add(Test_FM_GetFilenameState, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFilenameState");
+    UtTest_Add(Test_FM_VerifyNameValid, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyNameValid");
+    UtTest_Add(Test_FM_VerifyFileClosed, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileClosed");
+    UtTest_Add(Test_FM_VerifyFileExists, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileExists");
+    UtTest_Add(Test_FM_VerifyFileNoExist, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileNoExist");
+    UtTest_Add(Test_FM_VerifyFileNotOpen, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileNotOpen");
+    UtTest_Add(Test_FM_VerifyDirExists, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyDirExists");
+    UtTest_Add(Test_FM_VerifyDirNoExist, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyDirNoExist");
+    UtTest_Add(Test_FM_VerifyChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyChildTask");
+    UtTest_Add(Test_FM_InvokeChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_InvokeChildTask");
+    UtTest_Add(Test_FM_AppendPathSep, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppendPathSep");
 }

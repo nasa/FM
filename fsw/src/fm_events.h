@@ -1523,8 +1523,8 @@
 #define FM_FNAME_ISFILE_EID_OFFSET   2 /* mutually exclusive with ISDIR */
 #define FM_FNAME_ISOPEN_EID_OFFSET   3
 #define FM_FNAME_ISCLOSED_EID_OFFSET 4
-#define FM_FNAME_UNKNOWN_EID_OFFSET  5
-#define FM_FNAME_NUM_OFFSETS         6
+/* Unused EID offset 5 */
+#define FM_FNAME_NUM_OFFSETS 6
 
 #define FM_CHILD_DISABLED_EID_OFFSET 0
 #define FM_CHILD_Q_FULL_EID_OFFSET   1
@@ -1584,20 +1584,6 @@
  *  Value: 153
  */
 #define FM_COPY_SRC_ISDIR_ERR_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
-
-/**
- * \brief FM Child Task Copy File Source File Name Has Unknown State Event ID
- *
- *  \par Type: ERROR
- *
- *  \par Cause
- *
- *  This event message is generated upon receipt of a /FM_Copy
- *  command packet with a source filename of unknown state.
- *
- *  Value: 156
- */
-#define FM_COPY_SRC_UNKNOWN_ERR_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_UNKNOWN_EID_OFFSET)
 
 /**
  * \brief FM Child Task Copy File Target Filename Error Base ID
@@ -1668,20 +1654,6 @@
  *  Value: 160
  */
 #define FM_COPY_TGT_ISOPEN_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
-
-/**
- * \brief FM Child Task Copy File Target Filename Unknown State Event ID
- *
- *  \par Type: ERROR
- *
- *  \par Cause
- *
- *  This event message is generated upon receipt of a /FM_Copy
- *  command packet with a target filename with unknown state.
- *
- *  Value: 162
- */
-#define FM_COPY_TGT_UNKNOWN_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_UNKNOWN_EID_OFFSET)
 
 /**
  * \brief FM Child Task Copy File Child Task Error Base ID
@@ -1882,20 +1854,6 @@
 #define FM_MOVE_TGT_ISOPEN_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
 
 /**
- * \brief FM Child Task Move File Target File Has Unknown State Event ID
- *
- *  \par Type: ERROR
- *
- *  \par Cause
- *
- *  This event message is generated upon receipt of a /FM_Copy
- *  command packet with a target file with unknown state..
- *
- *  Value: 177
- */
-#define FM_MOVE_TGT_UNKNOWN_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_UNKNOWN_EID_OFFSET)
-
-/**
  * \brief FM Child Task Move File Child Task Error Base ID
  *
  *  \par Type: ERROR
@@ -2092,20 +2050,6 @@
  *  Value: 190
  */
 #define FM_RENAME_TGT_ISOPEN_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
-
-/**
- * \brief FM Child Task Rename File Target Filename Has Unknown State Event ID
- *
- *  \par Type: ERROR
- *
- *  \par Cause
- *
- *  This event message is generated upon receipt of a /FM_Rename
- *  command packet with a target file with unknown state.
- *
- *  Value: 192
- */
-#define FM_RENAME_TGT_UNKNOWN_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_UNKNOWN_EID_OFFSET)
 
 /**
  * \brief FM Child Task Rename File Child Task Error Base ID

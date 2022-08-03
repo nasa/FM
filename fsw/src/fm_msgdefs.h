@@ -138,11 +138,9 @@
  *       - Error event #FM_COPY_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_COPY_SRC_DNE_ERR_EID may be sent
  *       - Error event #FM_COPY_SRC_ISDIR_ERR_EID may be sent
- *       - Error event #FM_COPY_SRC_UNKNOWN_ERR_EID may be sent
  *       - Error event #FM_COPY_TGT_INVALID_ERR_EID may be sent
  *       - Error event #FM_COPY_TGT_EXIST_ERR_EID may be sent
  *       - Error event #FM_COPY_TGT_ISDIR_ERR_EID may be sent
- *       - Error event #FM_COPY_TGT_UNKNOWN_ERR_EID may be sent
  *       - Error event #FM_COPY_CHILD_DISABLED_ERR_EID may be sent
  *       - Error event #FM_COPY_CHILD_FULL_ERR_EID may be sent
  *       - Error event #FM_COPY_CHILD_BROKEN_ERR_EID may be sent
