@@ -595,8 +595,6 @@ void FM_InvokeChildTask(void)
         OS_CountSemGive(FM_GlobalData.ChildSemaphore);
     }
 
-    return;
-
 } /* End of FM_InvokeChildTask */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -629,8 +627,6 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
             strcat(Directory, "/");
         }
     }
-
-    return;
 
 } /* End of FM_AppendPathSep */
 
