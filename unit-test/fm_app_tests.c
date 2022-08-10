@@ -709,24 +709,6 @@ void Test_FM_ProcessCmd_SetTableStateCCReturn(void)
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
 }
 
-void Test_FM_ProcessCmd_DeleteFileIntCCReturn(void)
-{
-    // Arrange
-    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_INT_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), true);
-
-    // Act
-    UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
-
-    // Assert
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-    UtAssert_STUB_COUNT(FM_DeleteFileCmd, 1);
-    UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
-}
-
 void Test_FM_ProcessCmd_SetPermissionsCCReturn(void)
 {
     // Arrange
@@ -868,9 +850,6 @@ void add_FM_ProcessCmd_tests(void)
 
     UtTest_Add(Test_FM_ProcessCmd_SetTableStateCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_PRocessCmd_SetTableStateCCReturn");
-
-    UtTest_Add(Test_FM_ProcessCmd_DeleteFileIntCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_DeleteFileIntCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_SetPermissionsCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_PRocessCmd_SetPermissionsCCReturn");
