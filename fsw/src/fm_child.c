@@ -134,8 +134,6 @@ void FM_ChildTask(void)
     /* This call allows cFE to clean-up system resources */
     CFE_ES_ExitChildTask();
 
-    return;
-
 } /* End of FM_ChildTask() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -191,8 +189,6 @@ void FM_ChildLoop(void)
 
         CFE_ES_PerfLogExit(FM_CHILD_TASK_PERF_ID);
     }
-
-    return;
 
 } /* End of FM_ChildLoop() */
 
@@ -286,8 +282,6 @@ void FM_ChildProcess(void)
     FM_GlobalData.ChildQueueCount--;
     OS_MutSemGive(FM_GlobalData.ChildQueueCountSem);
 
-    return;
-
 } /* End of FM_ChildProcess() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -329,8 +323,6 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildCopyCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -371,8 +363,6 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildMoveCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -412,8 +402,6 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-    return;
 
 } /* End of FM_ChildRenameCmd() */
 
@@ -457,8 +445,6 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-    return;
 
 } /* End of FM_ChildDeleteCmd() */
 
@@ -612,8 +598,6 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildDeleteAllCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -656,8 +640,6 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-    return;
 
 } /* End of FM_ChildDecompressCmd() */
 
@@ -836,8 +818,6 @@ void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildConcatCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -997,8 +977,6 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildFileInfoCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1038,8 +1016,6 @@ void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-    return;
 
 } /* End of FM_ChildCreateDirCmd() */
 
@@ -1120,8 +1096,6 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildDeleteDirCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1182,8 +1156,6 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-    return;
 
 } /* End of FM_ChildDirListFileCmd() */
 
@@ -1319,8 +1291,6 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
-
 } /* End of FM_ChildDirListPktCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1357,7 +1327,6 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 
-    return;
 } /* End of FM_ChildSetPermissionsCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1577,8 +1546,6 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                           "%s command: wrote %d of %d names: dir = %s, filename = %s", CmdText, (int)FileEntries,
                           (int)DirEntries, Directory, Filename);
     }
-
-    return;
 
 } /* End of FM_ChildDirListFileLoop */
 

@@ -272,8 +272,6 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
             break;
     }
 
-    return;
-
 } /* End of FM_ProcessPkt */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -388,8 +386,6 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_GlobalData.CommandErrCounter++;
     }
 
-    return;
-
 } // End of FM_ProcessCmd
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -435,8 +431,6 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         CFE_SB_TimeStampMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg);
         CFE_SB_TransmitMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, true);
     }
-
-    return;
 
 } // End of FM_ReportHK
 

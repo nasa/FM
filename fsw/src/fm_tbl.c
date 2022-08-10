@@ -202,8 +202,6 @@ void FM_AcquireTablePointers(void)
         FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
     }
 
-    return;
-
 } /* End FM_AcquireTablePointers */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -219,8 +217,6 @@ void FM_ReleaseTablePointers(void)
 
     /* Prevent table pointer use while released */
     FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
-
-    return;
 
 } /* End FM_ReleaseTablePointers */
 
