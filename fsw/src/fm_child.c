@@ -1468,6 +1468,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                     strncat(TempName, OS_DIRENTRY_NAME(DirEntry), (OS_MAX_PATH_LEN - PathLength));
 
                     /* Populate directory list file entry */
+                    memset(&DirListData, 0, sizeof(DirListData));
                     strncpy(DirListData.EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
                     DirListData.EntryName[EntryLength] = '\0';
 
