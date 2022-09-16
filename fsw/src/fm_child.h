@@ -419,9 +419,6 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
  *  \param [out] FilesTillSleep If this is zero the function will sleep for #FM_CHILD_STAT_SLEEP_MS and reset it to
  *                              #FM_CHILD_STAT_SLEEP_FILECOUNT. Otherwise it will subtract 1
  *  \param [in] GetSizeTimeMode Whether this function should call FM_ChildSizeTimeMode
- *
- *  \return Execution status, see \ref CFEReturnCodes and \ref OSReturnCodes
- *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
 void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
                        bool GetSizeTimeMode);
