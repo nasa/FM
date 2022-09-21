@@ -28,6 +28,23 @@
 #include "cfe.h"
 #include "fm_msg.h"
 
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ *  \brief  FM enum used for verifying file states
+ */
+typedef enum
+{
+    FM_FILE_CLOSED,  /**< \brief FM File Is Closed */
+    FM_FILE_EXISTS,  /**< \brief FM File Exists */
+    FM_FILE_NOEXIST, /**< \brief FM File Does Not Exist */
+    FM_FILE_NOTOPEN, /**< \brief FM File Is Not Open */
+    FM_DIR_EXISTS,   /**< \brief FM Directory Exists */
+    FM_DIR_NOEXIST   /**< \brief FM Directory Does Not Exist */
+} FM_File_States;
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM command handler utility function prototypes                  */
@@ -146,10 +163,33 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd);
 uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
- *  \brief Verify File is Closed Function
+ *  \brief Verify File State Function
  *
  *  \par Description
  *       This function calls the Get Filename State function and generates
+ *       an error event if the state is anything other than the given state.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *
+ *  \param [in]  State      State of file to verify
+ *  \param [in]  Filename   Pointer to buffer containing filename
+ *  \param [in]  BufferSize Size of filename character buffer
+ *  \param [in]  EventID    Error event ID (command specific)
+ *  \param [in]  CmdText    Error event text (command specific)
+ *
+ *  \return Boolean file state response
+ *  \retval true  File is in the given state
+ *  \retval false File is not in the given state
+ *
+ *  \sa #FM_GetFilenameState
+ */
+bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+
+/**
+ *  \brief Verify File is Closed Function
+ *
+ *  \par Description
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is anything other than a closed file.
  *
  *  \par Assumptions, External Events, and Notes:
@@ -163,7 +203,7 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
  *  \retval true  File is closed
  *  \retval false File is not closed
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
@@ -171,7 +211,7 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *  \brief Verify File Exists Function
  *
  *  \par Description
- *       This function calls the Get Filename State function and generates
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is anything other than an open file or
  *       a closed file.
  *
@@ -186,7 +226,7 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *  \retval true  File exists
  *  \retval false File does not exist
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
@@ -194,7 +234,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *  \brief Verify File Does Not Exist Function
  *
  *  \par Description
- *       This function calls the Get Filename State function and generates
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is anything other than the name is
  *       unused the name is not a file and is not a directory.
  *
@@ -209,7 +249,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *  \retval true  File does not exist
  *  \retval false File exists
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
@@ -217,7 +257,7 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
  *  \brief Verify File Is Not Open Function
  *
  *  \par Description
- *       This function calls the Get Filename State function and generates
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is a directory or an open file.
  *
  *  \par Assumptions, External Events, and Notes:
@@ -231,7 +271,7 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
  *  \retval true  File is not open or not in use
  *  \retval false File anything other than closed or not in use
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
@@ -239,7 +279,7 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
  *  \brief Verify Directory Exists Function
  *
  *  \par Description
- *       This function calls the Get Filename State function and generates
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is not an existing directory.
  *
  *  \par Assumptions, External Events, and Notes:
@@ -253,7 +293,7 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
  *  \retval true  Directory exists
  *  \retval false Directory does not exist
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
@@ -261,7 +301,7 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
  *  \brief Verify Directory Does Not Exist Function
  *
  *  \par Description
- *       This function calls the Get Filename State function and generates
+ *       This function calls the Verify File State function and generates
  *       an error event if the state is an existing file or directory.
  *
  *  \par Assumptions, External Events, and Notes:
@@ -275,7 +315,7 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
  *  \retval true  Directory does not exist
  *  \retval false Directory exists
  *
- *  \sa #FM_GetFilenameState
+ *  \sa #FM_VerifyFileState
  */
 bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 

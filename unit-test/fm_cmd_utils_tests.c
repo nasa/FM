@@ -231,6 +231,31 @@ void Test_FM_VerifyNameValid(void)
 }
 
 /* **************************
+ * FM_VerifyFileState Tests
+ * *************************/
+void Test_FM_VerifyFileState(void)
+{
+    char           filename[OS_MAX_FILE_NAME] = "Filename";
+    osal_id_t      id                         = OS_OBJECT_ID_UNDEFINED;
+    OS_file_prop_t file_prop;
+
+    memset(&file_prop, 0, sizeof(file_prop));
+    strncpy(file_prop.Path, filename, sizeof(file_prop.Path));
+    OS_OpenCreate(&id, NULL, 0, 0);
+
+    /* FM_NAME_IS_CLOSED */
+    UtAssert_BOOL_TRUE(FM_VerifyFileState(FM_FILE_CLOSED, filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* FM_NAME_IS_OPEN */
+    UT_SetDataBuffer(UT_KEY(OS_ForEachObject), &id, sizeof(id), false);
+    UT_SetDataBuffer(UT_KEY(OS_FDGetInfo), &file_prop, sizeof(file_prop), false);
+    UtAssert_BOOL_FALSE(FM_VerifyFileState(FM_FILE_CLOSED, filename, sizeof(filename), 0, "Cmd Text"));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_FNAME_ISOPEN_EID_OFFSET);
+}
+
+/* **************************
  * VerifyFileClosed Tests
  * *************************/
 void Test_FM_VerifyFileClosed(void)
@@ -578,6 +603,7 @@ void UtTest_Setup(void)
     UtTest_Add(Test_FM_GetOpenFilesData, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetOpenFilesData");
     UtTest_Add(Test_FM_GetFilenameState, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFilenameState");
     UtTest_Add(Test_FM_VerifyNameValid, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyNameValid");
+    UtTest_Add(Test_FM_VerifyFileState, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileState");
     UtTest_Add(Test_FM_VerifyFileClosed, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileClosed");
     UtTest_Add(Test_FM_VerifyFileExists, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileExists");
     UtTest_Add(Test_FM_VerifyFileNoExist, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyFileNoExist");
