@@ -59,7 +59,7 @@ int32 FM_TableInit(void)
         FM_AcquireTablePointers();
     }
 
-    return (Status);
+    return Status;
 
 } /* End FM_TableInit */
 
@@ -85,7 +85,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
         CFE_EVS_SendEvent(FM_TABLE_VERIFY_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Free Space Table verify error - null pointer detected");
 
-        return (FM_TABLE_VALIDATION_ERR);
+        return FM_TABLE_VALIDATION_ERR;
     }
 
     /*
@@ -176,7 +176,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
         Result = FM_TABLE_VALIDATION_ERR;
     }
 
-    return (Result);
+    return Result;
 
 } /* End FM_ValidateTable */
 

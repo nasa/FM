@@ -60,7 +60,7 @@ bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
                           FM_MAJOR_VERSION, FM_MINOR_VERSION, FM_REVISION, FM_MISSION_REV);
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_NoopCmd() */
 
@@ -92,7 +92,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(FM_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_ResetCountersCmd() */
 
@@ -160,7 +160,7 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_CopyFileCmd() */
 
@@ -229,7 +229,7 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_MoveFileCmd() */
 
@@ -285,7 +285,7 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_RenameFileCmd() */
 
@@ -332,7 +332,7 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_DeleteFileCmd() */
 
@@ -388,7 +388,7 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_DeleteAllFilesCmd() */
 
@@ -443,7 +443,7 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_DecompressFileCmd() */
 
@@ -507,7 +507,7 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_ConcatFilesCmd() */
 
@@ -569,7 +569,7 @@ bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_GetFileInfoCmd() */
 
@@ -606,7 +606,7 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(FM_GET_OPEN_FILES_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_GetOpenFilesCmd() */
 
@@ -653,7 +653,7 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_CreateDirectoryCmd() */
 
@@ -700,7 +700,7 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_DeleteDirectoryCmd() */
 
@@ -780,7 +780,7 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_GetDirListFileCmd() */
 
@@ -839,7 +839,7 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_GetDirListPktCmd() */
 
@@ -914,7 +914,7 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
         }
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_GetFreeSpaceCmd() */
 
@@ -984,7 +984,7 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
         }
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_SetTableStateCmd() */
 
@@ -1035,7 +1035,7 @@ bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_InvokeChildTask();
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End of FM_SetPermissionsCmd() */
 

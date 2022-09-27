@@ -105,7 +105,7 @@ int32 FM_ChildInit(void)
                           TaskText, (int)Result);
     }
 
-    return (Result);
+    return Result;
 
 } /* End of FM_ChildInit() */
 
@@ -1402,7 +1402,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
                           "%s error: OS_OpenCreate failed: result = %d, file = %s", CmdText, (int)Status, Filename);
     }
 
-    return (CommandResult);
+    return CommandResult;
 
 } /* End FM_ChildDirListFileInit */
 
@@ -1571,7 +1571,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
         *FileMode = OS_FILESTAT_MODE(FileStatus);
     }
 
-    return (Result);
+    return Result;
 
 } /* End of FM_ChildSizeTimeMode */
 
