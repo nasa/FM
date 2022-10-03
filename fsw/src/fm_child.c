@@ -1338,10 +1338,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
     int32           Status       = 0;
 
     /* Initialize the standard cFE File Header for the Directory Listing File */
-    memset(&FileHeader, 0, sizeof(FileHeader));
-    FileHeader.SubType = FM_DIR_LIST_FILE_SUBTYPE;
-    strncpy(FileHeader.Description, CmdText, sizeof(FileHeader.Description) - 1);
-    FileHeader.Description[sizeof(FileHeader.Description) - 1] = '\0';
+    CFE_FS_InitHeader(&FileHeader, CmdText, FM_DIR_LIST_FILE_SUBTYPE);
 
     /* Create directory listing output file */
     Status = OS_OpenCreate(&FileHandle, Filename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_READ_WRITE);
