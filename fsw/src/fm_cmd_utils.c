@@ -61,7 +61,7 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
                           (int)ExpectedLength, (int)ActualLength);
     }
 
-    return (FunctionResult);
+    return FunctionResult;
 
 } /* FM_IsValidCmdPktLength */
 
@@ -83,7 +83,7 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
         FunctionResult = false;
     }
 
-    return (FunctionResult);
+    return FunctionResult;
 
 } /* End FM_VerifyOverwrite */
 
@@ -130,7 +130,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 
     OS_ForEachObject(OS_OBJECT_CREATOR_ANY, LoadOpenFileData, (void *)OpenFilesData);
 
-    return (OpenFileCount);
+    return OpenFileCount;
 
 } /* End FM_GetOpenFilesData */
 
@@ -239,7 +239,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
         }
     }
 
-    return (FilenameState);
+    return FilenameState;
 
 } /* End FM_GetFilenameState */
 
@@ -263,7 +263,7 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
         CFE_EVS_SendEvent(EventID, CFE_EVS_EventType_ERROR, "%s error: invalid name: name = %s", CmdText, Name);
     }
 
-    return (FilenameState);
+    return FilenameState;
 
 } /* End FM_VerifyNameValid */
 
@@ -368,7 +368,7 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
         CFE_EVS_SendEvent((EventID + ErrorCode), CFE_EVS_EventType_ERROR, Spec, CmdText, Filename);
     }
 
-    return (Result);
+    return Result;
 
 } /* End FM_VerifyFileState */
 
@@ -497,7 +497,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
         Result = true;
     }
 
-    return (Result);
+    return Result;
 
 } /* End FM_VerifyChildTask */
 

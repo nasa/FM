@@ -237,7 +237,7 @@ int32 FM_AppInit(void)
         }
     }
 
-    return (Result);
+    return Result;
 
 } /* End of FM_AppInit() */
 
