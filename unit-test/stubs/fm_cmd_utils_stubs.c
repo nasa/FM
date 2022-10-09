@@ -44,8 +44,8 @@
 #include "uttest.h"
 #include "utstubs.h"
 
-// static uint32 OpenFileCount = 0;
-// static bool FileIsOpen = false;
+/* static uint32 OpenFileCount = 0; */
+/* static bool FileIsOpen = false; */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -65,7 +65,7 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
     status = UT_DEFAULT_IMPL(FM_IsValidCmdPktLength);
 
     return status;
-} /* FM_IsValidCmdPktLength */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -76,7 +76,7 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
 bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyOverwrite);
-} /* End FM_VerifyOverwrite */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -87,7 +87,7 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
 uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 {
     return UT_DEFAULT_IMPL(FM_GetOpenFilesData);
-} /* End FM_GetOpenFilesData */
+}
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM utility function -- query filename state                     */
@@ -101,7 +101,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
     UT_Stub_RegisterContextGenericArg(UT_KEY(FM_GetFilenameState), FileInfoCmd);
 
     return UT_DEFAULT_IMPL(FM_GetFilenameState);
-} /* End FM_GetFilenameState */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -112,7 +112,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
 uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyNameValid);
-} /* End FM_VerifyNameValid */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -123,7 +123,7 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
 bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileClosed);
-} /* End FM_VerifyFileClosed */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -134,7 +134,7 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
 bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileExists);
-} /* End FM_VerifyFileExists */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -145,7 +145,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
 bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileNoExist);
-} /* End FM_VerifyFileNoExist */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -156,7 +156,7 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
 bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyFileNotOpen);
-} /* End FM_VerifyFileNotOpen */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -167,7 +167,7 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
 bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return UT_DEFAULT_IMPL(FM_VerifyDirExists);
-} /* End FM_VerifyDirExists */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -177,9 +177,8 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
 
 bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return UT_DEFAULT_IMPL(FM_VerifyDirNoExist);
-} /* End FM_VerifyDirNoExist */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -189,9 +188,8 @@ bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const ch
 
 bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
 {
-
     return UT_DEFAULT_IMPL(FM_VerifyChildTask);
-} /* End FM_VerifyChildTask */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -201,9 +199,8 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
 
 void FM_InvokeChildTask(void)
 {
-
     UT_DEFAULT_IMPL(FM_InvokeChildTask);
-} /* End of FM_InvokeChildTask */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -214,8 +211,4 @@ void FM_InvokeChildTask(void)
 void FM_AppendPathSep(char *Directory, uint32 BufferSize)
 {
     UT_DEFAULT_IMPL(FM_AppendPathSep);
-} /* End of FM_AppendPathSep */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

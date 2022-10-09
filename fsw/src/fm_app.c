@@ -156,8 +156,7 @@ void FM_AppMain(void)
     ** Let cFE kill the task (and any child tasks)...
     */
     CFE_ES_ExitApp(RunStatus);
-
-} /* End FM_AppMain */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -238,8 +237,7 @@ int32 FM_AppInit(void)
     }
 
     return Result;
-
-} /* End of FM_AppInit() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -271,8 +269,7 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
                               (unsigned long)CFE_SB_MsgIdToValue(MessageID));
             break;
     }
-
-} /* End of FM_ProcessPkt */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -381,8 +378,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         /* Increment command error counter */
         FM_GlobalData.CommandErrCounter++;
     }
-
-} // End of FM_ProcessCmd
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -427,9 +423,4 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         CFE_SB_TimeStampMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg);
         CFE_SB_TransmitMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, true);
     }
-
-} // End of FM_ReportHK
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

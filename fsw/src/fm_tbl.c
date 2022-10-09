@@ -60,8 +60,7 @@ int32 FM_TableInit(void)
     }
 
     return Status;
-
-} /* End FM_TableInit */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -177,8 +176,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
     }
 
     return Result;
-
-} /* End FM_ValidateTable */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -201,8 +199,7 @@ void FM_AcquireTablePointers(void)
         /* Make sure we don't try to use the empty table buffer */
         FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
     }
-
-} /* End FM_AcquireTablePointers */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -217,9 +214,4 @@ void FM_ReleaseTablePointers(void)
 
     /* Prevent table pointer use while released */
     FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
-
-} /* End FM_ReleaseTablePointers */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

@@ -49,7 +49,6 @@
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-
 } FM_HousekeepingCmd_t;
 
 /**
@@ -59,9 +58,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-
 } FM_NoopCmd_t;
 
 /**
@@ -71,9 +68,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-
 } FM_ResetCmd_t;
 
 /**
@@ -83,13 +78,11 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     uint16 Overwrite;               /**< \brief Allow overwrite */
     char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
-
 } FM_CopyFileCmd_t;
 
 /**
@@ -104,7 +97,6 @@ typedef struct
     uint16 Overwrite;               /**< \brief Allow overwrite */
     char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
-
 } FM_MoveFileCmd_t;
 
 /**
@@ -118,7 +110,6 @@ typedef struct
 
     char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
-
 } FM_RenameFileCmd_t;
 
 /**
@@ -130,7 +121,6 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader;                 /**< \brief Command header */
     char                    Filename[OS_MAX_PATH_LEN]; /**< \brief Delete filename */
-
 } FM_DeleteFileCmd_t;
 
 /**
@@ -142,7 +132,6 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader;                  /**< \brief Command header */
     char                    Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
-
 } FM_DeleteAllCmd_t;
 
 /**
@@ -155,7 +144,6 @@ typedef struct
     CFE_MSG_CommandHeader_t CmdHeader;               /**< \brief Command header */
     char                    Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
     char                    Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
-
 } FM_DecompressCmd_t;
 
 /**
@@ -170,7 +158,6 @@ typedef struct
     char Source1[OS_MAX_PATH_LEN]; /**< \brief Source 1 filename */
     char Source2[OS_MAX_PATH_LEN]; /**< \brief Source 2 filename */
     char Target[OS_MAX_PATH_LEN];  /**< \brief Target filename */
-
 } FM_ConcatCmd_t;
 
 /**
@@ -184,7 +171,6 @@ typedef struct
 
     char   Filename[OS_MAX_PATH_LEN]; /**< \brief Filename */
     uint32 FileInfoCRC;               /**< \brief File info CRC method */
-
 } FM_GetFileInfoCmd_t;
 
 /**
@@ -194,9 +180,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-
 } FM_GetOpenFilesCmd_t;
 
 /**
@@ -209,7 +193,6 @@ typedef struct
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
-
 } FM_CreateDirCmd_t;
 
 /**
@@ -222,7 +205,6 @@ typedef struct
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
-
 } FM_DeleteDirCmd_t;
 
 /**
@@ -238,7 +220,6 @@ typedef struct
     char  Filename[OS_MAX_PATH_LEN];  /**< \brief Filename */
     uint8 GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
     uint8 Spare01[3];                 /**< \brief Padding to 32 bit boundary */
-
 } FM_GetDirFileCmd_t;
 
 /**
@@ -248,14 +229,12 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
     char   Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
     uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
     uint8  GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
     uint8  Spare01[3];                 /**< \brief Padding to 32 bit boundary */
-
 } FM_GetDirPktCmd_t;
 
 /**
@@ -265,9 +244,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-
 } FM_GetFreeSpaceCmd_t;
 
 /**
@@ -281,7 +258,6 @@ typedef struct
 
     uint32 TableEntryIndex; /**< \brief Table entry index */
     uint32 TableEntryState; /**< \brief New table entry state */
-
 } FM_SetTableStateCmd_t;
 
 /**
@@ -295,7 +271,6 @@ typedef struct
 
     char   FileName[OS_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
     uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
-
 } FM_SetPermCmd_t;
 
 /**\}*/
@@ -350,7 +325,6 @@ typedef struct
     char   DirName[OS_MAX_PATH_LEN]; /**< \brief Directory name */
     uint32 DirEntries;               /**< \brief Number of entries in the directory */
     uint32 FileEntries;              /**< \brief Number of entries written to output file */
-
 } FM_DirListFileStats_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -389,7 +363,6 @@ typedef struct
 {
     char LogicalName[OS_MAX_PATH_LEN]; /**< \brief Logical filename */
     char AppName[OS_MAX_API_NAME];     /**< \brief Application that opened file */
-
 } FM_OpenFilesEntry_t;
 
 /**
@@ -455,7 +428,6 @@ typedef struct
 
     uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
     uint8 ChildPreviousCC; /**< \brief Command code previously executed */
-
 } FM_HousekeepingPkt_t;
 
 /**\}*/
@@ -473,7 +445,6 @@ typedef struct
 {
     uint32 State;                 /**< \brief Table entry enable/disable state */
     char   Name[OS_MAX_PATH_LEN]; /**< \brief File system name = string */
-
 } FM_TableEntry_t;
 
 /**
@@ -482,7 +453,6 @@ typedef struct
 typedef struct
 {
     FM_TableEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief One entry for each file system */
-
 } FM_FreeSpaceTable_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -569,7 +539,6 @@ typedef struct
     FS_LIB_Decompress_State_t DecompressState;
 
 #endif
-
 } FM_GlobalData_t;
 
 /** \brief File Manager global */

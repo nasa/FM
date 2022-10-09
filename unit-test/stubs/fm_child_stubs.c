@@ -66,7 +66,7 @@
 int32 FM_ChildInit(void)
 {
     return UT_DEFAULT_IMPL(FM_ChildInit);
-} /* End of FM_ChildInit() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -77,7 +77,7 @@ int32 FM_ChildInit(void)
 void FM_ChildTask(void)
 {
     UT_DEFAULT_IMPL(FM_ChildTask);
-} /* End of FM_ChildTask() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -88,7 +88,7 @@ void FM_ChildTask(void)
 void FM_ChildLoop(void)
 {
     UT_DEFAULT_IMPL(FM_ChildLoop);
-} /* End of FM_ChildLoop() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -99,7 +99,7 @@ void FM_ChildLoop(void)
 void FM_ChildProcess(void)
 {
     UT_DEFAULT_IMPL(FM_ChildProcess);
-} /* End of FM_ChildProcess() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -111,7 +111,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_Stub_RegisterContext(UT_KEY(FM_ChildCopyCmd), CmdArgs);
     UT_DEFAULT_IMPL(FM_ChildCopyCmd);
-} /* End of FM_ChildCopyCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -122,7 +122,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildMoveCmd);
-} /* End of FM_ChildMoveCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -133,7 +133,7 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildRenameCmd);
-} /* End of FM_ChildRenameCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -144,7 +144,7 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDeleteCmd);
-} /* End of FM_ChildDeleteCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -155,7 +155,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDeleteAllCmd);
-} /* End of FM_ChildDeleteAllCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -168,7 +168,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDecompressCmd);
-} /* End of FM_ChildDecompressCmd() */
+}
 
 #endif
 
@@ -181,7 +181,7 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildConcatCmd);
-} /* End of FM_ChildConcatCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -192,7 +192,7 @@ void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildFileInfoCmd);
-} /* End of FM_ChildFileInfoCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -203,7 +203,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildCreateDirCmd);
-} /* End of FM_ChildCreateDirCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -214,8 +214,7 @@ void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
-
-} /* End of FM_ChildDeleteDirCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -226,7 +225,7 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
-} /* End of FM_ChildDirListFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -237,7 +236,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildDirListPktCmd);
-} /* End of FM_ChildDirListPktCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -247,7 +246,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     UT_DEFAULT_IMPL(FM_ChildSetPermissionsCmd);
-} /* End of FM_ChildSetPermissionsCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -258,7 +257,7 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
 bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, const char *Filename)
 {
     return UT_DEFAULT_IMPL(FM_ChildDirListFileInit);
-} /* End FM_ChildDirListFileInit */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -270,7 +269,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                              const char *Filename, uint8 getSizeTimeMode)
 {
     UT_DEFAULT_IMPL(FM_ChildDirListFileLoop);
-} /* End of FM_ChildDirListFileLoop */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -281,7 +280,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
 int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileTime, uint32 *FileMode)
 {
     return UT_DEFAULT_IMPL(FM_ChildSizeTimeMode);
-} /* End of FM_ChildSizeTimeMode */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -297,8 +296,4 @@ void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int
     UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), FilesTillSleep);
     UT_Stub_RegisterContextGenericArg(UT_KEY(FM_ChildSleepStat), getSizeTimeMode);
     UT_DEFAULT_IMPL(FM_ChildSleepStat);
-} /* FM_ChildSleepStat */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

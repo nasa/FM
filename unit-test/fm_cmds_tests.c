@@ -87,7 +87,6 @@ void Test_FM_NoopCmd_Success(void)
 
 void Test_FM_NoopCmd_BadLength(void)
 {
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
     bool Result = FM_NoopCmd(&UT_CmdBuf.Buf);
@@ -214,7 +213,6 @@ void Test_FM_CopyFileCmd_Success(void)
 
 void Test_FM_CopyFileCmd_BadLength(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -238,7 +236,6 @@ void Test_FM_CopyFileCmd_BadLength(void)
 
 void Test_FM_CopyFileCmd_BadOverwrite(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -262,7 +259,6 @@ void Test_FM_CopyFileCmd_BadOverwrite(void)
 
 void Test_FM_CopyFileCmd_SourceNotExist(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -286,7 +282,6 @@ void Test_FM_CopyFileCmd_SourceNotExist(void)
 
 void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -310,7 +305,6 @@ void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
 
 void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
 {
-
     UT_CmdBuf.CopyFileCmd.Overwrite         = 1;
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -335,7 +329,6 @@ void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
 
 void Test_FM_CopyFileCmd_NoChildTask(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -383,7 +376,6 @@ void add_FM_CopyFileCmd_tests(void)
 
 void Test_FM_MoveFileCmd_Success(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -407,7 +399,6 @@ void Test_FM_MoveFileCmd_Success(void)
 
 void Test_FM_MoveFileCmd_BadLength(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -908,7 +899,6 @@ void add_FM_DeleteAllFilesCmd_tests(void)
 
 void Test_FM_DecompressFileCmd_Success(void)
 {
-
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1311,7 +1301,6 @@ void Test_FM_GetOpenFilesCmd_Success(void)
 
 void Test_FM_GetOpenFilesCmd_BadLength(void)
 {
-
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
     bool Result = FM_GetOpenFilesCmd(&UT_CmdBuf.Buf);

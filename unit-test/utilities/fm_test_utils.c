@@ -64,7 +64,6 @@ void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT
 
 void FM_Test_Setup(void)
 {
-
     UT_ResetState(0);
 
     memset(&FM_GlobalData, 0, sizeof(FM_GlobalData));

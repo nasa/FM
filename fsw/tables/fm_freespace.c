@@ -99,7 +99,3 @@ FM_FreeSpaceTable_t FM_FreeSpaceTable = {
         },
     },
 };
-
-/************************/
-/*  End of File Comment */
-/************************/
