@@ -62,14 +62,14 @@
  * ********************************/
 void Test_FM_AppMain_AppInitNotSuccess(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), !CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_AppMain());
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
@@ -81,15 +81,15 @@ void Test_FM_AppMain_AppInitNotSuccess(void)
 
 void Test_FM_AppMain_SBReceiveBufferDefaultOption(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), true);
     UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 2, false);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), -1);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_AppMain());
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
@@ -104,15 +104,15 @@ void Test_FM_AppMain_SBReceiveBufferDefaultOption(void)
 
 void Test_FM_AppMain_SBReceiveBufferIsTimeOut(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), true);
     UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 2, false);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), CFE_SB_TIME_OUT);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_AppMain());
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
@@ -125,7 +125,7 @@ void Test_FM_AppMain_SBReceiveBufferIsTimeOut(void)
 
 void Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_SB_Buffer_t *sbbufptr = NULL;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), true);
@@ -133,10 +133,10 @@ void Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), CFE_SUCCESS);
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &sbbufptr, sizeof(sbbufptr), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_AppMain());
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
@@ -149,7 +149,7 @@ void Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull(void)
 
 void Test_FM_AppMain_BufPtrNotEqualNull(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_SB_Buffer_t  sbbuf;
     CFE_SB_Buffer_t *sbbufptr = &sbbuf;
     CFE_SB_MsgId_t   msgid    = CFE_SB_INVALID_MSG_ID;
@@ -160,10 +160,10 @@ void Test_FM_AppMain_BufPtrNotEqualNull(void)
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &sbbufptr, sizeof(sbbufptr), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &msgid, sizeof(msgid), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_AppMain());
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
@@ -179,7 +179,7 @@ void Test_FM_AppMain_BufPtrNotEqualNull(void)
  * ********************************/
 void Test_FM_ProcessPkt_CheckMessageReturnHKRequest(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_SB_MsgId_t msgid = CFE_SB_ValueToMsgId(FM_SEND_HK_MID);
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &msgid, sizeof(msgid), false);
@@ -188,24 +188,24 @@ void Test_FM_ProcessPkt_CheckMessageReturnHKRequest(void)
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessPkt(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(FM_IsValidCmdPktLength, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
 void Test_FM_ProcessPkt_CheckMessageReturnGroundCommand(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_SB_MsgId_t    msgid    = CFE_SB_ValueToMsgId(FM_CMD_MID);
     CFE_MSG_FcnCode_t fcn_code = -1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &msgid, sizeof(msgid), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessPkt(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 1);
     UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -215,15 +215,15 @@ void Test_FM_ProcessPkt_CheckMessageReturnGroundCommand(void)
 
 void Test_FM_ProcessPkt_CheckDefaultSwitchMessage(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_SB_MsgId_t msgid = CFE_SB_INVALID_MSG_ID;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &msgid, sizeof(msgid), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessPkt(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_MID_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -234,13 +234,13 @@ void Test_FM_ProcessPkt_CheckDefaultSwitchMessage(void)
  * *******************************/
 void Test_FM_AppInit_EVSRegisterNotSuccess(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), !CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), !CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_STARTUP_EVENTS_ERR_EID);
@@ -249,14 +249,14 @@ void Test_FM_AppInit_EVSRegisterNotSuccess(void)
 
 void Test_FM_AppInit_CreatePipeFail(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), !CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), !CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
@@ -266,15 +266,15 @@ void Test_FM_AppInit_CreatePipeFail(void)
 
 void Test_FM_AppInit_HKSubscribeFail(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), !CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), !CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
@@ -285,16 +285,16 @@ void Test_FM_AppInit_HKSubscribeFail(void)
 
 void Test_FM_AppInit_GroundCmdSubscribeFail(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, !CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), !CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
@@ -305,16 +305,16 @@ void Test_FM_AppInit_GroundCmdSubscribeFail(void)
 
 void Test_FM_AppInit_TableInitNotSuccess(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(FM_TableInit), !CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), !CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
@@ -325,16 +325,16 @@ void Test_FM_AppInit_TableInitNotSuccess(void)
 
 void Test_FM_AppInit_TableInitSuccess(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), CFE_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(FM_TableInit), CFE_SUCCESS);
 
-    // Act
+    /* Act */
     UtAssert_INT32_EQ(FM_AppInit(), CFE_SUCCESS);
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
@@ -349,7 +349,7 @@ void Test_FM_AppInit_TableInitSuccess(void)
  * *******************************/
 void Test_FM_ReportHK_ReturnPktLengthTrue(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesData), 0);
 
@@ -363,10 +363,10 @@ void Test_FM_ReportHK_ReturnPktLengthTrue(void)
     FM_GlobalData.ChildCurrentCC      = 7;
     FM_GlobalData.ChildPreviousCC     = 8;
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ReportHK(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(FM_IsValidCmdPktLength, 1);
     UtAssert_STUB_COUNT(FM_ReleaseTablePointers, 1);
     UtAssert_STUB_COUNT(FM_AcquireTablePointers, 1);
@@ -387,13 +387,13 @@ void Test_FM_ReportHK_ReturnPktLengthTrue(void)
 
 void Test_FM_ReportHK_ReturnPktLengthFalse(void)
 {
-    // Arrange
+    /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ReportHK(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(FM_ReleaseTablePointers, 0);
     UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 0);
 }
@@ -403,16 +403,16 @@ void Test_FM_ReportHK_ReturnPktLengthFalse(void)
  * *******************************/
 void Test_FM_ProcessCmd_NoopCmdCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_NOOP_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_NoopCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_NoopCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -421,16 +421,16 @@ void Test_FM_ProcessCmd_NoopCmdCCReturn(void)
 
 void Test_FM_ProcessCmd_ResetCountersCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_RESET_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_ResetCountersCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 0);
@@ -439,16 +439,16 @@ void Test_FM_ProcessCmd_ResetCountersCCReturn(void)
 
 void Test_FM_ProcessCmd_CopyFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_COPY_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_CopyFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -457,16 +457,16 @@ void Test_FM_ProcessCmd_CopyFileCCReturn(void)
 
 void Test_FM_ProcessCmd_MoveFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_MOVE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_MoveFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -475,16 +475,16 @@ void Test_FM_ProcessCmd_MoveFileCCReturn(void)
 
 void Test_FM_ProcessCmd_RenameFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_RENAME_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_RenameFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -493,16 +493,16 @@ void Test_FM_ProcessCmd_RenameFileCCReturn(void)
 
 void Test_FM_ProcessCmd_DeleteFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_DELETE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -511,16 +511,16 @@ void Test_FM_ProcessCmd_DeleteFileCCReturn(void)
 
 void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_DELETE_ALL_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteAllFilesCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -530,16 +530,16 @@ void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
 #ifdef FM_INCLUDE_DECOMPRESS
 void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_DECOMPRESS_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DecompressFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -549,16 +549,16 @@ void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
 
 void Test_FM_ProcessCmd_ConcatFilesCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_CONCAT_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_ConcatFilesCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -567,16 +567,16 @@ void Test_FM_ProcessCmd_ConcatFilesCCReturn(void)
 
 void Test_FM_ProcessCmd_GetFileInfoCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_GET_FILE_INFO_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFileInfoCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetFileInfoCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -585,16 +585,16 @@ void Test_FM_ProcessCmd_GetFileInfoCCReturn(void)
 
 void Test_FM_ProcessCmd_GetOpenFilesCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_GET_OPEN_FILES_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetOpenFilesCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -603,16 +603,16 @@ void Test_FM_ProcessCmd_GetOpenFilesCCReturn(void)
 
 void Test_FM_ProcessCmd_CreateDirectoryCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_CREATE_DIR_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_CreateDirectoryCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -621,16 +621,16 @@ void Test_FM_ProcessCmd_CreateDirectoryCCReturn(void)
 
 void Test_FM_ProcessCmd_DeleteDirectoryCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_DELETE_DIR_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteDirectoryCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -639,16 +639,16 @@ void Test_FM_ProcessCmd_DeleteDirectoryCCReturn(void)
 
 void Test_FM_ProcessCmd_GetDirListFileCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetDirListFileCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -657,16 +657,16 @@ void Test_FM_ProcessCmd_GetDirListFileCCReturn(void)
 
 void Test_FM_ProcessCmd_GetDirListPktCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_PKT_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetDirListPktCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -675,16 +675,16 @@ void Test_FM_ProcessCmd_GetDirListPktCCReturn(void)
 
 void Test_FM_ProcessCmd_GetFreeSpaceCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_GET_FREE_SPACE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFreeSpaceCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetFreeSpaceCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -693,16 +693,16 @@ void Test_FM_ProcessCmd_GetFreeSpaceCCReturn(void)
 
 void Test_FM_ProcessCmd_SetTableStateCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_SET_TABLE_STATE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_SetTableStateCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_SetTableStateCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -711,16 +711,16 @@ void Test_FM_ProcessCmd_SetTableStateCCReturn(void)
 
 void Test_FM_ProcessCmd_SetPermissionsCCReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = FM_SET_FILE_PERM_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), true);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_SetPermissionsCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
@@ -729,15 +729,15 @@ void Test_FM_ProcessCmd_SetPermissionsCCReturn(void)
 
 void Test_FM_ProcessCmd_DefaultReturn(void)
 {
-    // Arrange
+    /* Arrange */
     CFE_MSG_FcnCode_t fcn_code = -1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
 
-    // Act
+    /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
-    // Assert
+    /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 0);
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 1);
@@ -863,6 +863,7 @@ void add_FM_ReportHK_tests(void)
     UtTest_Add(Test_FM_ReportHK_ReturnPktLengthFalse, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ReportHK_ReturnPktLengthFalse");
 }
+
 /*
  * Register the test cases to execute with the unit test tool
  */

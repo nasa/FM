@@ -62,8 +62,7 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
     }
 
     return FunctionResult;
-
-} /* FM_IsValidCmdPktLength */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -84,8 +83,7 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
     }
 
     return FunctionResult;
-
-} /* End FM_VerifyOverwrite */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -121,8 +119,7 @@ static void LoadOpenFileData(osal_id_t ObjId, void *CallbackArg)
 
         OpenFileCount++;
     }
-
-} /* End LoadOpenFileData() */
+}
 
 uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 {
@@ -131,8 +128,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
     OS_ForEachObject(OS_OBJECT_CREATOR_ANY, LoadOpenFileData, (void *)OpenFilesData);
 
     return OpenFileCount;
-
-} /* End FM_GetOpenFilesData */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -149,7 +145,6 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
 
     if (OS_IdentifyObject(ObjId) == OS_OBJECT_TYPE_OS_STREAM)
     {
-
         /* Get system info for each file descriptor table entry */
         /* If the FD table entry is valid - then the file is open */
         if (OS_FDGetInfo(ObjId, &FdProp) == OS_SUCCESS)
@@ -160,8 +155,7 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
             }
         }
     }
-
-} /* End SearchOpenFileData() */
+}
 
 uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
 {
@@ -240,8 +234,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
     }
 
     return FilenameState;
-
-} /* End FM_GetFilenameState */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -264,8 +257,7 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
     }
 
     return FilenameState;
-
-} /* End FM_VerifyNameValid */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -369,8 +361,7 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
     }
 
     return Result;
-
-} /* End FM_VerifyFileState */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -380,10 +371,8 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
 
 bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_FILE_CLOSED, Filename, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyFileClosed */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -393,10 +382,8 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
 
 bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_FILE_EXISTS, Filename, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyFileExists */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -406,10 +393,8 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
 
 bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_FILE_NOEXIST, Filename, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyFileNoExist */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -419,10 +404,8 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
 
 bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_FILE_NOTOPEN, Filename, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyFileNotOpen */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -432,10 +415,8 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
 
 bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_DIR_EXISTS, Directory, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyDirExists */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -445,10 +426,8 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
 
 bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
-
     return FM_VerifyFileState(FM_DIR_NOEXIST, Name, BufferSize, EventID, CmdText);
-
-} /* End FM_VerifyDirNoExist */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -498,8 +477,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
     }
 
     return Result;
-
-} /* End FM_VerifyChildTask */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -528,8 +506,7 @@ void FM_InvokeChildTask(void)
         /* Signal child task to call command handler */
         OS_CountSemGive(FM_GlobalData.ChildSemaphore);
     }
-
-} /* End of FM_InvokeChildTask */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -561,9 +538,4 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
             strcat(Directory, "/");
         }
     }
-
-} /* End of FM_AppendPathSep */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

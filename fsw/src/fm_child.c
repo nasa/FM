@@ -80,7 +80,6 @@ int32 FM_ChildInit(void)
 
         if (Result != CFE_SUCCESS)
         {
-
             TaskEID = FM_CHILD_INIT_QSEM_ERR_EID;
             strncpy(TaskText, "create queue count semaphore failed", TaskTextLen - 1);
             TaskText[TaskTextLen - 1] = '\0';
@@ -106,8 +105,7 @@ int32 FM_ChildInit(void)
     }
 
     return Result;
-
-} /* End of FM_ChildInit() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -133,8 +131,7 @@ void FM_ChildTask(void)
 
     /* This call allows cFE to clean-up system resources */
     CFE_ES_ExitChildTask();
-
-} /* End of FM_ChildTask() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -189,8 +186,7 @@ void FM_ChildLoop(void)
 
         CFE_ES_PerfLogExit(FM_CHILD_TASK_PERF_ID);
     }
-
-} /* End of FM_ChildLoop() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -277,8 +273,7 @@ void FM_ChildProcess(void)
     OS_MutSemTake(FM_GlobalData.ChildQueueCountSem);
     FM_GlobalData.ChildQueueCount--;
     OS_MutSemGive(FM_GlobalData.ChildQueueCountSem);
-
-} /* End of FM_ChildProcess() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -318,8 +313,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildCopyCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -358,8 +352,7 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildMoveCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -398,8 +391,7 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildRenameCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -438,8 +430,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDeleteCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -590,8 +581,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDeleteAllCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -633,8 +623,7 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDecompressCmd() */
+}
 
 #endif
 
@@ -810,8 +799,7 @@ void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildConcatCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -969,8 +957,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildFileInfoCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1009,8 +996,7 @@ void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildCreateDirCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1088,8 +1074,7 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDeleteDirCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1149,8 +1134,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDirListFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1283,8 +1267,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildDirListPktCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1319,8 +1302,7 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /* Report previous child task activity */
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
-
-} /* End of FM_ChildSetPermissionsCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1400,8 +1382,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
     }
 
     return CommandResult;
-
-} /* End FM_ChildDirListFileInit */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1537,8 +1518,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                           "%s command: wrote %d of %d names: dir = %s, filename = %s", CmdText, (int)FileEntries,
                           (int)DirEntries, Directory, Filename);
     }
-
-} /* End of FM_ChildDirListFileLoop */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1569,8 +1549,7 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
     }
 
     return Result;
-
-} /* End of FM_ChildSizeTimeMode */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1603,8 +1582,4 @@ void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int
         DirListData->ModifyTime = 0;
         DirListData->Mode       = 0;
     }
-} /* FM_ChildSleepStat */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

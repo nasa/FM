@@ -52,7 +52,7 @@ int32 FM_TableInit(void)
     int32 status;
     status = UT_DEFAULT_IMPL(FM_TableInit);
     return status;
-} /* End FM_TableInit */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -65,7 +65,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
     int32 status;
     status = UT_DEFAULT_IMPL(FM_ValidateTable);
     return status;
-} /* End FM_ValidateTable */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -76,7 +76,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
 void FM_AcquireTablePointers(void)
 {
     UT_DEFAULT_IMPL(FM_AcquireTablePointers);
-} /* End FM_AcquireTablePointers */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -87,8 +87,4 @@ void FM_AcquireTablePointers(void)
 void FM_ReleaseTablePointers(void)
 {
     UT_DEFAULT_IMPL(FM_ReleaseTablePointers);
-} /* End FM_ReleaseTablePointers */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

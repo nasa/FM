@@ -54,7 +54,7 @@
 bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_NoopCmd) != 0;
-} /* End of FM_NoopCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -65,7 +65,7 @@ bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_ResetCountersCmd) != 0;
-} /* End of FM_ResetCountersCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -76,7 +76,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_CopyFileCmd) != 0;
-} /* End of FM_CopyFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -87,7 +87,7 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_MoveFileCmd) != 0;
-} /* End of FM_MoveFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -98,7 +98,7 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_RenameFileCmd) != 0;
-} /* End of FM_RenameFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -109,7 +109,7 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_DeleteFileCmd) != 0;
-} /* End of FM_DeleteFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -120,7 +120,7 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_DeleteAllFilesCmd) != 0;
-} /* End of FM_DeleteAllFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -132,7 +132,7 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_DecompressFileCmd) != 0;
-} /* End of FM_DecompressFileCmd() */
+}
 
 #endif
 
@@ -145,7 +145,7 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_ConcatFilesCmd) != 0;
-} /* End of FM_ConcatFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -156,7 +156,7 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_GetFileInfoCmd) != 0;
-} /* End of FM_GetFileInfoCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -167,7 +167,7 @@ bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_GetOpenFilesCmd) != 0;
-} /* End of FM_GetOpenFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -178,7 +178,7 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_CreateDirectoryCmd);
-} /* End of FM_CreateDirectoryCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -189,7 +189,7 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_DeleteDirectoryCmd) != 0;
-} /* End of FM_DeleteDirectoryCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -200,7 +200,7 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_GetDirListFileCmd) != 0;
-} /* End of FM_GetDirListFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -211,7 +211,7 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_GetDirListPktCmd) != 0;
-} /* End of FM_GetDirListPktCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -222,7 +222,7 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_GetFreeSpaceCmd) != 0;
-} /* End of FM_GetFreeSpaceCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -233,7 +233,7 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_SetTableStateCmd) != 0;
-} /* End of FM_SetTableStateCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -244,8 +244,4 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
 bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     return UT_DEFAULT_IMPL(FM_SetPermissionsCmd) != 0;
-} /* End of FM_SetPermissionsCmd() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

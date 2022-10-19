@@ -68,7 +68,7 @@ FM_GlobalData_t FM_GlobalData;
 void FM_AppMain(void)
 {
     UT_DEFAULT_IMPL(FM_AppMain);
-} /* End FM_AppMain */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -79,7 +79,7 @@ void FM_AppMain(void)
 int32 FM_AppInit(void)
 {
     return UT_DEFAULT_IMPL(FM_AppInit);
-} /* End of FM_AppInit() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -90,7 +90,7 @@ int32 FM_AppInit(void)
 void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr)
 {
     UT_DEFAULT_IMPL(FM_ProcessPkt);
-} /* End of FM_ProcessPkt */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -102,7 +102,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *MessagePtr)
 {
     UT_DEFAULT_IMPL(FM_ProcessCmd);
     UT_Stub_CopyFromLocal(UT_KEY(FM_ProcessCmd), &MessagePtr, sizeof(MessagePtr));
-} /* End of FM_ProcessCmd */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -113,8 +113,4 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *MessagePtr)
 void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
 {
     UT_DEFAULT_IMPL(FM_ReportHK);
-} /* End of FM_ReportHK */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

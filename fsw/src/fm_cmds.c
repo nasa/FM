@@ -61,8 +61,7 @@ bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_NoopCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -93,8 +92,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_ResetCountersCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -161,8 +159,7 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_CopyFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -230,8 +227,7 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_MoveFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -286,8 +282,7 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_RenameFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -333,8 +328,7 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_DeleteFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -389,8 +383,7 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_DeleteAllFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -444,8 +437,7 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_DecompressFileCmd() */
+}
 
 #endif
 
@@ -508,8 +500,7 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_ConcatFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -570,8 +561,7 @@ bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_GetFileInfoCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -607,8 +597,7 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_GetOpenFilesCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -654,8 +643,7 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_CreateDirectoryCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -701,8 +689,7 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_DeleteDirectoryCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -781,8 +768,7 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_GetDirListFileCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -840,8 +826,7 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_GetDirListPktCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -915,8 +900,7 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_GetFreeSpaceCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -985,8 +969,7 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_SetTableStateCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1036,9 +1019,4 @@ bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
     }
 
     return CommandResult;
-
-} /* End of FM_SetPermissionsCmd() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}
