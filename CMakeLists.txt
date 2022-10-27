@@ -4,7 +4,7 @@ include_directories(fsw/src)
 include_directories(fsw/mission_inc)
 include_directories(fsw/platform_inc)
 
-# Uncomment the below include if decompress functionality is 
+# Uncomment the below include if decompress functionality is
 # enabled in FM
 # include_directories(${fs_lib_MISSION_DIR}/fsw/public_inc)
 
@@ -20,7 +20,7 @@ set(APP_SRC_FILES
 add_cfe_app(fm ${APP_SRC_FILES})
 
 set(APP_TABLE_FILES
-  fsw/tables/fm_freespace.c
+  fsw/tables/fm_monitor.c
 )
 
 add_cfe_tables(fm ${APP_TABLE_FILES})

@@ -1136,7 +1136,7 @@
 #define FM_GET_DIR_PKT_OS_ERR_EID 75
 
 /**
- * \brief FM Get Free Space Command Event ID
+ * \brief FM Monitor Filesystem Command Event ID
  *
  *  \par Type: DEBUG
  *
@@ -1146,9 +1146,9 @@
  *  \par Cause
  *
  *  This event message signals the successful completion of a
- *  /FM_GetFreeSpace command.
+ *  /FM_MonitorFilesystemSpace command.
  */
-#define FM_GET_FREE_SPACE_CMD_EID 76
+#define FM_MONITOR_FILESYSTEM_SPACE_CMD_EID 76
 
 /**
  * \brief FM Get Free Space Command Length Invalid Event ID
@@ -1499,16 +1499,28 @@
 #define FM_SB_RECEIVE_NULL_PTR_ERR_EID 102
 
 /**
- * \brief FM Get Free Space Get File SYstem Stats Failed Event ID
+ * \brief FM Get Free Space Get File System Stats Failed Event ID
  *
  *  \par Type: ERROR
  *
  *  \par Cause:
  *
  *  This event message occurs if the free space for a file system cannot be read
- *  when processing the #FM_GetFreeSpaceCmd command.
+ *  when processing the #FM_MonitorFilesystemSpaceCmd command.
  */
 #define FM_OS_SYS_STAT_ERR_EID 103
+
+/**
+ * \brief FM Directory Size Estimate Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ * This event message occurs if the system encounters an error during
+ * calculation of a directory size estimate
+ */
+#define FM_DIRECTORY_ESTIMATE_ERR_EID 104
 
 /** -------------------------------------------------------------
  *  NOTE: From here on, the event IDs will take the form of a

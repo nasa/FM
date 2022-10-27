@@ -240,12 +240,12 @@ typedef struct
 /**
  *  \brief Get Free Space command packet structure
  *
- *  For command details see #FM_GET_FREE_SPACE_CC
+ *  For command details see #FM_MONITOR_FILESYSTEM_SPACE_CC
  */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
-} FM_GetFreeSpaceCmd_t;
+} FM_MonitorFilesystemSpaceCmd_t;
 
 /**
  *  \brief Set Table State command packet structure
@@ -378,28 +378,30 @@ typedef struct
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* FM -- get file system free space telemetry structures           */
+/* FM -- monitor filesystem telemetry structures                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  \brief Get Free Space list entry structure
+ *  \brief Monitor filesystem list entry structure
  */
 typedef struct
 {
-    osal_blockcount_t FreeSpace;             /**< \brief Blocks free in filesystem */
-    char              Name[OS_MAX_PATH_LEN]; /**< \brief File system name */
-} FM_FreeSpacePktEntry_t;
+    uint8  ReportType;
+    char   Name[OS_MAX_PATH_LEN]; /**< \brief File system name */
+    uint64 Blocks;                /**< \brief Block count from last check/poll, 0 if unknown */
+    uint64 Bytes;                 /**< \brief Byte count from last check/poll, 0 if unknown */
+} FM_MonitorReportEntry_t;
 
 /**
- *  \brief Get Free Space telemetry packet
+ *  \brief Monitor filesystem telemetry packet
  */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    FM_FreeSpacePktEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
-} FM_FreeSpacePkt_t;
+    FM_MonitorReportEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
+} FM_MonitorReportPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -434,26 +436,75 @@ typedef struct
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* FM -- file system free space table structures                   */
+/* FM -- monitor filesyste table structures                        */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+typedef enum
+{
+    /**
+     * Table entry is not used, these entries are ignored
+     */
+    FM_MonitorTableEntry_Type_UNUSED = 0,
+
+    /**
+     * Monitor the free space on given volume
+     *
+     * The given path will be passed to OS_FileSysStatVolume() and the results
+     * will be reported in the generated TLM entry.
+     */
+    FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE = 1,
+
+    /**
+     * Estimate the sum of space used by files within specified directory
+     *
+     * The given path will be opened as a directory.  The size of each regular
+     * file present in that directory will be summed to produce an estimate of the
+     * total space associated with that directory.
+     *
+     * Note that this yields only an estimate, as there can be discrepancies
+     * between the file size as observed by this method and the actual disk blocks
+     * used by a given file.
+     */
+    FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE = 2
+
+} FM_MonitorTableEntry_Type_t;
+
 /**
- *  \brief Get Free Space table entry
+ *  \brief Monitor table entry
  */
 typedef struct
 {
-    uint32 State;                 /**< \brief Table entry enable/disable state */
-    char   Name[OS_MAX_PATH_LEN]; /**< \brief File system name = string */
-} FM_TableEntry_t;
+    /**
+     * Table entry type.
+     *
+     * This should be one of the enumeration values in FM_MonitorTableEntry_Type_t.
+     * It is defined as a uint8 in this table to ensure a consistent size.
+     */
+    uint8_t Type;
+
+    /**
+     * Boolean flag indicating whether this entry is active or not
+     */
+    uint8_t Enabled;
+
+    /**
+     * Location to monitor
+     *
+     * The interpretation of this string depends on Type
+     * See description of the FM_MonitorTableEntry_Type_t for how this is to be set
+     */
+    char Name[OS_MAX_PATH_LEN];
+
+} FM_MonitorTableEntry_t;
 
 /**
  *  \brief Get Free Space table definition
  */
 typedef struct
 {
-    FM_TableEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief One entry for each file system */
-} FM_FreeSpaceTable_t;
+    FM_MonitorTableEntry_t Entries[FM_TABLE_ENTRY_COUNT]; /**< \brief One entry for each monitor */
+} FM_MonitorTable_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -490,8 +541,8 @@ typedef struct
  */
 typedef struct
 {
-    FM_FreeSpaceTable_t *FreeSpaceTablePtr;    /**< \brief File System Table Pointer */
-    CFE_TBL_Handle_t     FreeSpaceTableHandle; /**< \brief File System Table Handle */
+    FM_MonitorTable_t *MonitorTablePtr;    /**< \brief File System Table Pointer */
+    CFE_TBL_Handle_t   MonitorTableHandle; /**< \brief File System Table Handle */
 
     CFE_SB_PipeId_t CmdPipe; /**< \brief cFE software bus command pipe */
 
@@ -523,7 +574,8 @@ typedef struct
 
     FM_DirListPkt_t DirListPkt; /**< \brief Get dir list to packet telemetry packet */
 
-    FM_FreeSpacePkt_t FreeSpacePkt; /**< \brief Get free space telemetry packet */
+    FM_MonitorReportPkt_t
+        MonitorReportPkt; /**< \brief Telemetry packet reporting status of items in the monitor table */
 
     FM_FileInfoPkt_t FileInfoPkt; /**< \brief Get file info telemetry packet */
 

@@ -834,23 +834,23 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
+bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    const char * CmdText       = "Get Free Space";
-    bool         CommandResult = false;
-    int32        OS_Status     = OS_SUCCESS;
-    uint32       i             = 0;
-    OS_statvfs_t FileStats;
+    const char *CmdText       = "Get Free Space";
+    bool        CommandResult = false;
+    uint32      i             = 0;
+    int32       OpResult;
 
-    memset(&FileStats, 0, sizeof(FileStats));
+    const FM_MonitorTableEntry_t *MonitorPtr;
+    FM_MonitorReportEntry_t *     ReportPtr;
 
     /* Verify command packet length */
-    CommandResult =
-        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetFreeSpaceCmd_t), FM_GET_FREE_SPACE_PKT_ERR_EID, CmdText);
+    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_MonitorFilesystemSpaceCmd_t),
+                                           FM_GET_FREE_SPACE_PKT_ERR_EID, CmdText);
     if (CommandResult == true)
     {
         /* Verify that we have a pointer to the file system table data */
-        if (FM_GlobalData.FreeSpaceTablePtr == (FM_FreeSpaceTable_t *)NULL)
+        if (FM_GlobalData.MonitorTablePtr == NULL)
         {
             CommandResult = false;
 
@@ -860,42 +860,62 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
         else
         {
             /* Initialize the file system free space telemetry packet */
-            CFE_MSG_Init(&FM_GlobalData.FreeSpacePkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FREE_SPACE_TLM_MID),
-                         sizeof(FM_FreeSpacePkt_t));
+            CFE_MSG_Init(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FREE_SPACE_TLM_MID),
+                         sizeof(FM_MonitorReportPkt_t));
 
             /* Process enabled file system table entries */
+            MonitorPtr = FM_GlobalData.MonitorTablePtr->Entries;
+            ReportPtr  = FM_GlobalData.MonitorReportPkt.FileSys;
             for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
             {
-                if (FM_GlobalData.FreeSpaceTablePtr->FileSys[i].State == FM_TABLE_ENTRY_ENABLED)
+                if (MonitorPtr->Type != FM_MonitorTableEntry_Type_UNUSED)
                 {
-                    /* Get file system name */
-                    strncpy(FM_GlobalData.FreeSpacePkt.FileSys[i].Name,
-                            FM_GlobalData.FreeSpaceTablePtr->FileSys[i].Name, OS_MAX_PATH_LEN - 1);
-                    FM_GlobalData.FreeSpacePkt.FileSys[i].Name[OS_MAX_PATH_LEN - 1] = '\0';
+                    CFE_SB_MessageStringSet(ReportPtr->Name, MonitorPtr->Name, sizeof(ReportPtr->Name),
+                                            sizeof(MonitorPtr->Name));
+                    ReportPtr->ReportType = MonitorPtr->Type;
 
-                    /* Get file system free space */
-                    OS_Status = OS_FileSysStatVolume(FM_GlobalData.FreeSpacePkt.FileSys[i].Name, &FileStats);
-                    if (OS_Status == OS_SUCCESS)
-                    {
-                        FM_GlobalData.FreeSpacePkt.FileSys[i].FreeSpace = FileStats.blocks_free;
-                    }
-                    else
-                    {
-                        CFE_EVS_SendEvent(FM_OS_SYS_STAT_ERR_EID, CFE_EVS_EventType_ERROR,
-                                          "Could not get file system free space for %s. Returned 0x%08X",
-                                          FM_GlobalData.FreeSpacePkt.FileSys[i].Name, OS_Status);
+                    /* Pre-initialize to 0, will be overwritten with real value if successful */
+                    ReportPtr->Blocks = 0;
+                    ReportPtr->Bytes  = 0;
 
-                        FM_GlobalData.FreeSpacePkt.FileSys[i].FreeSpace = 0;
+                    if (MonitorPtr->Enabled)
+                    {
+                        if (MonitorPtr->Type == FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE)
+                        {
+                            OpResult = FM_GetVolumeFreeSpace(MonitorPtr->Name, &ReportPtr->Blocks, &ReportPtr->Bytes);
+                        }
+                        else if (MonitorPtr->Type == FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE)
+                        {
+                            OpResult =
+                                FM_GetDirectorySpaceEstimate(MonitorPtr->Name, &ReportPtr->Blocks, &ReportPtr->Bytes);
+                        }
+                        else
+                        {
+                            OpResult = CFE_STATUS_NOT_IMPLEMENTED;
+                        }
+
+                        if (OpResult != CFE_SUCCESS)
+                        {
+                            CommandResult = false;
+                        }
                     }
                 }
+                else
+                {
+                    /* Make sure this entry is all clear */
+                    memset(ReportPtr, 0, sizeof(*ReportPtr));
+                }
+
+                ++MonitorPtr;
+                ++ReportPtr;
             }
 
             /* Timestamp and send file system free space telemetry packet */
-            CFE_SB_TimeStampMsg(&FM_GlobalData.FreeSpacePkt.TlmHeader.Msg);
-            CFE_SB_TransmitMsg(&FM_GlobalData.FreeSpacePkt.TlmHeader.Msg, true);
+            CFE_SB_TimeStampMsg(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg);
+            CFE_SB_TransmitMsg(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg, true);
 
             /* Send command completion event (debug) */
-            CFE_EVS_SendEvent(FM_GET_FREE_SPACE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
+            CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
         }
     }
 
@@ -919,7 +939,7 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetTableStateCmd_t), FM_SET_TABLE_STATE_PKT_ERR_EID, CmdText);
     if (CommandResult == true)
     {
-        if (FM_GlobalData.FreeSpaceTablePtr == (FM_FreeSpaceTable_t *)NULL)
+        if (FM_GlobalData.MonitorTablePtr == NULL)
         {
             /* File system table has not been loaded */
             CommandResult = false;
@@ -944,7 +964,8 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
             CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
                               "%s error: invalid command argument: state = %d", CmdText, (int)CmdPtr->TableEntryState);
         }
-        else if (FM_GlobalData.FreeSpaceTablePtr->FileSys[CmdPtr->TableEntryIndex].State == FM_TABLE_ENTRY_UNUSED)
+        else if (FM_GlobalData.MonitorTablePtr->Entries[CmdPtr->TableEntryIndex].Type ==
+                 FM_MonitorTableEntry_Type_UNUSED)
         {
             /* Current table entry state must not be unused */
             CommandResult = false;
@@ -956,10 +977,10 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
         else
         {
             /* Update the table entry state as commanded */
-            FM_GlobalData.FreeSpaceTablePtr->FileSys[CmdPtr->TableEntryIndex].State = CmdPtr->TableEntryState;
+            FM_GlobalData.MonitorTablePtr->Entries[CmdPtr->TableEntryIndex].Enabled = CmdPtr->TableEntryState;
 
             /* Notify cFE that we have modified the table data */
-            CFE_TBL_Modified(FM_GlobalData.FreeSpaceTableHandle);
+            CFE_TBL_Modified(FM_GlobalData.MonitorTableHandle);
 
             /* Send command completion event (info) */
             CFE_EVS_SendEvent(FM_SET_TABLE_STATE_CMD_EID, CFE_EVS_EventType_INFORMATION,

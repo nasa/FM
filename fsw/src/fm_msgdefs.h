@@ -855,20 +855,20 @@
 #define FM_GET_DIR_PKT_CC 15
 
 /**
- * \brief Get Free Space
+ * \brief Monitor Filesystem Space
  *
  *  \par Description
- *       This command queries the amount of free space for each of the
- *       enabled entries in the file system free space table.  The data
+ *       This command queries the specified location for each of the
+ *       enabled entries in the file system monitor table.  The data
  *       is then placed in a telemetry packet and sent to ground.
  *
  *  \par Command Packet Structure
- *       #FM_GetFreeSpaceCmd_t
+ *       #FM_MonitorFilesystemSpaceCmd_t
  *
  *  \par Evidence of success may be found in the following telemetry:
  *       - #FM_HousekeepingPkt_t.CommandCounter will increment
- *       - Debug event #FM_GET_FREE_SPACE_CMD_EID will be sent
- *       - Telemetry packet #FM_FreeSpacePkt_t will be sent
+ *       - Debug event #FM_MONITOR_FILESYSTEM_SPACE_CMD_EID will be sent
+ *       - Telemetry packet #FM_MonitorReportPkt_t will be sent
  *
  *  \par Error Conditions
  *       - Invalid command packet length
@@ -882,7 +882,7 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  */
-#define FM_GET_FREE_SPACE_CC 16
+#define FM_MONITOR_FILESYSTEM_SPACE_CC 16
 
 /**
  * \brief Set Free Space Table Entry State

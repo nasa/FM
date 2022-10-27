@@ -43,17 +43,17 @@ int32 FM_TableInit(void)
     int32 Status;
 
     /* Initialize file system free space table pointer */
-    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
+    FM_GlobalData.MonitorTablePtr = NULL;
 
     /* Register the file system free space table - this must succeed! */
-    Status = CFE_TBL_Register(&FM_GlobalData.FreeSpaceTableHandle, FM_TABLE_CFE_NAME, sizeof(FM_FreeSpaceTable_t),
+    Status = CFE_TBL_Register(&FM_GlobalData.MonitorTableHandle, FM_TABLE_CFE_NAME, sizeof(FM_MonitorTable_t),
                               (CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP),
                               (CFE_TBL_CallbackFuncPtr_t)FM_ValidateTable);
 
     if (Status == CFE_SUCCESS)
     {
         /* Make an attempt to load the default table data - OK if this fails */
-        CFE_TBL_Load(FM_GlobalData.FreeSpaceTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+        CFE_TBL_Load(FM_GlobalData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
 
         /* Allow cFE a chance to dump, update, etc. */
         FM_AcquireTablePointers();
@@ -68,7 +68,7 @@ int32 FM_TableInit(void)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
+int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
     int32 Result     = CFE_SUCCESS;
     int32 NameLength = 0;
@@ -77,6 +77,8 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
     int32 CountGood   = 0;
     int32 CountBad    = 0;
     int32 CountUnused = 0;
+
+    FM_MonitorTableEntry_t *EntryPtr;
 
     /* Verify the table pointer is valid */
     if (TablePtr == NULL)
@@ -100,16 +102,17 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
     **
     ** -- file system name for unused entries is ignored
     */
+    EntryPtr = TablePtr->Entries;
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         /* Validate file system name if state is enabled or disabled */
-        if ((TablePtr->FileSys[i].State == FM_TABLE_ENTRY_ENABLED) ||
-            (TablePtr->FileSys[i].State == FM_TABLE_ENTRY_DISABLED))
+        if (EntryPtr->Type == FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE ||
+            EntryPtr->Type == FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE)
         {
             /* Search file system name buffer for a string terminator */
             for (NameLength = 0; NameLength < OS_MAX_PATH_LEN; NameLength++)
             {
-                if (TablePtr->FileSys[i].Name[NameLength] == '\0')
+                if (EntryPtr->Name[NameLength] == '\0')
                 {
                     break;
                 }
@@ -145,7 +148,7 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
                 CountGood++;
             }
         }
-        else if (TablePtr->FileSys[i].State == FM_TABLE_ENTRY_UNUSED)
+        else if (EntryPtr->Type == FM_MonitorTableEntry_Type_UNUSED)
         {
             /* Ignore (but count) unused table entries */
             CountUnused++;
@@ -159,10 +162,12 @@ int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
             if (CountBad == 1)
             {
                 CFE_EVS_SendEvent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "Table verify error: index = %d, invalid state = %d", (int)i,
-                                  (int)TablePtr->FileSys[i].State);
+                                  "Table verify error: index = %d, invalid type = %u", (int)i,
+                                  (unsigned int)EntryPtr->Type);
             }
         }
+
+        ++EntryPtr;
     }
 
     /* Display verify results */
@@ -189,15 +194,15 @@ void FM_AcquireTablePointers(void)
     int32 Status;
 
     /* Allow cFE an opportunity to make table updates */
-    CFE_TBL_Manage(FM_GlobalData.FreeSpaceTableHandle);
+    CFE_TBL_Manage(FM_GlobalData.MonitorTableHandle);
 
     /* Acquire pointer to file system free space table */
-    Status = CFE_TBL_GetAddress((void *)&FM_GlobalData.FreeSpaceTablePtr, FM_GlobalData.FreeSpaceTableHandle);
+    Status = CFE_TBL_GetAddress((void *)&FM_GlobalData.MonitorTablePtr, FM_GlobalData.MonitorTableHandle);
 
     if (Status == CFE_TBL_ERR_NEVER_LOADED)
     {
         /* Make sure we don't try to use the empty table buffer */
-        FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
+        FM_GlobalData.MonitorTablePtr = NULL;
     }
 }
 
@@ -210,8 +215,8 @@ void FM_AcquireTablePointers(void)
 void FM_ReleaseTablePointers(void)
 {
     /* Release pointer to file system free space table */
-    CFE_TBL_ReleaseAddress(FM_GlobalData.FreeSpaceTableHandle);
+    CFE_TBL_ReleaseAddress(FM_GlobalData.MonitorTableHandle);
 
     /* Prevent table pointer use while released */
-    FM_GlobalData.FreeSpaceTablePtr = (FM_FreeSpaceTable_t *)NULL;
+    FM_GlobalData.MonitorTablePtr = NULL;
 }

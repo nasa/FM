@@ -676,17 +676,17 @@ void Test_FM_ProcessCmd_GetDirListPktCCReturn(void)
 void Test_FM_ProcessCmd_GetFreeSpaceCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_GET_FREE_SPACE_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_MONITOR_FILESYSTEM_SPACE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFreeSpaceCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_MonitorFilesystemSpaceCmd), true);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
 
     /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-    UtAssert_STUB_COUNT(FM_GetFreeSpaceCmd, 1);
+    UtAssert_STUB_COUNT(FM_MonitorFilesystemSpaceCmd, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
 }

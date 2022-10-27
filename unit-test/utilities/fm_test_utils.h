@@ -40,26 +40,26 @@ extern CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[];
 /* Command buffer typedef for any handler */
 typedef union
 {
-    CFE_SB_Buffer_t       Buf;
-    FM_HousekeepingCmd_t  HousekeepingCmd;
-    FM_NoopCmd_t          NoopCmd;
-    FM_ResetCmd_t         ResetCmd;
-    FM_CopyFileCmd_t      CopyFileCmd;
-    FM_MoveFileCmd_t      MoveFileCmd;
-    FM_RenameFileCmd_t    RenameFileCmd;
-    FM_DeleteFileCmd_t    DeleteFileCmd;
-    FM_DeleteAllCmd_t     DeleteAllCmd;
-    FM_DecompressCmd_t    DecompressCmd;
-    FM_ConcatCmd_t        ConcatCmd;
-    FM_GetFileInfoCmd_t   GetFileInfoCmd;
-    FM_GetOpenFilesCmd_t  GetOpenFilesCmd;
-    FM_CreateDirCmd_t     CreateDirCmd;
-    FM_DeleteDirCmd_t     DeleteDirCmd;
-    FM_GetDirFileCmd_t    GetDirFileCmd;
-    FM_GetDirPktCmd_t     GetDirPktCmd;
-    FM_GetFreeSpaceCmd_t  GetFreeSpaceCmd;
-    FM_SetTableStateCmd_t SetTableStateCmd;
-    FM_SetPermCmd_t       SetPermCmd;
+    CFE_SB_Buffer_t                Buf;
+    FM_HousekeepingCmd_t           HousekeepingCmd;
+    FM_NoopCmd_t                   NoopCmd;
+    FM_ResetCmd_t                  ResetCmd;
+    FM_CopyFileCmd_t               CopyFileCmd;
+    FM_MoveFileCmd_t               MoveFileCmd;
+    FM_RenameFileCmd_t             RenameFileCmd;
+    FM_DeleteFileCmd_t             DeleteFileCmd;
+    FM_DeleteAllCmd_t              DeleteAllCmd;
+    FM_DecompressCmd_t             DecompressCmd;
+    FM_ConcatCmd_t                 ConcatCmd;
+    FM_GetFileInfoCmd_t            GetFileInfoCmd;
+    FM_GetOpenFilesCmd_t           GetOpenFilesCmd;
+    FM_CreateDirCmd_t              CreateDirCmd;
+    FM_DeleteDirCmd_t              DeleteDirCmd;
+    FM_GetDirFileCmd_t             GetDirFileCmd;
+    FM_GetDirPktCmd_t              GetDirPktCmd;
+    FM_MonitorFilesystemSpaceCmd_t GetFreeSpaceCmd;
+    FM_SetTableStateCmd_t          SetTableStateCmd;
+    FM_SetPermCmd_t                SetPermCmd;
 } UT_CmdBuf_t;
 
 extern UT_CmdBuf_t UT_CmdBuf;

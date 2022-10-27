@@ -377,4 +377,47 @@ void FM_InvokeChildTask(void);
  */
 void FM_AppendPathSep(char *Directory, uint32 BufferSize);
 
+/**
+ *  \brief Gets the free space on the volume
+ *
+ *  \par Description
+ *       Queries the free space on the specified volume and reports
+ *       the result in units of blocks and bytes
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       If not successful, the output variables will not be set
+ *
+ *  \param [in]  FileSys  Pointer to buffer containing filesystem name
+ *  \param [out] BlockCount Count of blocks free
+ *  \param [out] ByteCount  Count of bytes free
+ *
+ *  \returns Status code
+ *  \retval CFE_SUCCESS if successful
+ */
+int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount);
+
+/**
+ *  \brief Estimate the disk space used by files in a specified directory
+ *
+ *  \par Description
+ *       Opens the directory and queries the size of every file currently
+ *       present in the directory.  Outputs the sum of all file sizes to
+ *       get an estimate of the total disk space used by that directory.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This is just a simple estimate, as the actual disk space consumed
+ *       a file can be quite different than the reported size, depending on
+ *       the underlying file system.
+ *
+ *       If not successful, the output variables will not be set
+ *
+ *  \param [in]  Directory  Pointer to buffer containing directory name
+ *  \param [out] BlockCount Count of blocks used
+ *  \param [out] ByteCount  Count of bytes used
+ *
+ *  \returns Status code
+ *  \retval CFE_SUCCESS if successful
+ */
+int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount);
+
 #endif

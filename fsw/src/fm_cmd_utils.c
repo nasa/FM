@@ -539,3 +539,114 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
         }
     }
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM utility function -- Facilitates monitoring free volume space */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
+{
+    OS_statvfs_t  FileStats;
+    osal_status_t OS_Status;
+    int32         Result;
+
+    /* Get file system free space */
+    OS_Status = OS_FileSysStatVolume(FileSys, &FileStats);
+    if (OS_Status == OS_SUCCESS)
+    {
+        *BlockCount = FileStats.blocks_free;
+        *ByteCount  = FileStats.block_size * FileStats.blocks_free;
+
+        Result = CFE_SUCCESS;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(FM_OS_SYS_STAT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Could not get file system free space for %s. Returned %d", FileSys, (int)OS_Status);
+
+        Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM utility function -- Facilitates monitoring directory usage   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
+{
+    osal_id_t     DirId;
+    os_dirent_t   DirEntry;
+    os_fstat_t    FileStat;
+    osal_status_t OS_Status;
+    int32         Result;
+    char          FullPath[OS_MAX_PATH_LEN];
+    uint64        TotalBytes;
+    size_t        DirLen;
+
+    TotalBytes = 0;
+
+    memset(&DirEntry, 0, sizeof(DirEntry));
+    strncpy(FullPath, Directory, sizeof(FullPath) - 1);
+    FullPath[sizeof(FullPath) - 1] = 0;
+    DirLen                         = strlen(FullPath);
+    if (DirLen < (sizeof(FullPath) - 2))
+    {
+        FullPath[DirLen] = '/';
+        ++DirLen;
+        FullPath[DirLen] = 0;
+
+        /* Open directory so that we can read from it */
+        OS_Status = OS_DirectoryOpen(&DirId, Directory);
+    }
+    else
+    {
+        OS_Status = OS_ERR_NAME_TOO_LONG;
+    }
+
+    if (OS_Status != OS_SUCCESS)
+    {
+        /* Send command failure event (error) */
+        CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID, CFE_EVS_EventType_ERROR, "OS_DirectoryOpen err=%d, path=%s",
+                          (int)OS_Status, Directory);
+
+        Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+    else
+    {
+        /* Read each directory entry and stat the files */
+        while (OS_DirectoryRead(DirId, &DirEntry) == OS_SUCCESS)
+        {
+            strncpy(&FullPath[DirLen], OS_DIRENTRY_NAME(DirEntry), sizeof(FullPath) - DirLen - 1);
+
+            OS_Status = OS_stat(FullPath, &FileStat);
+            if (OS_Status != OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID, CFE_EVS_EventType_ERROR, "OS_stat err=%d, path=%s",
+                                  (int)OS_Status, FullPath);
+            }
+            else if (!OS_FILESTAT_ISDIR(FileStat))
+            {
+                /*
+                 * Only need to accumulate regular file entries, not dirs.
+                 * Also note that OSAL does not currently report the number of
+                 * blocks, only the number of bytes, so that is all that this function
+                 * will export for now.  This could change in a future version of OSAL.
+                 */
+                TotalBytes += FileStat.FileSize;
+            }
+        }
+
+        OS_DirectoryClose(DirId);
+
+        *ByteCount = TotalBytes;
+        Result     = CFE_SUCCESS;
+    }
+
+    return Result;
+}
