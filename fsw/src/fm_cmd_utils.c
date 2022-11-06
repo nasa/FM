@@ -162,7 +162,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
     os_fstat_t FileStatus;
     uint32     FilenameState   = FM_NAME_IS_INVALID;
     bool       FilenameIsValid = false;
-    int32      StringLength    = 0;
+    int32      StringLength;
 
     memset(&FileStatus, 0, sizeof(FileStatus));
 
