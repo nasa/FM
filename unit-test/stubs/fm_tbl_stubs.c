@@ -60,7 +60,7 @@ int32 FM_TableInit(void)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr)
+int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
     int32 status;
     status = UT_DEFAULT_IMPL(FM_ValidateTable);

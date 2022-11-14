@@ -70,7 +70,7 @@ int32 FM_TableInit(void);
  *
  *  \sa /FM_AppInit
  */
-int32 FM_ValidateTable(FM_FreeSpaceTable_t *TablePtr);
+int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr);
 
 /**
  *  \brief Acquire Table Data Pointer Function

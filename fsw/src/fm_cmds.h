@@ -373,12 +373,12 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr);
 bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
- *  \brief Get Free Space Command Handler Function
+ *  \brief Monitor Filesystem Command Handler Function
  *
  *  \par Description
  *       This function creates a telemetry packet and populates the packet with
- *       free space data for each file system listed in the FM File System Free
- *       Space Table.
+ *       disk usage data for each location listed in the FM File System Monitor
+ *       Table.
  *
  *  \par Assumptions, External Events, and Notes:
  *
@@ -388,9 +388,9 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_GET_FREE_SPACE_CC, #FM_GetFreeSpaceCmd_t, #FM_FreeSpacePkt_t
+ *  \sa #FM_MONITOR_FILESYSTEM_SPACE_CC, #FM_MonitorFilesystemSpaceCmd_t, #FM_MonitorReportPkt_t
  */
-bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr);
+bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set Table Entry State Command Handler Function
@@ -407,7 +407,7 @@ bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_SET_TABLE_STATE_CC, #FM_SetTableStateCmd_t, #FM_TableEntry_t
+ *  \sa #FM_SET_TABLE_STATE_CC, #FM_SetTableStateCmd_t, #FM_MonitorTableEntry_t
  */
 bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr);
 

@@ -219,9 +219,9 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetFreeSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
+bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_GetFreeSpaceCmd) != 0;
+    return UT_DEFAULT_IMPL(FM_MonitorFilesystemSpaceCmd) != 0;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

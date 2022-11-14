@@ -372,7 +372,7 @@
 #define FM_TABLE_CFE_NAME "FreeSpace"
 
 /**
- * \brief Free Space Table Name - filename with path
+ * \brief Monitor Table Name - filename with path
  *
  *  \par Description:
  *       Table name with path is required to load table at startup.
@@ -382,10 +382,10 @@
  *       no limits on the definition.  If the named table does not
  *       exist or fails validation, the table load will fail.
  */
-#define FM_TABLE_DEF_NAME "/cf/fm_freespace.tbl"
+#define FM_TABLE_DEF_NAME "/cf/fm_monitor.tbl"
 
 /**
- * \brief Free Space Table Name - filename without path
+ * \brief Monitor Table Name - filename without path
  *
  *  \par Description:
  *       Table name without path defines the output name for the table
@@ -397,7 +397,7 @@
  *       valid then the make process may fail, or the table file may
  *       be unloadable to the target hardware.
  */
-#define FM_TABLE_FILENAME "fm_freespace.tbl"
+#define FM_TABLE_FILENAME "fm_monitor.tbl"
 
 /**
  * \brief Free Space Table Description

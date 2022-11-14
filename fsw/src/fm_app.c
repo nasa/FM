@@ -346,8 +346,8 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             Result = FM_GetDirListPktCmd(BufPtr);
             break;
 
-        case FM_GET_FREE_SPACE_CC:
-            Result = FM_GetFreeSpaceCmd(BufPtr);
+        case FM_MONITOR_FILESYSTEM_SPACE_CC:
+            Result = FM_MonitorFilesystemSpaceCmd(BufPtr);
             break;
 
         case FM_SET_TABLE_STATE_CC:

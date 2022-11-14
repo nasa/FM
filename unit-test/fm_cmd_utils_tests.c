@@ -593,6 +593,103 @@ void Test_FM_AppendPathSep(void)
     UtAssert_UINT32_EQ(strncmp(directory, "a/", sizeof(directory)), 0);
 }
 
+void Test_FM_GetVolumeFreeSpace(void)
+{
+    /*
+     * Test case for:
+     * int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
+     */
+    uint64       bytes;
+    uint64       blocks;
+    OS_statvfs_t statbuf;
+
+    statbuf.block_size   = 44;
+    statbuf.blocks_free  = 55;
+    statbuf.total_blocks = 66;
+
+    UT_SetDataBuffer(UT_KEY(OS_FileSysStatVolume), &statbuf, sizeof(statbuf), false);
+
+    /* Nominal */
+    UtAssert_INT32_EQ(FM_GetVolumeFreeSpace("test", &blocks, &bytes), CFE_SUCCESS);
+
+    UtAssert_UINT32_EQ(blocks, statbuf.blocks_free);
+    UtAssert_UINT32_EQ(bytes, statbuf.block_size * statbuf.blocks_free);
+
+    /* Failure in OS_FileSysStatVolume */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysStatVolume), OS_ERROR);
+    UtAssert_INT32_EQ(FM_GetVolumeFreeSpace("test", &blocks, &bytes), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_OS_SYS_STAT_ERR_EID);
+}
+
+void Test_FM_GetDirectorySpaceEstimate(void)
+{
+    /*
+     * Test case for:
+     * int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
+     */
+
+    uint64      bytes;
+    uint64      blocks;
+    os_dirent_t direntry = {.FileName = "f1"};
+    os_fstat_t  fstat;
+    char        longname[OS_MAX_PATH_LEN + 5];
+
+    memset(&fstat, 0, sizeof(fstat));
+
+    /* Nominal */
+    fstat.FileSize = 1234;
+    blocks         = 0;
+    bytes          = 0;
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, OS_ERROR);
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+
+    UtAssert_INT32_EQ(FM_GetDirectorySpaceEstimate("test", &blocks, &bytes), CFE_SUCCESS);
+    UtAssert_ZERO(blocks); /* not reported via OS_stat, so left unchanged */
+    UtAssert_UINT32_EQ(bytes, fstat.FileSize);
+
+    /* Skip subdirectories */
+    fstat.FileModeBits = OS_FILESTAT_MODE_DIR;
+    blocks             = 0;
+    bytes              = 0;
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, OS_ERROR);
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
+    UT_SetDataBuffer(UT_KEY(OS_stat), &fstat, sizeof(fstat), false);
+
+    UtAssert_INT32_EQ(FM_GetDirectorySpaceEstimate("test", &blocks, &bytes), CFE_SUCCESS);
+    UtAssert_ZERO(blocks);
+    UtAssert_ZERO(bytes);
+
+    /* OS_stat failed for single file (this still returns success overall, but generates an event) */
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, OS_ERROR);
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
+    UT_SetDefaultReturnValue(UT_KEY(OS_stat), OS_ERROR);
+    UtAssert_INT32_EQ(FM_GetDirectorySpaceEstimate("test", &blocks, &bytes), CFE_SUCCESS);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DIRECTORY_ESTIMATE_ERR_EID);
+
+    /* Directory name string too long (should not cause segfault) */
+    UT_ResetState(UT_KEY(OS_DirectoryRead));
+    UT_ResetState(UT_KEY(OS_DirectoryOpen));
+    UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), OS_ERROR);
+    memset(longname, 'a', sizeof(longname) - 1);
+    longname[sizeof(longname) - 1] = 0;
+    UtAssert_INT32_EQ(FM_GetDirectorySpaceEstimate(longname, &blocks, &bytes), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DIRECTORY_ESTIMATE_ERR_EID);
+    UtAssert_STUB_COUNT(OS_DirectoryOpen, 0);
+    UtAssert_STUB_COUNT(OS_DirectoryRead, 0);
+
+    /* OS_DirectoryOpen failed */
+    UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), OS_ERROR);
+    UtAssert_INT32_EQ(FM_GetDirectorySpaceEstimate("test", &blocks, &bytes), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_DIRECTORY_ESTIMATE_ERR_EID);
+    UtAssert_STUB_COUNT(OS_DirectoryRead, 0);
+}
+
 /*
  * Register the test cases to execute with the unit test tool
  */
@@ -613,4 +710,6 @@ void UtTest_Setup(void)
     UtTest_Add(Test_FM_VerifyChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyChildTask");
     UtTest_Add(Test_FM_InvokeChildTask, FM_Test_Setup, FM_Test_Teardown, "Test_FM_InvokeChildTask");
     UtTest_Add(Test_FM_AppendPathSep, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppendPathSep");
+    UtTest_Add(Test_FM_GetVolumeFreeSpace, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetVolumeFreeSpace");
+    UtTest_Add(Test_FM_GetDirectorySpaceEstimate, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetDirectorySpaceEstimate");
 }
