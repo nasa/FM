@@ -70,9 +70,9 @@ int32 FM_TableInit(void)
 
 int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
-    int32 Result     = CFE_SUCCESS;
-    int32 NameLength = 0;
-    int32 i          = 0;
+    int32 Result = CFE_SUCCESS;
+    int32 NameLength;
+    int32 i = 0;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
