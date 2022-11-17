@@ -1221,17 +1221,16 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                     EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
 
                     /* Verify combined directory plus filename length */
-                    if ((PathLength + EntryLength) < OS_MAX_PATH_LEN)
+                    if ((PathLength + EntryLength) < sizeof(LogicalName))
                     {
                         /* Add filename to directory listing telemetry packet */
-                        strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
-                        ListEntry->EntryName[EntryLength] = '\0';
+                        strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(DirEntry), sizeof(ListEntry->EntryName) - 1);
+                        ListEntry->EntryName[sizeof(ListEntry->EntryName) - 1] = '\0';
 
                         /* Build filename - Directory already has path separator */
-                        strncpy(LogicalName, CmdArgs->Source2, PathLength);
-                        LogicalName[PathLength] = '\0';
-
-                        strncat(LogicalName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
+                        memcpy(LogicalName, CmdArgs->Source2, PathLength);
+                        memcpy(&LogicalName[PathLength], OS_DIRENTRY_NAME(DirEntry), EntryLength);
+                        LogicalName[PathLength + EntryLength] = '\0';
 
                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
 
@@ -1437,20 +1436,22 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                  * DirListData.EntryName and TempName are both OS_MAX_PATH_LEN, DirEntry name is OS_MAX_FILE_NAME,
                  * so limiting test is PathLength and EntryLength together
                  */
-                if ((PathLength + EntryLength) < OS_MAX_PATH_LEN)
+                if ((PathLength + EntryLength) < sizeof(TempName))
                 {
                     /* Build qualified directory entry name */
-                    strncpy(TempName, DirWithSep, PathLength);
-                    TempName[PathLength] = '\0';
+                    memcpy(TempName, DirWithSep, PathLength);
+                    memcpy(&TempName[PathLength], OS_DIRENTRY_NAME(DirEntry), EntryLength);
+                    TempName[PathLength + EntryLength] = '\0';
 
-                    strncat(TempName, OS_DIRENTRY_NAME(DirEntry), (OS_MAX_PATH_LEN - PathLength));
-
-                    /* Populate directory list file entry */
+                    /*
+                     * Populate directory list file entry -
+                     * Note this is guaranteed to be null terminated due to the memset()
+                     * this will leave at least one null char after the string.
+                     */
                     memset(&DirListData, 0, sizeof(DirListData));
-                    strncpy(DirListData.EntryName, OS_DIRENTRY_NAME(DirEntry), EntryLength);
-                    DirListData.EntryName[EntryLength] = '\0';
+                    strncpy(DirListData.EntryName, OS_DIRENTRY_NAME(DirEntry), sizeof(DirListData.EntryName) - 1);
 
-                    FM_ChildSleepStat(TempName, (FM_DirListEntry_t *)&DirListData, &FilesTillSleep, getSizeTimeMode);
+                    FM_ChildSleepStat(TempName, &DirListData, &FilesTillSleep, getSizeTimeMode);
 
                     /* Write directory list file entry to output file */
                     BytesWritten = OS_write(FileHandle, &DirListData, WriteLength);
