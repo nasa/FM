@@ -857,8 +857,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
             CmdArgs->FileInfoCRC = FM_IGNORE_CRC;
         }
-        else if ((CmdArgs->FileInfoCRC != CFE_MISSION_ES_CRC_8) && (CmdArgs->FileInfoCRC != CFE_MISSION_ES_CRC_16) &&
-                 (CmdArgs->FileInfoCRC != CFE_MISSION_ES_CRC_32))
+        else if ((CmdArgs->FileInfoCRC != CFE_ES_CrcType_CRC_8) && (CmdArgs->FileInfoCRC != CFE_ES_CrcType_CRC_16) &&
+                 (CmdArgs->FileInfoCRC != CFE_ES_CrcType_CRC_32))
         {
             /* Can only calculate CRC using known algorithms */
             FM_GlobalData.ChildCmdWarnCounter++;

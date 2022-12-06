@@ -1151,7 +1151,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoStateIsNotFileClosed(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_8,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_OPEN};
 
     /* Act */
@@ -1174,7 +1174,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission8(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_8,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
@@ -1199,7 +1199,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission16(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_16,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
@@ -1224,7 +1224,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission32(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_32,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_32,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
@@ -1272,7 +1272,7 @@ void Test_FM_ChildFileInfoCmd_OSOpenCreateTrueBytesReadZero(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_16,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 0);
@@ -1297,7 +1297,7 @@ void Test_FM_ChildFileInfoCmd_BytesReadLessThanZero(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_16,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), -1);
@@ -1324,7 +1324,7 @@ void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
                                         .Source1       = "dummy_source1",
                                         .Source2       = "dummy_source2",
-                                        .FileInfoCRC   = CFE_MISSION_ES_CRC_8,
+                                        .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);

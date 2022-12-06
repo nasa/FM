@@ -1,8 +1,8 @@
 /************************************************************************
- * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
- * Software System (cFS) File Manager Application Version 2.6.1”
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2019 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -19,27 +19,12 @@
 
 /**
  * @file
- *   Value definitions
+ *
+ * Declarations and prototypes for fm_extern_typedefs module
  */
-#ifndef FM_DEFS_H
-#define FM_DEFS_H
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM argument to not calculate CRC during Get File Info command   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#define FM_IGNORE_CRC 0
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM directory entry definitions                                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#define FM_THIS_DIRECTORY   "."
-#define FM_PARENT_DIRECTORY ".."
+#ifndef FM_EXTERN_TYPEDEFS_H
+#define FM_EXTERN_TYPEDEFS_H
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -62,4 +47,21 @@
 #define FM_TABLE_ENTRY_DISABLED 0
 #define FM_TABLE_ENTRY_ENABLED  1
 
-#endif
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM directory entry definitions                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_THIS_DIRECTORY   "."
+#define FM_PARENT_DIRECTORY ".."
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM argument to not calculate CRC during Get File Info command   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_IGNORE_CRC 0
+
+#endif /* FM_EXTERN_TYPEDEFS_H */
