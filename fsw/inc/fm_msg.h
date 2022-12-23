@@ -26,7 +26,7 @@
 
 #include "cfe.h"
 #include "fm_platform_cfg.h"
-#include "fm_defs.h"
+#include "fm_extern_typedefs.h"
 
 #ifdef FM_INCLUDE_DECOMPRESS
 #include "cfs_fs_lib.h"
