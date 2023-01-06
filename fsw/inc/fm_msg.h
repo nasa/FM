@@ -24,12 +24,12 @@
 #ifndef FM_MSG_H
 #define FM_MSG_H
 
-#include "cfe.h"
-#include "fm_platform_cfg.h"
-#include "fm_extern_typedefs.h"
+#include <cfe.h>
+#include <fm_platform_cfg.h>
+#include <fm_extern_typedefs.h>
 
 #ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
+#include <cfs_fs_lib.h>
 #endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
