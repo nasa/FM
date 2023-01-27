@@ -73,11 +73,11 @@ int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, ui
  * Generated stub function for FM_GetFilenameState()
  * ----------------------------------------------------
  */
-uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
+uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInfoCmd)
 {
     UT_GenStub_SetupReturnBuffer(FM_GetFilenameState, uint32);
 
-    UT_GenStub_AddParam(FM_GetFilenameState, char *, Filename);
+    UT_GenStub_AddParam(FM_GetFilenameState, const char *, Filename);
     UT_GenStub_AddParam(FM_GetFilenameState, uint32, BufferSize);
     UT_GenStub_AddParam(FM_GetFilenameState, bool, FileInfoCmd);
 
@@ -91,11 +91,11 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
  * Generated stub function for FM_GetOpenFilesData()
  * ----------------------------------------------------
  */
-uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
+uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData)
 {
     UT_GenStub_SetupReturnBuffer(FM_GetOpenFilesData, uint32);
 
-    UT_GenStub_AddParam(FM_GetOpenFilesData, const FM_OpenFilesEntry_t *, OpenFilesData);
+    UT_GenStub_AddParam(FM_GetOpenFilesData, FM_OpenFilesEntry_t *, OpenFilesData);
 
     UT_GenStub_Execute(FM_GetOpenFilesData, Basic, NULL);
 
@@ -172,11 +172,11 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
  * Generated stub function for FM_VerifyDirExists()
  * ----------------------------------------------------
  */
-bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyDirExists, bool);
 
-    UT_GenStub_AddParam(FM_VerifyDirExists, char *, Directory);
+    UT_GenStub_AddParam(FM_VerifyDirExists, const char *, Directory);
     UT_GenStub_AddParam(FM_VerifyDirExists, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyDirExists, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyDirExists, const char *, CmdText);
@@ -191,11 +191,11 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
  * Generated stub function for FM_VerifyDirNoExist()
  * ----------------------------------------------------
  */
-bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyDirNoExist, bool);
 
-    UT_GenStub_AddParam(FM_VerifyDirNoExist, char *, Name);
+    UT_GenStub_AddParam(FM_VerifyDirNoExist, const char *, Name);
     UT_GenStub_AddParam(FM_VerifyDirNoExist, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyDirNoExist, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyDirNoExist, const char *, CmdText);
@@ -210,11 +210,11 @@ bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const ch
  * Generated stub function for FM_VerifyFileClosed()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileClosed, bool);
 
-    UT_GenStub_AddParam(FM_VerifyFileClosed, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileClosed, const char *, Filename);
     UT_GenStub_AddParam(FM_VerifyFileClosed, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyFileClosed, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyFileClosed, const char *, CmdText);
@@ -229,11 +229,11 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
  * Generated stub function for FM_VerifyFileExists()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileExists, bool);
 
-    UT_GenStub_AddParam(FM_VerifyFileExists, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileExists, const char *, Filename);
     UT_GenStub_AddParam(FM_VerifyFileExists, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyFileExists, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyFileExists, const char *, CmdText);
@@ -248,11 +248,11 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  * Generated stub function for FM_VerifyFileNoExist()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileNoExist, bool);
 
-    UT_GenStub_AddParam(FM_VerifyFileNoExist, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileNoExist, const char *, Filename);
     UT_GenStub_AddParam(FM_VerifyFileNoExist, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyFileNoExist, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyFileNoExist, const char *, CmdText);
@@ -267,11 +267,11 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
  * Generated stub function for FM_VerifyFileNotOpen()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileNotOpen, bool);
 
-    UT_GenStub_AddParam(FM_VerifyFileNotOpen, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileNotOpen, const char *, Filename);
     UT_GenStub_AddParam(FM_VerifyFileNotOpen, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyFileNotOpen, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyFileNotOpen, const char *, CmdText);
@@ -286,12 +286,13 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
  * Generated stub function for FM_VerifyFileState()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
+                        const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileState, bool);
 
     UT_GenStub_AddParam(FM_VerifyFileState, FM_File_States, State);
-    UT_GenStub_AddParam(FM_VerifyFileState, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileState, const char *, Filename);
     UT_GenStub_AddParam(FM_VerifyFileState, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyFileState, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyFileState, const char *, CmdText);
@@ -306,11 +307,11 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
  * Generated stub function for FM_VerifyNameValid()
  * ----------------------------------------------------
  */
-uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyNameValid, uint32);
 
-    UT_GenStub_AddParam(FM_VerifyNameValid, char *, Name);
+    UT_GenStub_AddParam(FM_VerifyNameValid, const char *, Name);
     UT_GenStub_AddParam(FM_VerifyNameValid, uint32, BufferSize);
     UT_GenStub_AddParam(FM_VerifyNameValid, uint32, EventID);
     UT_GenStub_AddParam(FM_VerifyNameValid, const char *, CmdText);

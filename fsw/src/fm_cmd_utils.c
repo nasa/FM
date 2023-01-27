@@ -121,11 +121,11 @@ static void LoadOpenFileData(osal_id_t ObjId, void *CallbackArg)
     }
 }
 
-uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
+uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData)
 {
     OpenFileCount = 0;
 
-    OS_ForEachObject(OS_OBJECT_CREATOR_ANY, LoadOpenFileData, (void *)OpenFilesData);
+    OS_ForEachObject(OS_OBJECT_CREATOR_ANY, LoadOpenFileData, OpenFilesData);
 
     return OpenFileCount;
 }
@@ -138,7 +138,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
 
 static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
 {
-    char *         Fname = (char *)CallbackArg;
+    const char *   Fname = (const char *)CallbackArg;
     OS_file_prop_t FdProp;
 
     memset(&FdProp, 0, sizeof(FdProp));
@@ -157,7 +157,7 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
     }
 }
 
-uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
+uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInfoCmd)
 {
     os_fstat_t FileStatus;
     uint32     FilenameState   = FM_NAME_IS_INVALID;
@@ -202,7 +202,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
                 FilenameState = FM_NAME_IS_FILE_CLOSED;
                 FileIsOpen    = false;
 
-                OS_ForEachObject(OS_OBJECT_CREATOR_ANY, SearchOpenFileData, Filename);
+                OS_ForEachObject(OS_OBJECT_CREATOR_ANY, SearchOpenFileData, (void *)Filename);
 
                 if (FileIsOpen == true)
                 {
@@ -242,8 +242,9 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
+    char   LocalFile[1 + OS_MAX_PATH_LEN];
     uint32 FilenameState = FM_NAME_IS_INVALID;
 
     /* Looking for filename state != FM_NAME_IS_INVALID */
@@ -251,9 +252,12 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
 
     if (FilenameState == FM_NAME_IS_INVALID)
     {
-        /* Insert a terminator in case the invalid string did not have one */
-        Name[BufferSize - 1] = '\0';
-        CFE_EVS_SendEvent(EventID, CFE_EVS_EventType_ERROR, "%s error: invalid name: name = %s", CmdText, Name);
+        /*
+         * This function provided by SB will copy the string from a fixed size buffer,
+         * and always ensures the result is null terminated
+         */
+        CFE_SB_MessageStringGet(LocalFile, Name, NULL, sizeof(LocalFile), BufferSize);
+        CFE_EVS_SendEvent(EventID, CFE_EVS_EventType_ERROR, "%s error: invalid name: name = %s", CmdText, LocalFile);
     }
 
     return FilenameState;
@@ -265,13 +269,14 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
+                        const char *CmdText)
 {
-    bool   Result                = false;
-    uint32 FilenameState         = FM_NAME_IS_INVALID;
-    uint32 ErrorCode             = FM_FNAME_INVALID_EID_OFFSET;
-    int32  SpecLen               = OS_MAX_PATH_LEN;
-    char   Spec[OS_MAX_PATH_LEN] = "\0";
+    bool        Result        = false;
+    uint32      FilenameState = FM_NAME_IS_INVALID;
+    uint32      ErrorCode     = FM_FNAME_INVALID_EID_OFFSET;
+    const char *ErrorDesc     = "";
+    char        LocalFile[1 + OS_MAX_PATH_LEN];
 
     /* Get state of the filename */
     FilenameState = FM_GetFilenameState(Filename, BufferSize, false);
@@ -286,7 +291,7 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
             else
             {
                 ErrorCode = FM_FNAME_DNE_EID_OFFSET;
-                strncpy(Spec, "%s error: file does not exist: name = %s", SpecLen - 1);
+                ErrorDesc = "file does not exist";
             }
             break;
         case FM_NAME_IS_FILE_OPEN:
@@ -297,22 +302,22 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
             else if (State == FM_FILE_NOEXIST)
             {
                 ErrorCode = FM_FNAME_EXIST_EID_OFFSET;
-                strncpy(Spec, "%s error: file already exists: name = %s", SpecLen - 1);
+                ErrorDesc = "file already exists";
             }
             else if (State == FM_DIR_EXISTS)
             {
                 ErrorCode = FM_FNAME_ISFILE_EID_OFFSET;
-                strncpy(Spec, "%s error: directory name exists as a file: name %s", SpecLen - 1);
+                ErrorDesc = "directory name exists as a file";
             }
             else if (State == FM_DIR_NOEXIST)
             {
                 ErrorCode = FM_FNAME_DNE_EID_OFFSET;
-                strncpy(Spec, "%s error: directory name exists as a file: name = %s", SpecLen - 1);
+                ErrorDesc = "directory name exists as a file";
             }
             else
             {
                 ErrorCode = FM_FNAME_ISOPEN_EID_OFFSET;
-                strncpy(Spec, "%s error: file is already open: name = %s", SpecLen - 1);
+                ErrorDesc = "file is already open";
             }
             break;
         case FM_NAME_IS_FILE_CLOSED:
@@ -323,17 +328,17 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
             else if (State == FM_DIR_EXISTS)
             {
                 ErrorCode = FM_FNAME_ISFILE_EID_OFFSET;
-                strncpy(Spec, "%s error: directory name exists as a file: name %s", SpecLen - 1);
+                ErrorDesc = "directory name exists as a file";
             }
             else if (State == FM_DIR_NOEXIST)
             {
                 ErrorCode = FM_FNAME_DNE_EID_OFFSET;
-                strncpy(Spec, "%s error: directory name exists as a file: name = %s", SpecLen - 1);
+                ErrorDesc = "directory name exists as a file";
             }
             else
             {
                 ErrorCode = FM_FNAME_EXIST_EID_OFFSET;
-                strncpy(Spec, "%s error: file already exists: name = %s", SpecLen - 1);
+                ErrorDesc = "file already exists";
             }
             break;
         case FM_NAME_IS_DIRECTORY:
@@ -344,20 +349,25 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
             else
             {
                 ErrorCode = FM_FNAME_ISDIR_EID_OFFSET;
-                strncpy(Spec, "%s error: filename is a directory: name = %s", SpecLen - 1);
+                ErrorDesc = "filename is a directory";
             }
             break;
         default: /* FilenameState == FM_NAME_IS_INVALID */
             /* Insert a terminator in case the invalid string did not have one */
-            Filename[BufferSize - 1] = '\0';
-            ErrorCode                = FM_FNAME_INVALID_EID_OFFSET;
-            strncpy(Spec, "%s error: filename is invalid: name = %s", SpecLen - 1);
+            ErrorCode = FM_FNAME_INVALID_EID_OFFSET;
+            ErrorDesc = "filename is invalid";
             break;
     }
 
     if (!Result)
     {
-        CFE_EVS_SendEvent((EventID + ErrorCode), CFE_EVS_EventType_ERROR, Spec, CmdText, Filename);
+        /*
+         * This function provided by SB will copy the string from a fixed size buffer,
+         * and always ensures the result is null terminated
+         */
+        CFE_SB_MessageStringGet(LocalFile, Filename, NULL, sizeof(LocalFile), BufferSize);
+        CFE_EVS_SendEvent((EventID + ErrorCode), CFE_EVS_EventType_ERROR, "%s error: %s: name = %s", CmdText, ErrorDesc,
+                          LocalFile);
     }
 
     return Result;
@@ -369,7 +379,7 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_CLOSED, Filename, BufferSize, EventID, CmdText);
 }
@@ -380,7 +390,7 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_EXISTS, Filename, BufferSize, EventID, CmdText);
 }
@@ -391,7 +401,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_NOEXIST, Filename, BufferSize, EventID, CmdText);
 }
@@ -402,7 +412,7 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_NOTOPEN, Filename, BufferSize, EventID, CmdText);
 }
@@ -413,7 +423,7 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_DIR_EXISTS, Directory, BufferSize, EventID, CmdText);
 }
@@ -424,7 +434,7 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_DIR_NOEXIST, Name, BufferSize, EventID, CmdText);
 }
