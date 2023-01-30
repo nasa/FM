@@ -27,10 +27,6 @@
 #include "cfe.h"
 #include "fm_msg.h"
 
-#ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
-#endif
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM child task global function prototypes                        */
@@ -196,8 +192,6 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs);
  */
 void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
 
-#ifdef FM_INCLUDE_DECOMPRESS
-
 /**
  *  \brief Child Task Decompress File Command Handler
  *
@@ -214,8 +208,6 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
  *  \sa #FM_ChildQueueEntry_t, #FM_DecompressCmd_t
  */
 void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs);
-
-#endif
 
 /**
  *  \brief Child Task Concatenate Files Command Handler

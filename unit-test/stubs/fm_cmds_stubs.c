@@ -19,229 +19,297 @@
 
 /**
  * @file
- *  Provides functions for the execution of the FM ground commands
+ *
+ * Auto-Generated stub implementations for functions defined in fm_cmds header
  */
 
-#include "cfe.h"
-#include "fm_msg.h"
-#include "fm_msgdefs.h"
-#include "fm_msgids.h"
-#include "fm_events.h"
-#include "fm_app.h"
 #include "fm_cmds.h"
-#include "fm_cmd_utils.h"
-#include "fm_perfids.h"
-#include "fm_platform_cfg.h"
-#include "fm_version.h"
-#include "fm_verify.h"
-#include "fm_test_utils.h"
+#include "utgenstub.h"
 
-/************************************************************************
-** UT Includes
-*************************************************************************/
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-#include <string.h>
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- NOOP                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_NoopCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Reset Counters                            */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_ResetCountersCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Copy File                                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_CopyFileCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Move File                                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_MoveFileCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Rename File                               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_RenameFileCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Delete File                               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_DeleteFileCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Delete All Files                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_DeleteAllFilesCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Decompress File                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-#ifdef FM_INCLUDE_DECOMPRESS
-
-bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_DecompressFileCmd) != 0;
-}
-
-#endif
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Concatenate Files                         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ConcatFilesCmd()
+ * ----------------------------------------------------
+ */
 bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_ConcatFilesCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_ConcatFilesCmd, bool);
+
+    UT_GenStub_AddParam(FM_ConcatFilesCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_ConcatFilesCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ConcatFilesCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Get File Info                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_CopyFileCmd()
+ * ----------------------------------------------------
+ */
+bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_GetFileInfoCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_CopyFileCmd, bool);
+
+    UT_GenStub_AddParam(FM_CopyFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_CopyFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_CopyFileCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Get List of Open Files                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    return UT_DEFAULT_IMPL(FM_GetOpenFilesCmd) != 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Create Directory                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_CreateDirectoryCmd()
+ * ----------------------------------------------------
+ */
 bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_CreateDirectoryCmd);
+    UT_GenStub_SetupReturnBuffer(FM_CreateDirectoryCmd, bool);
+
+    UT_GenStub_AddParam(FM_CreateDirectoryCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_CreateDirectoryCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_CreateDirectoryCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Delete Directory                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_DecompressFileCmd()
+ * ----------------------------------------------------
+ */
+bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_DecompressFileCmd, bool);
 
+    UT_GenStub_AddParam(FM_DecompressFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_DecompressFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_DecompressFileCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_DeleteAllFilesCmd()
+ * ----------------------------------------------------
+ */
+bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_DeleteAllFilesCmd, bool);
+
+    UT_GenStub_AddParam(FM_DeleteAllFilesCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_DeleteAllFilesCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_DeleteAllFilesCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_DeleteDirectoryCmd()
+ * ----------------------------------------------------
+ */
 bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_DeleteDirectoryCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_DeleteDirectoryCmd, bool);
+
+    UT_GenStub_AddParam(FM_DeleteDirectoryCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_DeleteDirectoryCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_DeleteDirectoryCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Get List of Directory Entries (to file)   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_DeleteFileCmd()
+ * ----------------------------------------------------
+ */
+bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_DeleteFileCmd, bool);
 
+    UT_GenStub_AddParam(FM_DeleteFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_DeleteFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_DeleteFileCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetDirListFileCmd()
+ * ----------------------------------------------------
+ */
 bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_GetDirListFileCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_GetDirListFileCmd, bool);
+
+    UT_GenStub_AddParam(FM_GetDirListFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_GetDirListFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetDirListFileCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Get List of Directory Entries (to pkt)    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetDirListPktCmd()
+ * ----------------------------------------------------
+ */
 bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_GetDirListPktCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_GetDirListPktCmd, bool);
+
+    UT_GenStub_AddParam(FM_GetDirListPktCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_GetDirListPktCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetDirListPktCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Get File System Free Space                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetFileInfoCmd()
+ * ----------------------------------------------------
+ */
+bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetFileInfoCmd, bool);
 
+    UT_GenStub_AddParam(FM_GetFileInfoCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_GetFileInfoCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetFileInfoCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetOpenFilesCmd()
+ * ----------------------------------------------------
+ */
+bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetOpenFilesCmd, bool);
+
+    UT_GenStub_AddParam(FM_GetOpenFilesCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_GetOpenFilesCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetOpenFilesCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_MonitorFilesystemSpaceCmd()
+ * ----------------------------------------------------
+ */
 bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_MonitorFilesystemSpaceCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_MonitorFilesystemSpaceCmd, bool);
+
+    UT_GenStub_AddParam(FM_MonitorFilesystemSpaceCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_MonitorFilesystemSpaceCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_MonitorFilesystemSpaceCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Set Table Entry Enable/Disable State      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_MoveFileCmd()
+ * ----------------------------------------------------
+ */
+bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_SetTableStateCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_MoveFileCmd, bool);
+
+    UT_GenStub_AddParam(FM_MoveFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_MoveFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_MoveFileCmd, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM command handler -- Set Permissions for a file                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_NoopCmd()
+ * ----------------------------------------------------
+ */
+bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_NoopCmd, bool);
 
+    UT_GenStub_AddParam(FM_NoopCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_NoopCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_NoopCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_RenameFileCmd()
+ * ----------------------------------------------------
+ */
+bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_RenameFileCmd, bool);
+
+    UT_GenStub_AddParam(FM_RenameFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_RenameFileCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_RenameFileCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ResetCountersCmd()
+ * ----------------------------------------------------
+ */
+bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_ResetCountersCmd, bool);
+
+    UT_GenStub_AddParam(FM_ResetCountersCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_ResetCountersCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ResetCountersCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_SetPermissionsCmd()
+ * ----------------------------------------------------
+ */
 bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    return UT_DEFAULT_IMPL(FM_SetPermissionsCmd) != 0;
+    UT_GenStub_SetupReturnBuffer(FM_SetPermissionsCmd, bool);
+
+    UT_GenStub_AddParam(FM_SetPermissionsCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_SetPermissionsCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_SetPermissionsCmd, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_SetTableStateCmd()
+ * ----------------------------------------------------
+ */
+bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_SetTableStateCmd, bool);
+
+    UT_GenStub_AddParam(FM_SetTableStateCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_SetTableStateCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_SetTableStateCmd, bool);
 }

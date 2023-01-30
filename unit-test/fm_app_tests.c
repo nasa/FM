@@ -527,7 +527,6 @@ void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
 }
 
-#ifdef FM_INCLUDE_DECOMPRESS
 void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
 {
     /* Arrange */
@@ -545,7 +544,6 @@ void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
     UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 1);
     UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
 }
-#endif
 
 void Test_FM_ProcessCmd_ConcatFilesCCReturn(void)
 {
@@ -820,10 +818,10 @@ void add_FM_ProcessCmd_tests(void)
 
     UtTest_Add(Test_FM_ProcessCmd_DeleteAllFilesCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ProcessCmd_DeleteAllFilesCCReturn");
-#ifdef FM_INCLUDE_DECOMPRESS
+
     UtTest_Add(Test_FM_ProcessCmd_DecompressFileCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ProcessCmd_DecompressFileCCReturn");
-#endif
+
     UtTest_Add(Test_FM_ProcessCmd_ConcatFilesCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_PRocessCmd_ConcatFilesCCReturn");
 

@@ -37,10 +37,6 @@
 
 #include <string.h>
 
-#ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
-#endif
-
 /************************************************************************
 ** OSAL Compatibility for directory name access
 ** New OSAL version have an access macro to get the string.  If that
@@ -221,11 +217,11 @@ void FM_ChildProcess(void)
         case FM_DELETE_ALL_CC:
             FM_ChildDeleteAllCmd(CmdArgs);
             break;
-#ifdef FM_INCLUDE_DECOMPRESS
+
         case FM_DECOMPRESS_CC:
             FM_ChildDecompressCmd(CmdArgs);
             break;
-#endif
+
         case FM_CONCAT_CC:
             FM_ChildConcatCmd(CmdArgs);
             break;
@@ -589,8 +585,6 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifdef FM_INCLUDE_DECOMPRESS
-
 void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText    = "Decompress File";
@@ -600,7 +594,7 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
     /* Decompress source file into target file */
-    CFE_Status = FS_LIB_Decompress(&FM_GlobalData.DecompressState, CmdArgs->Source1, CmdArgs->Target);
+    CFE_Status = FM_Decompress_Impl(FM_GlobalData.DecompressorStatePtr, CmdArgs->Source1, CmdArgs->Target);
 
     if (CFE_Status != CFE_SUCCESS)
     {
@@ -624,8 +618,6 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildPreviousCC = CmdArgs->CommandCode;
     FM_GlobalData.ChildCurrentCC  = 0;
 }
-
-#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */

@@ -39,9 +39,6 @@
  * UT Testing
  */
 #include "fm_test_utils.h"
-#ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
-#endif
 
 /*
  * UT includes
@@ -250,13 +247,12 @@ void Test_FM_ChildProcess_FMDeleteAllCC(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_OS_ERR_EID);
 }
 
-#ifdef FM_INCLUDE_DECOMPRESS
 void Test_FM_ChildProcess_FMDecompressCC(void)
 {
     /* Arrange */
     FM_GlobalData.ChildQueue[0].CommandCode = FM_DECOMPRESS_CC;
 
-    UT_SetDefaultReturnValue(UT_KEY(FS_LIB_Decompress), !CFE_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(FM_Decompress_Impl), !CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildProcess());
@@ -264,12 +260,11 @@ void Test_FM_ChildProcess_FMDecompressCC(void)
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, FM_GlobalData.ChildQueue[0].CommandCode);
 
-    UtAssert_STUB_COUNT(FS_LIB_Decompress, 1);
+    UtAssert_STUB_COUNT(FM_Decompress_Impl, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CFE_ERR_EID);
 }
-#endif
 
 void Test_FM_ChildProcess_FMConcatCC(void)
 {
@@ -911,7 +906,7 @@ void Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn(void)
 /* ****************
  * ChildDecompressCmd Tests
  * ***************/
-#ifdef FM_INCLUDE_DECOMPRESS
+
 void Test_FM_ChildDecompressCmd_FSDecompressSuccess(void)
 {
     /* Arrange */
@@ -925,7 +920,7 @@ void Test_FM_ChildDecompressCmd_FSDecompressSuccess(void)
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
 
-    UtAssert_STUB_COUNT(FS_LIB_Decompress, 1);
+    UtAssert_STUB_COUNT(FM_Decompress_Impl, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CMD_EID);
@@ -937,7 +932,7 @@ void Test_FM_ChildDecompressCmd_FSDecompressNotSuccess(void)
     FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DECOMPRESS_CC};
 
     FM_GlobalData.ChildCurrentCC = 1;
-    UT_SetDefaultReturnValue(UT_KEY(FS_LIB_Decompress), !CFE_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(FM_Decompress_Impl), !CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDecompressCmd(&queue_entry));
@@ -945,12 +940,11 @@ void Test_FM_ChildDecompressCmd_FSDecompressNotSuccess(void)
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
 
-    UtAssert_STUB_COUNT(FS_LIB_Decompress, 1);
+    UtAssert_STUB_COUNT(FM_Decompress_Impl, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CFE_ERR_EID);
 }
-#endif
 
 /* ****************
  * ChildConcatCmd Tests
@@ -2265,10 +2259,10 @@ void add_FM_ChildProcess_tests(void)
 
     UtTest_Add(Test_FM_ChildProcess_FMDeleteAllCC, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildProcess_FMDeleteAllCC");
-#ifdef FM_INCLUDE_DECOMPRESS
+
     UtTest_Add(Test_FM_ChildProcess_FMDecompressCC, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildProcess_FMDecompressCC");
-#endif
+
     UtTest_Add(Test_FM_ChildProcess_FMConcatCC, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ChildProcess_FMConcatCC");
 
     UtTest_Add(Test_FM_ChildProcess_FMCreateDirCC, FM_Test_Setup, FM_Test_Teardown,
@@ -2369,7 +2363,7 @@ void add_FM_ChildDeleteAllCmd_tests(void)
     UtTest_Add(Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn");
 }
-#ifdef FM_INCLUDE_DECOMPRESS
+
 void add_FM_ChildDecompressCmd_tests(void)
 {
     UtTest_Add(Test_FM_ChildDecompressCmd_FSDecompressNotSuccess, FM_Test_Setup, FM_Test_Teardown,
@@ -2378,7 +2372,6 @@ void add_FM_ChildDecompressCmd_tests(void)
     UtTest_Add(Test_FM_ChildDecompressCmd_FSDecompressSuccess, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ChildDecompressCmd_FSDecompressSuccess");
 }
-#endif
 
 void add_FM_ChildConcatCmd_tests(void)
 {
@@ -2603,9 +2596,7 @@ void UtTest_Setup(void)
     add_FM_ChildRenameCmd_tests();
     add_FM_ChildDeleteCmd_tests();
     add_FM_ChildDeleteAllCmd_tests();
-#ifdef FM_INCLUDE_DECOMPRESS
     add_FM_ChildDecompressCmd_tests();
-#endif
     add_FM_ChildConcatCmd_tests();
     add_FM_ChildFileInfoCmd_tests();
     add_FM_ChildCreateDirCmd_tests();

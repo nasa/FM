@@ -390,7 +390,6 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 /* FM command handler -- Decompress File                           */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-#ifdef FM_INCLUDE_DECOMPRESS
 
 bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
@@ -438,8 +437,6 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
     return CommandResult;
 }
-
-#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */

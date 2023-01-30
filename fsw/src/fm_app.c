@@ -236,6 +236,8 @@ int32 FM_AppInit(void)
         }
     }
 
+    FM_CompressionService_Init();
+
     return Result;
 }
 
@@ -313,11 +315,11 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         case FM_DELETE_ALL_CC:
             Result = FM_DeleteAllFilesCmd(BufPtr);
             break;
-#ifdef FM_INCLUDE_DECOMPRESS
+
         case FM_DECOMPRESS_CC:
             Result = FM_DecompressFileCmd(BufPtr);
             break;
-#endif
+
         case FM_CONCAT_CC:
             Result = FM_ConcatFilesCmd(BufPtr);
             break;
