@@ -9,6 +9,7 @@
 
 add_cfe_coverage_stubs("fm_internal"
   utilities/fm_test_utils.c
+  stubs/fm_global_stubs.c
   stubs/fm_cmds_stubs.c
   stubs/fm_cmd_utils_stubs.c
   stubs/fm_cmd_utils_handlers.c

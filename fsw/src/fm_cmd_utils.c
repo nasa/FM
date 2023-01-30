@@ -26,6 +26,7 @@
  */
 
 #include "cfe.h"
+#include "fm_app.h"
 #include "fm_msg.h"
 #include "fm_cmd_utils.h"
 #include "fm_child.h"

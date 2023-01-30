@@ -25,7 +25,7 @@
 #include "common_types.h"
 
 #include "fm_platform_cfg.h"
-#include "fm_app.h"
+#include "fm_msg.h"
 #include "utstubs.h"
 
 typedef struct
