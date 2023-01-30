@@ -19,72 +19,61 @@
 
 /**
  * @file
- *  Provides functions for the initialization, validation, and
- *  management of the FM File System Free Space Table
+ *
+ * Auto-Generated stub implementations for functions defined in fm_tbl header
  */
 
-#include "cfe.h"
-#include "fm_platform_cfg.h"
-#include "fm_msg.h"
 #include "fm_tbl.h"
-#include "fm_events.h"
-#include "fm_perfids.h"
-#include "fm_child.h"
-#include "fm_test_utils.h"
+#include "utgenstub.h"
 
-/************************************************************************
-** UT Includes
-*************************************************************************/
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-#include <string.h>
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- startup initialization                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 FM_TableInit(void)
-{
-    int32 status;
-    status = UT_DEFAULT_IMPL(FM_TableInit);
-    return status;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- table data verification                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
-{
-    int32 status;
-    status = UT_DEFAULT_IMPL(FM_ValidateTable);
-    return status;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- acquire table data pointer                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_AcquireTablePointers()
+ * ----------------------------------------------------
+ */
 void FM_AcquireTablePointers(void)
 {
-    UT_DEFAULT_IMPL(FM_AcquireTablePointers);
+
+    UT_GenStub_Execute(FM_AcquireTablePointers, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- release table data pointer                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ReleaseTablePointers()
+ * ----------------------------------------------------
+ */
 void FM_ReleaseTablePointers(void)
 {
-    UT_DEFAULT_IMPL(FM_ReleaseTablePointers);
+
+    UT_GenStub_Execute(FM_ReleaseTablePointers, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_TableInit()
+ * ----------------------------------------------------
+ */
+int32 FM_TableInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(FM_TableInit, int32);
+
+    UT_GenStub_Execute(FM_TableInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_TableInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ValidateTable()
+ * ----------------------------------------------------
+ */
+int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
+{
+    UT_GenStub_SetupReturnBuffer(FM_ValidateTable, int32);
+
+    UT_GenStub_AddParam(FM_ValidateTable, FM_MonitorTable_t *, TablePtr);
+
+    UT_GenStub_Execute(FM_ValidateTable, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ValidateTable, int32);
 }
