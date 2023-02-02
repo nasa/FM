@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "fm_msg.h"
+#include "fm_app.h"
 
 /* UT includes */
 #include "uttest.h"

@@ -26,7 +26,7 @@
  */
 
 #include "fm_platform_cfg.h"
-#include "fm_msg.h"
+#include "fm_app.h"
 #include "fm_tbl.h"
 #include "fm_events.h"
 

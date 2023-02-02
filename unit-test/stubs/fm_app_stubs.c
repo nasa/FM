@@ -19,98 +19,70 @@
 
 /**
  * @file
- *  The File Manager (FM) Application provides onboard file system
- *  management services by processing commands for copying and moving
- *  files, decompressing files, concatenating files, creating directories,
- *  deleting files and directories, and providing file and directory status.
- *  When the File Manager application receives a housekeeping request
- *  (scheduled within the scheduler application), FM  reports it's housekeeping
- *  status values via telemetry messaging.
+ *
+ * Auto-Generated stub implementations for functions defined in fm_app header
  */
 
-#include "cfe.h"
-#include "fm_msg.h"
-#include "fm_msgdefs.h"
-#include "fm_msgids.h"
 #include "fm_app.h"
-#include "fm_tbl.h"
-#include "fm_child.h"
-#include "fm_cmds.h"
-#include "fm_cmd_utils.h"
-#include "fm_events.h"
-#include "fm_perfids.h"
-#include "fm_platform_cfg.h"
-#include "fm_version.h"
-#include "fm_verify.h"
-#include "fm_test_utils.h"
+#include "utgenstub.h"
 
-#include <string.h>
-
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application global data                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-FM_GlobalData_t FM_GlobalData;
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- entry point and main loop processor           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_AppMain(void)
-{
-    UT_DEFAULT_IMPL(FM_AppMain);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- startup initialization processor              */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_AppInit()
+ * ----------------------------------------------------
+ */
 int32 FM_AppInit(void)
 {
-    return UT_DEFAULT_IMPL(FM_AppInit);
+    UT_GenStub_SetupReturnBuffer(FM_AppInit, int32);
+
+    UT_GenStub_Execute(FM_AppInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_AppInit, int32);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- input packet processor                        */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_AppMain()
+ * ----------------------------------------------------
+ */
+void FM_AppMain(void)
+{
 
+    UT_GenStub_Execute(FM_AppMain, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ProcessCmd()
+ * ----------------------------------------------------
+ */
+void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(FM_ProcessCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(FM_ProcessCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ProcessPkt()
+ * ----------------------------------------------------
+ */
 void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr)
 {
-    UT_DEFAULT_IMPL(FM_ProcessPkt);
+    UT_GenStub_AddParam(FM_ProcessPkt, const CFE_SB_Buffer_t *, MessagePtr);
+
+    UT_GenStub_Execute(FM_ProcessPkt, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- command packet processor                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ProcessCmd(const CFE_SB_Buffer_t *MessagePtr)
-{
-    UT_DEFAULT_IMPL(FM_ProcessCmd);
-    UT_Stub_CopyFromLocal(UT_KEY(FM_ProcessCmd), &MessagePtr, sizeof(MessagePtr));
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- housekeeping request packet processor         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ReportHK()
+ * ----------------------------------------------------
+ */
 void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
 {
-    UT_DEFAULT_IMPL(FM_ReportHK);
+    UT_GenStub_AddParam(FM_ReportHK, const CFE_MSG_CommandHeader_t *, Msg);
+
+    UT_GenStub_Execute(FM_ReportHK, Basic, NULL);
 }
