@@ -108,7 +108,7 @@ bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText);
  *
  *  \sa #OS_FDGetInfo
  */
-uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData);
+uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData);
 
 /**
  *  \brief Get Filename State Function
@@ -135,7 +135,7 @@ uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData);
  *
  *  \sa #OS_stat, #OS_FDGetInfo
  */
-uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd);
+uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInfoCmd);
 
 /**
  *  \brief Verify Name Function
@@ -160,7 +160,7 @@ uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd);
  *
  *  \sa #FM_GetFilenameState
  */
-uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
+uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify File State Function
@@ -183,7 +183,8 @@ uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const c
  *
  *  \sa #FM_GetFilenameState
  */
-bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
+                        const char *CmdText);
 
 /**
  *  \brief Verify File is Closed Function
@@ -205,7 +206,7 @@ bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize,
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify File Exists Function
@@ -228,7 +229,7 @@ bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify File Does Not Exist Function
@@ -251,7 +252,7 @@ bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, cons
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify File Is Not Open Function
@@ -273,7 +274,7 @@ bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, con
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify Directory Exists Function
@@ -295,7 +296,7 @@ bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, con
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify Directory Does Not Exist Function
@@ -317,7 +318,7 @@ bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, cons
  *
  *  \sa #FM_VerifyFileState
  */
-bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
+bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText);
 
 /**
  *  \brief Verify Child Task Interface Function
