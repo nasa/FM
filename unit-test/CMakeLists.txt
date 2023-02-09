@@ -23,8 +23,12 @@ target_link_libraries(coverage-fm_internal-stubs ut_core_api_stubs ut_assert)
 
 # Include and expose unit test utilities, fsw/inc, and fsw/src includes
 target_include_directories(coverage-fm_internal-stubs PUBLIC utilities)
-target_include_directories(coverage-fm_internal-stubs PUBLIC ../fsw/inc)
-target_include_directories(coverage-fm_internal-stubs PUBLIC ../fsw/src)
+target_include_directories(coverage-fm_internal-stubs PUBLIC $<TARGET_PROPERTY:fm,INCLUDE_DIRECTORIES>)
+
+# This permits all source files under this directory scope to reference internal
+# headers in the "fsw/src" directory.  This is OK because it is a white-box test,
+# normally these headers should not be referenced outside the module.
+include_directories(../fsw/src)
 
 # Generate a dedicated "testrunner" executable for each test file
 # Accomplish this by cycling through all the app's source files, there must be

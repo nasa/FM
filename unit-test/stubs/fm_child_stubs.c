@@ -19,281 +19,283 @@
 
 /**
  * @file
- *  File Manager (FM) Child task (low priority command handler)
+ *
+ * Auto-Generated stub implementations for functions defined in fm_child header
  */
 
-#include "cfe.h"
-#include "fm_msg.h"
-#include "fm_msgdefs.h"
-#include "fm_msgids.h"
-#include "fm_events.h"
-#include "fm_app.h"
 #include "fm_child.h"
-#include "fm_cmds.h"
-#include "fm_cmd_utils.h"
-#include "fm_perfids.h"
-#include "fm_platform_cfg.h"
-#include "fm_verify.h"
-#include "fm_test_utils.h"
+#include "utgenstub.h"
 
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-#include <string.h>
-
-#ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
-#endif
-
-/************************************************************************
-** OSAL Compatibility for directory name access
-** New OSAL version have an access macro to get the string.  If that
-** macro is defined, use it, otherwise assume "d_name" structure member.
-*************************************************************************/
-#ifndef OS_DIRENTRY_NAME
-#define OS_DIRENTRY_NAME(x) ((x).d_name)
-#endif
-
-#define FM_QUEUE_SEM_NAME "FM_QUEUE_SEM"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task -- startup initialization                         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 FM_ChildInit(void)
-{
-    return UT_DEFAULT_IMPL(FM_ChildInit);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task -- task entry point                               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildTask(void)
-{
-    UT_DEFAULT_IMPL(FM_ChildTask);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task -- main process loop                              */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildLoop(void)
-{
-    UT_DEFAULT_IMPL(FM_ChildLoop);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task -- interface handshake processor                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildProcess(void)
-{
-    UT_DEFAULT_IMPL(FM_ChildProcess);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Copy File                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_Stub_RegisterContext(UT_KEY(FM_ChildCopyCmd), CmdArgs);
-    UT_DEFAULT_IMPL(FM_ChildCopyCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Move File                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildMoveCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Rename File                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildRenameCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Delete File                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildDeleteCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Delete All Files               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildDeleteAllCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Decompress File                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#ifdef FM_INCLUDE_DECOMPRESS
-
-void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildDecompressCmd);
-}
-
-#endif
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Concatenate Files              */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildConcatCmd()
+ * ----------------------------------------------------
+ */
 void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_DEFAULT_IMPL(FM_ChildConcatCmd);
+    UT_GenStub_AddParam(FM_ChildConcatCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildConcatCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Get File Info                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildCopyCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_DEFAULT_IMPL(FM_ChildFileInfoCmd);
+    UT_GenStub_AddParam(FM_ChildCopyCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildCopyCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Create Directory               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildCreateDirCmd()
+ * ----------------------------------------------------
+ */
 void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_DEFAULT_IMPL(FM_ChildCreateDirCmd);
+    UT_GenStub_AddParam(FM_ChildCreateDirCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildCreateDirCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Delete Directory               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDecompressCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildDecompressCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
+    UT_GenStub_Execute(FM_ChildDecompressCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDeleteAllCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildDeleteAllCmd, FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildDeleteAllCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDeleteCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildDeleteCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildDeleteCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDeleteDirCmd()
+ * ----------------------------------------------------
+ */
 void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
+    UT_GenStub_AddParam(FM_ChildDeleteDirCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildDeleteDirCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Get Directory List (to file)   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDirListFileCmd()
+ * ----------------------------------------------------
+ */
 void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
+    UT_GenStub_AddParam(FM_ChildDirListFileCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildDirListFileCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Get Directory List (to pkt)    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildDirListPktCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task command handler -- Set File Permissions           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
-{
-    UT_DEFAULT_IMPL(FM_ChildSetPermissionsCmd);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task utility function -- create dir list output file   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDirListFileInit()
+ * ----------------------------------------------------
+ */
 bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, const char *Filename)
 {
-    return UT_DEFAULT_IMPL(FM_ChildDirListFileInit);
+    UT_GenStub_SetupReturnBuffer(FM_ChildDirListFileInit, bool);
+
+    UT_GenStub_AddParam(FM_ChildDirListFileInit, osal_id_t *, FileHandlePtr);
+    UT_GenStub_AddParam(FM_ChildDirListFileInit, const char *, Directory);
+    UT_GenStub_AddParam(FM_ChildDirListFileInit, const char *, Filename);
+
+    UT_GenStub_Execute(FM_ChildDirListFileInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ChildDirListFileInit, bool);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task utility function -- write to dir list output file */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDirListFileLoop()
+ * ----------------------------------------------------
+ */
 void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *Directory, const char *DirWithSep,
-                             const char *Filename, uint8 getSizeTimeMode)
+                             const char *Filename, uint8 GetSizeTimeMode)
 {
-    UT_DEFAULT_IMPL(FM_ChildDirListFileLoop);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, osal_id_t, DirId);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, osal_id_t, FileHandle);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, const char *, Directory);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, const char *, DirWithSep);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, const char *, Filename);
+    UT_GenStub_AddParam(FM_ChildDirListFileLoop, uint8, GetSizeTimeMode);
+
+    UT_GenStub_Execute(FM_ChildDirListFileLoop, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task utility function -- get dir entry size and time   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildDirListPktCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildDirListPktCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
+    UT_GenStub_Execute(FM_ChildDirListPktCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildFileInfoCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildFileInfoCmd, FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildFileInfoCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildInit()
+ * ----------------------------------------------------
+ */
+int32 FM_ChildInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(FM_ChildInit, int32);
+
+    UT_GenStub_Execute(FM_ChildInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ChildInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildLoop()
+ * ----------------------------------------------------
+ */
+void FM_ChildLoop(void)
+{
+
+    UT_GenStub_Execute(FM_ChildLoop, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildMoveCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildMoveCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildMoveCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildProcess()
+ * ----------------------------------------------------
+ */
+void FM_ChildProcess(void)
+{
+
+    UT_GenStub_Execute(FM_ChildProcess, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildRenameCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildRenameCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildRenameCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildSetPermissionsCmd()
+ * ----------------------------------------------------
+ */
+void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_GenStub_AddParam(FM_ChildSetPermissionsCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+
+    UT_GenStub_Execute(FM_ChildSetPermissionsCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildSizeTimeMode()
+ * ----------------------------------------------------
+ */
 int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileTime, uint32 *FileMode)
 {
-    return UT_DEFAULT_IMPL(FM_ChildSizeTimeMode);
+    UT_GenStub_SetupReturnBuffer(FM_ChildSizeTimeMode, int32);
+
+    UT_GenStub_AddParam(FM_ChildSizeTimeMode, const char *, Filename);
+    UT_GenStub_AddParam(FM_ChildSizeTimeMode, uint32 *, FileSize);
+    UT_GenStub_AddParam(FM_ChildSizeTimeMode, uint32 *, FileTime);
+    UT_GenStub_AddParam(FM_ChildSizeTimeMode, uint32 *, FileMode);
+
+    UT_GenStub_Execute(FM_ChildSizeTimeMode, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_ChildSizeTimeMode, int32);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM child task utility function -- sleep between OS_stat on files*/
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildSleepStat()
+ * ----------------------------------------------------
+ */
 void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
-                       bool getSizeTimeMode)
+                       bool GetSizeTimeMode)
 {
-    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), Filename);
-    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), DirListData);
-    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), FilesTillSleep);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_ChildSleepStat), getSizeTimeMode);
-    UT_DEFAULT_IMPL(FM_ChildSleepStat);
+    UT_GenStub_AddParam(FM_ChildSleepStat, const char *, Filename);
+    UT_GenStub_AddParam(FM_ChildSleepStat, FM_DirListEntry_t *, DirListData);
+    UT_GenStub_AddParam(FM_ChildSleepStat, int32 *, FilesTillSleep);
+    UT_GenStub_AddParam(FM_ChildSleepStat, bool, GetSizeTimeMode);
+
+    UT_GenStub_Execute(FM_ChildSleepStat, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_ChildTask()
+ * ----------------------------------------------------
+ */
+void FM_ChildTask(void)
+{
+
+    UT_GenStub_Execute(FM_ChildTask, Basic, NULL);
 }
