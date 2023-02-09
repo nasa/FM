@@ -37,9 +37,8 @@
 /*
 ** FM file system free space table header
 */
-static CFE_TBL_FileDef_t CFE_TBL_FileDef
-    __attribute__((__used__)) = {"FM_MonitorTable", FM_APP_NAME "." FM_TABLE_CFE_NAME, FM_TABLE_DEF_DESC,
-                                 FM_TABLE_FILENAME, sizeof(FM_MonitorTable_t)};
+CFE_TBL_FileDef_t CFE_TBL_FileDef = {"FM_MonitorTable", FM_APP_NAME "." FM_TABLE_CFE_NAME, FM_TABLE_DEF_DESC,
+                                     FM_TABLE_FILENAME, sizeof(FM_MonitorTable_t)};
 
 /*
 ** FM file system monitor table data
