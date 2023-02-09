@@ -444,19 +444,6 @@
  */
 #define FM_TABLE_VALIDATION_ERR (-1)
 
-/**
- * \brief Include Decompress
- *
- *  \par Description:
- *       If this setting is defined, FM will be built with the Decompress
- *       command.  Otherwise Decompress will not be built into the application.
- *       If this setting is defined, FM will depend on an external FS_Lib.
- *
- *  \par Limits:
- *       N/A
- */
-/* #define FM_INCLUDE_DECOMPRESS */
-
 /**\}*/
 
 #endif

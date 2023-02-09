@@ -413,7 +413,9 @@
  *       of command argument verification and being able to place the command on
  *       the child task interface queue.
  *
- *       This command is only valid if FM_INCLUDE_DECOMPRESS is defined.
+ *       This command will only have an effect if FM is compiled with a decompression
+ *       algorithm enabled.  If compression is not enabled, issuing this command
+ *       will generate an error event.
  *
  *  \par Command Packet Structure
  *       #FM_DecompressCmd_t

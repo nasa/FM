@@ -54,10 +54,10 @@
 
   This Doxygen-based User's Guide provides a complete reference for the
   cFS File Manager (FM) application.  The Guide is intended primarily for
-  users of the software (operations personnel, test engineers, and 
+  users of the software (operations personnel, test engineers, and
   maintenance personnel) who prefer a developer-focused document and direct
   references to the source code.  The "deployment guide" section is intended
-  for mission developers when deploying and configuring the FM application 
+  for mission developers when deploying and configuring the FM application
   software for a mission flight software build environment.
 
   \ref cfsfmversion
@@ -109,21 +109,21 @@
   \page cfsfmovr CFS File Manager Overview
 
   The CFS FM application provides onboard file system management services by processing ground commands
-  for copying, moving, and renaming files, decompressing files, creating directories, deleting files and 
-  directories, providing file and directory informational telemetry messages, and providing open file and 
-  directory listings.  The FM software context diagram is shown in Figure FM-1.  
-  
+  for copying, moving, and renaming files, decompressing files, creating directories, deleting files and
+  directories, providing file and directory informational telemetry messages, and providing open file and
+  directory listings.  The FM software context diagram is shown in Figure FM-1.
+
   \image html CFS_FM_Context.jpg "Figure FM-1"
   \image latex CFS_FM_Context.jpg "Figure FM-1"
 
-  The FM application interfaces with the Command Ingest (CI) application to receive ground commands.  
-  See page \ref cfsfmcmdspg for a detailed description of the FM ground commands.  FM utilizes the Operating 
-  System Abstraction Layer (OSAL) API library functions for interfacing with the onboard file systems when 
+  The FM application interfaces with the Command Ingest (CI) application to receive ground commands.
+  See page \ref cfsfmcmdspg for a detailed description of the FM ground commands.  FM utilizes the Operating
+  System Abstraction Layer (OSAL) API library functions for interfacing with the onboard file systems when
   processing ground commands.  The FM application receives messages from the Scheduler (SCH) Application
-  for periodic housekeeping requests.  Upon receipt of a housekeeping request, FM will send its 
+  for periodic housekeeping requests.  Upon receipt of a housekeeping request, FM will send its
   housekeeping telemetry packets on the Software Bus.  Housekeeping telemetry
-  packets are typically subscribed to 
-  by the Housekeeping (HK), Telemetry Output (TO), and Data Storage applications.  See page 
+  packets are typically subscribed to
+  by the Housekeeping (HK), Telemetry Output (TO), and Data Storage applications.  See page
   \ref cfsfmtlm for a detailed description of the contents of the FM housekeeping telemetry packet.
 **/
 
@@ -134,66 +134,66 @@
 
   <B> Power-On and Processor Resets </B>
 
-  Upon a Power-On or Processor reset the FM application initializes all telemetry within its housekeeping 
-  telemetry packet.  The Command and Command Error counters are set to zero, as well as, all other 
-  numerical data within the packet.  In addition to initializing telemetry, FM registers for cFE event 
-  services, creates its software bus message pipe, and subscribes to FM SB housekeeping requests and 
+  Upon a Power-On or Processor reset the FM application initializes all telemetry within its housekeeping
+  telemetry packet.  The Command and Command Error counters are set to zero, as well as, all other
+  numerical data within the packet.  In addition to initializing telemetry, FM registers for cFE event
+  services, creates its software bus message pipe, and subscribes to FM SB housekeeping requests and
   commands.
 
   <B> Normal Operation </B>
 
-  The CFS FM application is a command and telemetry driven application.  FM waits in a command loop 
-  infinitely until the software receives a scheduled housekeeping request, ground command, or stored 
-  command.  Command packets (including housekeeping requests) are processed as they are received.  The 
-  application sends an FM housekeeping telemetry message on the cFE Software Bus upon receipt of a scheduled 
-  housekeeping request produced by the SCH application.  This request is typically performed every 
+  The CFS FM application is a command and telemetry driven application.  FM waits in a command loop
+  infinitely until the software receives a scheduled housekeeping request, ground command, or stored
+  command.  Command packets (including housekeeping requests) are processed as they are received.  The
+  application sends an FM housekeeping telemetry message on the cFE Software Bus upon receipt of a scheduled
+  housekeeping request produced by the SCH application.  This request is typically performed every
   4-5 seconds and these housekeeping messages are usually sent to the ground
   (though this depends on the configuration of the rest of the system).
 
-  Various FM ground commands produce telemetry messages as a result of processing the command.  These 
-  telemetry messages include a directory listing telemetry message, file information telemetry message, 
-  and an open file listing telemetry message. See page \ref cfsfmcmdspg for a detailed description of the 
-  FM directory listing, file information, and open file listing ground commands.  See page \ref cfsfmtlm 
-  for a detailed description of the contents of the FM directory listing, file information, and open file 
+  Various FM ground commands produce telemetry messages as a result of processing the command.  These
+  telemetry messages include a directory listing telemetry message, file information telemetry message,
+  and an open file listing telemetry message. See page \ref cfsfmcmdspg for a detailed description of the
+  FM directory listing, file information, and open file listing ground commands.  See page \ref cfsfmtlm
+  for a detailed description of the contents of the FM directory listing, file information, and open file
   listing telemetry messages.
 
-  Other FM ground commands produce files as a result of processing the command.  These files include a 
-  decompression file, concatenation file, and a directory listing file.  See page \ref cfsfmcmdspg for a 
-  detailed description of the FM decompress file, concatenate files, and directory listing file ground 
-  commands. Note decompression capability is optionally supported via the FM_INCLUDE_DECOMPRESS platform
+  Other FM ground commands produce files as a result of processing the command.  These files include a
+  decompression file, concatenation file, and a directory listing file.  See page \ref cfsfmcmdspg for a
+  detailed description of the FM decompress file, concatenate files, and directory listing file ground
+  commands. Note decompression capability is optionally supported via the FM_INCLUDE_COMPRESSION platform
   configuration option.
-  
-  The decompression file is produced using the cFE API function CFE_FS_Decompress which uses code ported 
-  from the GNU zip sources.  The cFE API function CFE_FS_Decompress produces the decompressed output file.  
-  The output file is comparable to that of a file that has been unzipped using the system utility gunzip.  
-  A compressed file reduces the size of the file by encoding the file.  Compressed files may be used to 
-  reduce uplink time to the spacecraft.  Decompressing the file will restore the file from its encoded 
+
+  The decompression file is produced using the cFE API function CFE_FS_Decompress which uses code ported
+  from the GNU zip sources.  The cFE API function CFE_FS_Decompress produces the decompressed output file.
+  The output file is comparable to that of a file that has been unzipped using the system utility gunzip.
+  A compressed file reduces the size of the file by encoding the file.  Compressed files may be used to
+  reduce uplink time to the spacecraft.  Decompressing the file will restore the file from its encoded
   state to the original state of the file.
 
-  The concatenation file is a direct copy of the contents of the two command specified source files, 
-  with the contents of the first source file specified proceeding the contents of the second source 
-  file specified.  The contents of the second source file are written with no delineation characters 
+  The concatenation file is a direct copy of the contents of the two command specified source files,
+  with the contents of the first source file specified proceeding the contents of the second source
+  file specified.  The contents of the second source file are written with no delineation characters
   such as spaces or returns following the contents of the first source file.
 
-  The directory listing file is written as a binary file and contains a cFE file header at the top of 
-  the file contiguously followed by a directory listing status data structure containing an echo of the 
-  command specified directory name (#OS_MAX_PATH_LEN), directory size in bytes (uint32), total number of 
-  file contained in the directory (uint32), and the number of file names written in the directory listing 
-  file (uint32).  The directory listing is then written contiguously one entry at a time.  Each entry in 
-  the directory listing includes for each file in the directory, the name of the file(#OS_MAX_PATH_LEN), 
-  file size in bytes (uint32), and last modification time of the file (uint32).  File systems use specific 
-  time epochs for their time tagging of files.  Since spacecraft systems rarely use an epoch that matches 
-  a particular file system, a function is used to convert the file system time (in seconds) to spacecraft 
-  time (in seconds).  The conversion is controlled by a cFE configuration parameter which is set equal to 
-  the number of seconds between the spacecraft's epoch and the file system's epoch.  See #CFE_FS_Header_t 
-  for the cFE file header format.  See /FM_DirListFileStat_t for the format of the directory listing 
+  The directory listing file is written as a binary file and contains a cFE file header at the top of
+  the file contiguously followed by a directory listing status data structure containing an echo of the
+  command specified directory name (#OS_MAX_PATH_LEN), directory size in bytes (uint32), total number of
+  file contained in the directory (uint32), and the number of file names written in the directory listing
+  file (uint32).  The directory listing is then written contiguously one entry at a time.  Each entry in
+  the directory listing includes for each file in the directory, the name of the file(#OS_MAX_PATH_LEN),
+  file size in bytes (uint32), and last modification time of the file (uint32).  File systems use specific
+  time epochs for their time tagging of files.  Since spacecraft systems rarely use an epoch that matches
+  a particular file system, a function is used to convert the file system time (in seconds) to spacecraft
+  time (in seconds).  The conversion is controlled by a cFE configuration parameter which is set equal to
+  the number of seconds between the spacecraft's epoch and the file system's epoch.  See #CFE_FS_Header_t
+  for the cFE file header format.  See /FM_DirListFileStat_t for the format of the directory listing
   status structure.  See /FM_DirListFileData_t for the format of a directory listing entry.
 **/
 
 /**
   \page cfsfmdg  CFS File Manager Deployment Guide
-  
-  To integrate the FM application, follow the CFS App Integration Guide. 
+
+  To integrate the FM application, follow the CFS App Integration Guide.
   Also, be sure to set up the configuration parameters and message IDs for
   the platform
 **/

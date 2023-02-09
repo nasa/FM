@@ -26,10 +26,7 @@
 
 #include "cfe.h"
 #include "fm_msg.h"
-
-#ifdef FM_INCLUDE_DECOMPRESS
-#include "cfs_fs_lib.h"
-#endif
+#include "fm_compression.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -103,10 +100,18 @@ typedef struct
 
     FM_ChildQueueEntry_t ChildQueue[FM_CHILD_QUEUE_DEPTH]; /**< \brief Child task command queue */
 
-#ifdef FM_INCLUDE_DECOMPRESS
-    FS_LIB_Decompress_State_t DecompressState;
+    /**
+     * \brief State of the embedded decompression routine
+     * This depends on the decompression option and may be NULL
+     */
+    FM_Decompressor_State_t *DecompressorStatePtr;
 
-#endif
+    /**
+     * \brief State of the embedded compression routine
+     * This depends on the compression option and may be NULL
+     */
+    FM_Compressor_State_t *CompressorStatePtr;
+
 } FM_GlobalData_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

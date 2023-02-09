@@ -177,8 +177,6 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr);
  */
 bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
-#ifdef FM_INCLUDE_DECOMPRESS
-
 /**
  *  \brief Decompress Files Command Handler Function
  *
@@ -205,8 +203,6 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \sa #FM_DECOMPRESS_CC, #FM_DecompressCmd_t
  */
 bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr);
-
-#endif
 
 /**
  *  \brief Concatenate Files Command Handler Function

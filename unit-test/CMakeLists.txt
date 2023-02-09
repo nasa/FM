@@ -13,6 +13,7 @@ add_cfe_coverage_stubs("fm_internal"
   stubs/fm_cmds_stubs.c
   stubs/fm_cmd_utils_stubs.c
   stubs/fm_cmd_utils_handlers.c
+  stubs/fm_compression_stubs.c
   stubs/fm_app_stubs.c
   stubs/fm_child_stubs.c
   stubs/fm_tbl_stubs.c

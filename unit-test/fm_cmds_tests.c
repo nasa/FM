@@ -892,7 +892,6 @@ void add_FM_DeleteAllFilesCmd_tests(void)
                "Test_FM_DeleteAllFilesCmd_NoChildTask");
 }
 
-#ifdef FM_INCLUDE_DECOMPRESS
 /****************************/
 /* Decompress File Test s   */
 /****************************/
@@ -1018,8 +1017,6 @@ void add_FM_DecompressFileCmd_tests(void)
     UtTest_Add(Test_FM_DecompressFileCmd_NoChildTask, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_DecompressFileCmd_NoChildTask");
 }
-
-#endif
 
 /****************************/
 /* Concat Files Tests       */
@@ -2292,11 +2289,7 @@ void UtTest_Setup(void)
     add_FM_RenameFileCmd_tests();
     add_FM_DeleteFileCmd_tests();
     add_FM_DeleteAllFilesCmd_tests();
-
-#ifdef FM_INCLUDE_DECOMPRESS
     add_FM_DecompressFileCmd_tests();
-#endif
-
     add_FM_ConcatFilesCmd_tests();
     add_FM_GetFileInfoCmd_tests();
     add_FM_GetOpenFilesCmd_tests();
