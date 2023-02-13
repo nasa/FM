@@ -188,9 +188,9 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_DeleteAllCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_DeleteAllFilesCmd_t
  */
-void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs);
 
 /**
  *  \brief Child Task Decompress File Command Handler
@@ -205,9 +205,9 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_DecompressCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_DecompressFileCmd_t
  */
-void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
  *  \brief Child Task Concatenate Files Command Handler
@@ -222,9 +222,9 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_ConcatCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_ConcatFilesCmd_t
  */
-void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
  *  \brief Child Task Get File Info Command Handler
@@ -256,9 +256,9 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_CreateDirCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_CreateDirectoryCmd_t
  */
-void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
  *  \brief Child Task Delete Directory Command Handler
@@ -273,9 +273,9 @@ void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_DeleteDirCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_DeleteDirectoryCmd_t
  */
-void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
+void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
 /**
  *  \brief Child Task Get Dir List to File Command Handler
@@ -290,7 +290,7 @@ void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_GetDirFileCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_GetDirListFileCmd_t
  */
 void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
@@ -307,7 +307,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_GetDirPktCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_GetDirListPktCmd_t
  */
 void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs);
 
@@ -324,7 +324,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs);
  *  \param [in] CmdArgs A pointer to an entry in the child task handshake command
  *       queue which contains the arguments necessary to process this command.
  *
- *  \sa #FM_ChildQueueEntry_t, #FM_SetPermCmd_t
+ *  \sa #FM_ChildQueueEntry_t, #FM_SetPermissionsCmd_t
  */
 void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs);
 

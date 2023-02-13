@@ -28,14 +28,14 @@
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ChildConcatCmd()
+ * Generated stub function for FM_ChildConcatFilesCmd()
  * ----------------------------------------------------
  */
-void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_GenStub_AddParam(FM_ChildConcatCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+    UT_GenStub_AddParam(FM_ChildConcatFilesCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
-    UT_GenStub_Execute(FM_ChildConcatCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ChildConcatFilesCmd, Basic, NULL);
 }
 
 /*
@@ -52,38 +52,38 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ChildCreateDirCmd()
+ * Generated stub function for FM_ChildCreateDirectoryCmd()
  * ----------------------------------------------------
  */
-void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_GenStub_AddParam(FM_ChildCreateDirCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+    UT_GenStub_AddParam(FM_ChildCreateDirectoryCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
-    UT_GenStub_Execute(FM_ChildCreateDirCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ChildCreateDirectoryCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ChildDecompressCmd()
+ * Generated stub function for FM_ChildDecompressFileCmd()
  * ----------------------------------------------------
  */
-void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_GenStub_AddParam(FM_ChildDecompressCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+    UT_GenStub_AddParam(FM_ChildDecompressFileCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
-    UT_GenStub_Execute(FM_ChildDecompressCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ChildDecompressFileCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ChildDeleteAllCmd()
+ * Generated stub function for FM_ChildDeleteAllFilesCmd()
  * ----------------------------------------------------
  */
-void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_GenStub_AddParam(FM_ChildDeleteAllCmd, FM_ChildQueueEntry_t *, CmdArgs);
+    UT_GenStub_AddParam(FM_ChildDeleteAllFilesCmd, FM_ChildQueueEntry_t *, CmdArgs);
 
-    UT_GenStub_Execute(FM_ChildDeleteAllCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ChildDeleteAllFilesCmd, Basic, NULL);
 }
 
 /*
@@ -100,14 +100,14 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ChildDeleteDirCmd()
+ * Generated stub function for FM_ChildDeleteDirectoryCmd()
  * ----------------------------------------------------
  */
-void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    UT_GenStub_AddParam(FM_ChildDeleteDirCmd, const FM_ChildQueueEntry_t *, CmdArgs);
+    UT_GenStub_AddParam(FM_ChildDeleteDirectoryCmd, const FM_ChildQueueEntry_t *, CmdArgs);
 
-    UT_GenStub_Execute(FM_ChildDeleteDirCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ChildDeleteDirectoryCmd, Basic, NULL);
 }
 
 /*

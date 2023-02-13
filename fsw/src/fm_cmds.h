@@ -65,7 +65,7 @@ bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_RESET_CC, #FM_ResetCmd_t
+ *  \sa #FM_RESET_COUNTERS_CC, #FM_ResetCountersCmd_t
  */
 bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -91,7 +91,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_COPY_CC, #FM_CopyFileCmd_t
+ *  \sa #FM_COPY_FILE_CC, #FM_CopyFileCmd_t
  */
 bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -110,7 +110,7 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_MOVE_CC, #FM_MoveFileCmd_t
+ *  \sa #FM_MOVE_FILE_CC, #FM_MoveFileCmd_t
  */
 bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -129,7 +129,7 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_RENAME_CC, #FM_RenameFileCmd_t
+ *  \sa #FM_RENAME_FILE_CC, #FM_RenameFileCmd_t
  */
 bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -147,7 +147,7 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_DELETE_CC, #FM_DeleteFileCmd_t
+ *  \sa #FM_DELETE_FILE_CC, #FM_DeleteFileCmd_t
  */
 bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -173,7 +173,7 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_DELETE_ALL_CC, #FM_DeleteAllCmd_t
+ *  \sa #FM_DELETE_ALL_FILES_CC, #FM_DeleteAllFilesCmd_t
  */
 bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -200,7 +200,7 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_DECOMPRESS_CC, #FM_DecompressCmd_t
+ *  \sa #FM_DECOMPRESS_FILE_CC, #FM_DecompressFileCmd_t
  */
 bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -228,7 +228,7 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_CONCAT_CC, #FM_ConcatCmd_t
+ *  \sa #FM_CONCAT_FILES_CC, #FM_ConcatFilesCmd_t
  */
 bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -292,7 +292,7 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_CREATE_DIR_CC, #FM_CreateDirCmd_t
+ *  \sa #FM_CREATE_DIRECTORY_CC, #FM_CreateDirectoryCmd_t
  */
 bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -310,7 +310,7 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_DELETE_DIR_CC, #FM_DeleteDirCmd_t
+ *  \sa #FM_DELETE_DIRECTORY_CC, #FM_DeleteDirectoryCmd_t
  */
 bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -336,7 +336,7 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_GET_DIR_FILE_CC, #FM_GetDirFileCmd_t,
+ *  \sa #FM_GET_DIR_LIST_FILE_CC, #FM_GetDirListFileCmd_t,
  *      #FM_DirListFileStats_t, FM_DirListEntry_t
  */
 bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr);
@@ -364,7 +364,7 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_GET_DIR_PKT_CC, #FM_GetDirPktCmd_t, #FM_DirListPkt_t
+ *  \sa #FM_GET_DIR_LIST_PKT_CC, #FM_GetDirListPktCmd_t, #FM_DirListPkt_t
  */
 bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr);
 
@@ -421,7 +421,7 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_SET_FILE_PERM_CC, #FM_SetPermCmd_t, #FM_SET_PERM_CMD_EID, #FM_SET_PERM_ERR_EID
+ *  \sa #FM_SET_PERMISSIONS_CC, #FM_SetPermissionsCmd_t, #FM_SET_PERM_CMD_EID, #FM_SET_PERM_ERR_EID
  */
 bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr);
 

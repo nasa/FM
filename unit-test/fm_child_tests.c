@@ -162,7 +162,7 @@ void Test_FM_ChildProcess_ChildReadIndexGreaterChildQDepth(void)
 void Test_FM_ChildProcess_FMCopyCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_COPY_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_COPY_FILE_CC;
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildProcess());
@@ -179,7 +179,7 @@ void Test_FM_ChildProcess_FMCopyCC(void)
 void Test_FM_ChildProcess_FMMoveCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_MOVE_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_MOVE_FILE_CC;
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildProcess());
@@ -196,7 +196,7 @@ void Test_FM_ChildProcess_FMMoveCC(void)
 void Test_FM_ChildProcess_FMRenameCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_RENAME_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_RENAME_FILE_CC;
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildProcess());
@@ -213,7 +213,7 @@ void Test_FM_ChildProcess_FMRenameCC(void)
 void Test_FM_ChildProcess_FMDeleteCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_FILE_CC;
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildProcess());
@@ -230,7 +230,7 @@ void Test_FM_ChildProcess_FMDeleteCC(void)
 void Test_FM_ChildProcess_FMDeleteAllCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_ALL_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_ALL_FILES_CC;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
@@ -250,7 +250,7 @@ void Test_FM_ChildProcess_FMDeleteAllCC(void)
 void Test_FM_ChildProcess_FMDecompressCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_DECOMPRESS_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_DECOMPRESS_FILE_CC;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_Decompress_Impl), !CFE_SUCCESS);
 
@@ -269,7 +269,7 @@ void Test_FM_ChildProcess_FMDecompressCC(void)
 void Test_FM_ChildProcess_FMConcatCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_CONCAT_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_CONCAT_FILES_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_cp), !OS_SUCCESS);
@@ -289,7 +289,7 @@ void Test_FM_ChildProcess_FMConcatCC(void)
 void Test_FM_ChildProcess_FMCreateDirCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_CREATE_DIR_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_CREATE_DIRECTORY_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_mkdir), !OS_SUCCESS);
@@ -309,7 +309,7 @@ void Test_FM_ChildProcess_FMCreateDirCC(void)
 void Test_FM_ChildProcess_FMDeleteDirCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_DIR_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_DELETE_DIRECTORY_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
@@ -354,7 +354,7 @@ void Test_FM_ChildProcess_FMGetFileInfoCC(void)
 void Test_FM_ChildProcess_FMGetDirListsFileCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_GET_DIR_FILE_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_GET_DIR_LIST_FILE_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
@@ -374,7 +374,7 @@ void Test_FM_ChildProcess_FMGetDirListsFileCC(void)
 void Test_FM_ChildProcess_FMGetDirListsPktCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_GET_DIR_PKT_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_GET_DIR_LIST_PKT_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
@@ -397,7 +397,7 @@ void Test_FM_ChildProcess_FMGetDirListsPktCC(void)
 void Test_FM_ChildProcess_FMSetFilePermCC(void)
 {
     /* Arrange */
-    FM_GlobalData.ChildQueue[0].CommandCode = FM_SET_FILE_PERM_CC;
+    FM_GlobalData.ChildQueue[0].CommandCode = FM_SET_PERMISSIONS_CC;
     FM_GlobalData.ChildCurrentCC            = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(OS_chmod), !OS_SUCCESS);
@@ -435,7 +435,7 @@ void Test_FM_ChildProcess_DefaultSwitch(void)
  * ***************/
 void Test_FM_ChildCopyCmd_OScpIsSuccess(void)
 {
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_COPY_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_COPY_FILE_CC};
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildCopyCmd(&queue_entry));
@@ -450,7 +450,7 @@ void Test_FM_ChildCopyCmd_OScpIsSuccess(void)
 
 void Test_FM_ChildCopyCmd_OScpNotSuccess(void)
 {
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_COPY_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_COPY_FILE_CC};
 
     /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(OS_cp), !OS_SUCCESS);
@@ -471,7 +471,7 @@ void Test_FM_ChildCopyCmd_OScpNotSuccess(void)
  * ***************/
 void Test_FM_ChildMoveCmd_OSmvNotSuccess(void)
 {
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_MOVE_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_MOVE_FILE_CC};
 
     /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(OS_mv), !OS_SUCCESS);
@@ -490,7 +490,7 @@ void Test_FM_ChildMoveCmd_OSmvNotSuccess(void)
 
 void Test_FM_ChildMoveCmd_OSmvSuccess(void)
 {
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_MOVE_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_MOVE_FILE_CC};
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildMoveCmd(&queue_entry));
@@ -510,7 +510,7 @@ void Test_FM_ChildMoveCmd_OSmvSuccess(void)
 void Test_FM_ChildRenameCmd_OSRenameSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_RENAME_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_RENAME_FILE_CC};
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildRenameCmd(&queue_entry));
@@ -527,7 +527,7 @@ void Test_FM_ChildRenameCmd_OSRenameSuccess(void)
 void Test_FM_ChildRenameCmd_OSRenameNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_RENAME_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_RENAME_FILE_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_rename), !OS_SUCCESS);
 
@@ -549,7 +549,7 @@ void Test_FM_ChildRenameCmd_OSRenameNotSuccess(void)
 void Test_FM_ChildDeleteCmd_OSRemoveSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_FILE_CC};
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteCmd(&queue_entry));
@@ -566,7 +566,7 @@ void Test_FM_ChildDeleteCmd_OSRemoveSuccess(void)
 void Test_FM_ChildDeleteCmd_OSRemoveNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_FILE_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_remove), !OS_SUCCESS);
 
@@ -583,18 +583,18 @@ void Test_FM_ChildDeleteCmd_OSRemoveNotSuccess(void)
 }
 
 /* ****************
- * ChildDeleteAllCmd Tests
+ * ChildDeleteAllFilesCmd Tests
  * ***************/
-void Test_FM_ChildDeleteAllCmd_DirOpenNotSuccess(void)
+void Test_FM_ChildDeleteAllFilesCmd_DirOpenNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -606,16 +606,16 @@ void Test_FM_ChildDeleteAllCmd_DirOpenNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_OS_ERR_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_DirReadNotSuccess(void)
+void Test_FM_ChildDeleteAllFilesCmd_DirReadNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -627,18 +627,18 @@ void Test_FM_ChildDeleteAllCmd_DirReadNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_DirEntryThisDirectory(void)
+void Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = FM_THIS_DIRECTORY};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -652,18 +652,18 @@ void Test_FM_ChildDeleteAllCmd_DirEntryThisDirectory(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_DirEntryParentDirectory(void)
+void Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = FM_PARENT_DIRECTORY};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -677,10 +677,10 @@ void Test_FM_ChildDeleteAllCmd_DirEntryParentDirectory(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_PathFilenameLengthGreaterMaxPthLen(void)
+void Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_CC,
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_FILES_CC,
                                         .Source1     = "dummy_source1",
                                         .Source2     = "dummy_source2HasAReallyLongNameSomeSayTheNameIs42Characters"};
     os_dirent_t          direntry    = {.FileName = "ThisDirectory"};
@@ -689,7 +689,7 @@ void Test_FM_ChildDeleteAllCmd_PathFilenameLengthGreaterMaxPthLen(void)
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -705,11 +705,11 @@ void Test_FM_ChildDeleteAllCmd_PathFilenameLengthGreaterMaxPthLen(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_InvalidFilenameState(void)
+void Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -717,7 +717,7 @@ void Test_FM_ChildDeleteAllCmd_InvalidFilenameState(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_INVALID);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -733,11 +733,11 @@ void Test_FM_ChildDeleteAllCmd_InvalidFilenameState(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_NotInUseFilenameState(void)
+void Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -745,7 +745,7 @@ void Test_FM_ChildDeleteAllCmd_NotInUseFilenameState(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_NOT_IN_USE);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -761,11 +761,11 @@ void Test_FM_ChildDeleteAllCmd_NotInUseFilenameState(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_DirectoryFilenameState(void)
+void Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -773,7 +773,7 @@ void Test_FM_ChildDeleteAllCmd_DirectoryFilenameState(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_DIRECTORY);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -789,11 +789,11 @@ void Test_FM_ChildDeleteAllCmd_DirectoryFilenameState(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_SKIP_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_OpenFilenameState(void)
+void Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -801,7 +801,7 @@ void Test_FM_ChildDeleteAllCmd_OpenFilenameState(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_FILE_OPEN);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -817,11 +817,11 @@ void Test_FM_ChildDeleteAllCmd_OpenFilenameState(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSRmNotSuccess(void)
+void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -830,7 +830,7 @@ void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSRmNotSuccess(void)
     UT_SetDefaultReturnValue(UT_KEY(OS_remove), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -847,11 +847,11 @@ void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSRmNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSrmSuccess(void)
+void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -859,7 +859,7 @@ void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSrmSuccess(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_FILE_CLOSED);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -875,11 +875,11 @@ void Test_FM_ChildDeleteAllCmd_ClosedFilename_OSrmSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
 }
 
-void Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn(void)
+void Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -887,7 +887,7 @@ void Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), -1); /* default case */
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteAllCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 1, queue_entry.CommandCode);
@@ -904,18 +904,18 @@ void Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn(void)
 }
 
 /* ****************
- * ChildDecompressCmd Tests
+ * ChildDecompressFileCmd Tests
  * ***************/
 
-void Test_FM_ChildDecompressCmd_FSDecompressSuccess(void)
+void Test_FM_ChildDecompressFileCmd_FSDecompressSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DECOMPRESS_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DECOMPRESS_FILE_CC};
 
     FM_GlobalData.ChildCurrentCC = 1;
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDecompressCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDecompressFileCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -926,16 +926,16 @@ void Test_FM_ChildDecompressCmd_FSDecompressSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CMD_EID);
 }
 
-void Test_FM_ChildDecompressCmd_FSDecompressNotSuccess(void)
+void Test_FM_ChildDecompressFileCmd_FSDecompressNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DECOMPRESS_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DECOMPRESS_FILE_CC};
 
     FM_GlobalData.ChildCurrentCC = 1;
     UT_SetDefaultReturnValue(UT_KEY(FM_Decompress_Impl), !CFE_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDecompressCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDecompressFileCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -947,19 +947,19 @@ void Test_FM_ChildDecompressCmd_FSDecompressNotSuccess(void)
 }
 
 /* ****************
- * ChildConcatCmd Tests
+ * ChildConcatFilesCmd Tests
  * ***************/
-void Test_FM_ChildConcatCmd_OSCpNotSuccess(void)
+void Test_FM_ChildConcatFilesCmd_OSCpNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     FM_GlobalData.ChildCurrentCC = 1;
     UT_SetDefaultReturnValue(UT_KEY(OS_cp), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -970,16 +970,16 @@ void Test_FM_ChildConcatCmd_OSCpNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_OSCPY_ERR_EID);
 }
 
-void Test_FM_ChildConcatCmd_OSOpenCreateSourceNotSuccess(void)
+void Test_FM_ChildConcatFilesCmd_OSOpenCreateSourceNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -992,16 +992,16 @@ void Test_FM_ChildConcatCmd_OSOpenCreateSourceNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_OPEN_SRC2_ERR_EID);
 }
 
-void Test_FM_ChildConcatCmd_OSOpenCreateTargetNotSuccess(void)
+void Test_FM_ChildConcatFilesCmd_OSOpenCreateTargetNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_OpenCreate), 2, !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1015,16 +1015,16 @@ void Test_FM_ChildConcatCmd_OSOpenCreateTargetNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_OPEN_TGT_ERR_EID);
 }
 
-void Test_FM_ChildConcatCmd_OSReadBytesZero(void)
+void Test_FM_ChildConcatFilesCmd_OSReadBytesZero(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 0);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -1039,16 +1039,16 @@ void Test_FM_ChildConcatCmd_OSReadBytesZero(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_CMD_EID);
 }
 
-void Test_FM_ChildConcatCmd_OSReadBytesLessThanZero(void)
+void Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), -1);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1063,17 +1063,17 @@ void Test_FM_ChildConcatCmd_OSReadBytesLessThanZero(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_OSRD_ERR_EID);
 }
 
-void Test_FM_ChildConcatCmd_BytesWrittenNotEqualBytesRead(void)
+void Test_FM_ChildConcatFilesCmd_BytesWrittenNotEqualBytesRead(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);
     UT_SetDefaultReturnValue(UT_KEY(OS_write), 0);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1088,18 +1088,18 @@ void Test_FM_ChildConcatCmd_BytesWrittenNotEqualBytesRead(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_OSWR_ERR_EID);
 }
 
-void Test_FM_ChildConcatCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount(void)
+void Test_FM_ChildConcatFilesCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);
     UT_SetDefaultReturnValue(UT_KEY(OS_write), 1);
     UT_SetDeferredRetcode(UT_KEY(OS_read), FM_CHILD_FILE_LOOP_COUNT + 1, -1);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildConcatCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildConcatFilesCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1341,15 +1341,15 @@ void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
 }
 
 /* ****************
- * ChildCreateDirCmd Tests
+ * ChildCreateDirectoryCmd Tests
  * ***************/
-void Test_FM_ChildCreateDirCmd_OSMkDirSuccess(void)
+void Test_FM_ChildCreateDirectoryCmd_OSMkDirSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CREATE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CREATE_DIRECTORY_CC};
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildCreateDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildCreateDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -1360,15 +1360,15 @@ void Test_FM_ChildCreateDirCmd_OSMkDirSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CREATE_DIR_CMD_EID);
 }
 
-void Test_FM_ChildCreateDirCmd_OSMkDirNotSuccess(void)
+void Test_FM_ChildCreateDirectoryCmd_OSMkDirNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CREATE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CREATE_DIRECTORY_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_mkdir), !CFE_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildCreateDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildCreateDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1380,17 +1380,17 @@ void Test_FM_ChildCreateDirCmd_OSMkDirNotSuccess(void)
 }
 
 /* ****************
- * ChildDeleteDirCmd Tests
+ * ChildDeleteDirectoryCmd Tests
  * ***************/
-void Test_FM_ChildDeleteDirCmd_OSDirectoryOpenNoSuccess(void)
+void Test_FM_ChildDeleteDirectoryCmd_OSDirectoryOpenNoSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1401,15 +1401,15 @@ void Test_FM_ChildDeleteDirCmd_OSDirectoryOpenNoSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_OPENDIR_OS_ERR_EID);
 }
 
-void Test_FM_ChildDeleteDirCmd_OSDirectoryReadNoSuccess(void)
+void Test_FM_ChildDeleteDirectoryCmd_OSDirectoryReadNoSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -1422,17 +1422,17 @@ void Test_FM_ChildDeleteDirCmd_OSDirectoryReadNoSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
 }
 
-void Test_FM_ChildDeleteDirCmd_StrCmpThisDirectoryZero(void)
+void Test_FM_ChildDeleteDirectoryCmd_StrCmpThisDirectoryZero(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
     os_dirent_t          direntry    = {.FileName = FM_THIS_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -1444,16 +1444,16 @@ void Test_FM_ChildDeleteDirCmd_StrCmpThisDirectoryZero(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
 }
 
-void Test_FM_ChildDeleteDirCmd_StrCmpParentDirectoryZero(void)
+void Test_FM_ChildDeleteDirectoryCmd_StrCmpParentDirectoryZero(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
     os_dirent_t          direntry    = {.FileName = FM_PARENT_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1465,15 +1465,15 @@ void Test_FM_ChildDeleteDirCmd_StrCmpParentDirectoryZero(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_EMPTY_ERR_EID);
 }
 
-void Test_FM_ChildDeleteDirCmd_RemoveTheDirIsTrueRmDirSuccess(void)
+void Test_FM_ChildDeleteDirectoryCmd_RemoveTheDirIsTrueRmDirSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
@@ -1485,16 +1485,16 @@ void Test_FM_ChildDeleteDirCmd_RemoveTheDirIsTrueRmDirSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
 }
 
-void Test_FM_ChildDeleteDirCmd_RemoveDirTrueOSRmDirNotSuccess(void)
+void Test_FM_ChildDeleteDirectoryCmd_RemoveDirTrueOSRmDirNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIR_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_DIRECTORY_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
     UT_SetDefaultReturnValue(UT_KEY(OS_rmdir), !OS_SUCCESS);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ChildDeleteDirCmd(&queue_entry));
+    UtAssert_VOIDCALL(FM_ChildDeleteDirectoryCmd(&queue_entry));
 
     /* Assert */
     UT_FM_Child_Cmd_Assert(0, 1, 0, queue_entry.CommandCode);
@@ -1512,7 +1512,7 @@ void Test_FM_ChildDeleteDirCmd_RemoveDirTrueOSRmDirNotSuccess(void)
 void Test_FM_ChildDirListFileCmd_OSDirOpenNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_GET_DIR_FILE_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_GET_DIR_LIST_FILE_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
@@ -1533,7 +1533,7 @@ void Test_FM_ChildDirListFileCmd_ChildDirListFileInitFalse(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
+        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -1555,7 +1555,7 @@ void Test_FM_ChildDirListFileCmd_ChildDirListFileInitTrue(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
+        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
@@ -1580,7 +1580,7 @@ void Test_FM_ChildDirListPktCmd_OSDirOpenNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
@@ -1602,7 +1602,7 @@ void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
@@ -1628,7 +1628,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = FM_THIS_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
@@ -1656,7 +1656,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry = {.FileName = FM_PARENT_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
@@ -1684,7 +1684,7 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2", .DirListOffset = 1};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2", .DirListOffset = 1};
     os_dirent_t direntry = {.FileName = "filename"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -1714,7 +1714,7 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
     os_dirent_t direntry[FM_DIR_LIST_PKT_ENTRIES + 1];
 
     /* Unit under test doesn't really care if the entry name is empty */
@@ -1747,7 +1747,7 @@ void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
     FM_DirListPkt_Payload_t *ReportPtr;
 
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_CC,
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_FILES_CC,
                                         .Source1     = "dummy_source1",
                                         .Source2 = "dummy_source2_has_a_long_name_to_make_path_length_longer_than_64"};
     os_dirent_t          direntry    = {.FileName = "direntry_long"};
@@ -1779,7 +1779,7 @@ void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
 void Test_FM_ChildSetPermissionsCmd_OSChmodSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_SET_FILE_PERM_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_SET_PERMISSIONS_CC};
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildSetPermissionsCmd(&queue_entry));
@@ -1796,7 +1796,7 @@ void Test_FM_ChildSetPermissionsCmd_OSChmodSuccess(void)
 void Test_FM_ChildSetPermissionsCmd_OSChmodNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_SET_FILE_PERM_CC};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_SET_PERMISSIONS_CC};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_chmod), !OS_SUCCESS);
 
@@ -2346,76 +2346,76 @@ void add_FM_ChildDeleteCmd_tests(void)
                "Test_FM_ChildDeleteCmd_OSRemoveNotSuccess");
 }
 
-void add_FM_ChildDeleteAllCmd_tests(void)
+void add_FM_ChildDeleteAllFilesCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_DirOpenNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_DirOpenNotSuccess");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_DirOpenNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_DirOpenNotSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_DirReadNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_DirReadNotSuccess");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_DirReadNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_DirReadNotSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_DirEntryThisDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_DirEntryThisDirectory");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_DirEntryParentDirectory, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_DirEntryParentDirectory");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_PathFilenameLengthGreaterMaxPthLen, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_PathFilenameLengthGreaterMaxPthLen");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_InvalidFilenameState, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_InvalidFilenameState");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_NotInUseFilenameState, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_NotInUseFilenameState");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_DirectoryFilenameState, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_DirectoryFilenameState");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_OpenFilenameState, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_OpenFilenameState");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_ClosedFilename_OSRmNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_ClosedFilename_OSRmNotSuccess");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_ClosedFilename_OSrmSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_ClosedFilename_OSrmSuccess");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteAllCmd_FilenameStateDefaultReturn");
+    UtTest_Add(Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn");
 }
 
-void add_FM_ChildDecompressCmd_tests(void)
+void add_FM_ChildDecompressFileCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildDecompressCmd_FSDecompressNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDecompressCmd_FSDecompressNotSuccess");
+    UtTest_Add(Test_FM_ChildDecompressFileCmd_FSDecompressNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDecompressFileCmd_FSDecompressNotSuccess");
 
-    UtTest_Add(Test_FM_ChildDecompressCmd_FSDecompressSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDecompressCmd_FSDecompressSuccess");
+    UtTest_Add(Test_FM_ChildDecompressFileCmd_FSDecompressSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDecompressFileCmd_FSDecompressSuccess");
 }
 
-void add_FM_ChildConcatCmd_tests(void)
+void add_FM_ChildConcatFilesCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildConcatCmd_OSCpNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_OSCpNotSuccess");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_OSCpNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_OSCpNotSuccess");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_OSOpenCreateSourceNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_OSOpenCreateSourceNotSuccess");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_OSOpenCreateSourceNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_OSOpenCreateSourceNotSuccess");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_OSOpenCreateTargetNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_OSOpenCreateTargetNotSuccess");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_OSOpenCreateTargetNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_OSOpenCreateTargetNotSuccess");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_OSReadBytesZero, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_OSReadBytesZero");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_OSReadBytesZero, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_OSReadBytesZero");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_OSReadBytesLessThanZero, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_OSReadBytesLessThanZero");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_BytesWrittenNotEqualBytesRead, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildConcatCmd_BytesWrittenNotEqualBytesRead");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_BytesWrittenNotEqualBytesRead, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildConcatFilesCmd_BytesWrittenNotEqualBytesRead");
 
-    UtTest_Add(Test_FM_ChildConcatCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount, FM_Test_Setup,
-               FM_Test_Teardown, "Test_FM_ChildConcatCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount");
+    UtTest_Add(Test_FM_ChildConcatFilesCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount, FM_Test_Setup,
+               FM_Test_Teardown, "Test_FM_ChildConcatFilesCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount");
 }
 
 void add_FM_ChildFileInfoCmd_tests(void)
@@ -2448,34 +2448,34 @@ void add_FM_ChildFileInfoCmd_tests(void)
                "Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero");
 }
 
-void add_FM_ChildCreateDirCmd_tests(void)
+void add_FM_ChildCreateDirectoryCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildCreateDirCmd_OSMkDirNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildCreateDirCmd_OSMkDirNotSuccess");
+    UtTest_Add(Test_FM_ChildCreateDirectoryCmd_OSMkDirNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildCreateDirectoryCmd_OSMkDirNotSuccess");
 
-    UtTest_Add(Test_FM_ChildCreateDirCmd_OSMkDirSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildCreateDirCmd_OSMkDirSuccess");
+    UtTest_Add(Test_FM_ChildCreateDirectoryCmd_OSMkDirSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildCreateDirectoryCmd_OSMkDirSuccess");
 }
 
-void add_FM_ChildDeleteDirCmd_tests(void)
+void add_FM_ChildDeleteDirectoryCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_OSDirectoryOpenNoSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_OSDirectoryOpenNoSuccess");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_OSDirectoryOpenNoSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_OSDirectoryOpenNoSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_OSDirectoryReadNoSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_OSDirectoryReadNoSuccess");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_OSDirectoryReadNoSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_OSDirectoryReadNoSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_StrCmpThisDirectoryZero, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_StrCmpThisDirectoryZero");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_StrCmpThisDirectoryZero, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_StrCmpThisDirectoryZero");
 
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_StrCmpParentDirectoryZero, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_StrCmpParentDirectoryZero");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_StrCmpParentDirectoryZero, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_StrCmpParentDirectoryZero");
 
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_RemoveTheDirIsTrueRmDirSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_RemoveTheDirIsTrueRmDirSuccess");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_RemoveTheDirIsTrueRmDirSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_RemoveTheDirIsTrueRmDirSuccess");
 
-    UtTest_Add(Test_FM_ChildDeleteDirCmd_RemoveDirTrueOSRmDirNotSuccess, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ChildDeleteDirCmd_RemoveDirTrueOSRmDirNotSuccess");
+    UtTest_Add(Test_FM_ChildDeleteDirectoryCmd_RemoveDirTrueOSRmDirNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_ChildDeleteDirectoryCmd_RemoveDirTrueOSRmDirNotSuccess");
 }
 
 void add_FM_ChildDirListFileCmd_tests(void)
@@ -2616,12 +2616,12 @@ void UtTest_Setup(void)
     add_FM_ChildMoveCmd_tests();
     add_FM_ChildRenameCmd_tests();
     add_FM_ChildDeleteCmd_tests();
-    add_FM_ChildDeleteAllCmd_tests();
-    add_FM_ChildDecompressCmd_tests();
-    add_FM_ChildConcatCmd_tests();
+    add_FM_ChildDeleteAllFilesCmd_tests();
+    add_FM_ChildDecompressFileCmd_tests();
+    add_FM_ChildConcatFilesCmd_tests();
     add_FM_ChildFileInfoCmd_tests();
-    add_FM_ChildCreateDirCmd_tests();
-    add_FM_ChildDeleteDirCmd_tests();
+    add_FM_ChildCreateDirectoryCmd_tests();
+    add_FM_ChildDeleteDirectoryCmd_tests();
     add_FM_ChildDirListFileCmd_tests();
     add_FM_ChildDirListPktCmd_tests();
     add_FM_ChildSetPermissionsCmd_tests();

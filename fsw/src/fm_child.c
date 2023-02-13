@@ -198,55 +198,55 @@ void FM_ChildProcess(void)
     /* Invoke the command specific handler */
     switch (CmdArgs->CommandCode)
     {
-        case FM_COPY_CC:
+        case FM_COPY_FILE_CC:
             FM_ChildCopyCmd(CmdArgs);
             break;
 
-        case FM_MOVE_CC:
+        case FM_MOVE_FILE_CC:
             FM_ChildMoveCmd(CmdArgs);
             break;
 
-        case FM_RENAME_CC:
+        case FM_RENAME_FILE_CC:
             FM_ChildRenameCmd(CmdArgs);
             break;
 
-        case FM_DELETE_CC:
+        case FM_DELETE_FILE_CC:
             FM_ChildDeleteCmd(CmdArgs);
             break;
 
-        case FM_DELETE_ALL_CC:
-            FM_ChildDeleteAllCmd(CmdArgs);
+        case FM_DELETE_ALL_FILES_CC:
+            FM_ChildDeleteAllFilesCmd(CmdArgs);
             break;
 
-        case FM_DECOMPRESS_CC:
-            FM_ChildDecompressCmd(CmdArgs);
+        case FM_DECOMPRESS_FILE_CC:
+            FM_ChildDecompressFileCmd(CmdArgs);
             break;
 
-        case FM_CONCAT_CC:
-            FM_ChildConcatCmd(CmdArgs);
+        case FM_CONCAT_FILES_CC:
+            FM_ChildConcatFilesCmd(CmdArgs);
             break;
 
-        case FM_CREATE_DIR_CC:
-            FM_ChildCreateDirCmd(CmdArgs);
+        case FM_CREATE_DIRECTORY_CC:
+            FM_ChildCreateDirectoryCmd(CmdArgs);
             break;
 
-        case FM_DELETE_DIR_CC:
-            FM_ChildDeleteDirCmd(CmdArgs);
+        case FM_DELETE_DIRECTORY_CC:
+            FM_ChildDeleteDirectoryCmd(CmdArgs);
             break;
 
         case FM_GET_FILE_INFO_CC:
             FM_ChildFileInfoCmd(CmdArgs);
             break;
 
-        case FM_GET_DIR_FILE_CC:
+        case FM_GET_DIR_LIST_FILE_CC:
             FM_ChildDirListFileCmd(CmdArgs);
             break;
 
-        case FM_GET_DIR_PKT_CC:
+        case FM_GET_DIR_LIST_PKT_CC:
             FM_ChildDirListPktCmd(CmdArgs);
             break;
 
-        case FM_SET_FILE_PERM_CC:
+        case FM_SET_PERMISSIONS_CC:
             FM_ChildSetPermissionsCmd(CmdArgs);
             break;
 
@@ -434,7 +434,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText = "Delete All Files";
     osal_id_t   DirId   = OS_OBJECT_ID_UNDEFINED;
@@ -450,7 +450,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
     /*
     ** Command argument useage for this command:
     **
-    **  CmdArgs->CommandCode = FM_DELETE_ALL_CC
+    **  CmdArgs->CommandCode = FM_DELETE_ALL_FILES_CC
     **  CmdArgs->Source1     = directory name
     **  CmdArgs->Source2     = directory name plus separator
     */
@@ -585,7 +585,7 @@ void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText    = "Decompress File";
     int32       CFE_Status = CFE_SUCCESS;
@@ -625,7 +625,7 @@ void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText        = "Concat Files";
     bool        ConcatResult   = false;
@@ -817,7 +817,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     /*
     ** Command argument useage for this command:
     **
-    **  CmdArgs->CommandCode   = FM_GET_DIR_FILE_CC
+    **  CmdArgs->CommandCode   = FM_GET_DIR_LIST_FILE_CC
     **  CmdArgs->Source1       = name of directory or file
     **  CmdArgs->FileInfoState = state of directory or file
     **  CmdArgs->FileInfoSize  = file size, else zero
@@ -825,7 +825,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     */
 
     /* Initialize file info packet (set all data to zero) */
-    CFE_MSG_Init(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FILE_INFO_TLM_MID),
+    CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.FileInfoPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_FILE_INFO_TLM_MID),
                  sizeof(FM_FileInfoPkt_t));
 
     ReportPtr = &FM_GlobalData.FileInfoPkt.Payload;
@@ -941,8 +941,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     }
 
     /* Timestamp and send file info telemetry packet */
-    CFE_SB_TimeStampMsg(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg);
-    CFE_SB_TransmitMsg(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg, true);
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.FileInfoPkt.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.FileInfoPkt.TelemetryHeader), true);
 
     FM_GlobalData.ChildCmdCounter++;
 
@@ -961,7 +961,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText   = "Create Directory";
     int32       OS_Status = OS_SUCCESS;
@@ -1000,7 +1000,7 @@ void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
     const char *CmdText      = "Delete Directory";
     bool        RemoveTheDir = true;
@@ -1092,7 +1092,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /*
     ** Command argument useage for this command:
     **
-    **  CmdArgs->CommandCode = FM_GET_DIR_FILE_CC
+    **  CmdArgs->CommandCode = FM_GET_DIR_LIST_FILE_CC
     **  CmdArgs->Source1     = directory name
     **  CmdArgs->Source2     = directory name plus separator
     **  CmdArgs->Target      = output filename
@@ -1162,7 +1162,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     /*
     ** Command argument useage for this command:
     **
-    **  CmdArgs->CommandCode   = FM_GET_DIR_PKT_CC
+    **  CmdArgs->CommandCode   = FM_GET_DIR_LIST_PKT_CC
     **  CmdArgs->Source1       = directory name
     **  CmdArgs->Source2       = directory name plus separator
     **  CmdArgs->DirListOffset = index of 1st reported dir entry
@@ -1183,7 +1183,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     else
     {
         /* Initialize the directory list telemetry packet */
-        CFE_MSG_Init(&FM_GlobalData.DirListPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_DIR_LIST_TLM_MID),
+        CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.DirListPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_DIR_LIST_TLM_MID),
                      sizeof(FM_DirListPkt_t));
 
         ReportPtr = &FM_GlobalData.DirListPkt.Payload;
@@ -1253,8 +1253,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
         OS_DirectoryClose(DirId);
 
         /* Timestamp and send directory listing telemetry packet */
-        CFE_SB_TimeStampMsg(&FM_GlobalData.DirListPkt.TlmHeader.Msg);
-        CFE_SB_TransmitMsg(&FM_GlobalData.DirListPkt.TlmHeader.Msg, true);
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.DirListPkt.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.DirListPkt.TelemetryHeader), true);
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_GET_DIR_PKT_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: offset = %d, dir = %s", CmdText,

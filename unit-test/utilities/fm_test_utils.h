@@ -41,25 +41,25 @@ extern CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[];
 typedef union
 {
     CFE_SB_Buffer_t                Buf;
-    FM_HousekeepingCmd_t           HousekeepingCmd;
+    FM_SendHkCmd_t                 SendHkCmd;
     FM_NoopCmd_t                   NoopCmd;
-    FM_ResetCmd_t                  ResetCmd;
+    FM_ResetCountersCmd_t          ResetCountersCmd;
     FM_CopyFileCmd_t               CopyFileCmd;
     FM_MoveFileCmd_t               MoveFileCmd;
     FM_RenameFileCmd_t             RenameFileCmd;
     FM_DeleteFileCmd_t             DeleteFileCmd;
-    FM_DeleteAllCmd_t              DeleteAllCmd;
-    FM_DecompressCmd_t             DecompressCmd;
-    FM_ConcatCmd_t                 ConcatCmd;
+    FM_DeleteAllFilesCmd_t         DeleteAllFilesCmd;
+    FM_DecompressFileCmd_t         DecompressFileCmd;
+    FM_ConcatFilesCmd_t            ConcatFilesCmd;
     FM_GetFileInfoCmd_t            GetFileInfoCmd;
     FM_GetOpenFilesCmd_t           GetOpenFilesCmd;
-    FM_CreateDirCmd_t              CreateDirCmd;
-    FM_DeleteDirCmd_t              DeleteDirCmd;
-    FM_GetDirFileCmd_t             GetDirFileCmd;
-    FM_GetDirPktCmd_t              GetDirPktCmd;
+    FM_CreateDirectoryCmd_t        CreateDirectoryCmd;
+    FM_DeleteDirectoryCmd_t        DeleteDirectoryCmd;
+    FM_GetDirListFileCmd_t         GetDirListFileCmd;
+    FM_GetDirListPktCmd_t          GetDirListPktCmd;
     FM_MonitorFilesystemSpaceCmd_t GetFreeSpaceCmd;
     FM_SetTableStateCmd_t          SetTableStateCmd;
-    FM_SetPermCmd_t                SetPermCmd;
+    FM_SetPermissionsCmd_t         SetPermissionsCmd;
 } UT_CmdBuf_t;
 
 extern UT_CmdBuf_t UT_CmdBuf;

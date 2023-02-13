@@ -83,7 +83,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     bool        CommandResult = false;
 
     /* Verify message length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ResetCmd_t), FM_RESET_PKT_ERR_EID, CmdText);
+    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ResetCountersCmd_t), FM_RESET_PKT_ERR_EID, CmdText);
 
     /* Reset command counters */
     if (CommandResult == true)
@@ -156,7 +156,7 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_COPY_CC;
+        CmdArgs->CommandCode = FM_COPY_FILE_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
 
@@ -224,7 +224,7 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_MOVE_CC;
+        CmdArgs->CommandCode = FM_MOVE_FILE_CC;
 
         strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
@@ -280,7 +280,7 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_RENAME_CC;
+        CmdArgs->CommandCode = FM_RENAME_FILE_CC;
 
         strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
@@ -355,10 +355,11 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
 
-    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteAllCmd_t);
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteAllFilesCmd_t);
 
     /* Verify message length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteAllCmd_t), FM_DELETE_ALL_PKT_ERR_EID, CmdText);
+    CommandResult =
+        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteAllFilesCmd_t), FM_DELETE_ALL_PKT_ERR_EID, CmdText);
 
     /* Verify that the directory exists */
     if (CommandResult == true)
@@ -384,7 +385,7 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_DELETE_ALL_CC;
+        CmdArgs->CommandCode = FM_DELETE_ALL_FILES_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
 
@@ -410,10 +411,10 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = false;
 
-    const FM_SourceTargetFileName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DecompressCmd_t);
+    const FM_SourceTargetFileName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DecompressFileCmd_t);
 
     /* Verify command packet length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DecompressCmd_t), FM_DECOM_PKT_ERR_EID, CmdText);
+    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DecompressFileCmd_t), FM_DECOM_PKT_ERR_EID, CmdText);
 
     /* Verify that source file exists, is not a directory and is not open */
     if (CommandResult == true)
@@ -439,7 +440,7 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_DECOMPRESS_CC;
+        CmdArgs->CommandCode = FM_DECOMPRESS_FILE_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
         strncpy(CmdArgs->Target, CmdPtr->Target, OS_MAX_PATH_LEN - 1);
@@ -464,10 +465,10 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = false;
 
-    const FM_TwoSourceOneTarget_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_ConcatCmd_t);
+    const FM_TwoSourceOneTarget_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_ConcatFilesCmd_t);
 
     /* Verify command packet length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ConcatCmd_t), FM_CONCAT_PKT_ERR_EID, CmdText);
+    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ConcatFilesCmd_t), FM_CONCAT_PKT_ERR_EID, CmdText);
 
     /* Verify that source file #1 exists, is not a directory and is not open */
     if (CommandResult == true)
@@ -499,7 +500,7 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_CONCAT_CC;
+        CmdArgs->CommandCode = FM_CONCAT_FILES_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Source1, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
         strncpy(CmdArgs->Source2, CmdPtr->Source2, OS_MAX_PATH_LEN - 1);
@@ -596,8 +597,8 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     if (CommandResult == true)
     {
         /* Initialize open files telemetry packet */
-        CFE_MSG_Init(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_OPEN_FILES_TLM_MID),
-                     sizeof(FM_OpenFilesPkt_t));
+        CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.OpenFilesPkt.TelemetryHeader),
+                     CFE_SB_ValueToMsgId(FM_OPEN_FILES_TLM_MID), sizeof(FM_OpenFilesPkt_t));
 
         /* Get list of open files and count */
         NumOpenFiles = FM_GetOpenFilesData(ReportPtr->OpenFilesList);
@@ -605,8 +606,8 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
         ReportPtr->NumOpenFiles = NumOpenFiles;
 
         /* Timestamp and send open files telemetry packet */
-        CFE_SB_TimeStampMsg(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg);
-        CFE_SB_TransmitMsg(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg, true);
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.OpenFilesPkt.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.OpenFilesPkt.TelemetryHeader), true);
 
         /* Send command completion event (debug) */
         CFE_EVS_SendEvent(FM_GET_OPEN_FILES_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
@@ -627,10 +628,11 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
     const char *          CmdText       = "Create Directory";
     bool                  CommandResult = false;
 
-    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_CreateDirCmd_t);
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_CreateDirectoryCmd_t);
 
     /* Verify command packet length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CreateDirCmd_t), FM_CREATE_DIR_PKT_ERR_EID, CmdText);
+    CommandResult =
+        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CreateDirectoryCmd_t), FM_CREATE_DIR_PKT_ERR_EID, CmdText);
 
     /* Verify that the directory name is not already in use */
     if (CommandResult == true)
@@ -651,7 +653,7 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_CREATE_DIR_CC;
+        CmdArgs->CommandCode = FM_CREATE_DIRECTORY_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
 
@@ -674,10 +676,11 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
     const char *          CmdText       = "Delete Directory";
     bool                  CommandResult = false;
 
-    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteDirCmd_t);
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteDirectoryCmd_t);
 
     /* Verify command packet length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteDirCmd_t), FM_DELETE_DIR_PKT_ERR_EID, CmdText);
+    CommandResult =
+        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteDirectoryCmd_t), FM_DELETE_DIR_PKT_ERR_EID, CmdText);
 
     /* Verify that the directory exists */
     if (CommandResult == true)
@@ -698,7 +701,7 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_DELETE_DIR_CC;
+        CmdArgs->CommandCode = FM_DELETE_DIRECTORY_CC;
         strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
 
@@ -723,11 +726,11 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
 
-    const FM_GetDirectoryToFile_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirFileCmd_t);
+    const FM_GetDirectoryToFile_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirListFileCmd_t);
 
     /* Verify command packet length */
     CommandResult =
-        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirFileCmd_t), FM_GET_DIR_FILE_PKT_ERR_EID, CmdText);
+        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirListFileCmd_t), FM_GET_DIR_FILE_PKT_ERR_EID, CmdText);
 
     /* Verify that source directory exists */
     if (CommandResult == true)
@@ -771,7 +774,7 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_AppendPathSep(DirWithSep, OS_MAX_PATH_LEN);
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode     = FM_GET_DIR_FILE_CC;
+        CmdArgs->CommandCode     = FM_GET_DIR_LIST_FILE_CC;
         CmdArgs->GetSizeTimeMode = CmdPtr->GetSizeTimeMode;
         strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
@@ -802,11 +805,11 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
 
-    const FM_GetDirectoryToPkt_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirPktCmd_t);
+    const FM_GetDirectoryToPkt_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirListPktCmd_t);
 
     /* Verify command packet length */
     CommandResult =
-        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirPktCmd_t), FM_GET_DIR_PKT_PKT_ERR_EID, CmdText);
+        FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirListPktCmd_t), FM_GET_DIR_PKT_PKT_ERR_EID, CmdText);
 
     /* Verify that source directory exists */
     if (CommandResult == true)
@@ -832,7 +835,7 @@ bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
         FM_AppendPathSep(DirWithSep, OS_MAX_PATH_LEN);
 
         /* Set handshake queue command args */
-        CmdArgs->CommandCode     = FM_GET_DIR_PKT_CC;
+        CmdArgs->CommandCode     = FM_GET_DIR_LIST_PKT_CC;
         CmdArgs->GetSizeTimeMode = CmdPtr->GetSizeTimeMode;
         strncpy(CmdArgs->Source1, CmdPtr->Directory, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
@@ -880,8 +883,8 @@ bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
         else
         {
             /* Initialize the file system free space telemetry packet */
-            CFE_MSG_Init(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FREE_SPACE_TLM_MID),
-                         sizeof(FM_MonitorReportPkt_t));
+            CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.MonitorReportPkt.TelemetryHeader),
+                         CFE_SB_ValueToMsgId(FM_FREE_SPACE_TLM_MID), sizeof(FM_MonitorReportPkt_t));
 
             /* Process enabled file system table entries */
             MonitorPtr = FM_GlobalData.MonitorTablePtr->Entries;
@@ -931,8 +934,8 @@ bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
             }
 
             /* Timestamp and send file system free space telemetry packet */
-            CFE_SB_TimeStampMsg(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg);
-            CFE_SB_TransmitMsg(&FM_GlobalData.MonitorReportPkt.TlmHeader.Msg, true);
+            CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.MonitorReportPkt.TelemetryHeader));
+            CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.MonitorReportPkt.TelemetryHeader), true);
 
             /* Send command completion event (debug) */
             CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
@@ -1026,10 +1029,10 @@ bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
     bool                  CommandResult = false;
     bool                  FilenameState = FM_NAME_IS_INVALID;
 
-    const FM_FilenameAndMode_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_SetPermCmd_t);
+    const FM_FilenameAndMode_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_SetPermissionsCmd_t);
 
     /* Verify command packet length */
-    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetPermCmd_t), FM_SET_PERM_ERR_EID, CmdText);
+    CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetPermissionsCmd_t), FM_SET_PERM_ERR_EID, CmdText);
 
     if (CommandResult == true)
     {
@@ -1052,7 +1055,7 @@ bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
     {
         CmdArgs = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildWriteIndex];
         /* Set handshake queue command args */
-        CmdArgs->CommandCode = FM_SET_FILE_PERM_CC;
+        CmdArgs->CommandCode = FM_SET_PERMISSIONS_CC;
         strncpy(CmdArgs->Source1, CmdPtr->FileName, OS_MAX_PATH_LEN - 1);
         CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
         CmdArgs->Mode                         = CmdPtr->Mode;

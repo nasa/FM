@@ -347,7 +347,7 @@ void Test_FM_AppInit_TableInitSuccess(void)
 /* ********************************
  * Report HK Tests
  * *******************************/
-void Test_FM_ReportHK_ReturnPktLengthTrue(void)
+void Test_FM_SendHkCmd_ReturnPktLengthTrue(void)
 {
     FM_HousekeepingPkt_Payload_t *ReportPtr;
 
@@ -366,7 +366,7 @@ void Test_FM_ReportHK_ReturnPktLengthTrue(void)
     FM_GlobalData.ChildPreviousCC     = 8;
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ReportHK(NULL));
+    UtAssert_VOIDCALL(FM_SendHkCmd(NULL));
 
     /* Assert */
     UtAssert_STUB_COUNT(FM_IsValidCmdPktLength, 1);
@@ -389,13 +389,13 @@ void Test_FM_ReportHK_ReturnPktLengthTrue(void)
     UtAssert_INT32_EQ(ReportPtr->ChildPreviousCC, FM_GlobalData.ChildPreviousCC);
 }
 
-void Test_FM_ReportHK_ReturnPktLengthFalse(void)
+void Test_FM_SendHkCmd_ReturnPktLengthFalse(void)
 {
     /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
     /* Act */
-    UtAssert_VOIDCALL(FM_ReportHK(NULL));
+    UtAssert_VOIDCALL(FM_SendHkCmd(NULL));
 
     /* Assert */
     UtAssert_STUB_COUNT(FM_ReleaseTablePointers, 0);
@@ -426,7 +426,7 @@ void Test_FM_ProcessCmd_NoopCmdCCReturn(void)
 void Test_FM_ProcessCmd_ResetCountersCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_RESET_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_RESET_COUNTERS_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), true);
@@ -444,7 +444,7 @@ void Test_FM_ProcessCmd_ResetCountersCCReturn(void)
 void Test_FM_ProcessCmd_CopyFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_COPY_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_COPY_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), true);
@@ -462,7 +462,7 @@ void Test_FM_ProcessCmd_CopyFileCCReturn(void)
 void Test_FM_ProcessCmd_MoveFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_MOVE_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_MOVE_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), true);
@@ -480,7 +480,7 @@ void Test_FM_ProcessCmd_MoveFileCCReturn(void)
 void Test_FM_ProcessCmd_RenameFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_RENAME_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_RENAME_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), true);
@@ -498,7 +498,7 @@ void Test_FM_ProcessCmd_RenameFileCCReturn(void)
 void Test_FM_ProcessCmd_DeleteFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), true);
@@ -516,7 +516,7 @@ void Test_FM_ProcessCmd_DeleteFileCCReturn(void)
 void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_ALL_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_ALL_FILES_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), true);
@@ -534,7 +534,7 @@ void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
 void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_DECOMPRESS_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_DECOMPRESS_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), true);
@@ -552,7 +552,7 @@ void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
 void Test_FM_ProcessCmd_ConcatFilesCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_CONCAT_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_CONCAT_FILES_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), true);
@@ -606,7 +606,7 @@ void Test_FM_ProcessCmd_GetOpenFilesCCReturn(void)
 void Test_FM_ProcessCmd_CreateDirectoryCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_CREATE_DIR_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_CREATE_DIRECTORY_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), true);
@@ -624,7 +624,7 @@ void Test_FM_ProcessCmd_CreateDirectoryCCReturn(void)
 void Test_FM_ProcessCmd_DeleteDirectoryCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_DIR_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_DELETE_DIRECTORY_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), true);
@@ -642,7 +642,7 @@ void Test_FM_ProcessCmd_DeleteDirectoryCCReturn(void)
 void Test_FM_ProcessCmd_GetDirListFileCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_FILE_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_LIST_FILE_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), true);
@@ -660,7 +660,7 @@ void Test_FM_ProcessCmd_GetDirListFileCCReturn(void)
 void Test_FM_ProcessCmd_GetDirListPktCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_PKT_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_GET_DIR_LIST_PKT_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), true);
@@ -714,7 +714,7 @@ void Test_FM_ProcessCmd_SetTableStateCCReturn(void)
 void Test_FM_ProcessCmd_SetPermissionsCCReturn(void)
 {
     /* Arrange */
-    CFE_MSG_FcnCode_t fcn_code = FM_SET_FILE_PERM_CC;
+    CFE_MSG_FcnCode_t fcn_code = FM_SET_PERMISSIONS_CC;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), true);
@@ -859,11 +859,11 @@ void add_FM_ProcessCmd_tests(void)
     UtTest_Add(Test_FM_ProcessCmd_DefaultReturn, FM_Test_Setup, FM_Test_Teardown, "Test_FM_PRocessCmd_DefaultReturn");
 }
 
-void add_FM_ReportHK_tests(void)
+void add_FM_SendHkCmd_tests(void)
 {
-    UtTest_Add(Test_FM_ReportHK_ReturnPktLengthTrue, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ReportHK_Return");
-    UtTest_Add(Test_FM_ReportHK_ReturnPktLengthFalse, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_ReportHK_ReturnPktLengthFalse");
+    UtTest_Add(Test_FM_SendHkCmd_ReturnPktLengthTrue, FM_Test_Setup, FM_Test_Teardown, "Test_FM_SendHkCmd_Return");
+    UtTest_Add(Test_FM_SendHkCmd_ReturnPktLengthFalse, FM_Test_Setup, FM_Test_Teardown,
+               "Test_FM_SendHkCmd_ReturnPktLengthFalse");
 }
 
 /*
@@ -874,6 +874,6 @@ void UtTest_Setup(void)
     add_FM_ProcessPkt_tests();
     add_FM_AppInit_tests();
     add_FM_AppMain_tests();
-    add_FM_ReportHK_tests();
+    add_FM_SendHkCmd_tests();
     add_FM_ProcessCmd_tests();
 }
