@@ -45,13 +45,13 @@
  *
  *  \par Command Success Verification
  *       - Informational event #FM_NOOP_CMD_EID will be sent
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
  *       - Error event #FM_NOOP_PKT_ERR_EID will be sent
  *
  *  \par Criticality
@@ -64,11 +64,11 @@
  *
  *  \par Description
  *       This command resets the following housekeeping telemetry:
- *       - #FM_HousekeepingPkt_t.CommandCounter
- *       - #FM_HousekeepingPkt_t.CommandErrCounter
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter
- *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter
  *
  *  \par Command Packet Structure
  *       #FM_ResetCmd_t
@@ -81,7 +81,7 @@
  *       - Invalid command packet length
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
  *       - Error event #FM_RESET_PKT_ERR_EID will be sent
  *
  *  \par Criticality
@@ -113,8 +113,8 @@
  *       #FM_CopyFileCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_COPY_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -131,8 +131,8 @@
  *       - Failure of OS copy function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_COPY_PKT_ERR_EID may be sent
  *       - Error event #FM_COPY_OVR_ERR_EID may be sent
  *       - Error event #FM_COPY_SRC_INVALID_ERR_EID may be sent
@@ -185,8 +185,8 @@
  *       #FM_MoveFileCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_MOVE_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -201,8 +201,8 @@
  *       - Failure of OS move function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_MOVE_PKT_ERR_EID may be sent
  *       - Error event #FM_MOVE_OVR_ERR_EID may be sent
  *       - Error event #FM_MOVE_SRC_INVALID_ERR_EID may be sent
@@ -247,8 +247,8 @@
  *       #FM_RenameFileCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_RENAME_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -262,8 +262,8 @@
  *       - Failure of OS rename function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_RENAME_PKT_ERR_EID may be sent
  *       - Error event #FM_RENAME_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_RENAME_SRC_DNE_ERR_EID may be sent
@@ -301,8 +301,8 @@
  *       #FM_DeleteFileCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_DELETE_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -314,8 +314,8 @@
  *       - Failure of OS delete function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_DELETE_PKT_ERR_EID may be sent
  *       - Error event #FM_DELETE_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_DELETE_SRC_DNE_ERR_EID may be sent
@@ -354,8 +354,8 @@
  *       #FM_DeleteAllCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_DELETE_ALL_CMD_EID will be sent
  *
  *  \par Command Warning Conditions
@@ -363,7 +363,7 @@
  *       - Directory entry is an open file
  *
  *  \par Command Warning Verification
- *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter will increment
  *       - Informational event #FM_DELETE_ALL_FILES_ND_WARNING_EID may be sent
  *       - Informational event #FM_DELETE_ALL_SKIP_WARNING_EID may be sent
  *
@@ -375,8 +375,8 @@
  *       - Failure of OS delete function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_DELETE_ALL_PKT_ERR_EID may be sent
  *       - Error event #FM_DELETE_ALL_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_DELETE_ALL_SRC_DNE_ERR_EID may be sent
@@ -421,8 +421,8 @@
  *       #FM_DecompressCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_DECOM_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -434,8 +434,8 @@
  *       - Failure of CFE_FS_Decompress function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_DECOM_PKT_ERR_EID may be sent
  *       - Error event #FM_DECOM_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_DECOM_SRC_DNE_ERR_EID may be sent
@@ -477,8 +477,8 @@
  *       #FM_ConcatCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_CONCAT_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -490,8 +490,8 @@
  *       - Failure of OS function (copy, open, read, write, etc.)
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_CONCAT_PKT_ERR_EID may be sent
  *       - Error event #FM_CONCAT_OSCPY_ERR_EID may be sent
  *       - Error event #FM_CONCAT_OPEN_SRC2_ERR_EID may be sent
@@ -545,8 +545,8 @@
  *       #FM_GetFileInfoCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_GET_FILE_INFO_CMD_EID will be sent
  *
  *  \par Command Warning Conditions
@@ -555,7 +555,7 @@
  *       - CRC cannot be calculated because file cannot be read
  *
  *  \par Command Warning Verification
- *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter will increment
  *       - Informational event #FM_GET_FILE_INFO_STATE_WARNING_EID may be sent
  *       - Informational event #FM_GET_FILE_INFO_TYPE_WARNING_EID may be sent
  *       - Informational event #FM_GET_FILE_INFO_READ_WARNING_EID may be sent
@@ -566,8 +566,8 @@
  *       - Failure of OS_stat function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_GET_FILE_INFO_OPEN_ERR_EID may be sent
  *       - Error event #FM_GET_FILE_INFO_PKT_ERR_EID may be sent
  *       - Error event #FM_GET_FILE_INFO_SRC_ERR_EID may be sent
@@ -596,14 +596,14 @@
  *       #FM_GetOpenFilesCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
  *       - Debug event #FM_GET_OPEN_FILES_CMD_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
  *       - Error event #FM_GET_OPEN_FILES_PKT_ERR_EID will be sent
  *
  *  \par Criticality
@@ -631,8 +631,8 @@
  *       #FM_CreateDirCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_CREATE_DIR_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -642,8 +642,8 @@
  *       - Failure of OS_mkdir function
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_CREATE_DIR_PKT_ERR_EID may be sent
  *       - Error event #FM_CREATE_DIR_SRC_INVALID_ERR_EID may be sent
  *       - Error event #FM_CREATE_DIR_SRC_DNE_ERR_EID may be sent
@@ -679,8 +679,8 @@
  *       #FM_DeleteDirCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_DELETE_DIR_CMD_EID will be sent
  *
  *  \par Command Error Conditions
@@ -691,8 +691,8 @@
  *       - Failure of OS function (OS_opendir, OS_rmdir)
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_DELETE_DIR_PKT_ERR_EID may be sent
  *       - Error event #FM_DELETE_DIR_EMPTY_ERR_EID may be sent
  *       - Error event #FM_DELETE_OPENDIR_OS_ERR_EID may be sent
@@ -734,15 +734,15 @@
  *       #FM_GetDirFileCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_GET_DIR_FILE_CMD_EID will be sent
  *
  *  \par Command Warning Conditions
  *       - Combined directory and entry name is too long
  *
  *  \par Command Warning Verification
- *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter will increment
  *       - Informational event #FM_GET_DIR_FILE_WARNING_EID may be sent
  *
  *  \par Command Error Conditions
@@ -756,8 +756,8 @@
  *       - Failure of OS function (OS_opendir, OS_creat, OS_write)
  *
  *  \par Command Failure Verification
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_GET_DIR_FILE_PKT_ERR_EID may be sent
  *       - Error event #FM_GET_DIR_FILE_OSOPENDIR_ERR_EID may be sent
  *       - Error event #FM_GET_DIR_FILE_WRBLANK_ERR_EID may be sent
@@ -816,8 +816,8 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - The #FM_DirListPkt_t telemetry packet will be sent
  *       - The #FM_GET_DIR_PKT_CMD_EID debug event will be sent
  *
@@ -825,7 +825,7 @@
  *       - Combined directory and entry name is too long
  *
  *  \par Command Warning Verification
- *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter will increment
  *       - Informational event #FM_GET_DIR_PKT_WARNING_EID may be sent
  *
  *  \par Error Conditions
@@ -837,8 +837,8 @@
  *       - Command packet length not as expected
  *
  *  \par Evidence of failure may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_GET_DIR_PKT_PKT_ERR_EID may be sent
  *       - Error event #FM_GET_DIR_PKT_OS_ERR_EID may be sent
  *       - Error event #FM_GET_DIR_PKT_SRC_INVALID_ERR_EID may be sent
@@ -868,7 +868,7 @@
  *       #FM_MonitorFilesystemSpaceCmd_t
  *
  *  \par Evidence of success may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
  *       - Debug event #FM_MONITOR_FILESYSTEM_SPACE_CMD_EID will be sent
  *       - Telemetry packet #FM_MonitorReportPkt_t will be sent
  *
@@ -877,7 +877,7 @@
  *       - Free space table is not loaded
  *
  *  \par Evidence of failure may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
  *       - Error event #FM_GET_FREE_SPACE_PKT_ERR_EID may be sent
  *       - Error event #FM_GET_FREE_SPACE_TBL_ERR_EID may be sent
  *
@@ -899,7 +899,7 @@
  *       #FM_SetTableStateCmd_t
  *
  *  \par Evidence of success may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
  *       - Informational event #FM_SET_TABLE_STATE_CMD_EID will be sent
  *
  *  \par Error Conditions
@@ -910,7 +910,7 @@
  *       - Invalid current table entry state, entry is unused
  *
  *  \par Evidence of failure may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter will increment
  *       - Error event #FM_SET_TABLE_STATE_PKT_ERR_EID may be sent
  *       - Error event #FM_SET_TABLE_STATE_TBL_ERR_EID may be sent
  *       - Error event #FM_SET_TABLE_STATE_ARG_IDX_ERR_EID may be sent
@@ -946,8 +946,8 @@
  *       #FM_SetPermCmd_t
  *
  *  \par Command Success Verification
- *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
- *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - Debug event #FM_SET_PERM_CMD_EID will be sent
  *
  *  \par Error Conditions
@@ -955,8 +955,8 @@
  *       - Error from call to OS_chmod
  *
  *  \par Evidence of failure may be found in the following telemetry:
- *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
- *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_Payload_t.ChildCmdErrCounter may increment
  *       - Error event #FM_SET_PERM_ERR_EID may be sent
  *       - Error event #FM_SET_PERM_OS_ERR_EID may be sent
  *

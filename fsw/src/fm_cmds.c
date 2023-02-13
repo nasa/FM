@@ -39,6 +39,14 @@
 
 #include <string.h>
 
+/**
+ * \brief Internal Macro to access the internal payload structure of a message
+ *
+ * This is done as a macro so it can be applied consistently to all
+ * message processing functions, based on the way FM defines its messages.
+ */
+#define FM_GET_CMD_PAYLOAD(ptr, type) (&((const type *)(ptr))->Payload)
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* FM command handler -- NOOP                                      */
@@ -102,10 +110,11 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_CopyFileCmd_t *    CmdPtr        = (FM_CopyFileCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Copy File";
     bool                  CommandResult = false;
+
+    const FM_OvwSourceTargetFilename_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_CopyFileCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CopyFileCmd_t), FM_COPY_PKT_ERR_EID, CmdText);
@@ -169,10 +178,11 @@ bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_MoveFileCmd_t *    CmdPtr        = (FM_MoveFileCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Move File";
     bool                  CommandResult = false;
+
+    const FM_OvwSourceTargetFilename_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_MoveFileCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_MoveFileCmd_t), FM_MOVE_PKT_ERR_EID, CmdText);
@@ -237,10 +247,11 @@ bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_RenameFileCmd_t *  CmdPtr        = (FM_RenameFileCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Rename File";
     bool                  CommandResult = false;
+
+    const FM_SourceTargetFileName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_RenameFileCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_RenameFileCmd_t), FM_RENAME_PKT_ERR_EID, CmdText);
@@ -292,10 +303,11 @@ bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_DeleteFileCmd_t *  CmdPtr        = (FM_DeleteFileCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Delete File";
     bool                  CommandResult = false;
+
+    const FM_SingleFilename_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteFileCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteFileCmd_t), FM_DELETE_PKT_ERR_EID, CmdText);
@@ -338,11 +350,12 @@ bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_DeleteAllCmd_t *   CmdPtr                      = (FM_DeleteAllCmd_t *)BufPtr;
     const char *          CmdText                     = "Delete All Files";
     char                  DirWithSep[OS_MAX_PATH_LEN] = "\0";
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
+
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteAllCmd_t);
 
     /* Verify message length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteAllCmd_t), FM_DELETE_ALL_PKT_ERR_EID, CmdText);
@@ -393,10 +406,11 @@ bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_DecompressCmd_t *  CmdPtr        = (FM_DecompressCmd_t *)BufPtr;
     const char *          CmdText       = "Decompress File";
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = false;
+
+    const FM_SourceTargetFileName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DecompressCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DecompressCmd_t), FM_DECOM_PKT_ERR_EID, CmdText);
@@ -446,10 +460,11 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_ConcatCmd_t *      CmdPtr        = (FM_ConcatCmd_t *)BufPtr;
     const char *          CmdText       = "Concat Files";
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = false;
+
+    const FM_TwoSourceOneTarget_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_ConcatCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ConcatCmd_t), FM_CONCAT_PKT_ERR_EID, CmdText);
@@ -507,11 +522,12 @@ bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_GetFileInfoCmd_t * CmdPtr        = (FM_GetFileInfoCmd_t *)BufPtr;
     const char *          CmdText       = "Get File Info";
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = false;
     uint32                FilenameState = FM_NAME_IS_INVALID;
+
+    const FM_FilenameAndCRC_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetFileInfoCmd_t);
 
     /* Verify command packet length */
     CommandResult =
@@ -572,6 +588,8 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
     bool        CommandResult = false;
     uint32      NumOpenFiles  = 0;
 
+    FM_OpenFilesPkt_Payload_t *ReportPtr = &FM_GlobalData.OpenFilesPkt.Payload;
+
     /* Verify command packet length */
     CommandResult =
         FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetOpenFilesCmd_t), FM_GET_OPEN_FILES_PKT_ERR_EID, CmdText);
@@ -582,8 +600,9 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
                      sizeof(FM_OpenFilesPkt_t));
 
         /* Get list of open files and count */
-        NumOpenFiles                            = FM_GetOpenFilesData(FM_GlobalData.OpenFilesPkt.OpenFilesList);
-        FM_GlobalData.OpenFilesPkt.NumOpenFiles = NumOpenFiles;
+        NumOpenFiles = FM_GetOpenFilesData(ReportPtr->OpenFilesList);
+
+        ReportPtr->NumOpenFiles = NumOpenFiles;
 
         /* Timestamp and send open files telemetry packet */
         CFE_SB_TimeStampMsg(&FM_GlobalData.OpenFilesPkt.TlmHeader.Msg);
@@ -604,10 +623,11 @@ bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_CreateDirCmd_t *   CmdPtr        = (FM_CreateDirCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Create Directory";
     bool                  CommandResult = false;
+
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_CreateDirCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CreateDirCmd_t), FM_CREATE_DIR_PKT_ERR_EID, CmdText);
@@ -650,10 +670,11 @@ bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_DeleteDirCmd_t *   CmdPtr        = (FM_DeleteDirCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Delete Directory";
     bool                  CommandResult = false;
+
+    const FM_DirectoryName_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_DeleteDirCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteDirCmd_t), FM_DELETE_DIR_PKT_ERR_EID, CmdText);
@@ -696,12 +717,13 @@ bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_GetDirFileCmd_t *  CmdPtr                      = (FM_GetDirFileCmd_t *)BufPtr;
     const char *          CmdText                     = "Directory List to File";
     char                  DirWithSep[OS_MAX_PATH_LEN] = "\0";
     char                  Filename[OS_MAX_PATH_LEN]   = "\0";
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
+
+    const FM_GetDirectoryToFile_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirFileCmd_t);
 
     /* Verify command packet length */
     CommandResult =
@@ -775,11 +797,12 @@ bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_GetDirPktCmd_t *   CmdPtr                      = (FM_GetDirPktCmd_t *)BufPtr;
     const char *          CmdText                     = "Directory List to Packet";
     char                  DirWithSep[OS_MAX_PATH_LEN] = "\0";
     FM_ChildQueueEntry_t *CmdArgs                     = NULL;
     bool                  CommandResult               = false;
+
+    const FM_GetDirectoryToPkt_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_GetDirPktCmd_t);
 
     /* Verify command packet length */
     CommandResult =
@@ -862,7 +885,7 @@ bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 
             /* Process enabled file system table entries */
             MonitorPtr = FM_GlobalData.MonitorTablePtr->Entries;
-            ReportPtr  = FM_GlobalData.MonitorReportPkt.FileSys;
+            ReportPtr  = FM_GlobalData.MonitorReportPkt.Payload.FileSys;
             for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
             {
                 if (MonitorPtr->Type != FM_MonitorTableEntry_Type_UNUSED)
@@ -927,9 +950,10 @@ bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_SetTableStateCmd_t *CmdPtr        = (FM_SetTableStateCmd_t *)BufPtr;
-    const char *           CmdText       = "Set Table State";
-    bool                   CommandResult = false;
+    const char *CmdText       = "Set Table State";
+    bool        CommandResult = false;
+
+    const FM_TableIndexAndState_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_SetTableStateCmd_t);
 
     /* Verify command packet length */
     CommandResult =
@@ -997,11 +1021,12 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
 
 bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_SetPermCmd_t *     CmdPtr        = (FM_SetPermCmd_t *)BufPtr;
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     const char *          CmdText       = "Set Permissions";
     bool                  CommandResult = false;
     bool                  FilenameState = FM_NAME_IS_INVALID;
+
+    const FM_FilenameAndMode_Payload_t *CmdPtr = FM_GET_CMD_PAYLOAD(BufPtr, FM_SetPermCmd_t);
 
     /* Verify command packet length */
     CommandResult = FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetPermCmd_t), FM_SET_PERM_ERR_EID, CmdText);

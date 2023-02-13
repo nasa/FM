@@ -389,8 +389,9 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
 {
-    const char *CmdText = "HK Request";
-    bool        Result  = true;
+    const char *                  CmdText = "HK Request";
+    bool                          Result  = true;
+    FM_HousekeepingPkt_Payload_t *PayloadPtr;
 
     /* Verify command packet length */
     Result = FM_IsValidCmdPktLength(&Msg->Msg, sizeof(FM_HousekeepingCmd_t), FM_HK_REQ_ERR_EID, CmdText);
@@ -405,22 +406,24 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         CFE_MSG_Init(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
                      sizeof(FM_HousekeepingPkt_t));
 
-        /* Report application command counters */
-        FM_GlobalData.HousekeepingPkt.CommandCounter    = FM_GlobalData.CommandCounter;
-        FM_GlobalData.HousekeepingPkt.CommandErrCounter = FM_GlobalData.CommandErrCounter;
+        PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
 
-        FM_GlobalData.HousekeepingPkt.NumOpenFiles = FM_GetOpenFilesData(NULL);
+        /* Report application command counters */
+        PayloadPtr->CommandCounter    = FM_GlobalData.CommandCounter;
+        PayloadPtr->CommandErrCounter = FM_GlobalData.CommandErrCounter;
+
+        PayloadPtr->NumOpenFiles = FM_GetOpenFilesData(NULL);
 
         /* Report child task command counters */
-        FM_GlobalData.HousekeepingPkt.ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
-        FM_GlobalData.HousekeepingPkt.ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
-        FM_GlobalData.HousekeepingPkt.ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
+        PayloadPtr->ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
+        PayloadPtr->ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
+        PayloadPtr->ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
 
-        FM_GlobalData.HousekeepingPkt.ChildQueueCount = FM_GlobalData.ChildQueueCount;
+        PayloadPtr->ChildQueueCount = FM_GlobalData.ChildQueueCount;
 
         /* Report current and previous commands executed by the child task */
-        FM_GlobalData.HousekeepingPkt.ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
-        FM_GlobalData.HousekeepingPkt.ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
+        PayloadPtr->ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
+        PayloadPtr->ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
 
         CFE_SB_TimeStampMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg);
         CFE_SB_TransmitMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, true);

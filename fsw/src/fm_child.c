@@ -809,6 +809,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     osal_id_t   FileHandle = OS_OBJECT_ID_UNDEFINED;
     int32       Status     = 0;
 
+    FM_FileInfoPkt_Payload_t *ReportPtr;
+
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
@@ -826,14 +828,16 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     CFE_MSG_Init(&FM_GlobalData.FileInfoPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_FILE_INFO_TLM_MID),
                  sizeof(FM_FileInfoPkt_t));
 
-    /* Report directory or filename state, name, size and time */
-    FM_GlobalData.FileInfoPkt.FileStatus = (uint8)CmdArgs->FileInfoState;
-    strncpy(FM_GlobalData.FileInfoPkt.Filename, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
-    FM_GlobalData.FileInfoPkt.Filename[OS_MAX_PATH_LEN - 1] = '\0';
+    ReportPtr = &FM_GlobalData.FileInfoPkt.Payload;
 
-    FM_GlobalData.FileInfoPkt.FileSize         = CmdArgs->FileInfoSize;
-    FM_GlobalData.FileInfoPkt.LastModifiedTime = CmdArgs->FileInfoTime;
-    FM_GlobalData.FileInfoPkt.Mode             = CmdArgs->Mode;
+    /* Report directory or filename state, name, size and time */
+    ReportPtr->FileStatus = (uint8)CmdArgs->FileInfoState;
+    strncpy(ReportPtr->Filename, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
+    ReportPtr->Filename[OS_MAX_PATH_LEN - 1] = '\0';
+
+    ReportPtr->FileSize         = CmdArgs->FileInfoSize;
+    ReportPtr->LastModifiedTime = CmdArgs->FileInfoTime;
+    ReportPtr->Mode             = CmdArgs->Mode;
 
     /* Validate CRC algorithm */
     if (CmdArgs->FileInfoCRC != FM_IGNORE_CRC)
@@ -895,8 +899,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
                 OS_close(FileHandle);
 
                 /* Add CRC to telemetry packet */
-                FM_GlobalData.FileInfoPkt.CRC_Computed = true;
-                FM_GlobalData.FileInfoPkt.CRC          = CurrentCRC;
+                ReportPtr->CRC_Computed = true;
+                ReportPtr->CRC          = CurrentCRC;
             }
             else if (BytesRead < 0)
             {
@@ -933,7 +937,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
             }
         }
 
-        FM_GlobalData.FileInfoPkt.CRC = CurrentCRC;
+        ReportPtr->CRC = CurrentCRC;
     }
 
     /* Timestamp and send file info telemetry packet */
@@ -1148,6 +1152,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     int32              FilesTillSleep = FM_CHILD_STAT_SLEEP_FILECOUNT;
     int32              Status;
 
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     memset(&DirEntry, 0, sizeof(DirEntry));
 
     /* Report current child task activity */
@@ -1180,9 +1186,11 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
         CFE_MSG_Init(&FM_GlobalData.DirListPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_DIR_LIST_TLM_MID),
                      sizeof(FM_DirListPkt_t));
 
-        strncpy(FM_GlobalData.DirListPkt.DirName, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
-        FM_GlobalData.DirListPkt.DirName[OS_MAX_PATH_LEN - 1] = '\0';
-        FM_GlobalData.DirListPkt.FirstFile                    = CmdArgs->DirListOffset;
+        ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+
+        strncpy(ReportPtr->DirName, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
+        ReportPtr->DirName[OS_MAX_PATH_LEN - 1] = '\0';
+        ReportPtr->FirstFile                    = CmdArgs->DirListOffset;
 
         StillProcessing = true;
         while (StillProcessing == true)
@@ -1199,16 +1207,16 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                      (strcmp(OS_DIRENTRY_NAME(DirEntry), FM_PARENT_DIRECTORY) != 0))
             {
                 /* Do not count the "." and ".." directory entries */
-                FM_GlobalData.DirListPkt.TotalFiles++;
+                ReportPtr->TotalFiles++;
 
                 /* Start collecting directory entries at command specified offset */
                 /* Stop collecting directory entries when telemetry packet is full */
-                if ((FM_GlobalData.DirListPkt.TotalFiles > FM_GlobalData.DirListPkt.FirstFile) &&
-                    (FM_GlobalData.DirListPkt.PacketFiles < FM_DIR_LIST_PKT_ENTRIES))
+                if ((ReportPtr->TotalFiles > ReportPtr->FirstFile) &&
+                    (ReportPtr->PacketFiles < FM_DIR_LIST_PKT_ENTRIES))
                 {
                     /* Create a shorthand access to the packet list entry */
-                    ListIndex = FM_GlobalData.DirListPkt.PacketFiles;
-                    ListEntry = &FM_GlobalData.DirListPkt.FileList[ListIndex];
+                    ListIndex = ReportPtr->PacketFiles;
+                    ListEntry = &ReportPtr->FileList[ListIndex];
 
                     EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
 
@@ -1227,7 +1235,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
 
                         /* Add another entry to the telemetry packet */
-                        FM_GlobalData.DirListPkt.PacketFiles++;
+                        ReportPtr->PacketFiles++;
                     }
                     else
                     {

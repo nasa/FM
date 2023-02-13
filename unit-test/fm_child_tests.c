@@ -1598,6 +1598,8 @@ void Test_FM_ChildDirListPktCmd_OSDirOpenNotSuccess(void)
 
 void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
         .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
@@ -1615,11 +1617,15 @@ void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, 0);
+
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
         .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
@@ -1639,11 +1645,15 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, 0);
+
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
         .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
@@ -1663,11 +1673,15 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, 0);
+
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
         .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2", .DirListOffset = 1};
@@ -1688,13 +1702,16 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
 
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.FirstFile, 1);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.TotalFiles, 1);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, 0);
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 1);
+    UtAssert_UINT32_EQ(ReportPtr->TotalFiles, 1);
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
         .CommandCode = FM_GET_DIR_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
@@ -1719,13 +1736,16 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
 
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.FirstFile, 0);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.TotalFiles, sizeof(direntry) / sizeof(direntry[0]));
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, FM_DIR_LIST_PKT_ENTRIES);
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 0);
+    UtAssert_UINT32_EQ(ReportPtr->TotalFiles, sizeof(direntry) / sizeof(direntry[0]));
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, FM_DIR_LIST_PKT_ENTRIES);
 }
 
 void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
 {
+    FM_DirListPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_CC,
                                         .Source1     = "dummy_source1",
@@ -1747,9 +1767,10 @@ void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_WARNING_EID);
 
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.FirstFile, 0);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.TotalFiles, 1);
-    UtAssert_UINT32_EQ(FM_GlobalData.DirListPkt.PacketFiles, 0);
+    ReportPtr = &FM_GlobalData.DirListPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 0);
+    UtAssert_UINT32_EQ(ReportPtr->TotalFiles, 1);
+    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
 }
 
 /* ****************
