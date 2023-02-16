@@ -65,7 +65,7 @@ void FM_AppMain(void)
 {
     uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
     CFE_SB_Buffer_t *BufPtr    = NULL;
-    int32            Result    = CFE_SUCCESS;
+    int32            Result;
 
     /* Performance Log (start time counter) */
     CFE_ES_PerfLogEntry(FM_APPMAIN_PERF_ID);
@@ -167,7 +167,7 @@ void FM_AppMain(void)
 int32 FM_AppInit(void)
 {
     const char *ErrText = "Initialization error:";
-    int32       Result  = CFE_SUCCESS;
+    int32       Result;
 
     /* Initialize global data  */
     memset(&FM_GlobalData, 0, sizeof(FM_GlobalData));
@@ -390,7 +390,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const char *                  CmdText = "HK Request";
-    bool                          Result  = true;
+    bool                          Result;
     FM_HousekeepingPkt_Payload_t *PayloadPtr;
 
     /* Verify command packet length */

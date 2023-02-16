@@ -273,10 +273,10 @@ uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, c
 bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
                         const char *CmdText)
 {
-    bool        Result        = false;
-    uint32      FilenameState = FM_NAME_IS_INVALID;
-    uint32      ErrorCode     = FM_FNAME_INVALID_EID_OFFSET;
-    const char *ErrorDesc     = "";
+    bool        Result = false;
+    uint32      FilenameState;
+    uint32      ErrorCode = FM_FNAME_INVALID_EID_OFFSET;
+    const char *ErrorDesc = "";
     char        LocalFile[1 + OS_MAX_PATH_LEN];
 
     /* Get state of the filename */
@@ -532,9 +532,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
     **   the string is both non-zero and less than the size
     **   of the string buffer.
     */
-    uint32 StringLength = 0;
-
-    StringLength = strlen(Directory);
+    uint32 StringLength = strlen(Directory);
 
     /* Do nothing if string already ends with a path separator */
     if ((StringLength != 0) && (Directory[StringLength - 1] != '/'))
