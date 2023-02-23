@@ -349,6 +349,8 @@ void Test_FM_AppInit_TableInitSuccess(void)
  * *******************************/
 void Test_FM_ReportHK_ReturnPktLengthTrue(void)
 {
+    FM_HousekeepingPkt_Payload_t *ReportPtr;
+
     /* Arrange */
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesData), 0);
@@ -374,15 +376,17 @@ void Test_FM_ReportHK_ReturnPktLengthTrue(void)
     UtAssert_STUB_COUNT(FM_GetOpenFilesData, 1);
     UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 1);
     UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.CommandCounter, FM_GlobalData.CommandCounter);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.CommandErrCounter, FM_GlobalData.CommandErrCounter);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.NumOpenFiles, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildCmdCounter, FM_GlobalData.ChildCmdCounter);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildCmdErrCounter, FM_GlobalData.ChildCmdErrCounter);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildCmdWarnCounter, FM_GlobalData.ChildCmdWarnCounter);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildQueueCount, FM_GlobalData.ChildQueueCount);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildCurrentCC, FM_GlobalData.ChildCurrentCC);
-    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.ChildPreviousCC, FM_GlobalData.ChildPreviousCC);
+
+    ReportPtr = &FM_GlobalData.HousekeepingPkt.Payload;
+    UtAssert_INT32_EQ(ReportPtr->CommandCounter, FM_GlobalData.CommandCounter);
+    UtAssert_INT32_EQ(ReportPtr->CommandErrCounter, FM_GlobalData.CommandErrCounter);
+    UtAssert_INT32_EQ(ReportPtr->NumOpenFiles, 0);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdCounter, FM_GlobalData.ChildCmdCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdErrCounter, FM_GlobalData.ChildCmdErrCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdWarnCounter, FM_GlobalData.ChildCmdWarnCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildQueueCount, FM_GlobalData.ChildQueueCount);
+    UtAssert_INT32_EQ(ReportPtr->ChildCurrentCC, FM_GlobalData.ChildCurrentCC);
+    UtAssert_INT32_EQ(ReportPtr->ChildPreviousCC, FM_GlobalData.ChildPreviousCC);
 }
 
 void Test_FM_ReportHK_ReturnPktLengthFalse(void)

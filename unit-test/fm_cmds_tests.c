@@ -188,8 +188,12 @@ void add_FM_ResetCountersCmd_tests(void)
 
 void Test_FM_CopyFileCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.CopyFileCmd.Source, "src1", sizeof(UT_CmdBuf.CopyFileCmd.Source) - 1);
-    strncpy(UT_CmdBuf.CopyFileCmd.Target, "tgt", sizeof(UT_CmdBuf.CopyFileCmd.Target) - 1);
+    FM_OvwSourceTargetFilename_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.CopyFileCmd.Payload;
+
+    strncpy(CmdPtr->Source, "src1", sizeof(CmdPtr->Source) - 1);
+    strncpy(CmdPtr->Target, "tgt", sizeof(CmdPtr->Target) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -305,7 +309,11 @@ void Test_FM_CopyFileCmd_NoOverwriteTargetExists(void)
 
 void Test_FM_CopyFileCmd_OverwriteFileOpen(void)
 {
-    UT_CmdBuf.CopyFileCmd.Overwrite         = 1;
+    FM_OvwSourceTargetFilename_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.CopyFileCmd.Payload;
+
+    CmdPtr->Overwrite                       = 1;
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -491,7 +499,11 @@ void Test_FM_MoveFileCmd_NoOverwriteTargetExists(void)
 
 void Test_FM_MoveFileCmd_OverwriteFileOpen(void)
 {
-    UT_CmdBuf.MoveFileCmd.Overwrite         = 1;
+    FM_OvwSourceTargetFilename_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.MoveFileCmd.Payload;
+
+    CmdPtr->Overwrite                       = 1;
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -562,8 +574,12 @@ void add_FM_MoveFileCmd_tests(void)
 
 void Test_FM_RenameFileCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.RenameFileCmd.Source, "src1", sizeof(UT_CmdBuf.RenameFileCmd.Source) - 1);
-    strncpy(UT_CmdBuf.RenameFileCmd.Target, "tgt", sizeof(UT_CmdBuf.RenameFileCmd.Target) - 1);
+    FM_SourceTargetFileName_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.RenameFileCmd.Payload;
+
+    strncpy(CmdPtr->Source, "src1", sizeof(CmdPtr->Source) - 1);
+    strncpy(CmdPtr->Target, "tgt", sizeof(CmdPtr->Target) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -797,7 +813,11 @@ void add_FM_DeleteFileCmd_tests(void)
 
 void Test_FM_DeleteAllFilesCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.DeleteAllCmd.Directory, "dir", sizeof(UT_CmdBuf.DeleteAllCmd.Directory) - 1);
+    FM_DirectoryName_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.DeleteAllCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -859,7 +879,11 @@ void Test_FM_DeleteAllFilesCmd_DirNoExist(void)
 
 void Test_FM_DeleteAllFilesCmd_NoChildTask(void)
 {
-    strncpy(UT_CmdBuf.DeleteAllCmd.Directory, "dir", sizeof(UT_CmdBuf.DeleteAllCmd.Directory) - 1);
+    FM_DirectoryName_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.DeleteAllCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1024,9 +1048,13 @@ void add_FM_DecompressFileCmd_tests(void)
 
 void Test_FM_ConcatFilesCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.ConcatCmd.Source1, "src1", sizeof(UT_CmdBuf.ConcatCmd.Source1) - 1);
-    strncpy(UT_CmdBuf.ConcatCmd.Source2, "src2", sizeof(UT_CmdBuf.ConcatCmd.Source2) - 1);
-    strncpy(UT_CmdBuf.ConcatCmd.Target, "tgt", sizeof(UT_CmdBuf.ConcatCmd.Target) - 1);
+    FM_TwoSourceOneTarget_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.ConcatCmd.Payload;
+
+    strncpy(CmdPtr->Source1, "src1", sizeof(CmdPtr->Source1) - 1);
+    strncpy(CmdPtr->Source2, "src2", sizeof(CmdPtr->Source2) - 1);
+    strncpy(CmdPtr->Target, "tgt", sizeof(CmdPtr->Target) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -1173,7 +1201,11 @@ void add_FM_ConcatFilesCmd_tests(void)
 
 void Test_FM_GetFileInfoCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.GetFileInfoCmd.Filename, "file", sizeof(UT_CmdBuf.GetFileInfoCmd.Filename) - 1);
+    FM_FilenameAndCRC_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetFileInfoCmd.Payload;
+
+    strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -1323,7 +1355,11 @@ void add_FM_GetOpenFilesCmd_tests(void)
 
 void Test_FM_CreateDirectoryCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.CreateDirCmd.Directory, "dir", sizeof(UT_CmdBuf.CreateDirCmd.Directory) - 1);
+    FM_DirectoryName_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.CreateDirCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1423,7 +1459,11 @@ void add_FM_CreateDirectoryCmd_tests(void)
 
 void Test_FM_DeleteDirectoryCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.DeleteDirCmd.Directory, "dir", sizeof(UT_CmdBuf.DeleteDirCmd.Directory) - 1);
+    FM_DirectoryName_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.DeleteDirCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1523,8 +1563,12 @@ void add_FM_DeleteDirectoryCmd_tests(void)
 
 void Test_FM_GetDirListFileCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", sizeof(UT_CmdBuf.GetDirFileCmd.Filename) - 1);
-    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", sizeof(UT_CmdBuf.GetDirFileCmd.Directory) - 1);
+    FM_GetDirectoryToFile_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+
+    strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1546,8 +1590,12 @@ void Test_FM_GetDirListFileCmd_Success(void)
 
 void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
 {
-    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", sizeof(UT_CmdBuf.GetDirFileCmd.Directory) - 1);
-    UT_CmdBuf.GetDirFileCmd.Filename[0]     = '\0';
+    FM_GetDirectoryToFile_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
+    CmdPtr->Filename[0]                     = '\0';
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
@@ -1611,8 +1659,12 @@ void Test_FM_GetDirListFileCmd_SourceNotExist(void)
 
 void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 {
-    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", sizeof(UT_CmdBuf.GetDirFileCmd.Filename) - 1);
-    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", sizeof(UT_CmdBuf.GetDirFileCmd.Directory) - 1);
+    FM_GetDirectoryToFile_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+
+    strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -1635,8 +1687,12 @@ void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 
 void Test_FM_GetDirListFileCmd_NoChildTask(void)
 {
-    strncpy(UT_CmdBuf.GetDirFileCmd.Filename, "file", sizeof(UT_CmdBuf.GetDirFileCmd.Filename) - 1);
-    strncpy(UT_CmdBuf.GetDirFileCmd.Directory, "dir", sizeof(UT_CmdBuf.GetDirFileCmd.Directory) - 1);
+    FM_GetDirectoryToFile_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+
+    strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -1683,7 +1739,11 @@ void add_FM_GetDirListFileCmd_tests(void)
 
 void Test_FM_GetDirListPktCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.GetDirPktCmd.Directory, "dir", sizeof(UT_CmdBuf.GetDirPktCmd.Directory) - 1);
+    FM_GetDirectoryToPkt_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.GetDirPktCmd.Payload;
+
+    strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
@@ -1793,8 +1853,11 @@ void UT_Handler_MonitorSpace(void *UserObj, UT_EntryKey_t FuncKey, const UT_Stub
 
 void Test_FM_MonitorFilesystemSpaceCmd_Success(void)
 {
+    FM_MonitorReportPkt_Payload_t *ReportPtr;
+
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
     FM_MonitorTable_t DummyTable;
@@ -1836,12 +1899,14 @@ void Test_FM_MonitorFilesystemSpaceCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(call_count_CFE_SB_TransmitMsg, 1);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[0].Bytes, 2000);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[0].Blocks, 20);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[1].Bytes, 1000);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[1].Blocks, 10);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[2].Bytes, 0);
-    UtAssert_UINT32_EQ(FM_GlobalData.MonitorReportPkt.FileSys[2].Blocks, 0);
+
+    ReportPtr = &FM_GlobalData.MonitorReportPkt.Payload;
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[0].Bytes, 2000);
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[0].Blocks, 20);
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[1].Bytes, 1000);
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[1].Blocks, 10);
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[2].Bytes, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FileSys[2].Blocks, 0);
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_BadLength(void)
@@ -1887,9 +1952,12 @@ void Test_FM_MonitorFilesystemSpaceCmd_NullFreeSpaceTable(void)
 
 void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
 {
+    FM_MonitorReportPkt_Payload_t *ReportPtr;
+
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Could not get file system free space for %%s. Returned 0x%%08X");
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
@@ -1922,15 +1990,19 @@ void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(call_count_CFE_SB_TransmitMsg, 1);
-    UtAssert_ZERO(FM_GlobalData.MonitorReportPkt.FileSys[0].Blocks);
-    UtAssert_ZERO(FM_GlobalData.MonitorReportPkt.FileSys[0].Bytes);
+    ReportPtr = &FM_GlobalData.MonitorReportPkt.Payload;
+    UtAssert_ZERO(ReportPtr->FileSys[0].Blocks);
+    UtAssert_ZERO(ReportPtr->FileSys[0].Bytes);
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
 {
+    FM_MonitorReportPkt_Payload_t *ReportPtr;
+
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Could not get file system free space for %%s. Returned 0x%%08X");
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
@@ -1962,8 +2034,9 @@ void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(call_count_CFE_SB_TransmitMsg, 1);
-    UtAssert_ZERO(FM_GlobalData.MonitorReportPkt.FileSys[0].Blocks);
-    UtAssert_ZERO(FM_GlobalData.MonitorReportPkt.FileSys[0].Bytes);
+    ReportPtr = &FM_GlobalData.MonitorReportPkt.Payload;
+    UtAssert_ZERO(ReportPtr->FileSys[0].Blocks);
+    UtAssert_ZERO(ReportPtr->FileSys[0].Bytes);
 }
 
 void add_FM_MonitorFilesystemSpaceCmd_tests(void)
@@ -1990,8 +2063,12 @@ void add_FM_MonitorFilesystemSpaceCmd_tests(void)
 
 void Test_FM_SetTableStateCmd_Success(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    CmdPtr->TableEntryIndex = 0;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -2023,8 +2100,12 @@ void Test_FM_SetTableStateCmd_Success(void)
 
 void Test_FM_SetTableStateCmd_BadLength(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    CmdPtr->TableEntryIndex = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
 
@@ -2040,8 +2121,12 @@ void Test_FM_SetTableStateCmd_BadLength(void)
 
 void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    CmdPtr->TableEntryIndex = 0;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -2071,8 +2156,12 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
 
 void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = FM_TABLE_ENTRY_COUNT;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = FM_TABLE_ENTRY_ENABLED;
+    CmdPtr->TableEntryIndex = FM_TABLE_ENTRY_COUNT;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -2106,8 +2195,12 @@ void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
 
 void Test_FM_SetTableStateCmd_BadNewState(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = 55;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = 55;
+    CmdPtr->TableEntryIndex = 0;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -2141,8 +2234,12 @@ void Test_FM_SetTableStateCmd_BadNewState(void)
 
 void Test_FM_SetTableStateCmd_BadCurrentState(void)
 {
-    UT_CmdBuf.SetTableStateCmd.TableEntryState = FM_TABLE_ENTRY_DISABLED;
-    UT_CmdBuf.SetTableStateCmd.TableEntryIndex = 0;
+    FM_TableIndexAndState_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetTableStateCmd.Payload;
+
+    CmdPtr->TableEntryState = FM_TABLE_ENTRY_DISABLED;
+    CmdPtr->TableEntryIndex = 0;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -2197,7 +2294,11 @@ void add_FM_SetTableStateCmd_tests(void)
 
 void Test_FM_SetPermissionsCmd_Success(void)
 {
-    strncpy(UT_CmdBuf.SetPermCmd.FileName, "file", sizeof(UT_CmdBuf.SetPermCmd.FileName) - 1);
+    FM_FilenameAndMode_Payload_t *CmdPtr;
+
+    CmdPtr = &UT_CmdBuf.SetPermCmd.Payload;
+
+    strncpy(CmdPtr->FileName, "file", sizeof(CmdPtr->FileName) - 1);
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);

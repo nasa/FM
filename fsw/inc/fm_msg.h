@@ -68,6 +68,20 @@ typedef struct
 } FM_ResetCmd_t;
 
 /**
+ * \brief Copy/Move File command payload structure
+ *
+ * Contains a source and target file name and an overwrite flag
+ *
+ * Used by #FM_COPY_CC, #FM_MOVE_CC
+ */
+typedef struct
+{
+    uint16 Overwrite;               /**< \brief Allow overwrite */
+    char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_OvwSourceTargetFilename_Payload_t;
+
+/**
  *  \brief Copy File command packet structure
  *
  *  For command details see #FM_COPY_CC
@@ -76,9 +90,7 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    uint16 Overwrite;               /**< \brief Allow overwrite */
-    char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
-    char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+    FM_OvwSourceTargetFilename_Payload_t Payload; /**< \brief Command payload */
 } FM_CopyFileCmd_t;
 
 /**
@@ -90,10 +102,20 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    uint16 Overwrite;               /**< \brief Allow overwrite */
-    char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
-    char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+    FM_OvwSourceTargetFilename_Payload_t Payload; /**< \brief Command payload */
+
 } FM_MoveFileCmd_t;
+
+/**
+ *  \brief Source and Target filename command payload structure
+ *
+ *  Used by #FM_RENAME_CC, #FM_DECOMPRESS_CC
+ */
+typedef struct
+{
+    char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_SourceTargetFileName_Payload_t;
 
 /**
  *  \brief Rename File command packet structure
@@ -104,9 +126,18 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
-    char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+    FM_SourceTargetFileName_Payload_t Payload; /**< \brief Command payload */
 } FM_RenameFileCmd_t;
+
+/**
+ *  \brief Single filename command payload structure
+ *
+ *  Used by #FM_DELETE_CC
+ */
+typedef struct
+{
+    char Filename[OS_MAX_PATH_LEN]; /**< \brief Delete filename */
+} FM_SingleFilename_Payload_t;
 
 /**
  *  \brief Delete File command packet structure
@@ -115,9 +146,20 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;                 /**< \brief Command header */
-    char                    Filename[OS_MAX_PATH_LEN]; /**< \brief Delete filename */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    FM_SingleFilename_Payload_t Payload; /**< \brief Command Payload */
 } FM_DeleteFileCmd_t;
+
+/**
+ *  \brief Single directory command payload structure
+ *
+ *  Used by #FM_DELETE_ALL_CC, #FM_CREATE_DIR_CC, #FM_DELETE_DIR_CC
+ */
+typedef struct
+{
+    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+} FM_DirectoryName_Payload_t;
 
 /**
  *  \brief Delete All command packet structure
@@ -126,8 +168,9 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;                  /**< \brief Command header */
-    char                    Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    FM_DirectoryName_Payload_t Payload; /**< \brief Command Payload */
 } FM_DeleteAllCmd_t;
 
 /**
@@ -137,10 +180,22 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader;               /**< \brief Command header */
-    char                    Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
-    char                    Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    FM_SourceTargetFileName_Payload_t Payload; /**< \brief Command Payload */
 } FM_DecompressCmd_t;
+
+/**
+ * \brief Two source, one target filename command payload structure
+ *
+ * Used by #FM_CONCAT_CC
+ */
+typedef struct
+{
+    char Source1[OS_MAX_PATH_LEN]; /**< \brief Source 1 filename */
+    char Source2[OS_MAX_PATH_LEN]; /**< \brief Source 2 filename */
+    char Target[OS_MAX_PATH_LEN];  /**< \brief Target filename */
+} FM_TwoSourceOneTarget_Payload_t;
 
 /**
  *  \brief Concatenate Files command packet structure
@@ -151,10 +206,19 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char Source1[OS_MAX_PATH_LEN]; /**< \brief Source 1 filename */
-    char Source2[OS_MAX_PATH_LEN]; /**< \brief Source 2 filename */
-    char Target[OS_MAX_PATH_LEN];  /**< \brief Target filename */
+    FM_TwoSourceOneTarget_Payload_t Payload; /**< \brief Command Payload */
 } FM_ConcatCmd_t;
+
+/**
+ *  \brief Filename and CRC command payload structure
+ *
+ *  Used by #FM_GET_FILE_INFO_CC
+ */
+typedef struct
+{
+    char   Filename[OS_MAX_PATH_LEN]; /**< \brief Filename */
+    uint32 FileInfoCRC;               /**< \brief File info CRC method */
+} FM_FilenameAndCRC_Payload_t;
 
 /**
  *  \brief Get File Info command packet structure
@@ -165,8 +229,7 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char   Filename[OS_MAX_PATH_LEN]; /**< \brief Filename */
-    uint32 FileInfoCRC;               /**< \brief File info CRC method */
+    FM_FilenameAndCRC_Payload_t Payload; /**< \brief Command Payload */
 } FM_GetFileInfoCmd_t;
 
 /**
@@ -188,7 +251,7 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    FM_DirectoryName_Payload_t Payload; /**< \brief Command Payload */
 } FM_CreateDirCmd_t;
 
 /**
@@ -200,8 +263,22 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    FM_DirectoryName_Payload_t Payload; /**< \brief Command Payload */
 } FM_DeleteDirCmd_t;
+
+/**
+ *  \brief Get Directory and output to file command payload
+ *
+ * Contains a directory and output file name, with optional flags
+ * Used by #FM_GET_DIR_FILE_CC
+ */
+typedef struct
+{
+    char  Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    char  Filename[OS_MAX_PATH_LEN];  /**< \brief Filename */
+    uint8 GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8 Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+} FM_GetDirectoryToFile_Payload_t;
 
 /**
  *  \brief Get DIR List to File command packet structure
@@ -212,11 +289,22 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char  Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
-    char  Filename[OS_MAX_PATH_LEN];  /**< \brief Filename */
-    uint8 GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
-    uint8 Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+    FM_GetDirectoryToFile_Payload_t Payload; /**< \brief Command Payload */
 } FM_GetDirFileCmd_t;
+
+/**
+ *  \brief Get Directory and output to message command payload
+ *
+ * Contains a directory and position offset, with optional flags
+ * Used by #FM_GET_DIR_PKT_CC
+ */
+typedef struct
+{
+    char   Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
+    uint8  GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8  Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+} FM_GetDirectoryToPkt_Payload_t;
 
 /**
  *  \brief Get DIR List to Packet command packet structure
@@ -227,10 +315,7 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char   Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
-    uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
-    uint8  GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
-    uint8  Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+    FM_GetDirectoryToPkt_Payload_t Payload; /**< \brief Command Payload */
 } FM_GetDirPktCmd_t;
 
 /**
@@ -244,6 +329,17 @@ typedef struct
 } FM_MonitorFilesystemSpaceCmd_t;
 
 /**
+ *  \brief Table Index and State command payload structure
+ *
+ *  Used by #FM_SET_TABLE_STATE_CC
+ */
+typedef struct
+{
+    uint32 TableEntryIndex; /**< \brief Table entry index */
+    uint32 TableEntryState; /**< \brief New table entry state */
+} FM_TableIndexAndState_Payload_t;
+
+/**
  *  \brief Set Table State command packet structure
  *
  *  For command details see #FM_SET_TABLE_STATE_CC
@@ -252,9 +348,19 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    uint32 TableEntryIndex; /**< \brief Table entry index */
-    uint32 TableEntryState; /**< \brief New table entry state */
+    FM_TableIndexAndState_Payload_t Payload; /**< \brief Command Payload */
 } FM_SetTableStateCmd_t;
+
+/**
+ *  \brief File name and mode command payload structure
+ *
+ *  Used by #FM_SET_FILE_PERM_CC
+ */
+typedef struct
+{
+    char   FileName[OS_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
+    uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
+} FM_FilenameAndMode_Payload_t;
 
 /**
  *  \brief Set Permissions for a file
@@ -265,8 +371,7 @@ typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
 
-    char   FileName[OS_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
-    uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
+    FM_FilenameAndMode_Payload_t Payload;
 } FM_SetPermCmd_t;
 
 /**\}*/
@@ -294,17 +399,25 @@ typedef struct
 } FM_DirListEntry_t;
 
 /**
+ *  \brief Get Directory Listing telemetry payload
+ */
+typedef struct
+{
+    char              DirName[OS_MAX_PATH_LEN];          /**< \brief Directory Name */
+    uint32            TotalFiles;                        /**< \brief Number of files in the directory */
+    uint32            PacketFiles;                       /**< \brief Number of files in this packet */
+    uint32            FirstFile;                         /**< \brief Index into directory files of first packet file */
+    FM_DirListEntry_t FileList[FM_DIR_LIST_PKT_ENTRIES]; /**< \brief Directory listing file data */
+} FM_DirListPkt_Payload_t;
+
+/**
  *  \brief Get Directory Listing telemetry packet
  */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    char              DirName[OS_MAX_PATH_LEN];          /**< \brief Directory Name */
-    uint32            TotalFiles;                        /**< \brief Number of files in the directory */
-    uint32            PacketFiles;                       /**< \brief Number of files in this packet */
-    uint32            FirstFile;                         /**< \brief Index into directory files of first packet file */
-    FM_DirListEntry_t FileList[FM_DIR_LIST_PKT_ENTRIES]; /**< \brief Directory listing file data */
+    FM_DirListPkt_Payload_t Payload; /**< \brief Telemetry Payload */
 } FM_DirListPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -330,12 +443,10 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  \brief Get File Info telemetry packet
+ *  \brief Get File Info telemetry payload
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
-
     uint8  FileStatus;                /**< \brief Status indicating whether the file is open or closed */
     uint8  CRC_Computed;              /**< \brief Flag indicating whether a CRC was computed or not */
     uint8  Spare[2];                  /**< \brief Structure padding */
@@ -344,6 +455,16 @@ typedef struct
     uint32 LastModifiedTime;          /**< \brief Last Modification Time of File */
     uint32 Mode;                      /**< \brief Mode of the file (Permissions) */
     char   Filename[OS_MAX_PATH_LEN]; /**< \brief Name of File */
+} FM_FileInfoPkt_Payload_t;
+
+/**
+ *  \brief Get File Info telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    FM_FileInfoPkt_Payload_t Payload; /**< \brief Telemetry Payload */
 } FM_FileInfoPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -362,14 +483,22 @@ typedef struct
 } FM_OpenFilesEntry_t;
 
 /**
+ *  \brief Get Open Files telemetry payload
+ */
+typedef struct
+{
+    uint32              NumOpenFiles;                         /**< \brief Number of files opened via cFE */
+    FM_OpenFilesEntry_t OpenFilesList[OS_MAX_NUM_OPEN_FILES]; /**< \brief List of files opened via cFE */
+} FM_OpenFilesPkt_Payload_t;
+
+/**
  *  \brief Get Open Files telemetry packet
  */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    uint32              NumOpenFiles;                         /**< \brief Number of files opened via cFE */
-    FM_OpenFilesEntry_t OpenFilesList[OS_MAX_NUM_OPEN_FILES]; /**< \brief List of files opened via cFE */
+    FM_OpenFilesPkt_Payload_t Payload; /**< \brief Telemetry Payload */
 } FM_OpenFilesPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -390,13 +519,21 @@ typedef struct
 } FM_MonitorReportEntry_t;
 
 /**
+ *  \brief Monitor filesystem telemetry payload
+ */
+typedef struct
+{
+    FM_MonitorReportEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
+} FM_MonitorReportPkt_Payload_t;
+
+/**
  *  \brief Monitor filesystem telemetry packet
  */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
 
-    FM_MonitorReportEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
+    FM_MonitorReportPkt_Payload_t Payload; /**< \brief Telemetry Payload */
 } FM_MonitorReportPkt_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -406,12 +543,10 @@ typedef struct
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * \brief Housekeeping telemetry packet
+ * \brief Housekeeping telemetry payload
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
-
     uint8 CommandCounter;    /**< \brief Application command counter */
     uint8 CommandErrCounter; /**< \brief Application command error counter */
     uint8 Spare;             /**< \brief Placeholder for unused command warning counter */
@@ -426,6 +561,16 @@ typedef struct
 
     uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
     uint8 ChildPreviousCC; /**< \brief Command code previously executed */
+} FM_HousekeepingPkt_Payload_t;
+
+/**
+ * \brief Housekeeping telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    FM_HousekeepingPkt_Payload_t Payload; /**< \brief Telemetry Payload */
 } FM_HousekeepingPkt_t;
 
 /**\}*/
