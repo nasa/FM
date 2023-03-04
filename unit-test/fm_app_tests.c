@@ -71,12 +71,11 @@ void Test_FM_AppMain_AppInitNotSuccess(void)
 
     /* Assert */
     UtAssert_STUB_COUNT(CFE_ES_RunLoop, 1);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 2);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_STARTUP_EVENTS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_EXIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_EXIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
 }
 
 void Test_FM_AppMain_SBReceiveBufferDefaultOption(void)
@@ -242,9 +241,6 @@ void Test_FM_AppInit_EVSRegisterNotSuccess(void)
 
     /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_STARTUP_EVENTS_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
 void Test_FM_AppInit_CreatePipeFail(void)
