@@ -132,7 +132,7 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
     }
 }
 
-uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInfoCmd)
+uint32 FM_GetFilenameState(const char *Filename, size_t BufferSize, bool FileInfoCmd)
 {
     os_fstat_t FileStatus;
     uint32     FilenameState   = FM_NAME_IS_INVALID;
@@ -217,7 +217,7 @@ uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInf
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+uint32 FM_VerifyNameValid(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     char   LocalFile[1 + OS_MAX_PATH_LEN];
     uint32 FilenameState = FM_NAME_IS_INVALID;
@@ -228,8 +228,8 @@ uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, c
     if (FilenameState == FM_NAME_IS_INVALID)
     {
         /*
-         * This function provided by SB will copy the string from a fixed size buffer,
-         * and always ensures the result is null terminated
+         * This function provided by SB will copy the string from a fixed-size buffer,
+         * and always ensures the result is null-terminated
          */
         CFE_SB_MessageStringGet(LocalFile, Name, NULL, sizeof(LocalFile), BufferSize);
         CFE_EVS_SendEvent(EventID, CFE_EVS_EventType_ERROR, "%s error: invalid name: name = %s", CmdText, LocalFile);
@@ -244,7 +244,7 @@ uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, c
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
+bool FM_VerifyFileState(FM_File_States State, const char *Filename, size_t BufferSize, uint32 EventID,
                         const char *CmdText)
 {
     bool        Result        = false;
@@ -337,8 +337,8 @@ bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 Buffe
     if (!Result)
     {
         /*
-         * This function provided by SB will copy the string from a fixed size buffer,
-         * and always ensures the result is null terminated
+         * This function provided by SB will copy the string from a fixed-size buffer,
+         * and always ensures the result is null-terminated
          */
         CFE_SB_MessageStringGet(LocalFile, Filename, NULL, sizeof(LocalFile), BufferSize);
         CFE_EVS_SendEvent((EventID + ErrorCode), CFE_EVS_EventType_ERROR, "%s error: %s: name = %s", CmdText, ErrorDesc,
@@ -354,7 +354,7 @@ bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 Buffe
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileClosed(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_CLOSED, Filename, BufferSize, EventID, CmdText);
 }
@@ -365,7 +365,7 @@ bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileExists(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_EXISTS, Filename, BufferSize, EventID, CmdText);
 }
@@ -376,7 +376,7 @@ bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNoExist(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_NOEXIST, Filename, BufferSize, EventID, CmdText);
 }
@@ -387,7 +387,7 @@ bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventI
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNotOpen(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_FILE_NOTOPEN, Filename, BufferSize, EventID, CmdText);
 }
@@ -398,7 +398,7 @@ bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventI
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirExists(const char *Directory, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_DIR_EXISTS, Directory, BufferSize, EventID, CmdText);
 }
@@ -409,7 +409,7 @@ bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirNoExist(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     return FM_VerifyFileState(FM_DIR_NOEXIST, Name, BufferSize, EventID, CmdText);
 }
@@ -506,7 +506,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
     **   the string is both non-zero and less than the size
     **   of the string buffer.
     */
-    uint32 StringLength = 0;
+    size_t StringLength = 0;
 
     StringLength = strlen(Directory);
 

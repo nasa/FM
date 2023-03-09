@@ -72,7 +72,7 @@ int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, ui
  * Generated stub function for FM_GetFilenameState()
  * ----------------------------------------------------
  */
-uint32 FM_GetFilenameState(const char *Filename, uint32 BufferSize, bool FileInfoCmd)
+uint32 FM_GetFilenameState(const char *Filename, size_t BufferSize, bool FileInfoCmd)
 {
     UT_GenStub_SetupReturnBuffer(FM_GetFilenameState, uint32);
 
@@ -152,7 +152,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
  * Generated stub function for FM_VerifyDirExists()
  * ----------------------------------------------------
  */
-bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirExists(const char *Directory, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyDirExists, bool);
 
@@ -171,7 +171,7 @@ bool FM_VerifyDirExists(const char *Directory, uint32 BufferSize, uint32 EventID
  * Generated stub function for FM_VerifyDirNoExist()
  * ----------------------------------------------------
  */
-bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyDirNoExist(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyDirNoExist, bool);
 
@@ -190,7 +190,7 @@ bool FM_VerifyDirNoExist(const char *Name, uint32 BufferSize, uint32 EventID, co
  * Generated stub function for FM_VerifyFileClosed()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileClosed(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileClosed, bool);
 
@@ -209,7 +209,7 @@ bool FM_VerifyFileClosed(const char *Filename, uint32 BufferSize, uint32 EventID
  * Generated stub function for FM_VerifyFileExists()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileExists(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileExists, bool);
 
@@ -228,7 +228,7 @@ bool FM_VerifyFileExists(const char *Filename, uint32 BufferSize, uint32 EventID
  * Generated stub function for FM_VerifyFileNoExist()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNoExist(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileNoExist, bool);
 
@@ -247,7 +247,7 @@ bool FM_VerifyFileNoExist(const char *Filename, uint32 BufferSize, uint32 EventI
  * Generated stub function for FM_VerifyFileNotOpen()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+bool FM_VerifyFileNotOpen(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileNotOpen, bool);
 
@@ -266,7 +266,7 @@ bool FM_VerifyFileNotOpen(const char *Filename, uint32 BufferSize, uint32 EventI
  * Generated stub function for FM_VerifyFileState()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 BufferSize, uint32 EventID,
+bool FM_VerifyFileState(FM_File_States State, const char *Filename, size_t BufferSize, uint32 EventID,
                         const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileState, bool);
@@ -287,7 +287,7 @@ bool FM_VerifyFileState(FM_File_States State, const char *Filename, uint32 Buffe
  * Generated stub function for FM_VerifyNameValid()
  * ----------------------------------------------------
  */
-uint32 FM_VerifyNameValid(const char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+uint32 FM_VerifyNameValid(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyNameValid, uint32);
 

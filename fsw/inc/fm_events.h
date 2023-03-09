@@ -19,7 +19,7 @@
 
 /**
  * @file
- *   Specification for the CFS File Manager Event Identifers.
+ *   Specification for the CFS File Manager Event Identifiers.
  */
 #ifndef FM_EVENTS_H
 #define FM_EVENTS_H
