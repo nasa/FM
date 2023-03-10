@@ -212,7 +212,7 @@ void Test_FM_CopyFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_CopyFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_COPY_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_COPY_FILE_CC);
 }
 
 void Test_FM_CopyFileCmd_BadLength(void)
@@ -402,7 +402,7 @@ void Test_FM_MoveFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_MoveFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_MOVE_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_MOVE_FILE_CC);
 }
 
 void Test_FM_MoveFileCmd_BadLength(void)
@@ -597,7 +597,7 @@ void Test_FM_RenameFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_RenameFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_RENAME_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_RENAME_FILE_CC);
 }
 
 void Test_FM_RenameFileCmd_BadLength(void)
@@ -708,7 +708,7 @@ void Test_FM_DeleteFileCmd_Success(void)
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
-    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
+    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_FILE_CC;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -723,7 +723,7 @@ void Test_FM_DeleteFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_DeleteFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_FILE_CC);
 }
 
 void Test_FM_DeleteFileCmd_BadLength(void)
@@ -731,7 +731,7 @@ void Test_FM_DeleteFileCmd_BadLength(void)
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
-    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
+    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_FILE_CC;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), false);
@@ -754,7 +754,7 @@ void Test_FM_DeleteFileCmd_FileNotClosed(void)
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
-    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
+    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_FILE_CC;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -777,7 +777,7 @@ void Test_FM_DeleteFileCmd_NoChildTask(void)
     FM_GlobalData.ChildWriteIndex           = 0;
     FM_GlobalData.ChildQueue[0].CommandCode = 0;
 
-    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_CC;
+    CFE_MSG_FcnCode_t forced_CmdCode = FM_DELETE_FILE_CC;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -815,7 +815,7 @@ void Test_FM_DeleteAllFilesCmd_Success(void)
 {
     FM_DirectoryName_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.DeleteAllCmd.Payload;
+    CmdPtr = &UT_CmdBuf.DeleteAllFilesCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
@@ -834,7 +834,7 @@ void Test_FM_DeleteAllFilesCmd_Success(void)
     UtAssert_True(Result == true, "FM_DeleteAllFilesCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_ALL_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_ALL_FILES_CC);
 }
 
 void Test_FM_DeleteAllFilesCmd_BadLength(void)
@@ -881,7 +881,7 @@ void Test_FM_DeleteAllFilesCmd_NoChildTask(void)
 {
     FM_DirectoryName_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.DeleteAllCmd.Payload;
+    CmdPtr = &UT_CmdBuf.DeleteAllFilesCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
@@ -938,7 +938,7 @@ void Test_FM_DecompressFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_DecompressFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DECOMPRESS_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DECOMPRESS_FILE_CC);
 }
 
 void Test_FM_DecompressFileCmd_BadLength(void)
@@ -1050,7 +1050,7 @@ void Test_FM_ConcatFilesCmd_Success(void)
 {
     FM_TwoSourceOneTarget_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.ConcatCmd.Payload;
+    CmdPtr = &UT_CmdBuf.ConcatFilesCmd.Payload;
 
     strncpy(CmdPtr->Source1, "src1", sizeof(CmdPtr->Source1) - 1);
     strncpy(CmdPtr->Source2, "src2", sizeof(CmdPtr->Source2) - 1);
@@ -1072,7 +1072,7 @@ void Test_FM_ConcatFilesCmd_Success(void)
     UtAssert_True(Result == true, "FM_ConcatFilesCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_CONCAT_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_CONCAT_FILES_CC);
 }
 
 void Test_FM_ConcatFilesCmd_BadLength(void)
@@ -1357,7 +1357,7 @@ void Test_FM_CreateDirectoryCmd_Success(void)
 {
     FM_DirectoryName_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.CreateDirCmd.Payload;
+    CmdPtr = &UT_CmdBuf.CreateDirectoryCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
@@ -1375,7 +1375,7 @@ void Test_FM_CreateDirectoryCmd_Success(void)
     UtAssert_True(Result == true, "FM_CreateDirectoryCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_CREATE_DIR_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_CREATE_DIRECTORY_CC);
 }
 
 void Test_FM_CreateDirectoryCmd_BadLength(void)
@@ -1461,7 +1461,7 @@ void Test_FM_DeleteDirectoryCmd_Success(void)
 {
     FM_DirectoryName_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.DeleteDirCmd.Payload;
+    CmdPtr = &UT_CmdBuf.DeleteDirectoryCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     FM_GlobalData.ChildWriteIndex           = 0;
@@ -1479,7 +1479,7 @@ void Test_FM_DeleteDirectoryCmd_Success(void)
     UtAssert_True(Result == true, "FM_DeleteDirectoryCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_DIR_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_DELETE_DIRECTORY_CC);
 }
 
 void Test_FM_DeleteDirectoryCmd_BadLength(void)
@@ -1565,7 +1565,7 @@ void Test_FM_GetDirListFileCmd_Success(void)
 {
     FM_GetDirectoryToFile_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+    CmdPtr = &UT_CmdBuf.GetDirListFileCmd.Payload;
 
     strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
@@ -1585,14 +1585,14 @@ void Test_FM_GetDirListFileCmd_Success(void)
     UtAssert_True(Result == true, "FM_GetDirListFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_FILE_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_LIST_FILE_CC);
 }
 
 void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
 {
     FM_GetDirectoryToFile_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+    CmdPtr = &UT_CmdBuf.GetDirListFileCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
     CmdPtr->Filename[0]                     = '\0';
@@ -1612,7 +1612,7 @@ void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
     UtAssert_True(Result == true, "FM_GetDirListFileCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_FILE_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_LIST_FILE_CC);
 }
 
 void Test_FM_GetDirListFileCmd_BadLength(void)
@@ -1661,7 +1661,7 @@ void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 {
     FM_GetDirectoryToFile_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+    CmdPtr = &UT_CmdBuf.GetDirListFileCmd.Payload;
 
     strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
@@ -1689,7 +1689,7 @@ void Test_FM_GetDirListFileCmd_NoChildTask(void)
 {
     FM_GetDirectoryToFile_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.GetDirFileCmd.Payload;
+    CmdPtr = &UT_CmdBuf.GetDirListFileCmd.Payload;
 
     strncpy(CmdPtr->Filename, "file", sizeof(CmdPtr->Filename) - 1);
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
@@ -1741,7 +1741,7 @@ void Test_FM_GetDirListPktCmd_Success(void)
 {
     FM_GetDirectoryToPkt_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.GetDirPktCmd.Payload;
+    CmdPtr = &UT_CmdBuf.GetDirListPktCmd.Payload;
 
     strncpy(CmdPtr->Directory, "dir", sizeof(CmdPtr->Directory) - 1);
 
@@ -1760,7 +1760,7 @@ void Test_FM_GetDirListPktCmd_Success(void)
     UtAssert_True(Result == true, "FM_GetDirListPktCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_PKT_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_GET_DIR_LIST_PKT_CC);
 }
 
 void Test_FM_GetDirListPktCmd_BadLength(void)
@@ -2296,7 +2296,7 @@ void Test_FM_SetPermissionsCmd_Success(void)
 {
     FM_FilenameAndMode_Payload_t *CmdPtr;
 
-    CmdPtr = &UT_CmdBuf.SetPermCmd.Payload;
+    CmdPtr = &UT_CmdBuf.SetPermissionsCmd.Payload;
 
     strncpy(CmdPtr->FileName, "file", sizeof(CmdPtr->FileName) - 1);
     UT_SetDefaultReturnValue(UT_KEY(FM_IsValidCmdPktLength), true);
@@ -2311,7 +2311,7 @@ void Test_FM_SetPermissionsCmd_Success(void)
     UtAssert_True(Result == true, "FM_SetPermissionsCmd returned true");
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_SET_FILE_PERM_CC);
+    UtAssert_INT32_EQ(FM_GlobalData.ChildQueue[0].CommandCode, FM_SET_PERMISSIONS_CC);
 }
 
 void Test_FM_SetPermissionsCmd_BadLength(void)

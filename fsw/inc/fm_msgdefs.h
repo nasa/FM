@@ -71,7 +71,7 @@
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdWarnCounter
  *
  *  \par Command Packet Structure
- *       #FM_ResetCmd_t
+ *       #FM_ResetCountersCmd_t
  *
  *  \par Command Success Verification
  *       - Command counters will be set to zero (see description)
@@ -88,7 +88,7 @@
  *       - There are no critical issues related to this command.
  *
  */
-#define FM_RESET_CC 1
+#define FM_RESET_COUNTERS_CC 1
 
 /**
  * \brief Copy File
@@ -151,9 +151,9 @@
  *       critical tasks.  Also, copying very large files may
  *       consume more CPU resource than anticipated.
  *
- *  \sa #FM_MOVE_CC, #FM_RENAME_CC
+ *  \sa #FM_MOVE_FILE_CC, #FM_RENAME_FILE_CC
  */
-#define FM_COPY_CC 2
+#define FM_COPY_FILE_CC 2
 
 /**
  * \brief Move File
@@ -219,9 +219,9 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  *
- *  \sa #FM_COPY_CC, #FM_RENAME_CC
+ *  \sa #FM_COPY_FILE_CC, #FM_RENAME_FILE_CC
  */
-#define FM_MOVE_CC 3
+#define FM_MOVE_FILE_CC 3
 
 /**
  * \brief Rename File
@@ -279,9 +279,9 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  *
- *  \sa #FM_COPY_CC, #FM_MOVE_CC
+ *  \sa #FM_COPY_FILE_CC, #FM_MOVE_FILE_CC
  */
-#define FM_RENAME_CC 4
+#define FM_RENAME_FILE_CC 4
 
 /**
  * \brief Delete File
@@ -330,9 +330,9 @@
  *       The FM application does not provide a method to restore deleted
  *       files.  Critical data may be lost when deleting files.
  *
- *  \sa #FM_DELETE_ALL_CC, #FM_DELETE_DIR_CC
+ *  \sa #FM_DELETE_ALL_FILES_CC, #FM_DELETE_DIRECTORY_CC
  */
-#define FM_DELETE_CC 5
+#define FM_DELETE_FILE_CC 5
 
 /**
  * \brief Delete All Files
@@ -351,7 +351,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_DeleteAllCmd_t
+ *       #FM_DeleteAllFilesCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -392,9 +392,9 @@
  *       deleting a very large number of files may consume more CPU resource
  *       than anticipated.
  *
- *  \sa #FM_DELETE_CC, #FM_DELETE_DIR_CC
+ *  \sa #FM_DELETE_FILE_CC, #FM_DELETE_DIRECTORY_CC
  */
-#define FM_DELETE_ALL_CC 7
+#define FM_DELETE_ALL_FILES_CC 7
 
 /**
  * \brief Decompress File
@@ -418,7 +418,7 @@
  *       will generate an error event.
  *
  *  \par Command Packet Structure
- *       #FM_DecompressCmd_t
+ *       #FM_DecompressFileCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -453,7 +453,7 @@
  *       Decompressing a very large file may consume more CPU resource than
  *       anticipated.
  */
-#define FM_DECOMPRESS_CC 8
+#define FM_DECOMPRESS_FILE_CC 8
 
 /**
  * \brief Concatenate Files
@@ -474,7 +474,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_ConcatCmd_t
+ *       #FM_ConcatFilesCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -517,9 +517,9 @@
  *       Concatenating very large files may consume more CPU resource
  *       than anticipated.
  *
- *  \sa #FM_COPY_CC
+ *  \sa #FM_COPY_FILE_CC
  */
-#define FM_CONCAT_CC 9
+#define FM_CONCAT_FILES_CC 9
 
 /**
  * \brief Get File Information
@@ -579,7 +579,7 @@
  *       Calculating the CRC for a very large file may consume more CPU resource than
  *       anticipated.
  *
- *  \sa #FM_GET_OPEN_FILES_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
+ *  \sa #FM_GET_OPEN_FILES_CC, #FM_GET_DIR_LIST_FILE_CC, #FM_GET_DIR_LIST_PKT_CC
  */
 #define FM_GET_FILE_INFO_CC 10
 
@@ -609,7 +609,7 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  *
- *  \sa #FM_GET_FILE_INFO_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
+ *  \sa #FM_GET_FILE_INFO_CC, #FM_GET_DIR_LIST_FILE_CC, #FM_GET_DIR_LIST_PKT_CC
  */
 #define FM_GET_OPEN_FILES_CC 11
 
@@ -628,7 +628,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_CreateDirCmd_t
+ *       #FM_CreateDirectoryCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -656,9 +656,9 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  *
- *  \sa #FM_DELETE_DIR_CC
+ *  \sa #FM_DELETE_DIRECTORY_CC
  */
-#define FM_CREATE_DIR_CC 12
+#define FM_CREATE_DIRECTORY_CC 12
 
 /**
  * \brief Remove Directory
@@ -676,7 +676,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_DeleteDirCmd_t
+ *       #FM_DeleteDirectoryCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -708,9 +708,9 @@
  *       The unexpected loss of a directory may affect a critical
  *       tasks ability to store data.
  *
- *  \sa #FM_CREATE_DIR_CC
+ *  \sa #FM_CREATE_DIRECTORY_CC
  */
-#define FM_DELETE_DIR_CC 13
+#define FM_DELETE_DIRECTORY_CC 13
 
 /**
  * \brief Get Directory Listing to a File
@@ -731,7 +731,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_GetDirFileCmd_t
+ *       #FM_GetDirListFileCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -778,9 +778,9 @@
  *       Reading a directory that contains thousands of files may consume more CPU
  *       resource than anticipated.
  *
- *  \sa #FM_GET_DIR_PKT_CC
+ *  \sa #FM_GET_DIR_LIST_PKT_CC
  */
-#define FM_GET_DIR_FILE_CC 14
+#define FM_GET_DIR_LIST_FILE_CC 14
 
 /**
  * \brief Get Directory Listing to a Packet
@@ -811,7 +811,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_GetDirPktCmd_t
+ *       #FM_GetDirListPktCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with
@@ -852,9 +852,9 @@
  *       Reading a directory that contains thousands of files may consume more CPU
  *       resource than anticipated.
  *
- *  \sa #FM_GET_DIR_FILE_CC
+ *  \sa #FM_GET_DIR_LIST_FILE_CC
  */
-#define FM_GET_DIR_PKT_CC 15
+#define FM_GET_DIR_LIST_PKT_CC 15
 
 /**
  * \brief Monitor Filesystem Space
@@ -943,7 +943,7 @@
  *       the child task interface queue.
  *
  *  \par Command Packet Structure
- *       #FM_SetPermCmd_t
+ *       #FM_SetPermissionsCmd_t
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
@@ -963,7 +963,7 @@
  *  \par Criticality
  *       - There are no critical issues related to this command.
  */
-#define FM_SET_FILE_PERM_CC 19
+#define FM_SET_PERMISSIONS_CC 19
 
 /**\}*/
 

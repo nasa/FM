@@ -77,12 +77,12 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_ReportHK()
+ * Generated stub function for FM_SendHkCmd()
  * ----------------------------------------------------
  */
-void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
+void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(FM_ReportHK, const CFE_MSG_CommandHeader_t *, Msg);
+    UT_GenStub_AddParam(FM_SendHkCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(FM_ReportHK, Basic, NULL);
+    UT_GenStub_Execute(FM_SendHkCmd, Basic, NULL);
 }

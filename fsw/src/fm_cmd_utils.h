@@ -90,7 +90,7 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
  *  \retval true  Overwrite argument valid
  *  \retval false Overwrite argument invalid
  *
- *  \sa #FM_COPY_CC, #FM_MOVE_CC
+ *  \sa #FM_COPY_FILE_CC, #FM_MOVE_FILE_CC
  */
 bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText);
 

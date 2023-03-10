@@ -172,7 +172,7 @@ int32 FM_AppInit(void);
  *
  *  \param [in] MessagePtr Pointer to Software Bus message buffer.
  *
- *  \sa #FM_ReportHK, #FM_ProcessCmd
+ *  \sa #FM_SendHkCmd, #FM_ProcessCmd
  */
 void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr);
 
@@ -202,11 +202,11 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \par Assumptions, External Events, and Notes: None
  *
- *  \param [in]  Msg Pointer to Software Bus command packet.
+ *  \param [in]  BufPtr Pointer to Software Bus command packet.
  *
- *  \sa #FM_HousekeepingCmd_t, #FM_HousekeepingPkt_t
+ *  \sa #FM_SendHkCmd_t, #FM_HousekeepingPkt_t
  */
-void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg);
+void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */

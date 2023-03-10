@@ -257,7 +257,7 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
     {
         /* Housekeeping request */
         case FM_SEND_HK_MID:
-            FM_ReportHK((CFE_MSG_CommandHeader_t *)BufPtr);
+            FM_SendHkCmd(BufPtr);
             break;
 
         /* FM ground commands */
@@ -292,35 +292,35 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             Result = FM_NoopCmd(BufPtr);
             break;
 
-        case FM_RESET_CC:
+        case FM_RESET_COUNTERS_CC:
             Result = FM_ResetCountersCmd(BufPtr);
             break;
 
-        case FM_COPY_CC:
+        case FM_COPY_FILE_CC:
             Result = FM_CopyFileCmd(BufPtr);
             break;
 
-        case FM_MOVE_CC:
+        case FM_MOVE_FILE_CC:
             Result = FM_MoveFileCmd(BufPtr);
             break;
 
-        case FM_RENAME_CC:
+        case FM_RENAME_FILE_CC:
             Result = FM_RenameFileCmd(BufPtr);
             break;
 
-        case FM_DELETE_CC:
+        case FM_DELETE_FILE_CC:
             Result = FM_DeleteFileCmd(BufPtr);
             break;
 
-        case FM_DELETE_ALL_CC:
+        case FM_DELETE_ALL_FILES_CC:
             Result = FM_DeleteAllFilesCmd(BufPtr);
             break;
 
-        case FM_DECOMPRESS_CC:
+        case FM_DECOMPRESS_FILE_CC:
             Result = FM_DecompressFileCmd(BufPtr);
             break;
 
-        case FM_CONCAT_CC:
+        case FM_CONCAT_FILES_CC:
             Result = FM_ConcatFilesCmd(BufPtr);
             break;
 
@@ -332,19 +332,19 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             Result = FM_GetOpenFilesCmd(BufPtr);
             break;
 
-        case FM_CREATE_DIR_CC:
+        case FM_CREATE_DIRECTORY_CC:
             Result = FM_CreateDirectoryCmd(BufPtr);
             break;
 
-        case FM_DELETE_DIR_CC:
+        case FM_DELETE_DIRECTORY_CC:
             Result = FM_DeleteDirectoryCmd(BufPtr);
             break;
 
-        case FM_GET_DIR_FILE_CC:
+        case FM_GET_DIR_LIST_FILE_CC:
             Result = FM_GetDirListFileCmd(BufPtr);
             break;
 
-        case FM_GET_DIR_PKT_CC:
+        case FM_GET_DIR_LIST_PKT_CC:
             Result = FM_GetDirListPktCmd(BufPtr);
             break;
 
@@ -356,7 +356,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             Result = FM_SetTableStateCmd(BufPtr);
             break;
 
-        case FM_SET_FILE_PERM_CC:
+        case FM_SET_PERMISSIONS_CC:
             Result = FM_SetPermissionsCmd(BufPtr);
             break;
 
@@ -370,7 +370,7 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
     if (Result == true)
     {
         /* Increment command success counter */
-        if (CommandCode != FM_RESET_CC)
+        if (CommandCode != FM_RESET_COUNTERS_CC)
         {
             FM_GlobalData.CommandCounter++;
         }
@@ -387,14 +387,14 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 /* FM application -- housekeeping request packet processor         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
+void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const char *                  CmdText = "HK Request";
     bool                          Result  = true;
     FM_HousekeepingPkt_Payload_t *PayloadPtr;
 
     /* Verify command packet length */
-    Result = FM_IsValidCmdPktLength(&Msg->Msg, sizeof(FM_HousekeepingCmd_t), FM_HK_REQ_ERR_EID, CmdText);
+    Result = FM_IsValidCmdPktLength(CFE_MSG_PTR(*BufPtr), sizeof(FM_SendHkCmd_t), FM_HK_REQ_ERR_EID, CmdText);
 
     if (Result == true)
     {
@@ -403,7 +403,7 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         FM_AcquireTablePointers();
 
         /* Initialize housekeeping telemetry message */
-        CFE_MSG_Init(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
+        CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
                      sizeof(FM_HousekeepingPkt_t));
 
         PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
@@ -425,7 +425,7 @@ void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
         PayloadPtr->ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
         PayloadPtr->ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
 
-        CFE_SB_TimeStampMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg);
-        CFE_SB_TransmitMsg(&FM_GlobalData.HousekeepingPkt.TlmHeader.Msg, true);
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), true);
     }
 }
