@@ -26,7 +26,6 @@
 #include "fm_cmd_utils.h"
 #include "utgenstub.h"
 
-void UT_DefaultHandler_FM_IsValidCmdPktLength(void *, UT_EntryKey_t, const UT_StubContext_t *);
 void UT_DefaultHandler_FM_VerifyChildTask(void *, UT_EntryKey_t, const UT_StubContext_t *);
 void UT_DefaultHandler_FM_VerifyDirExists(void *, UT_EntryKey_t, const UT_StubContext_t *);
 void UT_DefaultHandler_FM_VerifyDirNoExist(void *, UT_EntryKey_t, const UT_StubContext_t *);
@@ -129,25 +128,6 @@ void FM_InvokeChildTask(void)
 {
 
     UT_GenStub_Execute(FM_InvokeChildTask, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
- * Generated stub function for FM_IsValidCmdPktLength()
- * ----------------------------------------------------
- */
-bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID, const char *CmdText)
-{
-    UT_GenStub_SetupReturnBuffer(FM_IsValidCmdPktLength, bool);
-
-    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const CFE_MSG_Message_t *, MsgPtr);
-    UT_GenStub_AddParam(FM_IsValidCmdPktLength, size_t, ExpectedLength);
-    UT_GenStub_AddParam(FM_IsValidCmdPktLength, uint32, EventID);
-    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const char *, CmdText);
-
-    UT_GenStub_Execute(FM_IsValidCmdPktLength, Basic, UT_DefaultHandler_FM_IsValidCmdPktLength);
-
-    return UT_GenStub_GetReturnValue(FM_IsValidCmdPktLength, bool);
 }
 
 /*

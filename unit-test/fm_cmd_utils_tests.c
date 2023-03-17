@@ -45,27 +45,6 @@
  *          TEST CASE FUNCTIONS
  *********************************************************************************/
 
-/*****************
- * IsValidCmdPktLength Tests
- ****************/
-void Test_FM_IsValidCmdPktLength(void)
-{
-    size_t length  = 5;
-    uint32 eventid = 1;
-
-    /* Matching length */
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_IsValidCmdPktLength(NULL, length, 1, "Cmd Text"));
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-    /* Mismatched length */
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_IsValidCmdPktLength(NULL, length + 1, eventid, "Cmd Text"));
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, eventid);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
 /* **************************
  * VerifyOverwrite Tests
  * *************************/
@@ -695,7 +674,6 @@ void Test_FM_GetDirectorySpaceEstimate(void)
  */
 void UtTest_Setup(void)
 {
-    UtTest_Add(Test_FM_IsValidCmdPktLength, FM_Test_Setup, FM_Test_Teardown, "Test_FM_IsValidCmdPktLength");
     UtTest_Add(Test_FM_VerifyOverwrite, FM_Test_Setup, FM_Test_Teardown, "Test_FM_VerifyOverwrite");
     UtTest_Add(Test_FM_GetOpenFilesData, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetOpenFilesData");
     UtTest_Add(Test_FM_GetFilenameState, FM_Test_Setup, FM_Test_Teardown, "Test_FM_GetFilenameState");

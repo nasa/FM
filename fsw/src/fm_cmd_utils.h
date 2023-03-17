@@ -52,27 +52,6 @@ typedef enum
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  \brief Verify Command Packet Length Function
- *
- *  \par Description
- *       This function is invoked from each of the command handlers to verify the
- *       length of the command packet.
- *
- *  \par Assumptions, External Events, and Notes:
- *
- *  \param [in]  MsgPtr         Pointer to Message
- *  \param [in]  ExpectedLength Expected packet length (command specific)
- *  \param [in]  EventID        Error event ID (command specific)
- *  \param [in]  CmdText        Error event text (command specific)
- *
- *  \return Boolean valid packet length response
- *  \retval true  Packet length valid
- *  \retval false Packet length invalid
- */
-bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID,
-                            const char *CmdText);
-
-/**
  *  \brief Verify Target File Overwrite Function
  *
  *  \par Description

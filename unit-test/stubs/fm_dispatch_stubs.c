@@ -20,45 +20,51 @@
 /**
  * @file
  *
- * Auto-Generated stub implementations for functions defined in fm_app header
+ * Auto-Generated stub implementations for functions defined in fm_dispatch header
  */
 
-#include "fm_app.h"
+#include "fm_dispatch.h"
 #include "utgenstub.h"
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_AppInit()
+ * Generated stub function for FM_IsValidCmdPktLength()
  * ----------------------------------------------------
  */
-int32 FM_AppInit(void)
+bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID, const char *CmdText)
 {
-    UT_GenStub_SetupReturnBuffer(FM_AppInit, int32);
+    UT_GenStub_SetupReturnBuffer(FM_IsValidCmdPktLength, bool);
 
-    UT_GenStub_Execute(FM_AppInit, Basic, NULL);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, size_t, ExpectedLength);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, uint32, EventID);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const char *, CmdText);
 
-    return UT_GenStub_GetReturnValue(FM_AppInit, int32);
+    UT_GenStub_Execute(FM_IsValidCmdPktLength, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_IsValidCmdPktLength, bool);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_AppMain()
+ * Generated stub function for FM_ProcessCmd()
  * ----------------------------------------------------
  */
-void FM_AppMain(void)
+void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
+    UT_GenStub_AddParam(FM_ProcessCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(FM_AppMain, Basic, NULL);
+    UT_GenStub_Execute(FM_ProcessCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_SendHkCmd()
+ * Generated stub function for FM_ProcessPkt()
  * ----------------------------------------------------
  */
-void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
+void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(FM_SendHkCmd, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(FM_ProcessPkt, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(FM_SendHkCmd, Basic, NULL);
+    UT_GenStub_Execute(FM_ProcessPkt, Basic, NULL);
 }
