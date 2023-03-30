@@ -41,32 +41,6 @@ static bool   FileIsOpen    = false;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* FM utility function -- verify command packet length             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID, const char *CmdText)
-{
-    bool   FunctionResult = true;
-    size_t ActualLength   = 0;
-
-    CFE_MSG_GetSize(MsgPtr, &ActualLength);
-
-    /* Verify command packet length */
-    if (ActualLength != ExpectedLength)
-    {
-        FunctionResult = false;
-
-        CFE_EVS_SendEvent(EventID, CFE_EVS_EventType_ERROR,
-                          "%s error: invalid command packet length: expected = %d, actual = %d", CmdText,
-                          (int)ExpectedLength, (int)ActualLength);
-    }
-
-    return FunctionResult;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
 /* FM utility function -- verify state is not invalid              */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

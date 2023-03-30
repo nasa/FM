@@ -15,6 +15,7 @@ set(APP_SRC_FILES
   fsw/src/fm_app.c
   fsw/src/fm_cmds.c
   fsw/src/fm_child.c
+  fsw/src/fm_dispatch.c
   fsw/src/fm_tbl.c
 )
 

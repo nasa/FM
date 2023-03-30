@@ -39,6 +39,7 @@
 #include "fm_child.h"
 #include "fm_cmds.h"
 #include "fm_cmd_utils.h"
+#include "fm_dispatch.h"
 #include "fm_events.h"
 #include "fm_perfids.h"
 #include "fm_platform_cfg.h"
@@ -243,189 +244,40 @@ int32 FM_AppInit(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* FM application -- input packet processor                        */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
-{
-    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
-
-    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
-
-    switch (CFE_SB_MsgIdToValue(MessageID))
-    {
-        /* Housekeeping request */
-        case FM_SEND_HK_MID:
-            FM_SendHkCmd(BufPtr);
-            break;
-
-        /* FM ground commands */
-        case FM_CMD_MID:
-            FM_ProcessCmd(BufPtr);
-            break;
-
-        default:
-            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Main loop error: invalid message ID: mid = 0x%08lX",
-                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
-            break;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM application -- command packet processor                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    bool              Result      = true;
-    CFE_MSG_FcnCode_t CommandCode = 0;
-
-    CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
-
-    /* Invoke specific command handler */
-    switch (CommandCode)
-    {
-        case FM_NOOP_CC:
-            Result = FM_NoopCmd(BufPtr);
-            break;
-
-        case FM_RESET_COUNTERS_CC:
-            Result = FM_ResetCountersCmd(BufPtr);
-            break;
-
-        case FM_COPY_FILE_CC:
-            Result = FM_CopyFileCmd(BufPtr);
-            break;
-
-        case FM_MOVE_FILE_CC:
-            Result = FM_MoveFileCmd(BufPtr);
-            break;
-
-        case FM_RENAME_FILE_CC:
-            Result = FM_RenameFileCmd(BufPtr);
-            break;
-
-        case FM_DELETE_FILE_CC:
-            Result = FM_DeleteFileCmd(BufPtr);
-            break;
-
-        case FM_DELETE_ALL_FILES_CC:
-            Result = FM_DeleteAllFilesCmd(BufPtr);
-            break;
-
-        case FM_DECOMPRESS_FILE_CC:
-            Result = FM_DecompressFileCmd(BufPtr);
-            break;
-
-        case FM_CONCAT_FILES_CC:
-            Result = FM_ConcatFilesCmd(BufPtr);
-            break;
-
-        case FM_GET_FILE_INFO_CC:
-            Result = FM_GetFileInfoCmd(BufPtr);
-            break;
-
-        case FM_GET_OPEN_FILES_CC:
-            Result = FM_GetOpenFilesCmd(BufPtr);
-            break;
-
-        case FM_CREATE_DIRECTORY_CC:
-            Result = FM_CreateDirectoryCmd(BufPtr);
-            break;
-
-        case FM_DELETE_DIRECTORY_CC:
-            Result = FM_DeleteDirectoryCmd(BufPtr);
-            break;
-
-        case FM_GET_DIR_LIST_FILE_CC:
-            Result = FM_GetDirListFileCmd(BufPtr);
-            break;
-
-        case FM_GET_DIR_LIST_PKT_CC:
-            Result = FM_GetDirListPktCmd(BufPtr);
-            break;
-
-        case FM_MONITOR_FILESYSTEM_SPACE_CC:
-            Result = FM_MonitorFilesystemSpaceCmd(BufPtr);
-            break;
-
-        case FM_SET_TABLE_STATE_CC:
-            Result = FM_SetTableStateCmd(BufPtr);
-            break;
-
-        case FM_SET_PERMISSIONS_CC:
-            Result = FM_SetPermissionsCmd(BufPtr);
-            break;
-
-        default:
-            Result = false;
-            CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Main loop error: invalid command code: cc = %d",
-                              CommandCode);
-            break;
-    }
-
-    if (Result == true)
-    {
-        /* Increment command success counter */
-        if (CommandCode != FM_RESET_COUNTERS_CC)
-        {
-            FM_GlobalData.CommandCounter++;
-        }
-    }
-    else
-    {
-        /* Increment command error counter */
-        FM_GlobalData.CommandErrCounter++;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
 /* FM application -- housekeeping request packet processor         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    const char *                  CmdText = "HK Request";
-    bool                          Result  = true;
     FM_HousekeepingPkt_Payload_t *PayloadPtr;
 
-    /* Verify command packet length */
-    Result = FM_IsValidCmdPktLength(CFE_MSG_PTR(*BufPtr), sizeof(FM_SendHkCmd_t), FM_HK_REQ_ERR_EID, CmdText);
+    FM_ReleaseTablePointers();
 
-    if (Result == true)
-    {
-        FM_ReleaseTablePointers();
+    FM_AcquireTablePointers();
 
-        FM_AcquireTablePointers();
+    /* Initialize housekeeping telemetry message */
+    CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
+                 sizeof(FM_HousekeepingPkt_t));
 
-        /* Initialize housekeeping telemetry message */
-        CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
-                     sizeof(FM_HousekeepingPkt_t));
+    PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
 
-        PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
+    /* Report application command counters */
+    PayloadPtr->CommandCounter    = FM_GlobalData.CommandCounter;
+    PayloadPtr->CommandErrCounter = FM_GlobalData.CommandErrCounter;
 
-        /* Report application command counters */
-        PayloadPtr->CommandCounter    = FM_GlobalData.CommandCounter;
-        PayloadPtr->CommandErrCounter = FM_GlobalData.CommandErrCounter;
+    PayloadPtr->NumOpenFiles = FM_GetOpenFilesData(NULL);
 
-        PayloadPtr->NumOpenFiles = FM_GetOpenFilesData(NULL);
+    /* Report child task command counters */
+    PayloadPtr->ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
+    PayloadPtr->ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
+    PayloadPtr->ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
 
-        /* Report child task command counters */
-        PayloadPtr->ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
-        PayloadPtr->ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
-        PayloadPtr->ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
+    PayloadPtr->ChildQueueCount = FM_GlobalData.ChildQueueCount;
 
-        PayloadPtr->ChildQueueCount = FM_GlobalData.ChildQueueCount;
+    /* Report current and previous commands executed by the child task */
+    PayloadPtr->ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
+    PayloadPtr->ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
 
-        /* Report current and previous commands executed by the child task */
-        PayloadPtr->ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
-        PayloadPtr->ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
-
-        CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader));
-        CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), true);
-    }
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), true);
 }

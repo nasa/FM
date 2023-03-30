@@ -162,34 +162,6 @@ void FM_AppMain(void);
 int32 FM_AppInit(void);
 
 /**
- *  \brief Process Input Command Packets
- *
- *  \par Description
- *
- *       Branch to appropriate input packet handler: HK request or FM commands.
- *
- *  \par Assumptions, External Events, and Notes: None
- *
- *  \param [in] MessagePtr Pointer to Software Bus message buffer.
- *
- *  \sa #FM_SendHkCmd, #FM_ProcessCmd
- */
-void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr);
-
-/**
- *  \brief Process FM Ground Commands
- *
- *  \par Description
- *
- *       Branch to the command specific handlers for FM ground commands.
- *
- *  \par Assumptions, External Events, and Notes: None
- *
- *  \param [in]  BufPtr Pointer to Software Bus message buffer.
- */
-void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr);
-
-/**
  *  \brief Housekeeping Request Command Handler
  *
  *  \par Description
