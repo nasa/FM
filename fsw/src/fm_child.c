@@ -39,7 +39,7 @@
 
 /************************************************************************
 ** OSAL Compatibility for directory name access
-** New OSAL version have an access macro to get the string.  If that
+** New OSAL version has an access macro to get the string. If that
 ** macro is defined, use it, otherwise assume "d_name" structure member.
 *************************************************************************/
 #ifndef OS_DIRENTRY_NAME
@@ -195,7 +195,7 @@ void FM_ChildProcess(void)
     const char *          TaskText = "Child Task";
     FM_ChildQueueEntry_t *CmdArgs  = &FM_GlobalData.ChildQueue[FM_GlobalData.ChildReadIndex];
 
-    /* Invoke the command specific handler */
+    /* Invoke the command-specific handler */
     switch (CmdArgs->CommandCode)
     {
         case FM_COPY_FILE_CC:
@@ -448,7 +448,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
     char        Filename[2 * OS_MAX_PATH_LEN] = "";
 
     /*
-    ** Command argument useage for this command:
+    ** Command argument usage for this command:
     **
     **  CmdArgs->CommandCode = FM_DELETE_ALL_FILES_CC
     **  CmdArgs->Source1     = directory name
@@ -815,7 +815,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
     /*
-    ** Command argument useage for this command:
+    ** Command argument usage for this command:
     **
     **  CmdArgs->CommandCode   = FM_GET_DIR_LIST_FILE_CC
     **  CmdArgs->Source1       = name of directory or file
@@ -1090,7 +1090,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
     /*
-    ** Command argument useage for this command:
+    ** Command argument usage for this command:
     **
     **  CmdArgs->CommandCode = FM_GET_DIR_LIST_FILE_CC
     **  CmdArgs->Source1     = directory name
@@ -1147,8 +1147,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     os_dirent_t        DirEntry;
     int32              ListIndex      = 0;
     FM_DirListEntry_t *ListEntry      = NULL;
-    int32              PathLength     = 0;
-    int32              EntryLength    = 0;
+    size_t             PathLength     = 0;
+    size_t             EntryLength    = 0;
     int32              FilesTillSleep = FM_CHILD_STAT_SLEEP_FILECOUNT;
     int32              Status;
 
@@ -1160,7 +1160,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;
 
     /*
-    ** Command argument useage for this command:
+    ** Command argument usage for this command:
     **
     **  CmdArgs->CommandCode   = FM_GET_DIR_LIST_PKT_CC
     **  CmdArgs->Source1       = directory name
@@ -1209,7 +1209,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                 /* Do not count the "." and ".." directory entries */
                 ReportPtr->TotalFiles++;
 
-                /* Start collecting directory entries at command specified offset */
+                /* Start collecting directory entries at command-specified offset */
                 /* Stop collecting directory entries when telemetry packet is full */
                 if ((ReportPtr->TotalFiles > ReportPtr->FirstFile) &&
                     (ReportPtr->PacketFiles < FM_DIR_LIST_PKT_ENTRIES))
@@ -1335,7 +1335,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
             strncpy(FM_GlobalData.DirListFileStats.DirName, Directory, OS_MAX_PATH_LEN - 1);
             FM_GlobalData.DirListFileStats.DirName[OS_MAX_PATH_LEN - 1] = '\0';
 
-            /* Write blank FM directory statistics structure as a place holder */
+            /* Write blank FM directory statistics structure as a placeholder */
             BytesWritten = OS_write(FileHandle, &FM_GlobalData.DirListFileStats, sizeof(FM_DirListFileStats_t));
             if (BytesWritten == sizeof(FM_DirListFileStats_t))
             {
@@ -1393,13 +1393,13 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
                              const char *Filename, uint8 getSizeTimeMode)
 {
     const char *      CmdText                   = "Directory List to File";
-    int32             WriteLength               = sizeof(FM_DirListEntry_t);
+    size_t            WriteLength               = sizeof(FM_DirListEntry_t);
     bool              ReadingDirectory          = true;
     bool              CommandResult             = true;
     uint32            DirEntries                = 0;
     uint32            FileEntries               = 0;
-    int32             EntryLength               = 0;
-    int32             PathLength                = 0;
+    size_t            EntryLength               = 0;
+    size_t            PathLength                = 0;
     int32             BytesWritten              = 0;
     int32             FilesTillSleep            = FM_CHILD_STAT_SLEEP_FILECOUNT;
     int32             Status                    = 0;
@@ -1445,7 +1445,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
 
                     /*
                      * Populate directory list file entry -
-                     * Note this is guaranteed to be null terminated due to the memset()
+                     * Note this is guaranteed to be null-terminated due to the memset()
                      * this will leave at least one null char after the string.
                      */
                     memset(&DirListData, 0, sizeof(DirListData));
@@ -1491,7 +1491,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
         FM_GlobalData.DirListFileStats.DirEntries  = DirEntries;
         FM_GlobalData.DirListFileStats.FileEntries = FileEntries;
 
-        /* Back up to the start of the statisitics data */
+        /* Back up to the start of the statistics data */
         OS_lseek(FileHandle, sizeof(CFE_FS_Header_t), OS_SEEK_SET);
 
         /* Write an updated version of the statistics data */
