@@ -1683,9 +1683,11 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
     FM_DirListPkt_Payload_t *ReportPtr;
 
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2", .DirListOffset = 1};
-    os_dirent_t direntry = {.FileName = "filename"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_DIR_LIST_PKT_CC,
+                                        .Source1       = "dummy_source1",
+                                        .Source2       = "dummy_source2",
+                                        .DirListOffset = 1};
+    os_dirent_t          direntry    = {.FileName = "filename"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);

@@ -178,8 +178,7 @@ int32 FM_AppInit(void)
 
     if (Result != CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(FM_STARTUP_EVENTS_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s register for event services: result = 0x%08X", ErrText, (unsigned int)Result);
+        CFE_ES_WriteToSysLog("FM App: Error registering for Event Services, RC = 0x%08X\n", (unsigned int)Result);
     }
     else
     {
