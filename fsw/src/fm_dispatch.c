@@ -72,12 +72,12 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_NoopVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_NoopVerifyDispatch(const FM_NoopCmd_t *BufPtr)
 {
     /* Verify message length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_NoopCmd_t), FM_NOOP_PKT_ERR_EID, "No-op"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_NoopCmd_t), FM_NOOP_PKT_ERR_EID, "No-op"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_NoopCmd(BufPtr);
@@ -89,12 +89,13 @@ bool FM_NoopVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_ResetCountersVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_ResetCountersVerifyDispatch(const FM_ResetCountersCmd_t *BufPtr)
 {
     /* Verify message length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ResetCountersCmd_t), FM_RESET_PKT_ERR_EID, "Reset Counters"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_ResetCountersCmd_t), FM_RESET_PKT_ERR_EID,
+                                "Reset Counters"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_ResetCountersCmd(BufPtr);
@@ -106,12 +107,12 @@ bool FM_ResetCountersVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_CopyFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_CopyFileVerifyDispatch(const FM_CopyFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CopyFileCmd_t), FM_COPY_PKT_ERR_EID, "Copy File"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_CopyFileCmd_t), FM_COPY_PKT_ERR_EID, "Copy File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_CopyFileCmd(BufPtr);
@@ -123,12 +124,12 @@ bool FM_CopyFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_MoveFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_MoveFileVerifyDispatch(const FM_MoveFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_MoveFileCmd_t), FM_MOVE_PKT_ERR_EID, "Move File"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_MoveFileCmd_t), FM_MOVE_PKT_ERR_EID, "Move File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_MoveFileCmd(BufPtr);
@@ -140,12 +141,13 @@ bool FM_MoveFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_RenameFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_RenameFileVerifyDispatch(const FM_RenameFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_RenameFileCmd_t), FM_RENAME_PKT_ERR_EID, "Rename File"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_RenameFileCmd_t), FM_RENAME_PKT_ERR_EID,
+                                "Rename File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_RenameFileCmd(BufPtr);
@@ -157,12 +159,13 @@ bool FM_RenameFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_DeleteFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_DeleteFileVerifyDispatch(const FM_DeleteFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteFileCmd_t), FM_DELETE_PKT_ERR_EID, "Delete File"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_DeleteFileCmd_t), FM_DELETE_PKT_ERR_EID,
+                                "Delete File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_DeleteFileCmd(BufPtr);
@@ -174,13 +177,13 @@ bool FM_DeleteFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_DeleteAllFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_DeleteAllFilesVerifyDispatch(const FM_DeleteAllFilesCmd_t *BufPtr)
 {
     /* Verify message length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteAllFilesCmd_t), FM_DELETE_ALL_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_DeleteAllFilesCmd_t), FM_DELETE_ALL_PKT_ERR_EID,
                                 "Delete All Files"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_DeleteAllFilesCmd(BufPtr);
@@ -192,12 +195,13 @@ bool FM_DeleteAllFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_DecompressFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_DecompressFileVerifyDispatch(const FM_DecompressFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DecompressFileCmd_t), FM_DECOM_PKT_ERR_EID, "Decompress File"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_DecompressFileCmd_t), FM_DECOM_PKT_ERR_EID,
+                                "Decompress File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_DecompressFileCmd(BufPtr);
@@ -209,12 +213,13 @@ bool FM_DecompressFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_ConcatFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_ConcatFilesVerifyDispatch(const FM_ConcatFilesCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_ConcatFilesCmd_t), FM_CONCAT_PKT_ERR_EID, "Concat Files"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_ConcatFilesCmd_t), FM_CONCAT_PKT_ERR_EID,
+                                "Concat Files"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_ConcatFilesCmd(BufPtr);
@@ -226,13 +231,13 @@ bool FM_ConcatFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetFileInfoVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_GetFileInfoVerifyDispatch(const FM_GetFileInfoCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetFileInfoCmd_t), FM_GET_FILE_INFO_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_GetFileInfoCmd_t), FM_GET_FILE_INFO_PKT_ERR_EID,
                                 "Get File Info"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_GetFileInfoCmd(BufPtr);
@@ -244,13 +249,13 @@ bool FM_GetFileInfoVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetOpenFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_GetOpenFilesVerifyDispatch(const FM_GetOpenFilesCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetOpenFilesCmd_t), FM_GET_OPEN_FILES_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_GetOpenFilesCmd_t), FM_GET_OPEN_FILES_PKT_ERR_EID,
                                 "Get Open Files"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_GetOpenFilesCmd(BufPtr);
@@ -262,13 +267,13 @@ bool FM_GetOpenFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_CreateDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_CreateDirectoryVerifyDispatch(const FM_CreateDirectoryCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_CreateDirectoryCmd_t), FM_CREATE_DIR_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_CreateDirectoryCmd_t), FM_CREATE_DIR_PKT_ERR_EID,
                                 "Create Directory"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_CreateDirectoryCmd(BufPtr);
@@ -280,13 +285,13 @@ bool FM_CreateDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_DeleteDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_DeleteDirectoryVerifyDispatch(const FM_DeleteDirectoryCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_DeleteDirectoryCmd_t), FM_DELETE_DIR_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_DeleteDirectoryCmd_t), FM_DELETE_DIR_PKT_ERR_EID,
                                 "Delete Directory"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_DeleteDirectoryCmd(BufPtr);
@@ -298,13 +303,13 @@ bool FM_DeleteDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetDirListFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_GetDirListFileVerifyDispatch(const FM_GetDirListFileCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirListFileCmd_t), FM_GET_DIR_FILE_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_GetDirListFileCmd_t), FM_GET_DIR_FILE_PKT_ERR_EID,
                                 "Directory List to File"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_GetDirListFileCmd(BufPtr);
@@ -316,13 +321,13 @@ bool FM_GetDirListFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_GetDirListPktVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_GetDirListPktVerifyDispatch(const FM_GetDirListPktCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_GetDirListPktCmd_t), FM_GET_DIR_PKT_PKT_ERR_EID,
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_GetDirListPktCmd_t), FM_GET_DIR_PKT_PKT_ERR_EID,
                                 "Directory List to Packet"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_GetDirListPktCmd(BufPtr);
@@ -334,13 +339,13 @@ bool FM_GetDirListPktVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_MonitorFilesystemSpaceVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_MonitorFilesystemSpaceVerifyDispatch(const FM_MonitorFilesystemSpaceCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_MonitorFilesystemSpaceCmd_t), FM_GET_FREE_SPACE_PKT_ERR_EID,
-                                "Get Free Space"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_MonitorFilesystemSpaceCmd_t),
+                                FM_GET_FREE_SPACE_PKT_ERR_EID, "Get Free Space"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_MonitorFilesystemSpaceCmd(BufPtr);
@@ -352,13 +357,13 @@ bool FM_MonitorFilesystemSpaceVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_SetTableStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_SetTableStateVerifyDispatch(const FM_SetTableStateCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetTableStateCmd_t), FM_SET_TABLE_STATE_PKT_ERR_EID,
-                                "Set Table State"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_SetTableStateCmd_t),
+                                FM_SET_TABLE_STATE_PKT_ERR_EID, "Set Table State"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_SetTableStateCmd(BufPtr);
@@ -370,12 +375,13 @@ bool FM_SetTableStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_SetPermissionsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t FM_SetPermissionsVerifyDispatch(const FM_SetPermissionsCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SetPermissionsCmd_t), FM_SET_PERM_ERR_EID, "Set Permissions"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_SetPermissionsCmd_t), FM_SET_PERM_ERR_EID,
+                                "Set Permissions"))
     {
-        return false;
+        return CFE_STATUS_VALIDATION_FAILURE;
     }
 
     return FM_SetPermissionsCmd(BufPtr);
@@ -387,10 +393,10 @@ bool FM_SetPermissionsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void FM_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+void FM_SendHkVerifyDispatch(const FM_SendHkCmd_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SendHkCmd_t), FM_HK_REQ_ERR_EID, "HK Request"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->CommandHeader.Msg, sizeof(FM_SendHkCmd_t), FM_HK_REQ_ERR_EID, "HK Request"))
     {
         return;
     }
@@ -414,7 +420,7 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
     {
         /* Housekeeping request */
         case FM_SEND_HK_MID:
-            FM_SendHkVerifyDispatch(BufPtr);
+            FM_SendHkVerifyDispatch((FM_SendHkCmd_t *)BufPtr);
             break;
 
         /* FM ground commands */
@@ -437,7 +443,7 @@ void FM_ProcessPkt(const CFE_SB_Buffer_t *BufPtr)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    bool              Result;
+    CFE_Status_t      Status      = FM_ERROR;
     CFE_MSG_FcnCode_t CommandCode = 0;
 
     CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
@@ -446,85 +452,84 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
     switch (CommandCode)
     {
         case FM_NOOP_CC:
-            Result = FM_NoopVerifyDispatch(BufPtr);
+            Status = FM_NoopVerifyDispatch((FM_NoopCmd_t *)BufPtr);
             break;
 
         case FM_RESET_COUNTERS_CC:
-            Result = FM_ResetCountersVerifyDispatch(BufPtr);
+            Status = FM_ResetCountersVerifyDispatch((FM_ResetCountersCmd_t *)BufPtr);
             break;
 
         case FM_COPY_FILE_CC:
-            Result = FM_CopyFileVerifyDispatch(BufPtr);
+            Status = FM_CopyFileVerifyDispatch((FM_CopyFileCmd_t *)BufPtr);
             break;
 
         case FM_MOVE_FILE_CC:
-            Result = FM_MoveFileVerifyDispatch(BufPtr);
+            Status = FM_MoveFileVerifyDispatch((FM_MoveFileCmd_t *)BufPtr);
             break;
 
         case FM_RENAME_FILE_CC:
-            Result = FM_RenameFileVerifyDispatch(BufPtr);
+            Status = FM_RenameFileVerifyDispatch((FM_RenameFileCmd_t *)BufPtr);
             break;
 
         case FM_DELETE_FILE_CC:
-            Result = FM_DeleteFileVerifyDispatch(BufPtr);
+            Status = FM_DeleteFileVerifyDispatch((FM_DeleteFileCmd_t *)BufPtr);
             break;
 
         case FM_DELETE_ALL_FILES_CC:
-            Result = FM_DeleteAllFilesVerifyDispatch(BufPtr);
+            Status = FM_DeleteAllFilesVerifyDispatch((FM_DeleteAllFilesCmd_t *)BufPtr);
             break;
 
         case FM_DECOMPRESS_FILE_CC:
-            Result = FM_DecompressFileVerifyDispatch(BufPtr);
+            Status = FM_DecompressFileVerifyDispatch((FM_DecompressFileCmd_t *)BufPtr);
             break;
 
         case FM_CONCAT_FILES_CC:
-            Result = FM_ConcatFilesVerifyDispatch(BufPtr);
+            Status = FM_ConcatFilesVerifyDispatch((FM_ConcatFilesCmd_t *)BufPtr);
             break;
 
         case FM_GET_FILE_INFO_CC:
-            Result = FM_GetFileInfoVerifyDispatch(BufPtr);
+            Status = FM_GetFileInfoVerifyDispatch((FM_GetFileInfoCmd_t *)BufPtr);
             break;
 
         case FM_GET_OPEN_FILES_CC:
-            Result = FM_GetOpenFilesVerifyDispatch(BufPtr);
+            Status = FM_GetOpenFilesVerifyDispatch((FM_GetOpenFilesCmd_t *)BufPtr);
             break;
 
         case FM_CREATE_DIRECTORY_CC:
-            Result = FM_CreateDirectoryVerifyDispatch(BufPtr);
+            Status = FM_CreateDirectoryVerifyDispatch((FM_CreateDirectoryCmd_t *)BufPtr);
             break;
 
         case FM_DELETE_DIRECTORY_CC:
-            Result = FM_DeleteDirectoryVerifyDispatch(BufPtr);
+            Status = FM_DeleteDirectoryVerifyDispatch((FM_DeleteDirectoryCmd_t *)BufPtr);
             break;
 
         case FM_GET_DIR_LIST_FILE_CC:
-            Result = FM_GetDirListFileVerifyDispatch(BufPtr);
+            Status = FM_GetDirListFileVerifyDispatch((FM_GetDirListFileCmd_t *)BufPtr);
             break;
 
         case FM_GET_DIR_LIST_PKT_CC:
-            Result = FM_GetDirListPktVerifyDispatch(BufPtr);
+            Status = FM_GetDirListPktVerifyDispatch((FM_GetDirListPktCmd_t *)BufPtr);
             break;
 
         case FM_MONITOR_FILESYSTEM_SPACE_CC:
-            Result = FM_MonitorFilesystemSpaceVerifyDispatch(BufPtr);
+            Status = FM_MonitorFilesystemSpaceVerifyDispatch((FM_MonitorFilesystemSpaceCmd_t *)BufPtr);
             break;
 
         case FM_SET_TABLE_STATE_CC:
-            Result = FM_SetTableStateVerifyDispatch(BufPtr);
+            Status = FM_SetTableStateVerifyDispatch((FM_SetTableStateCmd_t *)BufPtr);
             break;
 
         case FM_SET_PERMISSIONS_CC:
-            Result = FM_SetPermissionsVerifyDispatch(BufPtr);
+            Status = FM_SetPermissionsVerifyDispatch((FM_SetPermissionsCmd_t *)BufPtr);
             break;
 
         default:
-            Result = false;
             CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Main loop error: invalid command code: cc = %d",
                               CommandCode);
             break;
     }
 
-    if (Result)
+    if (Status == CFE_SUCCESS)
     {
         /* Increment command success counter */
         if (CommandCode != FM_RESET_COUNTERS_CC)

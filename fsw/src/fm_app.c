@@ -246,7 +246,7 @@ CFE_Status_t FM_AppInit(void)
 /* FM application -- housekeeping request packet processor         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
+void FM_SendHkCmd(const FM_SendHkCmd_t *BufPtr)
 {
     FM_HousekeepingPkt_Payload_t *PayloadPtr;
 

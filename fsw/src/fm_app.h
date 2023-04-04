@@ -30,7 +30,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* FM -- application global constants                              */
+/* FM -- Macro Definitions                                         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -42,6 +42,11 @@
  *      message was received or not.
  */
 #define FM_SB_TIMEOUT 1000
+
+/**
+ *  \brief FM Error Codes
+ */
+#define FM_ERROR -1 /**< \brief Generic FM error return code */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -177,7 +182,7 @@ CFE_Status_t FM_AppInit(void);
  *
  *  \sa #FM_SendHkCmd_t, #FM_HousekeepingPkt_t
  */
-void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr);
+void FM_SendHkCmd(const FM_SendHkCmd_t *BufPtr);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */

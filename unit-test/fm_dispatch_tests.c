@@ -63,7 +63,7 @@ void Test_FM_ProcessCmd_NoopCmdCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_NoopCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_NoopCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_NoopCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -85,7 +85,7 @@ void Test_FM_ProcessCmd_ResetCountersCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_ResetCountersCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -107,7 +107,7 @@ void Test_FM_ProcessCmd_CopyFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_CopyFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -129,7 +129,7 @@ void Test_FM_ProcessCmd_MoveFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_MoveFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -151,7 +151,7 @@ void Test_FM_ProcessCmd_RenameFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_RenameFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -173,7 +173,7 @@ void Test_FM_ProcessCmd_DeleteFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_DeleteFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -195,7 +195,7 @@ void Test_FM_ProcessCmd_DeleteAllFilesCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_DeleteAllFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -217,7 +217,7 @@ void Test_FM_ProcessCmd_DecompressFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_DecompressFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -239,7 +239,7 @@ void Test_FM_ProcessCmd_ConcatFilesCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_ConcatFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -261,7 +261,7 @@ void Test_FM_ProcessCmd_GetFileInfoCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_GetFileInfoCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFileInfoCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFileInfoCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -283,7 +283,7 @@ void Test_FM_ProcessCmd_GetOpenFilesCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_GetOpenFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -305,7 +305,7 @@ void Test_FM_ProcessCmd_CreateDirectoryCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_CreateDirectoryCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -327,7 +327,7 @@ void Test_FM_ProcessCmd_DeleteDirectoryCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_DeleteDirectoryCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -349,7 +349,7 @@ void Test_FM_ProcessCmd_GetDirListFileCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_GetDirListFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -371,7 +371,7 @@ void Test_FM_ProcessCmd_GetDirListPktCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_GetDirListPktCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -393,7 +393,7 @@ void Test_FM_ProcessCmd_MonitorFilesystemSpaceCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_MonitorFilesystemSpaceCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_MonitorFilesystemSpaceCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_MonitorFilesystemSpaceCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -415,7 +415,7 @@ void Test_FM_ProcessCmd_SetTableStateCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_SetTableStateCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_SetTableStateCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_SetTableStateCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -437,7 +437,7 @@ void Test_FM_ProcessCmd_SetPermissionsCCReturn(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &fcn_code, sizeof(fcn_code), false);
     length = sizeof(FM_SetPermissionsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), CFE_SUCCESS);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ProcessCmd(NULL));
@@ -632,270 +632,271 @@ void Test_FM_NoopVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_NoopCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_NoopCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_NoopVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_NoopVerifyDispatch(&UT_CmdBuf.NoopCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_NoopCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_NoopVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_NoopVerifyDispatch(&UT_CmdBuf.NoopCmd), CFE_SUCCESS);
 }
 
 void Test_FM_ResetCountersVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_ResetCountersCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_ResetCountersVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_ResetCountersVerifyDispatch(&UT_CmdBuf.ResetCountersCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_ResetCountersCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_ResetCountersVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_ResetCountersVerifyDispatch(&UT_CmdBuf.ResetCountersCmd), CFE_SUCCESS);
 }
 
 void Test_FM_CopyFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_CopyFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_CopyFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_CopyFileVerifyDispatch(&UT_CmdBuf.CopyFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_CopyFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_CopyFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_CopyFileVerifyDispatch(&UT_CmdBuf.CopyFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_MoveFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_MoveFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_MoveFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_MoveFileVerifyDispatch(&UT_CmdBuf.MoveFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_MoveFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_MoveFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_MoveFileVerifyDispatch(&UT_CmdBuf.MoveFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_RenameFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_RenameFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_RenameFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_RenameFileVerifyDispatch(&UT_CmdBuf.RenameFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_RenameFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_RenameFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_RenameFileVerifyDispatch(&UT_CmdBuf.RenameFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_DeleteFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_DeleteFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteFileVerifyDispatch(&UT_CmdBuf.DeleteFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_DeleteFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_DeleteFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteFileVerifyDispatch(&UT_CmdBuf.DeleteFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_DeleteAllFilesVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteAllFilesCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_DeleteAllFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteAllFilesVerifyDispatch(&UT_CmdBuf.DeleteAllFilesCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_DeleteAllFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_DeleteAllFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteAllFilesVerifyDispatch(&UT_CmdBuf.DeleteAllFilesCmd), CFE_SUCCESS);
 }
 
 void Test_FM_DecompressFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DecompressFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_DecompressFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DecompressFileVerifyDispatch(&UT_CmdBuf.DecompressFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_DecompressFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_DecompressFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DecompressFileVerifyDispatch(&UT_CmdBuf.DecompressFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_ConcatFilesVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_ConcatFilesCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_ConcatFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_ConcatFilesVerifyDispatch(&UT_CmdBuf.ConcatFilesCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_ConcatFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_ConcatFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_ConcatFilesVerifyDispatch(&UT_CmdBuf.ConcatFilesCmd), CFE_SUCCESS);
 }
 
 void Test_FM_GetFileInfoVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFileInfoCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFileInfoCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_GetFileInfoVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetFileInfoVerifyDispatch(&UT_CmdBuf.GetFileInfoCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_GetFileInfoCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_GetFileInfoVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetFileInfoVerifyDispatch(&UT_CmdBuf.GetFileInfoCmd), CFE_SUCCESS);
 }
 
 void Test_FM_GetOpenFilesVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_GetOpenFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetOpenFilesVerifyDispatch(&UT_CmdBuf.GetOpenFilesCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_GetOpenFilesCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_GetOpenFilesVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetOpenFilesVerifyDispatch(&UT_CmdBuf.GetOpenFilesCmd), CFE_SUCCESS);
 }
 
 void Test_FM_CreateDirectoryVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_CreateDirectoryCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_CreateDirectoryVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_CreateDirectoryVerifyDispatch(&UT_CmdBuf.CreateDirectoryCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_CreateDirectoryCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_CreateDirectoryVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_CreateDirectoryVerifyDispatch(&UT_CmdBuf.CreateDirectoryCmd), CFE_SUCCESS);
 }
 
 void Test_FM_DeleteDirectoryVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_DeleteDirectoryCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_DeleteDirectoryVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteDirectoryVerifyDispatch(&UT_CmdBuf.DeleteDirectoryCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_DeleteDirectoryCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_DeleteDirectoryVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_DeleteDirectoryVerifyDispatch(&UT_CmdBuf.DeleteDirectoryCmd), CFE_SUCCESS);
 }
 
 void Test_FM_GetDirListFileVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListFileCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_GetDirListFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetDirListFileVerifyDispatch(&UT_CmdBuf.GetDirListFileCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_GetDirListFileCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_GetDirListFileVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetDirListFileVerifyDispatch(&UT_CmdBuf.GetDirListFileCmd), CFE_SUCCESS);
 }
 
 void Test_FM_GetDirListPktVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetDirListPktCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_GetDirListPktVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetDirListPktVerifyDispatch(&UT_CmdBuf.GetDirListPktCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_GetDirListPktCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_GetDirListPktVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_GetDirListPktVerifyDispatch(&UT_CmdBuf.GetDirListPktCmd), CFE_SUCCESS);
 }
 
 void Test_FM_MonitorFilesystemSpaceVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_MonitorFilesystemSpaceCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_MonitorFilesystemSpaceCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_MonitorFilesystemSpaceVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_MonitorFilesystemSpaceVerifyDispatch(&UT_CmdBuf.GetFreeSpaceCmd),
+                      CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_MonitorFilesystemSpaceCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_MonitorFilesystemSpaceVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_MonitorFilesystemSpaceVerifyDispatch(&UT_CmdBuf.GetFreeSpaceCmd), CFE_SUCCESS);
 }
 
 void Test_FM_SetTableStateVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_SetTableStateCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_SetTableStateCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_SetTableStateVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_SetTableStateVerifyDispatch(&UT_CmdBuf.SetTableStateCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_SetTableStateCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_SetTableStateVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_SetTableStateVerifyDispatch(&UT_CmdBuf.SetTableStateCmd), CFE_SUCCESS);
 }
 
 void Test_FM_SetPermissionsVerifyDispatch(void)
 {
     size_t length;
 
-    UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), true);
+    UT_SetDefaultReturnValue(UT_KEY(FM_SetPermissionsCmd), CFE_SUCCESS);
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_FALSE(FM_SetPermissionsVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_SetPermissionsVerifyDispatch(&UT_CmdBuf.SetPermissionsCmd), CFE_STATUS_VALIDATION_FAILURE);
 
     length = sizeof(FM_SetPermissionsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_BOOL_TRUE(FM_SetPermissionsVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_INT32_EQ(FM_SetPermissionsVerifyDispatch(&UT_CmdBuf.SetPermissionsCmd), CFE_SUCCESS);
 }
 
 void Test_FM_SendHkVerifyDispatch(void)
@@ -904,11 +905,11 @@ void Test_FM_SendHkVerifyDispatch(void)
 
     length = 1; /* bad size for any message */
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_VOIDCALL(FM_SendHkVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(FM_SendHkVerifyDispatch(&UT_CmdBuf.SendHkCmd));
 
     length = sizeof(FM_SendHkCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &length, sizeof(length), false);
-    UtAssert_VOIDCALL(FM_SendHkVerifyDispatch(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(FM_SendHkVerifyDispatch(&UT_CmdBuf.SendHkCmd));
 }
 
 /*
