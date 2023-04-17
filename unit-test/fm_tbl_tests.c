@@ -87,28 +87,28 @@ void Test_FM_TableInit_Fail(void)
 
 void Test_FM_ValidateTable_Success(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         if ((i & 2) == 0)
         {
-            DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+            Table.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
         }
         else
         {
-            DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE;
+            Table.Entries[i].Type = FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE;
             ;
         }
         if ((i & 1) == 0)
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
         }
         else
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
         }
-        snprintf(DummyTable.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
+        snprintf(Table.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
     }
 
     int32 strCmpResult;
@@ -116,7 +116,7 @@ void Test_FM_ValidateTable_Success(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&DummyTable);
+    int32 Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -161,29 +161,29 @@ void Test_FM_ValidateTable_NullTable(void)
 
 void Test_FM_ValidateTable_UnusedEntry(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
-        DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+        Table.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
         if ((i % 2) == 0)
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
         }
         else
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
         }
-        snprintf(DummyTable.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
+        snprintf(Table.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
     }
-    DummyTable.Entries[0].Type = FM_MonitorTableEntry_Type_UNUSED;
+    Table.Entries[0].Type = FM_MonitorTableEntry_Type_UNUSED;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&DummyTable);
+    int32 Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -203,25 +203,25 @@ void Test_FM_ValidateTable_UnusedEntry(void)
 
 void Test_FM_ValidateTable_BadEntryState(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
-        DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+        Table.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
         if ((i % 2) == 0)
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
         }
         else
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
         }
 
-        snprintf(DummyTable.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
+        snprintf(Table.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
     }
 
-    DummyTable.Entries[0].Type = 99;
-    DummyTable.Entries[1].Type = 99;
+    Table.Entries[0].Type = 99;
+    Table.Entries[1].Type = 99;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -232,7 +232,7 @@ void Test_FM_ValidateTable_BadEntryState(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&DummyTable);
+    int32 Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -260,20 +260,20 @@ void Test_FM_ValidateTable_BadEntryState(void)
 
 void Test_FM_ValidateTable_EmptyName(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
-        DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+        Table.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
         if ((i % 2) == 0)
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
         }
         else
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
         }
-        DummyTable.Entries[i].Name[0] = '\0';
+        Table.Entries[i].Name[0] = '\0';
     }
 
     int32 strCmpResult;
@@ -285,7 +285,7 @@ void Test_FM_ValidateTable_EmptyName(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&DummyTable);
+    int32 Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -313,25 +313,25 @@ void Test_FM_ValidateTable_EmptyName(void)
 
 void Test_FM_ValidateTable_NameTooLong(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     for (int i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
-        DummyTable.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+        Table.Entries[i].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
         if ((i % 2) == 0)
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_DISABLED;
         }
         else
         {
-            DummyTable.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
+            Table.Entries[i].Enabled = FM_TABLE_ENTRY_ENABLED;
         }
 
-        snprintf(DummyTable.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
+        snprintf(Table.Entries[i].Name, OS_MAX_PATH_LEN, "Test");
     }
 
-    memset(DummyTable.Entries[0].Name, 'A', sizeof(DummyTable.Entries[0].Name));
-    memset(DummyTable.Entries[1].Name, 'A', sizeof(DummyTable.Entries[1].Name));
+    memset(Table.Entries[0].Name, 'A', sizeof(Table.Entries[0].Name));
+    memset(Table.Entries[1].Name, 'A', sizeof(Table.Entries[1].Name));
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -342,7 +342,7 @@ void Test_FM_ValidateTable_NameTooLong(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&DummyTable);
+    int32 Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -370,11 +370,11 @@ void Test_FM_ValidateTable_NameTooLong(void)
 
 void Test_FM_AcquireTablePointers_Success(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     FM_AcquireTablePointers();
 
@@ -383,11 +383,11 @@ void Test_FM_AcquireTablePointers_Success(void)
 
 void Test_FM_AcquireTablePointers_Fail(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_ERR_NEVER_LOADED);
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     FM_AcquireTablePointers();
 
@@ -396,9 +396,9 @@ void Test_FM_AcquireTablePointers_Fail(void)
 
 void Test_FM_ReleaseTablePointers(void)
 {
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     FM_ReleaseTablePointers();
 

@@ -1463,23 +1463,23 @@ void Test_FM_MonitorFilesystemSpaceCmd_Success(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
     uint64            RefVal1;
     uint64            RefVal2;
 
     RefVal1 = 20;
     RefVal2 = 10;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
+    memset(&Table, 0, sizeof(Table));
 
-    DummyTable.Entries[0].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
-    DummyTable.Entries[0].Enabled = FM_TABLE_ENTRY_ENABLED;
-    DummyTable.Entries[1].Type    = FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE;
-    DummyTable.Entries[1].Enabled = FM_TABLE_ENTRY_ENABLED;
-    DummyTable.Entries[2].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
-    DummyTable.Entries[2].Enabled = FM_TABLE_ENTRY_DISABLED;
+    Table.Entries[0].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+    Table.Entries[0].Enabled = FM_TABLE_ENTRY_ENABLED;
+    Table.Entries[1].Type    = FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE;
+    Table.Entries[1].Enabled = FM_TABLE_ENTRY_ENABLED;
+    Table.Entries[2].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+    Table.Entries[2].Enabled = FM_TABLE_ENTRY_DISABLED;
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     UT_SetHandlerFunction(UT_KEY(FM_GetVolumeFreeSpace), UT_Handler_MonitorSpace, &RefVal1);
     UT_SetHandlerFunction(UT_KEY(FM_GetDirectorySpaceEstimate), UT_Handler_MonitorSpace, &RefVal2);
@@ -1550,13 +1550,13 @@ void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
              "Could not get file system free space for %%s. Returned 0x%%08X");
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
-    DummyTable.Entries[0].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
-    DummyTable.Entries[0].Enabled = true;
+    memset(&Table, 0, sizeof(Table));
+    Table.Entries[0].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+    Table.Entries[0].Enabled = true;
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_GetVolumeFreeSpace), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
 
@@ -1594,13 +1594,13 @@ void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
              "Could not get file system free space for %%s. Returned 0x%%08X");
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
-    DummyTable.Entries[0].Type    = 142;
-    DummyTable.Entries[0].Enabled = true;
+    memset(&Table, 0, sizeof(Table));
+    Table.Entries[0].Type    = 142;
+    Table.Entries[0].Enabled = true;
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     /* Assert */
     UtAssert_BOOL_FALSE(FM_MonitorFilesystemSpaceCmd(&UT_CmdBuf.Buf));
@@ -1656,12 +1656,12 @@ void Test_FM_SetTableStateCmd_Success(void)
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command: index = %%d, state = %%d");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
+    memset(&Table, 0, sizeof(Table));
 
-    DummyTable.Entries[0].Type    = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    Table.Entries[0].Type         = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     UtAssert_BOOL_TRUE(FM_SetTableStateCmd(&UT_CmdBuf.Buf));
 
@@ -1725,11 +1725,11 @@ void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: invalid command argument: index = %%d");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
+    memset(&Table, 0, sizeof(Table));
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
@@ -1762,11 +1762,11 @@ void Test_FM_SetTableStateCmd_BadNewState(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: invalid command argument: state = %%d");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
+    memset(&Table, 0, sizeof(Table));
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     bool Result = FM_SetTableStateCmd(&UT_CmdBuf.Buf);
 
@@ -1799,11 +1799,11 @@ void Test_FM_SetTableStateCmd_BadCurrentState(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s error: cannot modify unused table entry: index = %%d");
 
-    FM_MonitorTable_t DummyTable;
+    FM_MonitorTable_t Table;
 
-    memset(&DummyTable, 0, sizeof(DummyTable));
+    memset(&Table, 0, sizeof(Table));
 
-    FM_GlobalData.MonitorTablePtr = &DummyTable;
+    FM_GlobalData.MonitorTablePtr = &Table;
 
     UtAssert_BOOL_FALSE(FM_SetTableStateCmd(&UT_CmdBuf.Buf));
 
