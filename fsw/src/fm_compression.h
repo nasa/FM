@@ -31,6 +31,8 @@
 #include <common_types.h>
 #include <fm_platform_cfg.h>
 
+#include "cfe.h"
+
 /**
  * @brief The state object for a compressor
  *
@@ -56,7 +58,7 @@ typedef struct FM_Decompressor_State FM_Decompressor_State_t;
  * @returns Status code
  * @retval #CFE_SUCCESS if successful
  */
-int32 FM_CompressionService_Init(void);
+CFE_Status_t FM_CompressionService_Init(void);
 
 /**
  * @brief Abstract file decompression routine
@@ -71,7 +73,7 @@ int32 FM_CompressionService_Init(void);
  * @returns Status code
  * @retval #CFE_SUCCESS if decompression was successful
  */
-int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName);
+CFE_Status_t FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName);
 
 /**
  * @brief Abstract file compression routine
@@ -86,6 +88,6 @@ int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName
  * @returns Status code
  * @retval #CFE_SUCCESS if decompression was successful
  */
-int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName);
+CFE_Status_t FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName);
 
 #endif

@@ -531,11 +531,11 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
+CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
 {
     OS_statvfs_t  FileStats;
     osal_status_t OS_Status;
-    int32         Result;
+    CFE_Status_t  Result;
 
     /* Get file system free space */
     OS_Status = OS_FileSysStatVolume(FileSys, &FileStats);
@@ -563,13 +563,13 @@ int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *Byt
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
+CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
 {
     osal_id_t     DirId;
     os_dirent_t   DirEntry;
     os_fstat_t    FileStat;
     osal_status_t OS_Status;
-    int32         Result;
+    CFE_Status_t  Result;
     char          FullPath[OS_MAX_PATH_LEN];
     uint64        TotalBytes;
     size_t        DirLen;

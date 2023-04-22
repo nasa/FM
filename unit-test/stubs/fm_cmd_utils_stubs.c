@@ -54,9 +54,9 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
  * Generated stub function for FM_GetDirectorySpaceEstimate()
  * ----------------------------------------------------
  */
-int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
+CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
 {
-    UT_GenStub_SetupReturnBuffer(FM_GetDirectorySpaceEstimate, int32);
+    UT_GenStub_SetupReturnBuffer(FM_GetDirectorySpaceEstimate, CFE_Status_t);
 
     UT_GenStub_AddParam(FM_GetDirectorySpaceEstimate, const char *, Directory);
     UT_GenStub_AddParam(FM_GetDirectorySpaceEstimate, uint64 *, BlockCount);
@@ -64,7 +64,7 @@ int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, ui
 
     UT_GenStub_Execute(FM_GetDirectorySpaceEstimate, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_GetDirectorySpaceEstimate, int32);
+    return UT_GenStub_GetReturnValue(FM_GetDirectorySpaceEstimate, CFE_Status_t);
 }
 
 /*
@@ -106,9 +106,9 @@ uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData)
  * Generated stub function for FM_GetVolumeFreeSpace()
  * ----------------------------------------------------
  */
-int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
+CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
 {
-    UT_GenStub_SetupReturnBuffer(FM_GetVolumeFreeSpace, int32);
+    UT_GenStub_SetupReturnBuffer(FM_GetVolumeFreeSpace, CFE_Status_t);
 
     UT_GenStub_AddParam(FM_GetVolumeFreeSpace, const char *, FileSys);
     UT_GenStub_AddParam(FM_GetVolumeFreeSpace, uint64 *, BlockCount);
@@ -116,7 +116,7 @@ int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *Byt
 
     UT_GenStub_Execute(FM_GetVolumeFreeSpace, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_GetVolumeFreeSpace, int32);
+    return UT_GenStub_GetReturnValue(FM_GetVolumeFreeSpace, CFE_Status_t);
 }
 
 /*

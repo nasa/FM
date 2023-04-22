@@ -49,7 +49,7 @@
  *
  *  \sa #FM_AppInit
  */
-int32 FM_ChildInit(void);
+CFE_Status_t FM_ChildInit(void);
 
 /**
  *  \brief Child Task Entry Point Function

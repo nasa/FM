@@ -103,7 +103,6 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
 
     FM_OvwSourceTargetFilename_Payload_t Payload; /**< \brief Command payload */
-
 } FM_MoveFileCmd_t;
 
 /**
@@ -608,7 +607,6 @@ typedef enum
      * used by a given file.
      */
     FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE = 2
-
 } FM_MonitorTableEntry_Type_t;
 
 /**
@@ -636,7 +634,6 @@ typedef struct
      * See description of the FM_MonitorTableEntry_Type_t for how this is to be set
      */
     char Name[OS_MAX_PATH_LEN];
-
 } FM_MonitorTableEntry_t;
 
 /**

@@ -53,13 +53,13 @@ void FM_ReleaseTablePointers(void)
  * Generated stub function for FM_TableInit()
  * ----------------------------------------------------
  */
-int32 FM_TableInit(void)
+CFE_Status_t FM_TableInit(void)
 {
-    UT_GenStub_SetupReturnBuffer(FM_TableInit, int32);
+    UT_GenStub_SetupReturnBuffer(FM_TableInit, CFE_Status_t);
 
     UT_GenStub_Execute(FM_TableInit, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_TableInit, int32);
+    return UT_GenStub_GetReturnValue(FM_TableInit, CFE_Status_t);
 }
 
 /*
@@ -67,13 +67,13 @@ int32 FM_TableInit(void)
  * Generated stub function for FM_ValidateTable()
  * ----------------------------------------------------
  */
-int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
+CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
-    UT_GenStub_SetupReturnBuffer(FM_ValidateTable, int32);
+    UT_GenStub_SetupReturnBuffer(FM_ValidateTable, CFE_Status_t);
 
     UT_GenStub_AddParam(FM_ValidateTable, FM_MonitorTable_t *, TablePtr);
 
     UT_GenStub_Execute(FM_ValidateTable, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_ValidateTable, int32);
+    return UT_GenStub_GetReturnValue(FM_ValidateTable, CFE_Status_t);
 }

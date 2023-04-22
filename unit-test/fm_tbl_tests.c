@@ -55,7 +55,7 @@ uint8 call_count_CFE_EVS_SendEvent;
 /************************/
 void Test_FM_TableInit_Success(void)
 {
-    int32 Result;
+    CFE_Status_t Result;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_SUCCESS);
 
@@ -69,7 +69,7 @@ void Test_FM_TableInit_Success(void)
 
 void Test_FM_TableInit_Fail(void)
 {
-    int32 Result;
+    CFE_Status_t Result;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), -1);
 
@@ -183,7 +183,7 @@ void Test_FM_ValidateTable_UnusedEntry(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&Table);
+    CFE_Status_t Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -232,7 +232,7 @@ void Test_FM_ValidateTable_BadEntryState(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&Table);
+    CFE_Status_t Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -285,7 +285,7 @@ void Test_FM_ValidateTable_EmptyName(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&Table);
+    CFE_Status_t Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -342,7 +342,7 @@ void Test_FM_ValidateTable_NameTooLong(void)
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Free Space Table verify results: good entries = %%d, bad = %%d, unused = %%d");
 
-    int32 Result = FM_ValidateTable(&Table);
+    CFE_Status_t Result = FM_ValidateTable(&Table);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

@@ -30,17 +30,17 @@
 
 #include "fm_compression.h"
 
-int32 FM_CompressionService_Init(void)
+CFE_Status_t FM_CompressionService_Init(void)
 {
     return CFE_SUCCESS;
 }
 
-int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
     return CFE_STATUS_NOT_IMPLEMENTED;
 }
 
-int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
     return CFE_STATUS_NOT_IMPLEMENTED;
 }

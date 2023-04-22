@@ -187,13 +187,13 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
  * Generated stub function for FM_ChildInit()
  * ----------------------------------------------------
  */
-int32 FM_ChildInit(void)
+CFE_Status_t FM_ChildInit(void)
 {
-    UT_GenStub_SetupReturnBuffer(FM_ChildInit, int32);
+    UT_GenStub_SetupReturnBuffer(FM_ChildInit, CFE_Status_t);
 
     UT_GenStub_Execute(FM_ChildInit, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_ChildInit, int32);
+    return UT_GenStub_GetReturnValue(FM_ChildInit, CFE_Status_t);
 }
 
 /*

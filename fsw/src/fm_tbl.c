@@ -38,9 +38,9 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_TableInit(void)
+CFE_Status_t FM_TableInit(void)
 {
-    int32 Status;
+    CFE_Status_t Status;
 
     /* Initialize file system free space table pointer */
     FM_GlobalData.MonitorTablePtr = NULL;
@@ -68,11 +68,11 @@ int32 FM_TableInit(void)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
+CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
-    int32 Result = CFE_SUCCESS;
-    int32 NameLength;
-    int32 i = 0;
+    CFE_Status_t Result = CFE_SUCCESS;
+    int32        NameLength;
+    int32        i = 0;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
@@ -191,7 +191,7 @@ int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 
 void FM_AcquireTablePointers(void)
 {
-    int32 Status;
+    CFE_Status_t Status;
 
     /* Allow cFE an opportunity to make table updates */
     CFE_TBL_Manage(FM_GlobalData.MonitorTableHandle);

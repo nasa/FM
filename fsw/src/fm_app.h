@@ -111,7 +111,6 @@ typedef struct
      * This depends on the compression option and may be NULL
      */
     FM_Compressor_State_t *CompressorStatePtr;
-
 } FM_GlobalData_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -159,7 +158,7 @@ void FM_AppMain(void);
  *
  *  \sa #CFE_EVS_Register, #CFE_SB_CreatePipe, #CFE_SB_Subscribe
  */
-int32 FM_AppInit(void);
+CFE_Status_t FM_AppInit(void);
 
 /**
  *  \brief Housekeeping Request Command Handler
