@@ -589,7 +589,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirOpenNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
@@ -610,7 +610,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirReadNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
@@ -631,7 +631,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = FM_THIS_DIRECTORY};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -656,7 +656,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = FM_PARENT_DIRECTORY};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -681,8 +681,8 @@ void Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_FILES_CC,
-                                        .Source1     = "dummy_source1",
-                                        .Source2     = "dummy_source2HasAReallyLongNameSomeSayTheNameIs42Characters"};
+                                        .Source1     = "source1",
+                                        .Source2     = "source2HasAReallyReallyLongNameSomeSayTheNameIs42Characters"};
     os_dirent_t          direntry    = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -709,7 +709,7 @@ void Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -737,7 +737,7 @@ void Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -765,7 +765,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -793,7 +793,7 @@ void Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -821,7 +821,7 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -851,7 +851,7 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -879,7 +879,7 @@ void Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_DELETE_ALL_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = "ThisDirectory"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
@@ -952,8 +952,7 @@ void Test_FM_ChildDecompressFileCmd_FSDecompressNotSuccess(void)
 void Test_FM_ChildConcatFilesCmd_OSCpNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     FM_GlobalData.ChildCurrentCC = 1;
     UT_SetDefaultReturnValue(UT_KEY(OS_cp), !OS_SUCCESS);
@@ -973,8 +972,7 @@ void Test_FM_ChildConcatFilesCmd_OSCpNotSuccess(void)
 void Test_FM_ChildConcatFilesCmd_OSOpenCreateSourceNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -995,8 +993,7 @@ void Test_FM_ChildConcatFilesCmd_OSOpenCreateSourceNotSuccess(void)
 void Test_FM_ChildConcatFilesCmd_OSOpenCreateTargetNotSuccess(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_OpenCreate), 2, !OS_SUCCESS);
 
@@ -1018,8 +1015,7 @@ void Test_FM_ChildConcatFilesCmd_OSOpenCreateTargetNotSuccess(void)
 void Test_FM_ChildConcatFilesCmd_OSReadBytesZero(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 0);
 
@@ -1042,8 +1038,7 @@ void Test_FM_ChildConcatFilesCmd_OSReadBytesZero(void)
 void Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), -1);
 
@@ -1066,8 +1061,7 @@ void Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero(void)
 void Test_FM_ChildConcatFilesCmd_BytesWrittenNotEqualBytesRead(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);
     UT_SetDefaultReturnValue(UT_KEY(OS_write), 0);
@@ -1091,8 +1085,7 @@ void Test_FM_ChildConcatFilesCmd_BytesWrittenNotEqualBytesRead(void)
 void Test_FM_ChildConcatFilesCmd_CopyInProgressTrueLoopCountEqualChildFileLoopCount(void)
 {
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_CONCAT_FILES_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+    FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_CONCAT_FILES_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);
     UT_SetDefaultReturnValue(UT_KEY(OS_write), 1);
@@ -1122,8 +1115,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualIgnoreCRC(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = FM_IGNORE_CRC,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1143,8 +1136,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoStateIsNotFileClosed(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_OPEN};
 
@@ -1166,8 +1159,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission8(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1191,8 +1184,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission16(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1216,8 +1209,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission32(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_32,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1241,8 +1234,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCNotEqualToAnyMissionES(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = -1,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1264,8 +1257,8 @@ void Test_FM_ChildFileInfoCmd_OSOpenCreateTrueBytesReadZero(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1289,8 +1282,8 @@ void Test_FM_ChildFileInfoCmd_BytesReadLessThanZero(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1316,8 +1309,8 @@ void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_FILE_INFO_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
+                                        .Source1       = "source1",
+                                        .Source2       = "source2",
                                         .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED};
 
@@ -1533,7 +1526,7 @@ void Test_FM_ChildDirListFileCmd_ChildDirListFileInitFalse(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
+        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "source1", .Target = "target"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -1555,7 +1548,7 @@ void Test_FM_ChildDirListFileCmd_ChildDirListFileInitTrue(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "dummy_source1", .Target = "dummy_target"};
+        .CommandCode = FM_GET_DIR_LIST_FILE_CC, .Source1 = "source1", .Target = "target"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
@@ -1580,7 +1573,7 @@ void Test_FM_ChildDirListPktCmd_OSDirOpenNotSuccess(void)
 {
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryOpen), !OS_SUCCESS);
 
@@ -1602,7 +1595,7 @@ void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2"};
 
     UT_SetDefaultReturnValue(UT_KEY(OS_DirectoryRead), !OS_SUCCESS);
 
@@ -1628,7 +1621,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = FM_THIS_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
@@ -1656,7 +1649,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry = {.FileName = FM_PARENT_DIRECTORY};
 
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
@@ -1683,11 +1676,9 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
     FM_DirListPkt_Payload_t *ReportPtr;
 
     /* Arrange */
-    FM_ChildQueueEntry_t queue_entry = {.CommandCode   = FM_GET_DIR_LIST_PKT_CC,
-                                        .Source1       = "dummy_source1",
-                                        .Source2       = "dummy_source2",
-                                        .DirListOffset = 1};
-    os_dirent_t          direntry    = {.FileName = "filename"};
+    FM_ChildQueueEntry_t queue_entry = {
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2", .DirListOffset = 1};
+    os_dirent_t direntry = {.FileName = "filename"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
@@ -1716,7 +1707,7 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {
-        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "dummy_source1", .Source2 = "dummy_source2"};
+        .CommandCode = FM_GET_DIR_LIST_PKT_CC, .Source1 = "source1", .Source2 = "source2"};
     os_dirent_t direntry[FM_DIR_LIST_PKT_ENTRIES + 1];
 
     /* Unit under test doesn't really care if the entry name is empty */
@@ -1750,8 +1741,8 @@ void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
 
     /* Arrange */
     FM_ChildQueueEntry_t queue_entry = {.CommandCode = FM_DELETE_ALL_FILES_CC,
-                                        .Source1     = "dummy_source1",
-                                        .Source2 = "dummy_source2_has_a_long_name_to_make_path_length_longer_than_64"};
+                                        .Source1     = "source1",
+                                        .Source2 = "source2_has_quite_a_long_name_to_make_path_length_longer_than_64"};
     os_dirent_t          direntry    = {.FileName = "direntry_long"};
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
