@@ -31,9 +31,9 @@
  * Generated stub function for FM_Compress_Impl()
  * ----------------------------------------------------
  */
-int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
-    UT_GenStub_SetupReturnBuffer(FM_Compress_Impl, int32);
+    UT_GenStub_SetupReturnBuffer(FM_Compress_Impl, CFE_Status_t);
 
     UT_GenStub_AddParam(FM_Compress_Impl, FM_Compressor_State_t *, State);
     UT_GenStub_AddParam(FM_Compress_Impl, const char *, SrcFileName);
@@ -41,7 +41,7 @@ int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, co
 
     UT_GenStub_Execute(FM_Compress_Impl, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_Compress_Impl, int32);
+    return UT_GenStub_GetReturnValue(FM_Compress_Impl, CFE_Status_t);
 }
 
 /*
@@ -49,13 +49,13 @@ int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, co
  * Generated stub function for FM_CompressionService_Init()
  * ----------------------------------------------------
  */
-int32 FM_CompressionService_Init(void)
+CFE_Status_t FM_CompressionService_Init(void)
 {
-    UT_GenStub_SetupReturnBuffer(FM_CompressionService_Init, int32);
+    UT_GenStub_SetupReturnBuffer(FM_CompressionService_Init, CFE_Status_t);
 
     UT_GenStub_Execute(FM_CompressionService_Init, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_CompressionService_Init, int32);
+    return UT_GenStub_GetReturnValue(FM_CompressionService_Init, CFE_Status_t);
 }
 
 /*
@@ -63,9 +63,9 @@ int32 FM_CompressionService_Init(void)
  * Generated stub function for FM_Decompress_Impl()
  * ----------------------------------------------------
  */
-int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
-    UT_GenStub_SetupReturnBuffer(FM_Decompress_Impl, int32);
+    UT_GenStub_SetupReturnBuffer(FM_Decompress_Impl, CFE_Status_t);
 
     UT_GenStub_AddParam(FM_Decompress_Impl, FM_Decompressor_State_t *, State);
     UT_GenStub_AddParam(FM_Decompress_Impl, const char *, SrcFileName);
@@ -73,5 +73,5 @@ int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName
 
     UT_GenStub_Execute(FM_Decompress_Impl, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_Decompress_Impl, int32);
+    return UT_GenStub_GetReturnValue(FM_Decompress_Impl, CFE_Status_t);
 }

@@ -54,12 +54,12 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 FM_ChildInit(void)
+CFE_Status_t FM_ChildInit(void)
 {
-    int32  TaskTextLen               = OS_MAX_PATH_LEN;
-    char   TaskText[OS_MAX_PATH_LEN] = "\0";
-    int32  Result                    = CFE_SUCCESS;
-    uint32 TaskEID                   = 0;
+    int32        TaskTextLen               = OS_MAX_PATH_LEN;
+    char         TaskText[OS_MAX_PATH_LEN] = "\0";
+    CFE_Status_t Result                    = CFE_SUCCESS;
+    uint32       TaskEID                   = 0;
 
     /* Create counting semaphore (given by parent to wake-up child) */
     Result = OS_CountSemCreate(&FM_GlobalData.ChildSemaphore, FM_CHILD_SEM_NAME, 0, 0);
@@ -137,8 +137,8 @@ void FM_ChildTask(void)
 
 void FM_ChildLoop(void)
 {
-    const char *TaskText = "Child Task termination error: ";
-    int32       Result   = CFE_SUCCESS;
+    const char * TaskText = "Child Task termination error: ";
+    CFE_Status_t Result   = CFE_SUCCESS;
 
     while (Result == CFE_SUCCESS)
     {
@@ -587,8 +587,8 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
 
 void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 {
-    const char *CmdText    = "Decompress File";
-    int32       CFE_Status = CFE_SUCCESS;
+    const char * CmdText    = "Decompress File";
+    CFE_Status_t CFE_Status = CFE_SUCCESS;
 
     /* Report current child task activity */
     FM_GlobalData.ChildCurrentCC = CmdArgs->CommandCode;

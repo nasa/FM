@@ -31,13 +31,13 @@
  * Generated stub function for FM_AppInit()
  * ----------------------------------------------------
  */
-int32 FM_AppInit(void)
+CFE_Status_t FM_AppInit(void)
 {
-    UT_GenStub_SetupReturnBuffer(FM_AppInit, int32);
+    UT_GenStub_SetupReturnBuffer(FM_AppInit, CFE_Status_t);
 
     UT_GenStub_Execute(FM_AppInit, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(FM_AppInit, int32);
+    return UT_GenStub_GetReturnValue(FM_AppInit, CFE_Status_t);
 }
 
 /*

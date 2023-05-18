@@ -51,19 +51,19 @@ struct FM_Decompressor_State
  */
 static FM_Decompressor_State_t FM_FSLIB_DecompressState;
 
-int32 FM_CompressionService_Init(void)
+CFE_Status_t FM_CompressionService_Init(void)
 {
     memset(&FM_FSLIB_DecompressState, 0, sizeof(FM_FSLIB_DecompressState));
     FM_GlobalData.DecompressorStatePtr = &FM_FSLIB_DecompressState;
     return CFE_SUCCESS;
 }
 
-int32 FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
     return FS_LIB_Decompress(&State->LibState, SrcFileName, DstFileName);
 }
 
-int32 FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
+CFE_Status_t FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName)
 {
     return CFE_STATUS_NOT_IMPLEMENTED;
 }
