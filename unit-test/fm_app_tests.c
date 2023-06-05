@@ -297,14 +297,14 @@ void Test_FM_SendHkCmd(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesData), 0);
 
     /* Set non-zero values to assert */
-    FM_GlobalData.CommandCounter      = 1;
-    FM_GlobalData.CommandErrCounter   = 2;
-    FM_GlobalData.ChildCmdCounter     = 3;
-    FM_GlobalData.ChildCmdErrCounter  = 4;
-    FM_GlobalData.ChildCmdWarnCounter = 5;
-    FM_GlobalData.ChildQueueCount     = 6;
-    FM_GlobalData.ChildCurrentCC      = 7;
-    FM_GlobalData.ChildPreviousCC     = 8;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandCounter      = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter   = 2;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdCounter     = 3;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdErrCounter  = 4;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdWarnCounter = 5;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount     = 6;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCurrentCC      = 7;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildPreviousCC     = 8;
 
     /* Act */
     UtAssert_VOIDCALL(FM_SendHkCmd(NULL));
@@ -318,15 +318,15 @@ void Test_FM_SendHkCmd(void)
     UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
 
     ReportPtr = &FM_GlobalData.HousekeepingPkt.Payload;
-    UtAssert_INT32_EQ(ReportPtr->CommandCounter, FM_GlobalData.CommandCounter);
-    UtAssert_INT32_EQ(ReportPtr->CommandErrCounter, FM_GlobalData.CommandErrCounter);
+    UtAssert_INT32_EQ(ReportPtr->CommandCounter, FM_GlobalData.HousekeepingPkt.Payload.CommandCounter);
+    UtAssert_INT32_EQ(ReportPtr->CommandErrCounter, FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter);
     UtAssert_INT32_EQ(ReportPtr->NumOpenFiles, 0);
-    UtAssert_INT32_EQ(ReportPtr->ChildCmdCounter, FM_GlobalData.ChildCmdCounter);
-    UtAssert_INT32_EQ(ReportPtr->ChildCmdErrCounter, FM_GlobalData.ChildCmdErrCounter);
-    UtAssert_INT32_EQ(ReportPtr->ChildCmdWarnCounter, FM_GlobalData.ChildCmdWarnCounter);
-    UtAssert_INT32_EQ(ReportPtr->ChildQueueCount, FM_GlobalData.ChildQueueCount);
-    UtAssert_INT32_EQ(ReportPtr->ChildCurrentCC, FM_GlobalData.ChildCurrentCC);
-    UtAssert_INT32_EQ(ReportPtr->ChildPreviousCC, FM_GlobalData.ChildPreviousCC);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdCounter, FM_GlobalData.HousekeepingPkt.Payload.ChildCmdCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdErrCounter, FM_GlobalData.HousekeepingPkt.Payload.ChildCmdErrCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildCmdWarnCounter, FM_GlobalData.HousekeepingPkt.Payload.ChildCmdWarnCounter);
+    UtAssert_INT32_EQ(ReportPtr->ChildQueueCount, FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount);
+    UtAssert_INT32_EQ(ReportPtr->ChildCurrentCC, FM_GlobalData.HousekeepingPkt.Payload.ChildCurrentCC);
+    UtAssert_INT32_EQ(ReportPtr->ChildPreviousCC, FM_GlobalData.HousekeepingPkt.Payload.ChildPreviousCC);
 }
 
 /* * * * * * * * * * * * * *

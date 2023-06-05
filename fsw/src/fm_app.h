@@ -63,21 +63,9 @@ typedef struct
     osal_id_t       ChildSemaphore;     /**< \brief Child task wakeup counting semaphore */
     osal_id_t       ChildQueueCountSem; /**< \brief Child queue counter mutex semaphore */
 
-    uint8 ChildCmdCounter;     /**< \brief Child task command success counter */
-    uint8 ChildCmdErrCounter;  /**< \brief Child task command error counter */
-    uint8 ChildCmdWarnCounter; /**< \brief Child task command warning counter */
-
-    uint8 ChildWriteIndex; /**< \brief Array index for next write to command args */
-    uint8 ChildReadIndex;  /**< \brief Array index for next read from command args */
-    uint8 ChildQueueCount; /**< \brief Number of pending commands in queue */
-
-    uint8 CommandCounter;    /**< \brief Application command success counter */
-    uint8 CommandErrCounter; /**< \brief Application command error counter */
-    uint8 Spare8a;           /**< \brief Placeholder for unused command warning counter */
-
-    uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
-    uint8 ChildPreviousCC; /**< \brief Command code previously executed */
-    uint8 Spare8b;         /**< \brief Structure alignment spare */
+    uint8  ChildWriteIndex; /**< \brief Array index for next write to command args */
+    uint8  ChildReadIndex;  /**< \brief Array index for next read from command args */
+    uint16 Padding;         /**< \brief Structure padding to align to 32-bit boundaries */
 
     uint32 FileStatTime; /**< \brief Modify time from most recent OS_stat */
     uint32 FileStatSize; /**< \brief File size from most recent OS_stat */

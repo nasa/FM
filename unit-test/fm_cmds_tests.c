@@ -99,11 +99,11 @@ void Test_FM_ResetCountersCmd_Success(void)
     bool  Result;
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s command");
 
-    FM_GlobalData.CommandCounter      = 1;
-    FM_GlobalData.CommandErrCounter   = 1;
-    FM_GlobalData.ChildCmdCounter     = 1;
-    FM_GlobalData.ChildCmdErrCounter  = 1;
-    FM_GlobalData.ChildCmdWarnCounter = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandCounter = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdCounter   = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdErrCounter = 1;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdWarnCounter = 1;
 
     Result = FM_ResetCountersCmd(&UT_CmdBuf.Buf);
 
@@ -122,11 +122,11 @@ void Test_FM_ResetCountersCmd_Success(void)
 
     UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
-    UtAssert_INT32_EQ(FM_GlobalData.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.CommandErrCounter, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdCounter, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdErrCounter, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildCmdWarnCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.CommandCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.ChildCmdCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.ChildCmdErrCounter, 0);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.ChildCmdWarnCounter, 0);
 }
 
 void add_FM_ResetCountersCmd_tests(void)

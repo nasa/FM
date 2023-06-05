@@ -502,19 +502,19 @@ void Test_FM_VerifyChildTask(void)
 
     /* LocalQueueCount equal to FM_CHILD_QUEUE_DEPTH */
     FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
-    FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount = FM_CHILD_QUEUE_DEPTH;
     UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_CHILD_Q_FULL_EID_OFFSET);
 
     /* LocalQueueCount greater than FM_CHILD_QUEUE_DEPTH */
-    FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH + 1;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount = FM_CHILD_QUEUE_DEPTH + 1;
     UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, FM_CHILD_BROKEN_EID_OFFSET);
 
     /* ChildWriteIndex equal to FM_CHILD_QUEUE_DEPTH */
-    FM_GlobalData.ChildQueueCount = FM_CHILD_QUEUE_DEPTH - 1;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount = FM_CHILD_QUEUE_DEPTH - 1;
     FM_GlobalData.ChildWriteIndex = FM_CHILD_QUEUE_DEPTH;
     UtAssert_BOOL_FALSE(FM_VerifyChildTask(0, "Cmd Text"));
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 4);
@@ -536,14 +536,14 @@ void Test_FM_InvokeChildTask(void)
     FM_GlobalData.ChildSemaphore  = FM_UT_OBJID_1;
     UtAssert_VOIDCALL(FM_InvokeChildTask());
     UtAssert_INT32_EQ(FM_GlobalData.ChildWriteIndex, 0);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueueCount, 1);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount, 1);
     UtAssert_STUB_COUNT(OS_CountSemGive, 1);
 
     /* Conditions false */
     FM_GlobalData.ChildSemaphore = OS_OBJECT_ID_UNDEFINED;
     UtAssert_VOIDCALL(FM_InvokeChildTask());
     UtAssert_INT32_EQ(FM_GlobalData.ChildWriteIndex, 1);
-    UtAssert_INT32_EQ(FM_GlobalData.ChildQueueCount, 2);
+    UtAssert_INT32_EQ(FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount, 2);
     UtAssert_STUB_COUNT(OS_CountSemGive, 1);
 }
 

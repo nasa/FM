@@ -425,7 +425,7 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
     bool Result = false;
 
     /* Copy of child queue count that child task cannot change */
-    uint8 LocalQueueCount = FM_GlobalData.ChildQueueCount;
+    uint8 LocalQueueCount = FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount;
 
     /* Verify child task is active and queue interface is healthy */
     if (!OS_ObjectIdDefined(FM_GlobalData.ChildSemaphore))
@@ -482,7 +482,7 @@ void FM_InvokeChildTask(void)
 
     /* Prevent parent/child updating queue counter at same time */
     OS_MutSemTake(FM_GlobalData.ChildQueueCountSem);
-    FM_GlobalData.ChildQueueCount++;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildQueueCount++;
     OS_MutSemGive(FM_GlobalData.ChildQueueCountSem);
 
     /* Does the child task still have a semaphore? */
