@@ -512,6 +512,7 @@ typedef struct
 typedef struct
 {
     uint8  ReportType;
+    uint8  Padding[7];            /**< \brief Padding to align Name (and subsequent members) to 64-bit boundaries */
     char   Name[OS_MAX_PATH_LEN]; /**< \brief File system name */
     uint64 Blocks;                /**< \brief Block count from last check/poll, 0 if unknown */
     uint64 Bytes;                 /**< \brief Byte count from last check/poll, 0 if unknown */
@@ -656,6 +657,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_FcnCode_t CommandCode;              /**< \brief Command code - identifies the command */
+    uint16            Padding1;                 /**< \brief Structure padding to align to 32-bit boundaries */
     uint32            DirListOffset;            /**< \brief Starting entry for dir list commands */
     uint32            FileInfoState;            /**< \brief File info state */
     uint32            FileInfoSize;             /**< \brief File info size */
@@ -665,6 +667,7 @@ typedef struct
     char              Source2[OS_MAX_PATH_LEN]; /**< \brief Second source filename command argument */
     char              Target[OS_MAX_PATH_LEN];  /**< \brief Target filename command argument */
     uint8             GetSizeTimeMode; /**< \brief Whether to invoke stat call for size and time (CPU intensive) */
+    uint8             Padding2[3];     /**< \brief Structure padding to align to 32-bit boundaries */
     uint32            Mode;            /**< \brief File Mode */
 } FM_ChildQueueEntry_t;
 
