@@ -630,9 +630,6 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
     const char *CmdText        = "Concat Files";
     bool        ConcatResult   = false;
     bool        CopyInProgress = false;
-    bool        CreatedTgtFile = false;
-    bool        OpenedSource2  = false;
-    bool        OpenedTgtFile  = false;
     int32       LoopCount      = 0;
     int32       OS_Status      = OS_SUCCESS;
     osal_id_t   FileHandleSrc  = OS_OBJECT_ID_UNDEFINED;
@@ -657,12 +654,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        CreatedTgtFile = true;
-    }
-
-    /* Open source file #2 */
-    if (CreatedTgtFile)
-    {
+        /* Open source file #2 */
         OS_Status = OS_OpenCreate(&FileHandleSrc, CmdArgs->Source2, OS_FILE_FLAG_NONE, OS_READ_ONLY);
 
         if (OS_Status != OS_SUCCESS)
@@ -676,116 +668,93 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
         }
         else
         {
-            OpenedSource2 = true;
-        }
-    }
+            /* Open target file */
+            OS_Status = OS_OpenCreate(&FileHandleTgt, CmdArgs->Target, OS_FILE_FLAG_NONE, OS_READ_WRITE);
 
-    /* Open target file */
-    if (OpenedSource2)
-    {
-        OS_Status = OS_OpenCreate(&FileHandleTgt, CmdArgs->Target, OS_FILE_FLAG_NONE, OS_READ_WRITE);
-
-        if (OS_Status != OS_SUCCESS)
-        {
-            FM_GlobalData.ChildCmdErrCounter++;
-
-            /* Send command failure event (error) */
-            CFE_EVS_SendEvent(FM_CONCAT_OPEN_TGT_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "%s error: OS_OpenCreate failed: result = %d, tgt = %s", CmdText, (int)OS_Status,
-                              CmdArgs->Target);
-        }
-        else
-        {
-            OpenedTgtFile = true;
-        }
-    }
-
-    /* Append source file #2 to target file */
-    if (OpenedTgtFile)
-    {
-        /* Seek to end of target file */
-        OS_lseek(FileHandleTgt, 0, OS_SEEK_END);
-        CopyInProgress = true;
-        LoopCount      = 0;
-
-        while (CopyInProgress)
-        {
-            BytesRead = OS_read(FileHandleSrc, FM_GlobalData.ChildBuffer, FM_CHILD_FILE_BLOCK_SIZE);
-
-            if (BytesRead == 0)
+            if (OS_Status != OS_SUCCESS)
             {
-                /* Success - finished reading source file #2 */
-                CopyInProgress = false;
-                ConcatResult   = true;
-            }
-            else if (BytesRead < 0)
-            {
-                CopyInProgress = false;
                 FM_GlobalData.ChildCmdErrCounter++;
 
                 /* Send command failure event (error) */
-                CFE_EVS_SendEvent(FM_CONCAT_OSRD_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "%s error: OS_read failed: result = %d, file = %s", CmdText, (int)BytesRead,
-                                  CmdArgs->Source2);
+                CFE_EVS_SendEvent(FM_CONCAT_OPEN_TGT_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "%s error: OS_OpenCreate failed: result = %d, tgt = %s", CmdText, (int)OS_Status,
+                                  CmdArgs->Target);
             }
             else
             {
-                /* Write source file #2 to target file */
-                BytesWritten = OS_write(FileHandleTgt, FM_GlobalData.ChildBuffer, BytesRead);
+                /* Append source file #2 to target file */
+                /* Seek to end of target file */
+                OS_lseek(FileHandleTgt, 0, OS_SEEK_END);
+                CopyInProgress = true;
+                LoopCount      = 0;
 
-                if (BytesWritten != BytesRead)
+                while (CopyInProgress)
                 {
-                    CopyInProgress = false;
-                    FM_GlobalData.ChildCmdErrCounter++;
+                    BytesRead = OS_read(FileHandleSrc, FM_GlobalData.ChildBuffer, FM_CHILD_FILE_BLOCK_SIZE);
 
-                    /* Send command failure event (error) */
-                    CFE_EVS_SendEvent(FM_CONCAT_OSWR_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "%s error: OS_write failed: result = %d, expected = %d", CmdText,
-                                      (int)BytesWritten, (int)BytesRead);
-                }
-            }
+                    if (BytesRead == 0)
+                    {
+                        /* Success - finished reading source file #2 */
+                        CopyInProgress = false;
+                        ConcatResult   = true;
 
-            /* Avoid CPU hogging */
-            if (CopyInProgress)
-            {
-                LoopCount++;
-                if (LoopCount == FM_CHILD_FILE_LOOP_COUNT)
-                {
-                    /* Give up the CPU */
-                    CFE_ES_PerfLogExit(FM_CHILD_TASK_PERF_ID);
-                    OS_TaskDelay(FM_CHILD_FILE_SLEEP_MS);
-                    CFE_ES_PerfLogEntry(FM_CHILD_TASK_PERF_ID);
-                    LoopCount = 0;
+                        FM_GlobalData.ChildCmdCounter++;
+
+                        /* Send command completion event (debug) */
+                        CFE_EVS_SendEvent(FM_CONCAT_CMD_EID, CFE_EVS_EventType_DEBUG,
+                                          "%s command: src1 = %s, src2 = %s, tgt = %s", CmdText, CmdArgs->Source1,
+                                          CmdArgs->Source2, CmdArgs->Target);
+                    }
+                    else if (BytesRead < 0)
+                    {
+                        CopyInProgress = false;
+                        FM_GlobalData.ChildCmdErrCounter++;
+
+                        /* Send command failure event (error) */
+                        CFE_EVS_SendEvent(FM_CONCAT_OSRD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "%s error: OS_read failed: result = %d, file = %s", CmdText, (int)BytesRead,
+                                          CmdArgs->Source2);
+                    }
+                    else
+                    {
+                        /* Write source file #2 to target file */
+                        BytesWritten = OS_write(FileHandleTgt, FM_GlobalData.ChildBuffer, BytesRead);
+
+                        if (BytesWritten != BytesRead)
+                        {
+                            CopyInProgress = false;
+                            FM_GlobalData.ChildCmdErrCounter++;
+
+                            /* Send command failure event (error) */
+                            CFE_EVS_SendEvent(FM_CONCAT_OSWR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "%s error: OS_write failed: result = %d, expected = %d", CmdText,
+                                              (int)BytesWritten, (int)BytesRead);
+                        }
+
+                        /* Avoid CPU hogging */
+                        LoopCount++;
+                        if (LoopCount == FM_CHILD_FILE_LOOP_COUNT)
+                        {
+                            /* Give up the CPU */
+                            CFE_ES_PerfLogExit(FM_CHILD_TASK_PERF_ID);
+                            OS_TaskDelay(FM_CHILD_FILE_SLEEP_MS);
+                            CFE_ES_PerfLogEntry(FM_CHILD_TASK_PERF_ID);
+                            LoopCount = 0;
+                        }
+                    }
                 }
+                /* Close target file */
+                OS_close(FileHandleTgt);
             }
+            /* Close source file #2 */
+            OS_close(FileHandleSrc);
         }
-    }
 
-    if (OpenedTgtFile)
-    {
-        /* Close target file */
-        OS_close(FileHandleTgt);
-    }
-
-    if (OpenedSource2)
-    {
-        /* Close source file #2 */
-        OS_close(FileHandleSrc);
-    }
-
-    if ((CreatedTgtFile == true) && (ConcatResult == false))
-    {
-        /* Remove partial target file after concat error */
-        OS_remove(CmdArgs->Target);
-    }
-
-    if (ConcatResult == true)
-    {
-        FM_GlobalData.ChildCmdCounter++;
-
-        /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_CONCAT_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src1 = %s, src2 = %s, tgt = %s",
-                          CmdText, CmdArgs->Source1, CmdArgs->Source2, CmdArgs->Target);
+        if (ConcatResult == false)
+        {
+            /* Remove partial target file after concat error */
+            OS_remove(CmdArgs->Target);
+        }
     }
 
     /* Report previous child task activity */
