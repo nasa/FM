@@ -533,7 +533,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
 
 CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
 {
-    OS_statvfs_t  FileStats;
+    OS_statvfs_t  FileStats = {0};
     osal_status_t OS_Status;
     CFE_Status_t  Result;
 
