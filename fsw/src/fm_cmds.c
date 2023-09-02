@@ -73,12 +73,12 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const char *CmdText = "Reset Counters";
 
-    FM_GlobalData.CommandCounter    = 0;
-    FM_GlobalData.CommandErrCounter = 0;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandCounter    = 0;
+    FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter = 0;
 
-    FM_GlobalData.ChildCmdCounter     = 0;
-    FM_GlobalData.ChildCmdErrCounter  = 0;
-    FM_GlobalData.ChildCmdWarnCounter = 0;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdCounter     = 0;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdErrCounter  = 0;
+    FM_GlobalData.HousekeepingPkt.Payload.ChildCmdWarnCounter = 0;
 
     /* Send command completion event (debug) */
     CFE_EVS_SendEvent(FM_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);

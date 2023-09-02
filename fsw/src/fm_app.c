@@ -248,7 +248,7 @@ CFE_Status_t FM_AppInit(void)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    FM_HousekeepingPkt_Payload_t *PayloadPtr;
+    FM_HousekeepingPkt_Payload_t *PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
 
     FM_ReleaseTablePointers();
 
@@ -258,24 +258,7 @@ void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
     CFE_MSG_Init(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
                  sizeof(FM_HousekeepingPkt_t));
 
-    PayloadPtr = &FM_GlobalData.HousekeepingPkt.Payload;
-
-    /* Report application command counters */
-    PayloadPtr->CommandCounter    = FM_GlobalData.CommandCounter;
-    PayloadPtr->CommandErrCounter = FM_GlobalData.CommandErrCounter;
-
     PayloadPtr->NumOpenFiles = FM_GetOpenFilesData(NULL);
-
-    /* Report child task command counters */
-    PayloadPtr->ChildCmdCounter     = FM_GlobalData.ChildCmdCounter;
-    PayloadPtr->ChildCmdErrCounter  = FM_GlobalData.ChildCmdErrCounter;
-    PayloadPtr->ChildCmdWarnCounter = FM_GlobalData.ChildCmdWarnCounter;
-
-    PayloadPtr->ChildQueueCount = FM_GlobalData.ChildQueueCount;
-
-    /* Report current and previous commands executed by the child task */
-    PayloadPtr->ChildCurrentCC  = FM_GlobalData.ChildCurrentCC;
-    PayloadPtr->ChildPreviousCC = FM_GlobalData.ChildPreviousCC;
 
     CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader));
     CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.HousekeepingPkt.TelemetryHeader), true);

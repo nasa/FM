@@ -529,12 +529,12 @@ void FM_ProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         /* Increment command success counter */
         if (CommandCode != FM_RESET_COUNTERS_CC)
         {
-            FM_GlobalData.CommandCounter++;
+            FM_GlobalData.HousekeepingPkt.Payload.CommandCounter++;
         }
     }
     else
     {
         /* Increment command error counter */
-        FM_GlobalData.CommandErrCounter++;
+        FM_GlobalData.HousekeepingPkt.Payload.CommandErrCounter++;
     }
 }
