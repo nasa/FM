@@ -421,7 +421,7 @@ bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr);
  *  \retval true  Command successful
  *  \retval false Command not successful
  *
- *  \sa #FM_SET_PERMISSIONS_CC, #FM_SetPermissionsCmd_t, #FM_SET_PERM_CMD_EID, #FM_SET_PERM_ERR_EID
+ *  \sa #FM_SET_PERMISSIONS_CC, #FM_SetPermissionsCmd_t, #FM_SET_PERM_CMD_INF_EID, #FM_SET_PERM_ERR_EID
  */
 bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr);
 

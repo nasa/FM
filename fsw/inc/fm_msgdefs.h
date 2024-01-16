@@ -115,7 +115,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_COPY_CMD_EID will be sent
+ *       - Informational event #FM_COPY_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -187,7 +187,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_MOVE_CMD_EID will be sent
+ *       - Informational event #FM_MOVE_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -249,7 +249,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_RENAME_CMD_EID will be sent
+ *       - Informational event #FM_RENAME_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -303,7 +303,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_DELETE_CMD_EID will be sent
+ *       - Informational event #FM_DELETE_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -356,7 +356,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_DELETE_ALL_CMD_EID will be sent
+ *       - Informational event #FM_DELETE_ALL_CMD_INF_EID will be sent
  *
  *  \par Command Warning Conditions
  *       - Directory entry is not a file (sub-directory)
@@ -423,7 +423,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_DECOM_CMD_EID will be sent
+ *       - Informational event #FM_DECOM_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -479,7 +479,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_CONCAT_CMD_EID will be sent
+ *       - Informational event #FM_CONCAT_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -547,7 +547,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_GET_FILE_INFO_CMD_EID will be sent
+ *       - Informational event #FM_GET_FILE_INFO_CMD_INF_EID will be sent
  *
  *  \par Command Warning Conditions
  *       - File is open and CRC cannot be calculated
@@ -597,7 +597,7 @@
  *
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
- *       - Debug event #FM_GET_OPEN_FILES_CMD_EID will be sent
+ *       - Informational event #FM_GET_OPEN_FILES_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -633,7 +633,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_CREATE_DIR_CMD_EID will be sent
+ *       - Informational event #FM_CREATE_DIR_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -681,7 +681,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_DELETE_DIR_CMD_EID will be sent
+ *       - Informational event #FM_DELETE_DIR_CMD_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
@@ -736,7 +736,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_GET_DIR_FILE_CMD_EID will be sent
+ *       - Informational event #FM_GET_DIR_FILE_CMD_INF_EID will be sent
  *
  *  \par Command Warning Conditions
  *       - Combined directory and entry name is too long
@@ -819,7 +819,7 @@
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
  *       - The #FM_DirListPkt_t telemetry packet will be sent
- *       - The #FM_GET_DIR_PKT_CMD_EID debug event will be sent
+ *       - The #FM_GET_DIR_PKT_CMD_INF_EID informational event will be sent
  *
  *  \par Command Warning Conditions
  *       - Combined directory and entry name is too long
@@ -869,7 +869,7 @@
  *
  *  \par Evidence of success may be found in the following telemetry:
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
- *       - Debug event #FM_MONITOR_FILESYSTEM_SPACE_CMD_EID will be sent
+ *       - Informational event #FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID will be sent
  *       - Telemetry packet #FM_MonitorReportPkt_t will be sent
  *
  *  \par Error Conditions
@@ -948,7 +948,7 @@
  *  \par Command Success Verification
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment after validation
  *       - #FM_HousekeepingPkt_Payload_t.ChildCmdCounter will increment after completion
- *       - Debug event #FM_SET_PERM_CMD_EID will be sent
+ *       - Informational event #FM_SET_PERM_CMD_INF_EID will be sent
  *
  *  \par Error Conditions
  *       - Invalid command packet length

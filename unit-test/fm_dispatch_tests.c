@@ -495,36 +495,36 @@ void add_FM_ProcessCmd_tests(void)
                "Test_FM_ProcessCmd_DecompressFileCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_ConcatFilesCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_ConcatFilesCCReturn");
+               "Test_FM_ProcessCmd_ConcatFilesCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_GetFileInfoCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_GetFileInfoCCReturn");
+               "Test_FM_ProcessCmd_GetFileInfoCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_GetOpenFilesCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_GetOpenFilesCCReturn");
+               "Test_FM_ProcessCmd_GetOpenFilesCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_CreateDirectoryCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_CreateDirectoryCCReturn");
+               "Test_FM_ProcessCmd_CreateDirectoryCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_DeleteDirectoryCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_DeleteDirectoryCCReturn");
+               "Test_FM_ProcessCmd_DeleteDirectoryCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_GetDirListFileCCReturn, FM_Test_Setup, FM_Test_Teardown,
                "Test_FM_ProcessCmd_GetDirListFIleCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_GetDirListPktCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_GetDirListPktCCReturn");
+               "Test_FM_ProcessCmd_GetDirListPktCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_MonitorFilesystemSpaceCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_MonitorFilesystemSpaceCCReturn");
+               "Test_FM_ProcessCmd_MonitorFilesystemSpaceCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_SetTableStateCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_SetTableStateCCReturn");
+               "Test_FM_ProcessCmd_SetTableStateCCReturn");
 
     UtTest_Add(Test_FM_ProcessCmd_SetPermissionsCCReturn, FM_Test_Setup, FM_Test_Teardown,
-               "Test_FM_PRocessCmd_SetPermissionsCCReturn");
+               "Test_FM_ProcessCmd_SetPermissionsCCReturn");
 
-    UtTest_Add(Test_FM_ProcessCmd_DefaultReturn, FM_Test_Setup, FM_Test_Teardown, "Test_FM_PRocessCmd_DefaultReturn");
+    UtTest_Add(Test_FM_ProcessCmd_DefaultReturn, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ProcessCmd_DefaultReturn");
 }
 
 /* ********************************

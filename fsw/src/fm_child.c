@@ -302,7 +302,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_COPY_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s, tgt = %s", CmdText,
+        CFE_EVS_SendEvent(FM_COPY_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s, tgt = %s", CmdText,
                           CmdArgs->Source1, CmdArgs->Target);
     }
 
@@ -341,7 +341,7 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_MOVE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s, tgt = %s", CmdText,
+        CFE_EVS_SendEvent(FM_MOVE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s, tgt = %s", CmdText,
                           CmdArgs->Source1, CmdArgs->Target);
     }
 
@@ -380,8 +380,8 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_RENAME_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s, tgt = %s", CmdText,
-                          CmdArgs->Source1, CmdArgs->Target);
+        CFE_EVS_SendEvent(FM_RENAME_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s, tgt = %s",
+                          CmdText, CmdArgs->Source1, CmdArgs->Target);
     }
 
     /* Report previous child task activity */
@@ -419,7 +419,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_DELETE_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: file = %s", CmdText,
+        CFE_EVS_SendEvent(FM_DELETE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: file = %s", CmdText,
                           CmdArgs->Source1);
     }
 
@@ -551,13 +551,13 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
         OS_DirectoryClose(DirId);
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_DELETE_ALL_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: deleted %d files: dir = %s",
-                          CmdText, (int)DeleteCount, Directory);
+        CFE_EVS_SendEvent(FM_DELETE_ALL_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "%s command: deleted %d files: dir = %s", CmdText, (int)DeleteCount, Directory);
         FM_GlobalData.ChildCmdCounter++;
 
         if (FilesNotDeletedCount > 0)
         {
-            /* If errors occured, report generic event(s) */
+            /* If errors occurred, report generic event(s) */
             CFE_EVS_SendEvent(FM_DELETE_ALL_FILES_ND_WARNING_EID, CFE_EVS_EventType_INFORMATION,
                               "%s command: one or more files could not be deleted. Files may be open : dir = %s",
                               CmdText, Directory);
@@ -566,7 +566,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
 
         if (DirectoriesSkippedCount > 0)
         {
-            /* If errors occured, report generic event(s) */
+            /* If errors occurred, report generic event(s) */
             CFE_EVS_SendEvent(FM_DELETE_ALL_SKIP_WARNING_EID, CFE_EVS_EventType_INFORMATION,
                               "%s command: one or more directories skipped : dir = %s", CmdText, Directory);
             FM_GlobalData.ChildCmdWarnCounter++;
@@ -610,8 +610,8 @@ void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_DECOM_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s, tgt = %s", CmdText,
-                          CmdArgs->Source1, CmdArgs->Target);
+        CFE_EVS_SendEvent(FM_DECOM_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s, tgt = %s",
+                          CmdText, CmdArgs->Source1, CmdArgs->Target);
     }
 
     /* Report previous child task activity */
@@ -700,8 +700,8 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
                         FM_GlobalData.ChildCmdCounter++;
 
-                        /* Send command completion event (debug) */
-                        CFE_EVS_SendEvent(FM_CONCAT_CMD_EID, CFE_EVS_EventType_DEBUG,
+                        /* Send command completion event (info) */
+                        CFE_EVS_SendEvent(FM_CONCAT_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
                                           "%s command: src1 = %s, src2 = %s, tgt = %s", CmdText, CmdArgs->Source1,
                                           CmdArgs->Source2, CmdArgs->Target);
                     }
@@ -915,8 +915,8 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
     FM_GlobalData.ChildCmdCounter++;
 
-    /* Send command completion event (debug) */
-    CFE_EVS_SendEvent(FM_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: file = %s", CmdText,
+    /* Send command completion event (info) */
+    CFE_EVS_SendEvent(FM_GET_FILE_INFO_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: file = %s", CmdText,
                       CmdArgs->Source1);
 
     /* Report previous child task activity */
@@ -954,7 +954,7 @@ void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_CREATE_DIR_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s", CmdText,
+        CFE_EVS_SendEvent(FM_CREATE_DIR_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s", CmdText,
                           CmdArgs->Source1);
     }
 
@@ -1029,7 +1029,7 @@ void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
         else
         {
             /* Send command completion event (info) */
-            CFE_EVS_SendEvent(FM_DELETE_DIR_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: src = %s", CmdText,
+            CFE_EVS_SendEvent(FM_DELETE_DIR_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: src = %s", CmdText,
                               CmdArgs->Source1);
 
             FM_GlobalData.ChildCmdCounter++;
@@ -1226,8 +1226,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
         CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.DirListPkt.TelemetryHeader), true);
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_GET_DIR_PKT_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: offset = %d, dir = %s", CmdText,
-                          (int)CmdArgs->DirListOffset, CmdArgs->Source1);
+        CFE_EVS_SendEvent(FM_GET_DIR_PKT_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "%s command: offset = %d, dir = %s", CmdText, (int)CmdArgs->DirListOffset, CmdArgs->Source1);
 
         FM_GlobalData.ChildCmdCounter++;
     }
@@ -1254,8 +1254,8 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
         FM_GlobalData.ChildCmdCounter++;
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_SET_PERM_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command: file = %s, access = %d", CmdText,
-                          CmdArgs->Source1, (int)CmdArgs->Mode);
+        CFE_EVS_SendEvent(FM_SET_PERM_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: file = %s, access = %d",
+                          CmdText, CmdArgs->Source1, (int)CmdArgs->Mode);
     }
     else
     {
@@ -1484,9 +1484,9 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
     {
         FM_GlobalData.ChildCmdCounter++;
 
-        CFE_EVS_SendEvent(FM_GET_DIR_FILE_CMD_EID, CFE_EVS_EventType_DEBUG,
-                          "%s command: wrote %d of %d names: dir = %s, filename = %s", CmdText, (int)FileEntries,
-                          (int)DirEntries, Directory, Filename);
+        CFE_EVS_SendEvent(FM_GET_DIR_FILE_CMD_INF_EID,
+                          CFE_EVS_EventType_INFORMATION, "%s command: wrote %d of %d names: dir = %s, filename = %s",
+                          CmdText, (int)FileEntries, (int)DirEntries, Directory, Filename);
     }
 }
 
