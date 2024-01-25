@@ -172,8 +172,8 @@ void Test_FM_ChildProcess_FMCopyCC(void)
 
     UtAssert_STUB_COUNT(OS_cp, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_COPY_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_COPY_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMMoveCC(void)
@@ -189,8 +189,8 @@ void Test_FM_ChildProcess_FMMoveCC(void)
 
     UtAssert_STUB_COUNT(OS_mv, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_MOVE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_MOVE_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMRenameCC(void)
@@ -206,8 +206,8 @@ void Test_FM_ChildProcess_FMRenameCC(void)
 
     UtAssert_STUB_COUNT(OS_rename, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RENAME_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RENAME_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMDeleteCC(void)
@@ -223,8 +223,8 @@ void Test_FM_ChildProcess_FMDeleteCC(void)
 
     UtAssert_STUB_COUNT(OS_remove, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMDeleteAllCC(void)
@@ -347,8 +347,8 @@ void Test_FM_ChildProcess_FMGetFileInfoCC(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_STATE_WARNING_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMGetDirListsFileCC(void)
@@ -390,8 +390,8 @@ void Test_FM_ChildProcess_FMGetDirListsPktCC(void)
     UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
     UtAssert_STUB_COUNT(OS_DirectoryClose, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 }
 
 void Test_FM_ChildProcess_FMSetFilePermCC(void)
@@ -444,8 +444,8 @@ void Test_FM_ChildCopyCmd_OScpIsSuccess(void)
     UT_FM_Child_Cmd_Assert(1, 0, 0, queue_entry.CommandCode);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_COPY_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_COPY_CMD_INF_EID);
 }
 
 void Test_FM_ChildCopyCmd_OScpNotSuccess(void)
@@ -500,8 +500,8 @@ void Test_FM_ChildMoveCmd_OSmvSuccess(void)
 
     UtAssert_STUB_COUNT(OS_mv, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_MOVE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_MOVE_CMD_INF_EID);
 }
 
 /* ****************
@@ -520,8 +520,8 @@ void Test_FM_ChildRenameCmd_OSRenameSuccess(void)
 
     UtAssert_STUB_COUNT(OS_rename, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RENAME_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RENAME_CMD_INF_EID);
 }
 
 void Test_FM_ChildRenameCmd_OSRenameNotSuccess(void)
@@ -559,8 +559,8 @@ void Test_FM_ChildDeleteCmd_OSRemoveSuccess(void)
 
     UtAssert_STUB_COUNT(OS_remove, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteCmd_OSRemoveNotSuccess(void)
@@ -623,8 +623,8 @@ void Test_FM_ChildDeleteAllFilesCmd_DirReadNotSuccess(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryClose, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory(void)
@@ -648,8 +648,8 @@ void Test_FM_ChildDeleteAllFilesCmd_DirEntryThisDirectory(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory(void)
@@ -673,8 +673,8 @@ void Test_FM_ChildDeleteAllFilesCmd_DirEntryParentDirectory(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen(void)
@@ -699,8 +699,8 @@ void Test_FM_ChildDeleteAllFilesCmd_PathFilenameLengthGreaterMaxPthLen(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -727,8 +727,8 @@ void Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -755,8 +755,8 @@ void Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -783,8 +783,8 @@ void Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_SKIP_WARNING_EID);
 }
@@ -811,8 +811,8 @@ void Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -841,8 +841,8 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess(void)
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(OS_remove, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -871,8 +871,8 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess(void)
     UtAssert_STUB_COUNT(OS_remove, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRewind, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn(void)
@@ -897,8 +897,8 @@ void Test_FM_ChildDeleteAllFilesCmd_FilenameStateDefaultReturn(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(FM_GetFilenameState, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_ALL_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_DELETE_ALL_FILES_ND_WARNING_EID);
 }
@@ -922,8 +922,8 @@ void Test_FM_ChildDecompressFileCmd_FSDecompressSuccess(void)
 
     UtAssert_STUB_COUNT(FM_Decompress_Impl, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DECOM_CMD_INF_EID);
 }
 
 void Test_FM_ChildDecompressFileCmd_FSDecompressNotSuccess(void)
@@ -1031,8 +1031,8 @@ void Test_FM_ChildConcatFilesCmd_OSReadBytesZero(void)
     UtAssert_STUB_COUNT(OS_remove, 0);
     UtAssert_STUB_COUNT(OS_close, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CONCAT_CMD_INF_EID);
 }
 
 void Test_FM_ChildConcatFilesCmd_OSReadBytesLessThanZero(void)
@@ -1128,8 +1128,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualIgnoreCRC(void)
 
     UtAssert_STUB_COUNT(OS_OpenCreate, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_FileInfoStateIsNotFileClosed(void)
@@ -1151,8 +1151,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoStateIsNotFileClosed(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_STATE_WARNING_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission8(void)
@@ -1176,8 +1176,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission8(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_OPEN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission16(void)
@@ -1201,8 +1201,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission16(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_OPEN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission32(void)
@@ -1226,8 +1226,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission32(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_OPEN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_FileInfoCRCNotEqualToAnyMissionES(void)
@@ -1249,8 +1249,8 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCNotEqualToAnyMissionES(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_TYPE_WARNING_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_OSOpenCreateTrueBytesReadZero(void)
@@ -1274,8 +1274,8 @@ void Test_FM_ChildFileInfoCmd_OSOpenCreateTrueBytesReadZero(void)
     UtAssert_STUB_COUNT(OS_OpenCreate, 1);
     UtAssert_STUB_COUNT(OS_close, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_BytesReadLessThanZero(void)
@@ -1301,8 +1301,8 @@ void Test_FM_ChildFileInfoCmd_BytesReadLessThanZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_READ_WARNING_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
@@ -1329,8 +1329,8 @@ void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
     UtAssert_STUB_COUNT(OS_OpenCreate, 1);
     UtAssert_STUB_COUNT(OS_close, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_FILE_INFO_CMD_INF_EID);
 }
 
 /* ****************
@@ -1349,8 +1349,8 @@ void Test_FM_ChildCreateDirectoryCmd_OSMkDirSuccess(void)
 
     UtAssert_STUB_COUNT(OS_mkdir, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CREATE_DIR_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CREATE_DIR_CMD_INF_EID);
 }
 
 void Test_FM_ChildCreateDirectoryCmd_OSMkDirNotSuccess(void)
@@ -1411,8 +1411,8 @@ void Test_FM_ChildDeleteDirectoryCmd_OSDirectoryReadNoSuccess(void)
     UtAssert_STUB_COUNT(OS_DirectoryRead, 1);
     UtAssert_STUB_COUNT(OS_DirectoryClose, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteDirectoryCmd_StrCmpThisDirectoryZero(void)
@@ -1433,8 +1433,8 @@ void Test_FM_ChildDeleteDirectoryCmd_StrCmpThisDirectoryZero(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteDirectoryCmd_StrCmpParentDirectoryZero(void)
@@ -1474,8 +1474,8 @@ void Test_FM_ChildDeleteDirectoryCmd_RemoveTheDirIsTrueRmDirSuccess(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_DELETE_DIR_CMD_INF_EID);
 }
 
 void Test_FM_ChildDeleteDirectoryCmd_RemoveDirTrueOSRmDirNotSuccess(void)
@@ -1562,8 +1562,8 @@ void Test_FM_ChildDirListFileCmd_ChildDirListFileInitTrue(void)
     UtAssert_STUB_COUNT(OS_DirectoryClose, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(OS_close, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 }
 
 /* ****************
@@ -1608,8 +1608,8 @@ void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_GlobalData.DirListPkt.Payload;
     UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
@@ -1636,8 +1636,8 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_GlobalData.DirListPkt.Payload;
     UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
@@ -1664,8 +1664,8 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_GlobalData.DirListPkt.Payload;
     UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
@@ -1692,8 +1692,8 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, 2);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_GlobalData.DirListPkt.Payload;
     UtAssert_UINT32_EQ(ReportPtr->FirstFile, 1);
@@ -1726,8 +1726,8 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
     UtAssert_STUB_COUNT(OS_DirectoryOpen, 1);
     UtAssert_STUB_COUNT(OS_DirectoryRead, sizeof(direntry) / sizeof(direntry[0]) + 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_GlobalData.DirListPkt.Payload;
     UtAssert_UINT32_EQ(ReportPtr->FirstFile, 0);
@@ -1782,8 +1782,8 @@ void Test_FM_ChildSetPermissionsCmd_OSChmodSuccess(void)
 
     UtAssert_STUB_COUNT(OS_chmod, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_PERM_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_SET_PERM_CMD_INF_EID);
 }
 
 void Test_FM_ChildSetPermissionsCmd_OSChmodNotSuccess(void)
@@ -1920,8 +1920,8 @@ void Test_FM_ChildDirListFileLoop_OSDirReadNotSuccess(void)
     UtAssert_STUB_COUNT(OS_write, 0);
     UtAssert_STUB_COUNT(OS_lseek, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 
     UtAssert_UINT32_EQ(FM_GlobalData.DirListFileStats.DirEntries, 0);
     UtAssert_UINT32_EQ(FM_GlobalData.DirListFileStats.FileEntries, 0);
@@ -1945,8 +1945,8 @@ void Test_FM_ChildDirListFileLoop_OSDirEntryNameIsThisDirectory(void)
     UtAssert_STUB_COUNT(OS_write, 0);
     UtAssert_STUB_COUNT(OS_lseek, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 
     UtAssert_UINT32_EQ(FM_GlobalData.DirListFileStats.DirEntries, 0);
     UtAssert_UINT32_EQ(FM_GlobalData.DirListFileStats.FileEntries, 0);
@@ -1970,8 +1970,8 @@ void Test_FM_ChildDirListFileLoop_OSDirEntryNameIsParentDirectory(void)
     UtAssert_STUB_COUNT(OS_write, 0);
     UtAssert_STUB_COUNT(OS_lseek, 0);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 }
 
 void Test_FM_ChildDirListFileLoop_PathLengthAndEntryLengthGreaterMaxPathLen(void)
@@ -1998,8 +1998,8 @@ void Test_FM_ChildDirListFileLoop_PathLengthAndEntryLengthGreaterMaxPathLen(void
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_WARNING_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 
     UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.DirEntries, 1);
     UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.FileEntries, 0);
@@ -2023,8 +2023,8 @@ void Test_FM_ChildDirListFileLoop_FileEntriesGreaterFMDirListFileEntries(void)
     UtAssert_STUB_COUNT(OS_write, FM_DIR_LIST_FILE_ENTRIES + 1);
     UtAssert_STUB_COUNT(OS_lseek, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_CMD_INF_EID);
 
     UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.DirEntries, entrycnt);
     UtAssert_INT32_EQ(FM_GlobalData.DirListFileStats.FileEntries, FM_DIR_LIST_FILE_ENTRIES);

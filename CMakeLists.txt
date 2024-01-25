@@ -47,7 +47,7 @@ add_cfe_app(fm ${APP_SRC_FILES} ${FM_OPTION_SRC_FILES})
 # This permits direct access to public headers in the fsw/inc directory
 target_include_directories(fm PUBLIC fsw/inc)
 
-# Add dependencies based on the type of compression algoritm selected (if any)
+# Add dependencies based on the type of compression algorithm selected (if any)
 if (FM_DEPENDENCY_LIST)
   add_cfe_app_dependency(fm ${FM_DEPENDENCY_LIST})
 endif()

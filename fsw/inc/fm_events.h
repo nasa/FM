@@ -244,7 +244,7 @@
 /**
  * \brief FM Copy File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -256,7 +256,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_COPY_CMD_EID 16
+#define FM_COPY_CMD_INF_EID 16
 
 /**
  * \brief FM Copy File Command Length Invalid Event ID
@@ -303,14 +303,14 @@
 /**
  * \brief FM Move File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_Move command.
  */
-#define FM_MOVE_CMD_EID 20
+#define FM_MOVE_CMD_INF_EID 20
 
 /**
  * \brief FM Move File Command Length Invalid Event ID
@@ -357,14 +357,14 @@
 /**
  * \brief FM Rename File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_Rename command.
  */
-#define FM_RENAME_CMD_EID 24
+#define FM_RENAME_CMD_INF_EID 24
 
 /**
  * \brief FM Rename File Command Length Invalid Event ID
@@ -411,14 +411,14 @@
 /**
  * \brief FM Delete File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_Delete command.
  */
-#define FM_DELETE_CMD_EID 28
+#define FM_DELETE_CMD_INF_EID 28
 
 /**
  * \brief FM Delete File Command Length Invalid Event ID
@@ -450,7 +450,7 @@
 /**
  * \brief FM Delete All Files Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -462,7 +462,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_DELETE_ALL_CMD_EID 31
+#define FM_DELETE_ALL_CMD_INF_EID 31
 
 /**
  * \brief FM Delete All Files Unable To Delete All Event ID
@@ -518,7 +518,7 @@
 /**
  * \brief FM Decompress File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -530,7 +530,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_DECOM_CMD_EID 36
+#define FM_DECOM_CMD_INF_EID 36
 
 /**
  * \brief FM Decompress File Command Length Invalid Event ID
@@ -562,7 +562,7 @@
 /**
  * \brief FM Concat Files Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -574,7 +574,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_CONCAT_CMD_EID 39
+#define FM_CONCAT_CMD_INF_EID 39
 
 /**
  * \brief FM Concat Files Command Length Invalid Event ID
@@ -679,10 +679,7 @@
 /**
  * \brief FM Get File Info Command Event ID
  *
- *  \par Type: DEBUG
- *
- *  This event is type debug because the command generates a telemetry
- *  packet that also signals the completion of the command.
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -694,7 +691,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_GET_FILE_INFO_CMD_EID 46
+#define FM_GET_FILE_INFO_CMD_INF_EID 46
 
 /**
  * \brief FM Get File Info Unable To Compute CRC File State Invalid Event ID
@@ -795,17 +792,14 @@
 /**
  * \brief FM Get Open Files Command Event ID
  *
- *  \par Type: DEBUG
- *
- *  This event is type debug because the command generates a telemetry
- *  packet that also signals the completion of the command.
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_GetOpenFiles command.
  */
-#define FM_GET_OPEN_FILES_CMD_EID 53
+#define FM_GET_OPEN_FILES_CMD_INF_EID 53
 
 /**
  * \brief FM Get Open Files Command Length Invalid Event ID
@@ -822,14 +816,14 @@
 /**
  * \brief FM Create Directory Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_CreateDir command.
  */
-#define FM_CREATE_DIR_CMD_EID 55
+#define FM_CREATE_DIR_CMD_INF_EID 55
 
 /**
  * \brief FM Create Directory Command Length Invalid Event ID
@@ -860,14 +854,14 @@
 /**
  * \brief FM Delete Directory Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_DeleteDir command.
  */
-#define FM_DELETE_DIR_CMD_EID 58
+#define FM_DELETE_DIR_CMD_INF_EID 58
 
 /**
  * \brief FM Delete Directory Command Length Invalid Event ID
@@ -924,7 +918,7 @@
 /**
  * \brief FM Directory List To File Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -936,7 +930,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_GET_DIR_FILE_CMD_EID 63
+#define FM_GET_DIR_FILE_CMD_INF_EID 63
 
 /**
  * \brief FM Directory List To File Command Length Invalid Event ID
@@ -1078,10 +1072,7 @@
 /**
  * \brief FM Directory List To Packet Command Event ID
  *
- *  \par Type: DEBUG
- *
- *  This event is type debug because the command generates a telemetry
- *  packet that also signals the completion of the command.
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
@@ -1093,7 +1084,7 @@
  *  occur until some time after the command was invoked.  However, this
  *  event message does signal the actual completion of the command.
  */
-#define FM_GET_DIR_PKT_CMD_EID 72
+#define FM_GET_DIR_PKT_CMD_INF_EID 72
 
 /**
  * \brief FM Directory List To Packet Command Directory and Entry Too Long Event ID
@@ -1138,17 +1129,14 @@
 /**
  * \brief FM Monitor Filesystem Command Event ID
  *
- *  \par Type: DEBUG
- *
- *  This event is type debug because the command generates a telemetry
- *  packet that also signals the completion of the command.
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_MonitorFilesystemSpace command.
  */
-#define FM_MONITOR_FILESYSTEM_SPACE_CMD_EID 76
+#define FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID 76
 
 /**
  * \brief FM Get Free Space Command Length Invalid Event ID
@@ -1453,14 +1441,14 @@
 /**
  * \brief FM Set Permissions Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
  *  This event message signals the successful completion of a
  *  /FM_SetPerm command.
  */
-#define FM_SET_PERM_CMD_EID 99
+#define FM_SET_PERM_CMD_INF_EID 99
 
 /**
  * \brief FM Set Permissions Command Chmod Error Event ID
