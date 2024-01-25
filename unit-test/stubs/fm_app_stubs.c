@@ -56,9 +56,9 @@ void FM_AppMain(void)
  * Generated stub function for FM_SendHkCmd()
  * ----------------------------------------------------
  */
-void FM_SendHkCmd(const CFE_SB_Buffer_t *BufPtr)
+void FM_SendHkCmd(const FM_SendHkCmd_t *BufPtr)
 {
-    UT_GenStub_AddParam(FM_SendHkCmd, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(FM_SendHkCmd, const FM_SendHkCmd_t *, BufPtr);
 
     UT_GenStub_Execute(FM_SendHkCmd, Basic, NULL);
 }

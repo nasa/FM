@@ -28,6 +28,7 @@
 #ifndef FM_COMPRESSION_H
 #define FM_COMPRESSION_H
 
+#include <cfe_error.h>
 #include <common_types.h>
 #include <fm_platform_cfg.h>
 
