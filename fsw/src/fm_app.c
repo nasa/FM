@@ -186,8 +186,8 @@ CFE_Status_t FM_AppInit(void)
         Result = CFE_SB_CreatePipe(&FM_GlobalData.CmdPipe, FM_APP_PIPE_DEPTH, FM_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(FM_STARTUP_CREAT_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "%s create SB input pipe: result = 0x%08X", ErrText, (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "%s create SB input pipe: result = 0x%08X",
+                              ErrText, (unsigned int)Result);
         }
         else
         {
@@ -229,7 +229,7 @@ CFE_Status_t FM_AppInit(void)
                 FM_ChildInit();
 
                 /* Application startup event message */
-                CFE_EVS_SendEvent(FM_STARTUP_EID, CFE_EVS_EventType_INFORMATION,
+                CFE_EVS_SendEvent(FM_INIT_INF_EID, CFE_EVS_EventType_INFORMATION,
                                   "Initialization complete: version %d.%d.%d.%d", FM_MAJOR_VERSION, FM_MINOR_VERSION,
                                   FM_REVISION, FM_MISSION_REV);
             }

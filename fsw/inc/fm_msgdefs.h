@@ -44,7 +44,7 @@
  *       #FM_NoopCmd_t
  *
  *  \par Command Success Verification
- *       - Informational event #FM_NOOP_CMD_EID will be sent
+ *       - Informational event #FM_NOOP_INF_EID will be sent
  *       - #FM_HousekeepingPkt_Payload_t.CommandCounter will increment
  *
  *  \par Command Error Conditions
@@ -75,7 +75,7 @@
  *
  *  \par Command Success Verification
  *       - Command counters will be set to zero (see description)
- *       - Debug event #FM_RESET_CMD_EID will be sent
+ *       - Debug event #FM_RESET_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length

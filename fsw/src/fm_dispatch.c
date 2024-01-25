@@ -390,7 +390,7 @@ bool FM_SetPermissionsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 void FM_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     /* Verify command packet length */
-    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SendHkCmd_t), FM_HK_REQ_ERR_EID, "HK Request"))
+    if (!FM_IsValidCmdPktLength(&BufPtr->Msg, sizeof(FM_SendHkCmd_t), FM_HKREQ_LEN_ERR_EID, "HK Request"))
     {
         return;
     }

@@ -39,7 +39,7 @@
  *  This event message is issued after the File Manager application has
  *  successfully completed startup initialization.
  */
-#define FM_STARTUP_EID 1
+#define FM_INIT_INF_EID 1
 
 /**
  * \brief FM Initialization Register For Event Services Failed Event ID
@@ -71,7 +71,7 @@
  *  This is a fatal error that will cause the File Manager application
  *  to terminate.
  */
-#define FM_STARTUP_CREAT_PIPE_ERR_EID 3
+#define FM_CR_PIPE_ERR_EID 3
 
 /**
  * \brief FM Initialization Subscribe to HK Request Failed Event ID
@@ -188,7 +188,7 @@
  *  This event message is generated upon receipt of a housekeeping
  *  request command packet with an invalid length.
  */
-#define FM_HK_REQ_ERR_EID 11
+#define FM_HKREQ_LEN_ERR_EID 11
 
 /**
  * \brief FM No-op Command Event ID
@@ -200,7 +200,7 @@
  *  This event message signals the successful completion of a
  *  /FM_Noop command.
  */
-#define FM_NOOP_CMD_EID 12
+#define FM_NOOP_INF_EID 12
 
 /**
  * \brief FM No-op Command Length Invalid Event ID
@@ -227,7 +227,7 @@
  *  This event message signals the successful completion of a
  *  /FM_ResetCtrs command.
  */
-#define FM_RESET_CMD_EID 14
+#define FM_RESET_INF_EID 14
 
 /**
  * \brief FM Reset Counters Command Length Invalid Event ID

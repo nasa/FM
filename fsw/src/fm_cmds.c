@@ -57,7 +57,7 @@ bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const char *CmdText = "No-op";
 
-    CFE_EVS_SendEvent(FM_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "%s command: FM version %d.%d.%d.%d", CmdText,
+    CFE_EVS_SendEvent(FM_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command: FM version %d.%d.%d.%d", CmdText,
                       FM_MAJOR_VERSION, FM_MINOR_VERSION, FM_REVISION, FM_MISSION_REV);
 
     return true;
@@ -81,7 +81,7 @@ bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     FM_GlobalData.ChildCmdWarnCounter = 0;
 
     /* Send command completion event (debug) */
-    CFE_EVS_SendEvent(FM_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
+    CFE_EVS_SendEvent(FM_RESET_INF_EID, CFE_EVS_EventType_DEBUG, "%s command", CmdText);
 
     return true;
 }
