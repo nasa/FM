@@ -508,7 +508,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
     */
     size_t StringLength = 0;
 
-    StringLength = strlen(Directory);
+    StringLength = OS_strnlen(Directory, OS_MAX_PATH_LEN);
 
     /* Do nothing if string already ends with a path separator */
     if ((StringLength != 0) && (Directory[StringLength - 1] != '/'))
@@ -577,9 +577,8 @@ CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCo
     TotalBytes = 0;
 
     memset(&DirEntry, 0, sizeof(DirEntry));
-    strncpy(FullPath, Directory, sizeof(FullPath) - 1);
-    FullPath[sizeof(FullPath) - 1] = 0;
-    DirLen                         = strlen(FullPath);
+    snprintf(FullPath, sizeof(FullPath), "%s", Directory);
+    DirLen = OS_strnlen(FullPath, OS_MAX_PATH_LEN);
     if (DirLen < (sizeof(FullPath) - 2))
     {
         FullPath[DirLen] = '/';
@@ -607,7 +606,7 @@ CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCo
         /* Read each directory entry and stat the files */
         while (OS_DirectoryRead(DirId, &DirEntry) == OS_SUCCESS)
         {
-            strncpy(&FullPath[DirLen], OS_DIRENTRY_NAME(DirEntry), sizeof(FullPath) - DirLen - 1);
+            snprintf(&FullPath[DirLen], sizeof(FullPath) - DirLen, "%s", OS_DIRENTRY_NAME(DirEntry));
 
             OS_Status = OS_stat(FullPath, &FileStat);
             if (OS_Status != OS_SUCCESS)

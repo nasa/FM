@@ -387,10 +387,8 @@ bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_DECOMPRESS_FILE_CC;
-        strncpy(CmdArgs->Source1, CmdPtr->Source, OS_MAX_PATH_LEN - 1);
-        CmdArgs->Source1[OS_MAX_PATH_LEN - 1] = '\0';
-        strncpy(CmdArgs->Target, CmdPtr->Target, OS_MAX_PATH_LEN - 1);
-        CmdArgs->Target[OS_MAX_PATH_LEN - 1] = '\0';
+        snprintf(CmdArgs->Source1, OS_MAX_PATH_LEN, "%s", CmdPtr->Source);
+        snprintf(CmdArgs->Target, OS_MAX_PATH_LEN, "%s", CmdPtr->Target);
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -831,7 +829,8 @@ bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_GlobalData.MonitorReportPkt.TelemetryHeader), true);
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command", CmdText);
+        CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command",
+                          CmdText);
     }
 
     return CommandResult;
