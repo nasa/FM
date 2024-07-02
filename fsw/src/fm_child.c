@@ -801,8 +801,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
     /* Report directory or filename state, name, size and time */
     ReportPtr->FileStatus = (uint8)CmdArgs->FileInfoState;
-    strncpy(ReportPtr->Filename, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
-    ReportPtr->Filename[OS_MAX_PATH_LEN - 1] = '\0';
+    snprintf(ReportPtr->Filename, OS_MAX_PATH_LEN, "%s", CmdArgs->Source1);
 
     ReportPtr->FileSize         = CmdArgs->FileInfoSize;
     ReportPtr->LastModifiedTime = CmdArgs->FileInfoTime;
@@ -1136,7 +1135,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
     **  CmdArgs->Source2       = directory name plus separator
     **  CmdArgs->DirListOffset = index of 1st reported dir entry
     */
-    PathLength = strlen(CmdArgs->Source2);
+    PathLength = OS_strnlen(CmdArgs->Source2, OS_MAX_PATH_LEN);
 
     /* Open source directory for reading directory list */
     Status = OS_DirectoryOpen(&DirId, CmdArgs->Source1);
@@ -1157,9 +1156,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
         ReportPtr = &FM_GlobalData.DirListPkt.Payload;
 
-        strncpy(ReportPtr->DirName, CmdArgs->Source1, OS_MAX_PATH_LEN - 1);
-        ReportPtr->DirName[OS_MAX_PATH_LEN - 1] = '\0';
-        ReportPtr->FirstFile                    = CmdArgs->DirListOffset;
+        snprintf(ReportPtr->DirName, OS_MAX_PATH_LEN, "%s", CmdArgs->Source1);
+        ReportPtr->FirstFile = CmdArgs->DirListOffset;
 
         StillProcessing = true;
         while (StillProcessing == true)
@@ -1187,14 +1185,13 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                     ListIndex = ReportPtr->PacketFiles;
                     ListEntry = &ReportPtr->FileList[ListIndex];
 
-                    EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
+                    EntryLength = OS_strnlen(OS_DIRENTRY_NAME(DirEntry), OS_MAX_FILE_NAME);
 
                     /* Verify combined directory plus filename length */
                     if ((PathLength + EntryLength) < sizeof(LogicalName))
                     {
                         /* Add filename to directory listing telemetry packet */
-                        strncpy(ListEntry->EntryName, OS_DIRENTRY_NAME(DirEntry), sizeof(ListEntry->EntryName) - 1);
-                        ListEntry->EntryName[sizeof(ListEntry->EntryName) - 1] = '\0';
+                        snprintf(ListEntry->EntryName, sizeof(ListEntry->EntryName), "%s", OS_DIRENTRY_NAME(DirEntry));
 
                         /* Build filename - Directory already has path separator */
                         memcpy(LogicalName, CmdArgs->Source2, PathLength);
@@ -1378,7 +1375,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
 
     memset(&DirEntry, 0, sizeof(DirEntry));
 
-    PathLength = strlen(DirWithSep);
+    PathLength = OS_strnlen(DirWithSep, OS_MAX_PATH_LEN);
 
     /* Until end of directory entries or output file write error */
     while ((CommandResult == true) && (ReadingDirectory == true))
@@ -1399,7 +1396,7 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
             /* Count all files - write limited number */
             if (FileEntries < FM_DIR_LIST_FILE_ENTRIES)
             {
-                EntryLength = strlen(OS_DIRENTRY_NAME(DirEntry));
+                EntryLength = OS_strnlen(OS_DIRENTRY_NAME(DirEntry), OS_MAX_FILE_NAME);
 
                 /*
                  * DirListData.EntryName and TempName are both OS_MAX_PATH_LEN, DirEntry name is OS_MAX_FILE_NAME,
@@ -1484,9 +1481,9 @@ void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *
     {
         FM_GlobalData.ChildCmdCounter++;
 
-        CFE_EVS_SendEvent(FM_GET_DIR_FILE_CMD_INF_EID,
-                          CFE_EVS_EventType_INFORMATION, "%s command: wrote %d of %d names: dir = %s, filename = %s",
-                          CmdText, (int)FileEntries, (int)DirEntries, Directory, Filename);
+        CFE_EVS_SendEvent(FM_GET_DIR_FILE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "%s command: wrote %d of %d names: dir = %s, filename = %s", CmdText, (int)FileEntries,
+                          (int)DirEntries, Directory, Filename);
     }
 }
 
