@@ -217,10 +217,7 @@
 /**
  * \brief FM Reset Counters Command Event ID
  *
- *  \par Type: DEBUG
- *
- *  This event is type debug because the command resets housekeeping
- *  telemetry counters that also signal the completion of the command.
+ *  \par Type: INFORMATION
  *
  *  \par Cause
  *
