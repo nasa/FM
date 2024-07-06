@@ -75,7 +75,7 @@
  *
  *  \par Command Success Verification
  *       - Command counters will be set to zero (see description)
- *       - Debug event #FM_RESET_INF_EID will be sent
+ *       - Informational event #FM_RESET_INF_EID will be sent
  *
  *  \par Command Error Conditions
  *       - Invalid command packet length
