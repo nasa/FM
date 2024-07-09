@@ -80,24 +80,24 @@ bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLeng
  * Internal dispatch function for each command -
  * These are declared here so they can be directly invoked by the unit test for coverage
  */
-bool FM_NoopVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_ResetCountersVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_CopyFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_MoveFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_RenameFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_DeleteFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_DeleteAllFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_DecompressFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_ConcatFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_GetFileInfoVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_GetOpenFilesVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_CreateDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_DeleteDirectoryVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_GetDirListFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_GetDirListPktVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_MonitorFilesystemSpaceVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_SetTableStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-bool FM_SetPermissionsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
-void FM_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t FM_NoopVerifyDispatch(const FM_NoopCmd_t *BufPtr);
+CFE_Status_t FM_ResetCountersVerifyDispatch(const FM_ResetCountersCmd_t *BufPtr);
+CFE_Status_t FM_CopyFileVerifyDispatch(const FM_CopyFileCmd_t *BufPtr);
+CFE_Status_t FM_MoveFileVerifyDispatch(const FM_MoveFileCmd_t *BufPtr);
+CFE_Status_t FM_RenameFileVerifyDispatch(const FM_RenameFileCmd_t *BufPtr);
+CFE_Status_t FM_DeleteFileVerifyDispatch(const FM_DeleteFileCmd_t *BufPtr);
+CFE_Status_t FM_DeleteAllFilesVerifyDispatch(const FM_DeleteAllFilesCmd_t *BufPtr);
+CFE_Status_t FM_DecompressFileVerifyDispatch(const FM_DecompressFileCmd_t *BufPtr);
+CFE_Status_t FM_ConcatFilesVerifyDispatch(const FM_ConcatFilesCmd_t *BufPtr);
+CFE_Status_t FM_GetFileInfoVerifyDispatch(const FM_GetFileInfoCmd_t *BufPtr);
+CFE_Status_t FM_GetOpenFilesVerifyDispatch(const FM_GetOpenFilesCmd_t *BufPtr);
+CFE_Status_t FM_CreateDirectoryVerifyDispatch(const FM_CreateDirectoryCmd_t *BufPtr);
+CFE_Status_t FM_DeleteDirectoryVerifyDispatch(const FM_DeleteDirectoryCmd_t *BufPtr);
+CFE_Status_t FM_GetDirListFileVerifyDispatch(const FM_GetDirListFileCmd_t *BufPtr);
+CFE_Status_t FM_GetDirListPktVerifyDispatch(const FM_GetDirListPktCmd_t *BufPtr);
+CFE_Status_t FM_MonitorFilesystemSpaceVerifyDispatch(const FM_MonitorFilesystemSpaceCmd_t *BufPtr);
+CFE_Status_t FM_SetTableStateVerifyDispatch(const FM_SetTableStateCmd_t *BufPtr);
+CFE_Status_t FM_SetPermissionsVerifyDispatch(const FM_SetPermissionsCmd_t *BufPtr);
+void         FM_SendHkVerifyDispatch(const FM_SendHkCmd_t *BufPtr);
 
 #endif
