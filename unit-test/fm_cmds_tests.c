@@ -74,7 +74,7 @@ void Test_FM_NoopCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_NOOP_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_NOOP_INF_EID);
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
@@ -114,7 +114,7 @@ void Test_FM_ResetCountersCmd_Success(void)
 
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RESET_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_RESET_INF_EID);
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
