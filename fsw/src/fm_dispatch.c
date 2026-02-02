@@ -231,27 +231,34 @@ void FM_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
 
 void FM_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
 {
-    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+    static CFE_SB_MsgId_t CMD_MID     = CFE_SB_MSGID_RESERVED;
+    static CFE_SB_MsgId_t SEND_HK_MID = CFE_SB_MSGID_RESERVED;
 
-    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+    CFE_SB_MsgId_t MessageId = CFE_SB_INVALID_MSG_ID;
 
-    switch (CFE_SB_MsgIdToValue(MessageID))
+
+    /* Cache the local MID values here, this avoid repeat lookups */
+    if (!CFE_SB_IsValidMsgId(CMD_MID))
     {
-        /* FM ground commands */
-        case FM_CMD_MID:
-            FM_ProcessGroundCommand(BufPtr);
-            break;
+        CMD_MID     = CFE_SB_ValueToMsgId(FM_CMD_MID);
+        SEND_HK_MID = CFE_SB_ValueToMsgId(FM_SEND_HK_MID);
+    }
 
-        /* Housekeeping request */
-        case FM_SEND_HK_MID:
-            FM_SendHkCmd((const FM_SendHkCmd_t *)BufPtr);
-            break;
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageId);
 
-        default:
-            FM_AppData.HkTlm.Payload.CommandErrCounter++;
-            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid command pipe message ID: 0x%08lX",
-                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
-            break;
+    if (CFE_SB_MsgId_Equal(MessageId, CMD_MID))
+    {
+        FM_ProcessGroundCommand(BufPtr);
+    }
+    else if (CFE_SB_MsgId_Equal(MessageId, SEND_HK_MID))
+    {
+        FM_SendHkCmd((const FM_SendHkCmd_t*) BufPtr);
+    }
+    else
+    {
+        FM_AppData.HkTlm.Payload.CommandErrCounter++;
+        CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
+                            "Invalid command pipe message ID: 0x%08lX",
+                            (unsigned long)CFE_SB_MsgIdToValue(MessageId));
     }
 }
