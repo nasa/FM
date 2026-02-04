@@ -31,7 +31,6 @@
 #define FM_TABLE_ENTRY_DISABLED 0
 #define FM_TABLE_ENTRY_ENABLED  1
 
-
 /* ======== */
 /* Typedefs */
 /* ======== */

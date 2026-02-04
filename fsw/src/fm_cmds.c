@@ -45,7 +45,7 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t* Msg)
+CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t *Msg)
 {
     CFE_TBL_Manage(FM_AppData.MonitorTableHandle);
 
@@ -63,15 +63,16 @@ CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t* Msg)
+CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t *Msg)
 {
     FM_AppData.HkTlm.Payload.CommandCounter++;
-    CFE_EVS_SendEvent(FM_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "No-op command: FM version %d.%d.%d.%d",
-                        FM_MAJOR_VERSION,
-                        FM_MINOR_VERSION,
-                        FM_REVISION,
-                        FM_MISSION_REV);
+    CFE_EVS_SendEvent(FM_NOOP_INF_EID,
+                      CFE_EVS_EventType_INFORMATION,
+                      "No-op command: FM version %d.%d.%d.%d",
+                      FM_MAJOR_VERSION,
+                      FM_MINOR_VERSION,
+                      FM_REVISION,
+                      FM_MISSION_REV);
 
     return CFE_SUCCESS;
 }
@@ -82,7 +83,7 @@ CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t* Msg)
+CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t *Msg)
 {
     FM_AppData.HkTlm.Payload.CommandCounter    = 0;
     FM_AppData.HkTlm.Payload.CommandErrCounter = 0;
@@ -92,8 +93,7 @@ CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t* Msg)
     FM_AppData.HkTlm.Payload.ChildCmdWarnCounter = 0;
 
     /* Send command completion event (debug) */
-    CFE_EVS_SendEvent(FM_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "Reset Counters command");
+    CFE_EVS_SendEvent(FM_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters command");
 
     return CFE_SUCCESS;
 }
@@ -104,10 +104,10 @@ CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t* Msg)
+CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Copy File";
+    const char           *CmdText = "Copy File";
     bool                  CommandResult;
 
     const FM_OvwSourceTargetFilename_Payload_t *CmdPtr = &Msg->Payload;
@@ -172,10 +172,10 @@ CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t* Msg)
+CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Move File";
+    const char           *CmdText = "Move File";
     bool                  CommandResult;
 
     const FM_OvwSourceTargetFilename_Payload_t *CmdPtr = &Msg->Payload;
@@ -241,10 +241,10 @@ CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t* Msg)
+CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Rename File";
+    const char           *CmdText = "Rename File";
     bool                  CommandResult;
 
     const FM_SourceTargetFileName_Payload_t *CmdPtr = &Msg->Payload;
@@ -297,10 +297,10 @@ CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t* Msg)
+CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Delete File";
+    const char           *CmdText = "Delete File";
     bool                  CommandResult;
 
     const FM_SingleFilename_Payload_t *CmdPtr = &Msg->Payload;
@@ -343,11 +343,11 @@ CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t* Msg)
+CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t *Msg)
 {
-    const char *          CmdText                     = "Delete All Files";
+    const char           *CmdText                              = "Delete All Files";
     char                  DirWithSep[CFE_MISSION_MAX_PATH_LEN] = "\0";
-    FM_ChildQueueEntry_t *CmdArgs                     = NULL;
+    FM_ChildQueueEntry_t *CmdArgs                              = NULL;
     bool                  CommandResult;
 
     const FM_DirectoryName_Payload_t *CmdPtr = &Msg->Payload;
@@ -399,9 +399,9 @@ CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t* Msg)
+CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t *Msg)
 {
-    const char *          CmdText = "Decompress File";
+    const char           *CmdText = "Decompress File";
     FM_ChildQueueEntry_t *CmdArgs = NULL;
     bool                  CommandResult;
 
@@ -451,9 +451,9 @@ CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t* Msg)
+CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t *Msg)
 {
-    const char *          CmdText = "Concat Files";
+    const char           *CmdText = "Concat Files";
     FM_ChildQueueEntry_t *CmdArgs = NULL;
     bool                  CommandResult;
 
@@ -513,9 +513,9 @@ CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t* Msg)
+CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t *Msg)
 {
-    const char *          CmdText       = "Get File Info";
+    const char           *CmdText       = "Get File Info";
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
     bool                  CommandResult = true;
     uint32                FilenameState = FM_NAME_IS_INVALID;
@@ -574,7 +574,7 @@ CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t* Msg)
+CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t *Msg)
 {
     const char *CmdText      = "Get Open Files";
     uint32      NumOpenFiles = 0;
@@ -582,7 +582,8 @@ CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t* Msg)
     FM_OpenFilesPkt_Payload_t *ReportPtr = &FM_AppData.OpenFilesPkt.Payload;
 
     /* Initialize open files telemetry packet */
-    CFE_MSG_Init(CFE_MSG_PTR(FM_AppData.OpenFilesPkt.TelemetryHeader), CFE_SB_ValueToMsgId(FM_OPEN_FILES_TLM_MID),
+    CFE_MSG_Init(CFE_MSG_PTR(FM_AppData.OpenFilesPkt.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(FM_OPEN_FILES_TLM_MID),
                  sizeof(FM_OpenFilesPkt_t));
 
     /* Get list of open files and count */
@@ -608,10 +609,10 @@ CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t* Msg)
+CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Create Directory";
+    const char           *CmdText = "Create Directory";
     bool                  CommandResult;
 
     const FM_DirectoryName_Payload_t *CmdPtr = &Msg->Payload;
@@ -655,10 +656,10 @@ CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t* Msg)
+CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs = NULL;
-    const char *          CmdText = "Delete Directory";
+    const char           *CmdText = "Delete Directory";
     bool                  CommandResult;
 
     const FM_DirectoryName_Payload_t *CmdPtr = &Msg->Payload;
@@ -702,12 +703,12 @@ CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t* Msg)
+CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t *Msg)
 {
-    const char *          CmdText                     = "Directory List to File";
+    const char           *CmdText                              = "Directory List to File";
     char                  DirWithSep[CFE_MISSION_MAX_PATH_LEN] = "\0";
     char                  Filename[CFE_MISSION_MAX_PATH_LEN]   = "\0";
-    FM_ChildQueueEntry_t *CmdArgs                     = NULL;
+    FM_ChildQueueEntry_t *CmdArgs                              = NULL;
     bool                  CommandResult;
 
     const FM_GetDirectoryToFile_Payload_t *CmdPtr = &Msg->Payload;
@@ -781,11 +782,11 @@ CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t* Msg)
+CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t *Msg)
 {
-    const char *          CmdText                     = "Directory List to Packet";
+    const char           *CmdText                              = "Directory List to Packet";
     char                  DirWithSep[CFE_MISSION_MAX_PATH_LEN] = "\0";
-    FM_ChildQueueEntry_t *CmdArgs                     = NULL;
+    FM_ChildQueueEntry_t *CmdArgs                              = NULL;
     bool                  CommandResult;
 
     const FM_GetDirectoryToPkt_Payload_t *CmdPtr = &Msg->Payload;
@@ -818,7 +819,7 @@ CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t* Msg)
 
         strncpy(CmdArgs->Source2, DirWithSep, CFE_MISSION_MAX_PATH_LEN - 1);
         CmdArgs->Source2[CFE_MISSION_MAX_PATH_LEN - 1] = '\0';
-        CmdArgs->DirListOffset                = CmdPtr->DirListOffset;
+        CmdArgs->DirListOffset                         = CmdPtr->DirListOffset;
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();
@@ -839,16 +840,16 @@ CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* Msg)
+CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *Msg)
 {
-    const char *CmdText       = "Get Free Space";
-    bool        CommandResult = true;
-    uint32      i;
-    int32       OpResult;
+    const char  *CmdText       = "Get Free Space";
+    bool         CommandResult = true;
+    uint32       i;
+    int32        OpResult;
     CFE_Status_t Status;
 
     const FM_MonitorTableEntry_t *MonitorPtr;
-    FM_MonitorReportEntry_t *     ReportPtr;
+    FM_MonitorReportEntry_t      *ReportPtr;
 
     /* Acquire pointer to file system free space table, also locks table */
     Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
@@ -860,14 +861,17 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* 
         FM_AppData.MonitorTablePtr = NULL;
 
         CommandResult = false;
-        CFE_EVS_SendEvent(FM_GET_FREE_SPACE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s error: file system free space table is not loaded", CmdText);
+        CFE_EVS_SendEvent(FM_GET_FREE_SPACE_TBL_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: file system free space table is not loaded",
+                          CmdText);
     }
     else
     {
         /* Initialize the file system free space telemetry packet */
         CFE_MSG_Init(CFE_MSG_PTR(FM_AppData.MonitorReportPkt.TelemetryHeader),
-                     CFE_SB_ValueToMsgId(FM_MONITOR_TLM_MID), sizeof(FM_MonitorReportPkt_t));
+                     CFE_SB_ValueToMsgId(FM_MONITOR_TLM_MID),
+                     sizeof(FM_MonitorReportPkt_t));
 
         /* Process enabled file system table entries */
         MonitorPtr = FM_AppData.MonitorTablePtr->Entries;
@@ -876,7 +880,9 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* 
         {
             if (MonitorPtr->Type != FM_MonitorTableEntry_Type_UNUSED)
             {
-                CFE_SB_MessageStringSet(ReportPtr->Name, MonitorPtr->Name, sizeof(ReportPtr->Name),
+                CFE_SB_MessageStringSet(ReportPtr->Name,
+                                        MonitorPtr->Name,
+                                        sizeof(ReportPtr->Name),
                                         sizeof(MonitorPtr->Name));
                 ReportPtr->ReportType = MonitorPtr->Type;
 
@@ -921,7 +927,9 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* 
         CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_AppData.MonitorReportPkt.TelemetryHeader), true);
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command",
+        CFE_EVS_SendEvent(FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID,
+                          CFE_EVS_EventType_INFORMATION,
+                          "%s command",
                           CmdText);
 
         /* Release pointer to file system free space table */
@@ -949,10 +957,10 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* 
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg)
+CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t *Msg)
 {
-    const char *CmdText       = "Set Table State";
-    bool        CommandResult = true;
+    const char  *CmdText       = "Set Table State";
+    bool         CommandResult = true;
     CFE_Status_t Status;
 
     const FM_TableIndexAndState_Payload_t *CmdPtr = &Msg->Payload;
@@ -966,33 +974,43 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg)
 
         /* File system table has not been loaded */
         CommandResult = false;
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s error: file system free space table is not loaded", CmdText);
+        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_TBL_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: file system free space table is not loaded",
+                          CmdText);
     }
     else if (CmdPtr->TableEntryIndex >= FM_TABLE_ENTRY_COUNT)
     {
         /* Table index argument is out of range */
         CommandResult = false;
 
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_IDX_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s error: invalid command argument: index = %d", CmdText, (int)CmdPtr->TableEntryIndex);
+        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_IDX_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: invalid command argument: index = %d",
+                          CmdText,
+                          (int)CmdPtr->TableEntryIndex);
     }
-    else if ((CmdPtr->TableEntryState != FM_TABLE_ENTRY_ENABLED) &&
-             (CmdPtr->TableEntryState != FM_TABLE_ENTRY_DISABLED))
+    else if ((CmdPtr->TableEntryState != FM_TABLE_ENTRY_ENABLED)
+             && (CmdPtr->TableEntryState != FM_TABLE_ENTRY_DISABLED))
     {
         /* State argument must be either enabled or disabled */
         CommandResult = false;
 
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s error: invalid command argument: state = %d", CmdText, (int)CmdPtr->TableEntryState);
+        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_ARG_STATE_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: invalid command argument: state = %d",
+                          CmdText,
+                          (int)CmdPtr->TableEntryState);
     }
     else if (FM_AppData.MonitorTablePtr->Entries[CmdPtr->TableEntryIndex].Type == FM_MonitorTableEntry_Type_UNUSED)
     {
         /* Current table entry state must not be unused */
         CommandResult = false;
 
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_UNUSED_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "%s error: cannot modify unused table entry: index = %d", CmdText,
+        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_UNUSED_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: cannot modify unused table entry: index = %d",
+                          CmdText,
                           (int)CmdPtr->TableEntryIndex);
     }
     else
@@ -1004,8 +1022,11 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg)
         CFE_TBL_Modified(FM_AppData.MonitorTableHandle);
 
         /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_CMD_EID, CFE_EVS_EventType_INFORMATION,
-                          "%s command: index = %d, state = %d", CmdText, (int)CmdPtr->TableEntryIndex,
+        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_CMD_EID,
+                          CFE_EVS_EventType_INFORMATION,
+                          "%s command: index = %d, state = %d",
+                          CmdText,
+                          (int)CmdPtr->TableEntryIndex,
                           (int)CmdPtr->TableEntryState);
     }
 
@@ -1033,10 +1054,10 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t FM_SetPermissionsCmd(const FM_SetPermissionsCmd_t* Msg)
+CFE_Status_t FM_SetPermissionsCmd(const FM_SetPermissionsCmd_t *Msg)
 {
     FM_ChildQueueEntry_t *CmdArgs       = NULL;
-    const char *          CmdText       = "Set Permissions";
+    const char           *CmdText       = "Set Permissions";
     bool                  CommandResult = true;
     uint32                FilenameState = FM_NAME_IS_INVALID;
 
@@ -1058,12 +1079,12 @@ CFE_Status_t FM_SetPermissionsCmd(const FM_SetPermissionsCmd_t* Msg)
     /* Prepare command for child task execution */
     if (CommandResult == true)
     {
-        CmdArgs = &FM_AppData.ChildQueue[FM_AppData.ChildWriteIndex];
+        CmdArgs              = &FM_AppData.ChildQueue[FM_AppData.ChildWriteIndex];
         /* Set handshake queue command args */
         CmdArgs->CommandCode = FM_SET_PERMISSIONS_CC;
         strncpy(CmdArgs->Source1, CmdPtr->FileName, CFE_MISSION_MAX_PATH_LEN - 1);
         CmdArgs->Source1[CFE_MISSION_MAX_PATH_LEN - 1] = '\0';
-        CmdArgs->Mode                         = CmdPtr->Mode;
+        CmdArgs->Mode                                  = CmdPtr->Mode;
 
         /* Invoke lower priority child task */
         FM_InvokeChildTask();

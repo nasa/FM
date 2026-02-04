@@ -191,46 +191,46 @@
  *       the child task interface queue.
  *
  **
-*
-*  \par Command Packet Structure
-*       #FM_MoveFileCmd_t
-*
-*  \par Command Success Verification
-*       - #FM_HkTlm_Payload_t.CommandCounter will increment after validation
-*       - #FM_HkTlm_Payload_t.ChildCmdCounter will increment after completion
-*       - Informational event #FM_MOVE_CMD_INF_EID will be sent
-*
-*  \par Command Error Conditions
-*       - Invalid command packet length
-*       - Overwrite is not TRUE (one) or FALSE (zero)
-*       - Source filename is invalid
-*       - Source file does not exist
-*       - Source filename is a directory
-*       - Target filename is invalid
-*       - Target file already exists
-*       - Target filename is a directory
-*       - Failure of OS move function
-*
-*  \par Command Failure Verification
-*       - #FM_HkTlm_Payload_t.CommandErrCounter may increment
-*       - #FM_HkTlm_Payload_t.ChildCmdErrCounter may increment
-*       - Error event #FM_MOVE_OVR_ERR_EID may be sent
-*       - Error event #FM_MOVE_SRC_INVALID_ERR_EID may be sent
-*       - Error event #FM_MOVE_SRC_DNE_ERR_EID may be sent
-*       - Error event #FM_MOVE_SRC_ISDIR_ERR_EID may be sent
-*       - Error event #FM_MOVE_TGT_INVALID_ERR_EID may be sent
-*       - Error event #FM_MOVE_TGT_EXIST_ERR_EID may be sent
-*       - Error event #FM_MOVE_TGT_ISDIR_ERR_EID may be sent
-*       - Error event #FM_MOVE_CHILD_DISABLED_ERR_EID may be sent
-*       - Error event #FM_MOVE_CHILD_FULL_ERR_EID may be sent
-*       - Error event #FM_MOVE_CHILD_BROKEN_ERR_EID may be sent
-*       - Error event #FM_MOVE_OS_ERR_EID may be sent
-*
-*  \par Criticality
-*       - There are no critical issues related to this command.
-*
-*  \sa #FM_COPY_FILE_CC, #FM_RENAME_FILE_CC
-*/
+ *
+ *  \par Command Packet Structure
+ *       #FM_MoveFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HkTlm_Payload_t.CommandCounter will increment after validation
+ *       - #FM_HkTlm_Payload_t.ChildCmdCounter will increment after completion
+ *       - Informational event #FM_MOVE_CMD_INF_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Overwrite is not TRUE (one) or FALSE (zero)
+ *       - Source filename is invalid
+ *       - Source file does not exist
+ *       - Source filename is a directory
+ *       - Target filename is invalid
+ *       - Target file already exists
+ *       - Target filename is a directory
+ *       - Failure of OS move function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HkTlm_Payload_t.CommandErrCounter may increment
+ *       - #FM_HkTlm_Payload_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_MOVE_OVR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_MOVE_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ *  \sa #FM_COPY_FILE_CC, #FM_RENAME_FILE_CC
+ */
 #define FM_MOVE_FILE_CC FM_CCVAL(MOVE_FILE)
 
 /**

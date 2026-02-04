@@ -32,7 +32,6 @@
  */
 void FM_AcquireTablePointers(void)
 {
-
     UT_GenStub_Execute(FM_AcquireTablePointers, Basic, NULL);
 }
 
@@ -43,7 +42,6 @@ void FM_AcquireTablePointers(void)
  */
 void FM_ReleaseTablePointers(void)
 {
-
     UT_GenStub_Execute(FM_ReleaseTablePointers, Basic, NULL);
 }
 

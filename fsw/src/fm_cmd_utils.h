@@ -150,8 +150,11 @@ FM_FileNameStates_Enum_t FM_VerifyNameValid(const char *Name, size_t BufferSize,
  *
  *  \sa #FM_GetFilenameState
  */
-bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t BufferSize, uint32 EventID,
-                        const char *CmdText);
+bool FM_VerifyFileState(FM_FileStates_Enum_t State,
+                        const char          *Filename,
+                        size_t               BufferSize,
+                        uint32               EventID,
+                        const char          *CmdText);
 
 /**
  *  \brief Verify File is Closed Function

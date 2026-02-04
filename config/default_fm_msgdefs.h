@@ -53,7 +53,7 @@
  */
 typedef struct
 {
-    uint16 Overwrite;               /**< \brief Allow overwrite */
+    uint16 Overwrite;                        /**< \brief Allow overwrite */
     char   Source[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Source filename */
     char   Target[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Target filename */
 } FM_OvwSourceTargetFilename_Payload_t;
@@ -109,7 +109,7 @@ typedef struct
 typedef struct
 {
     char   Filename[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Filename */
-    uint32 FileInfoCRC;               /**< \brief File info CRC method */
+    uint32 FileInfoCRC;                        /**< \brief File info CRC method */
 } FM_FilenameAndCRC_Payload_t;
 
 /**
@@ -122,8 +122,8 @@ typedef struct
 {
     char  Directory[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Directory name */
     char  Filename[CFE_MISSION_MAX_PATH_LEN];  /**< \brief Filename */
-    uint8 GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
-    uint8 Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+    uint8 GetSizeTimeMode; /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8 Spare01[3];      /**< \brief Padding to 32 bit boundary */
 } FM_GetDirectoryToFile_Payload_t;
 
 /**
@@ -135,9 +135,9 @@ typedef struct
 typedef struct
 {
     char   Directory[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Directory name */
-    uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
-    uint8  GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
-    uint8  Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+    uint32 DirListOffset;                       /**< \brief Index of 1st dir entry to put in packet */
+    uint8  GetSizeTimeMode; /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8  Spare01[3];      /**< \brief Padding to 32 bit boundary */
 } FM_GetDirectoryToPkt_Payload_t;
 
 /**
@@ -159,7 +159,7 @@ typedef struct
 typedef struct
 {
     char   FileName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
-    uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
+    uint32 Mode;                               /**< \brief Permissions, passed directly to OS_chmod */
 } FM_FilenameAndMode_Payload_t;
 
 /**\}*/
@@ -177,9 +177,9 @@ typedef struct
 typedef struct
 {
     char   EntryName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Directory Listing Filename */
-    uint32 EntrySize;                  /**< \brief Directory Listing File Size */
-    uint32 ModifyTime;                 /**< \brief Directory Listing File Last Modification Times */
-    uint32 Mode;                       /**< \brief Mode of the file (Permissions from #OS_FILESTAT_MODE) */
+    uint32 EntrySize;                           /**< \brief Directory Listing File Size */
+    uint32 ModifyTime;                          /**< \brief Directory Listing File Last Modification Times */
+    uint32 Mode;                                /**< \brief Mode of the file (Permissions from #OS_FILESTAT_MODE) */
 } FM_DirListEntry_t;
 
 /**
@@ -187,7 +187,7 @@ typedef struct
  */
 typedef struct
 {
-    char              DirName[CFE_MISSION_MAX_PATH_LEN];          /**< \brief Directory Name */
+    char              DirName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Directory Name */
     uint32            TotalFiles;                        /**< \brief Number of files in the directory */
     uint32            PacketFiles;                       /**< \brief Number of files in this packet */
     uint32            FirstFile;                         /**< \brief Index into directory files of first packet file */
@@ -199,13 +199,13 @@ typedef struct
  */
 typedef struct
 {
-    uint8  FileStatus;                /**< \brief Status indicating whether the file is open or closed */
-    uint8  CRC_Computed;              /**< \brief Flag indicating whether a CRC was computed or not */
-    uint8  Spare[2];                  /**< \brief Structure padding */
-    uint32 CRC;                       /**< \brief CRC value if computed */
-    uint32 FileSize;                  /**< \brief File Size */
-    uint32 LastModifiedTime;          /**< \brief Last Modification Time of File */
-    uint32 Mode;                      /**< \brief Mode of the file (Permissions) */
+    uint8  FileStatus;                         /**< \brief Status indicating whether the file is open or closed */
+    uint8  CRC_Computed;                       /**< \brief Flag indicating whether a CRC was computed or not */
+    uint8  Spare[2];                           /**< \brief Structure padding */
+    uint32 CRC;                                /**< \brief CRC value if computed */
+    uint32 FileSize;                           /**< \brief File Size */
+    uint32 LastModifiedTime;                   /**< \brief Last Modification Time of File */
+    uint32 Mode;                               /**< \brief Mode of the file (Permissions) */
     char   Filename[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Name of File */
 } FM_FileInfoPkt_Payload_t;
 
@@ -215,7 +215,7 @@ typedef struct
 typedef struct
 {
     char LogicalName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Logical filename */
-    char AppName[CFE_MISSION_MAX_API_LEN];     /**< \brief Application that opened file */
+    char AppName[CFE_MISSION_MAX_API_LEN];      /**< \brief Application that opened file */
 } FM_OpenFilesEntry_t;
 
 /**
@@ -223,7 +223,7 @@ typedef struct
  */
 typedef struct
 {
-    uint32              NumOpenFiles;                         /**< \brief Number of files opened via cFE */
+    uint32              NumOpenFiles;                             /**< \brief Number of files opened via cFE */
     FM_OpenFilesEntry_t OpenFilesList[CFE_MISSION_MAX_NUM_FILES]; /**< \brief List of files opened via cFE */
 } FM_OpenFilesPkt_Payload_t;
 
@@ -233,10 +233,10 @@ typedef struct
 typedef struct
 {
     uint8  ReportType;
-    uint8  Padding[7];            /**< \brief Padding to align Name (and subsequent members) to 64-bit boundaries */
+    uint8  Padding[7]; /**< \brief Padding to align Name (and subsequent members) to 64-bit boundaries */
     char   Name[CFE_MISSION_MAX_PATH_LEN]; /**< \brief File system name */
-    uint64 Blocks;                /**< \brief Block count from last check/poll, 0 if unknown */
-    uint64 Bytes;                 /**< \brief Byte count from last check/poll, 0 if unknown */
+    uint64 Blocks;                         /**< \brief Block count from last check/poll, 0 if unknown */
+    uint64 Bytes;                          /**< \brief Byte count from last check/poll, 0 if unknown */
 } FM_MonitorReportEntry_t;
 
 /**

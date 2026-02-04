@@ -46,7 +46,9 @@ CFE_Status_t FM_TableInit(void)
     FM_AppData.MonitorTablePtr = NULL;
 
     /* Register the file system free space table - this must succeed! */
-    Status = CFE_TBL_Register(&FM_AppData.MonitorTableHandle, FM_TABLE_CFE_NAME, sizeof(FM_MonitorTable_t),
+    Status = CFE_TBL_Register(&FM_AppData.MonitorTableHandle,
+                              FM_TABLE_CFE_NAME,
+                              sizeof(FM_MonitorTable_t),
                               (CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP),
                               (CFE_TBL_CallbackFuncPtr_t)FM_ValidateTable);
 
@@ -83,7 +85,8 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
     /* Verify the table pointer is valid */
     if (TablePtr == NULL)
     {
-        CFE_EVS_SendEvent(FM_TABLE_VERIFY_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
+        CFE_EVS_SendEvent(FM_TABLE_VERIFY_NULL_PTR_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
                           "Free Space Table verify error - null pointer detected");
 
         return FM_TABLE_VALIDATION_ERR;
@@ -106,8 +109,8 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
     for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
     {
         /* Validate file system name if state is enabled or disabled */
-        if (EntryPtr->Type == FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE ||
-            EntryPtr->Type == FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE)
+        if (EntryPtr->Type == FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE
+            || EntryPtr->Type == FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE)
         {
             /* Search file system name buffer for a string terminator */
             for (NameLength = 0; NameLength < OS_MAX_PATH_LEN; NameLength++)
@@ -126,8 +129,10 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
                 /* Send event describing first error only*/
                 if (CountBad == 1)
                 {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EMPTY_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Free Space Table verify error: index = %d, empty name string", (int)i);
+                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EMPTY_ERR_EID,
+                                      CFE_EVS_EventType_ERROR,
+                                      "Free Space Table verify error: index = %d, empty name string",
+                                      (int)i);
                 }
             }
             else if (NameLength == OS_MAX_PATH_LEN)
@@ -138,8 +143,10 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
                 /* Send event describing first error only*/
                 if (CountBad == 1)
                 {
-                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_TOOLONG_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Free Space Table verify error: index = %d, name too long", (int)i);
+                    CFE_EVS_SendEvent(FM_TABLE_VERIFY_TOOLONG_ERR_EID,
+                                      CFE_EVS_EventType_ERROR,
+                                      "Free Space Table verify error: index = %d, name too long",
+                                      (int)i);
                 }
             }
             else
@@ -161,8 +168,10 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
             /* Send event describing first error only*/
             if (CountBad == 1)
             {
-                CFE_EVS_SendEvent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "Table verify error: index = %d, invalid type = %u", (int)i,
+                CFE_EVS_SendEvent(FM_TABLE_VERIFY_BAD_STATE_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "Table verify error: index = %d, invalid type = %u",
+                                  (int)i,
                                   (unsigned int)EntryPtr->Type);
             }
         }
@@ -171,9 +180,12 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
     }
 
     /* Display verify results */
-    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EID, CFE_EVS_EventType_INFORMATION,
-                      "Free Space Table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
-                      (int)CountBad, (int)CountUnused);
+    CFE_EVS_SendEvent(FM_TABLE_VERIFY_EID,
+                      CFE_EVS_EventType_INFORMATION,
+                      "Free Space Table verify results: good entries = %d, bad = %d, unused = %d",
+                      (int)CountGood,
+                      (int)CountBad,
+                      (int)CountUnused);
 
     if (CountBad != 0)
     {

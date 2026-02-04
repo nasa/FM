@@ -297,32 +297,46 @@ void add_FM_AppMain_tests(void)
 {
     UtTest_Add(Test_FM_AppMain_AppInitNotSuccess, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppMain_AppInitNotSuccess");
 
-    UtTest_Add(Test_FM_AppMain_SBReceiveBufferDefaultOption, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppMain_SBReceiveBufferDefaultOption,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppMain_SBReceiveBufferDefaultOption");
 
-    UtTest_Add(Test_FM_AppMain_SBReceiveBufferIsTimeOut, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppMain_SBReceiveBufferIsTimeOut,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppMain_SBReceiveBufferIsTimeOut");
 
-    UtTest_Add(Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppMain_ReceiveBufferSuccessBufPtrIsNull");
 
-    UtTest_Add(Test_FM_AppMain_BufPtrNotEqualNull, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppMain_BufPtrNotEqualNull,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppMain_BufPtrNotEqualNull");
 }
 
 void add_FM_AppInit_tests(void)
 {
-    UtTest_Add(Test_FM_AppInit_EVSRegisterNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppInit_EVSRegisterNotSuccess,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppInit_EVSRegisterNotSuccess");
 
     UtTest_Add(Test_FM_AppInit_CreatePipeFail, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppInit_CreatePipeFail");
 
     UtTest_Add(Test_FM_AppInit_HKSubscribeFail, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppInit_HKSubscribeFail");
 
-    UtTest_Add(Test_FM_AppInit_GroundCmdSubscribeFail, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppInit_GroundCmdSubscribeFail,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppInit_GroundCmdSubscribeFail");
 
-    UtTest_Add(Test_FM_AppInit_TableInitNotSuccess, FM_Test_Setup, FM_Test_Teardown,
+    UtTest_Add(Test_FM_AppInit_TableInitNotSuccess,
+               FM_Test_Setup,
+               FM_Test_Teardown,
                "Test_FM_AppInit_TableInitNotSuccess");
 
     UtTest_Add(Test_FM_AppInit_TableInitSuccess, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AppInit_TableInitSuccess");

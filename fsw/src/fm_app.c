@@ -111,7 +111,8 @@ void FM_AppMain(void)
             else
             {
                 /* Software Bus thought it succeeded but provided a bad pointer */
-                CFE_EVS_SendEvent(FM_SB_RECEIVE_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
+                CFE_EVS_SendEvent(FM_SB_RECEIVE_NULL_PTR_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
                                   "Main loop error: SB returned NULL pointer on success");
 
                 /* Set request to terminate main loop */
@@ -121,8 +122,10 @@ void FM_AppMain(void)
         else if (Result != CFE_SB_TIME_OUT && Result != CFE_SB_NO_MESSAGE)
         {
             /* Process Software Bus error */
-            CFE_EVS_SendEvent(FM_SB_RECEIVE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Main loop error: SB receive: result = 0x%08X", (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_SB_RECEIVE_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "Main loop error: SB receive: result = 0x%08X",
+                              (unsigned int)Result);
 
             /* Set request to terminate main loop */
             RunStatus = CFE_ES_RunStatus_APP_ERROR;
@@ -132,7 +135,9 @@ void FM_AppMain(void)
     /*
     ** Send an event describing the reason for the termination...
     */
-    CFE_EVS_SendEvent(FM_EXIT_ERR_EID, CFE_EVS_EventType_ERROR, "Application terminating: result = 0x%08X",
+    CFE_EVS_SendEvent(FM_EXIT_ERR_EID,
+                      CFE_EVS_EventType_ERROR,
+                      "Application terminating: result = 0x%08X",
                       (unsigned int)Result);
 
     /*
@@ -159,16 +164,14 @@ void FM_AppMain(void)
 
 CFE_Status_t FM_AppInit(void)
 {
-    const char * ErrText = "Initialization error:";
+    const char  *ErrText = "Initialization error:";
     CFE_Status_t Result  = CFE_SUCCESS;
 
     /* Initialize global data  */
     memset(&FM_AppData, 0, sizeof(FM_AppData));
 
     /* Initialize housekeeping telemetry message */
-    CFE_MSG_Init(CFE_MSG_PTR(FM_AppData.HkTlm.TelemetryHeader),
-                 CFE_SB_ValueToMsgId(FM_HK_TLM_MID),
-                 sizeof(FM_HkTlm_t));
+    CFE_MSG_Init(CFE_MSG_PTR(FM_AppData.HkTlm.TelemetryHeader), CFE_SB_ValueToMsgId(FM_HK_TLM_MID), sizeof(FM_HkTlm_t));
 
     /* Register for event services */
     Result = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
@@ -183,8 +186,11 @@ CFE_Status_t FM_AppInit(void)
         Result = CFE_SB_CreatePipe(&FM_AppData.CmdPipe, FM_APP_PIPE_DEPTH, FM_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(FM_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "%s create SB input pipe: result = 0x%08X",
-                              ErrText, (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_CR_PIPE_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "%s create SB input pipe: result = 0x%08X",
+                              ErrText,
+                              (unsigned int)Result);
         }
         else
         {
@@ -193,8 +199,11 @@ CFE_Status_t FM_AppInit(void)
 
             if (Result != CFE_SUCCESS)
             {
-                CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_HK_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "%s subscribe to HK request: result = 0x%08X", ErrText, (unsigned int)Result);
+                CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_HK_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "%s subscribe to HK request: result = 0x%08X",
+                                  ErrText,
+                                  (unsigned int)Result);
             }
         }
     }
@@ -207,8 +216,11 @@ CFE_Status_t FM_AppInit(void)
 
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_GCMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "%s subscribe to FM commands: result = 0x%08X", ErrText, (unsigned int)Result);
+            CFE_EVS_SendEvent(FM_STARTUP_SUBSCRIB_GCMD_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "%s subscribe to FM commands: result = 0x%08X",
+                              ErrText,
+                              (unsigned int)Result);
         }
         else
         {
@@ -217,8 +229,11 @@ CFE_Status_t FM_AppInit(void)
 
             if (Result != CFE_SUCCESS)
             {
-                CFE_EVS_SendEvent(FM_STARTUP_TABLE_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "%s register free space table: result = 0x%08X", ErrText, (unsigned int)Result);
+                CFE_EVS_SendEvent(FM_STARTUP_TABLE_INIT_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "%s register free space table: result = 0x%08X",
+                                  ErrText,
+                                  (unsigned int)Result);
             }
             else
             {
@@ -226,9 +241,13 @@ CFE_Status_t FM_AppInit(void)
                 FM_ChildInit();
 
                 /* Application startup event message */
-                CFE_EVS_SendEvent(FM_INIT_INF_EID, CFE_EVS_EventType_INFORMATION,
-                                  "Initialization complete: version %d.%d.%d.%d", FM_MAJOR_VERSION, FM_MINOR_VERSION,
-                                  FM_REVISION, FM_MISSION_REV);
+                CFE_EVS_SendEvent(FM_INIT_INF_EID,
+                                  CFE_EVS_EventType_INFORMATION,
+                                  "Initialization complete: version %d.%d.%d.%d",
+                                  FM_MAJOR_VERSION,
+                                  FM_MINOR_VERSION,
+                                  FM_REVISION,
+                                  FM_MISSION_REV);
             }
         }
     }

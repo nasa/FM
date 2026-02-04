@@ -40,7 +40,6 @@
 /* Typedefs */
 /* ======== */
 
-
 /**
  * \defgroup cfsfmcmdstructs CFS File Manager Command Structures
  * \{
@@ -83,8 +82,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;        /** \brief Command header */
-    FM_OvwSourceTargetFilename_Payload_t Payload; /** \brief Command payload */
+    CFE_MSG_CommandHeader_t              CommandHeader; /** \brief Command header */
+    FM_OvwSourceTargetFilename_Payload_t Payload;       /** \brief Command payload */
 } FM_CopyFileCmd_t;
 
 /**
@@ -94,8 +93,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;        /** \brief Command header */
-    FM_OvwSourceTargetFilename_Payload_t Payload; /** \brief Command payload */
+    CFE_MSG_CommandHeader_t              CommandHeader; /** \brief Command header */
+    FM_OvwSourceTargetFilename_Payload_t Payload;       /** \brief Command payload */
 } FM_MoveFileCmd_t;
 
 /**
@@ -105,8 +104,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;     /** \brief Command header */
-    FM_SourceTargetFileName_Payload_t Payload; /** \brief Command payload */
+    CFE_MSG_CommandHeader_t           CommandHeader; /** \brief Command header */
+    FM_SourceTargetFileName_Payload_t Payload;       /** \brief Command payload */
 } FM_RenameFileCmd_t;
 
 /**
@@ -116,8 +115,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
-    FM_SingleFilename_Payload_t Payload;   /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t     CommandHeader; /** \brief Command header */
+    FM_SingleFilename_Payload_t Payload;       /** \brief Command Payload */
 } FM_DeleteFileCmd_t;
 
 /**
@@ -127,8 +126,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
-    FM_DirectoryName_Payload_t Payload;    /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t    CommandHeader; /** \brief Command header */
+    FM_DirectoryName_Payload_t Payload;       /** \brief Command Payload */
 } FM_DeleteAllFilesCmd_t;
 
 /**
@@ -138,8 +137,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;     /** \brief Command header */
-    FM_SourceTargetFileName_Payload_t Payload; /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t           CommandHeader; /** \brief Command header */
+    FM_SourceTargetFileName_Payload_t Payload;       /** \brief Command Payload */
 } FM_DecompressFileCmd_t;
 
 /**
@@ -149,8 +148,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;   /** \brief Command header */
-    FM_TwoSourceOneTarget_Payload_t Payload; /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t         CommandHeader; /** \brief Command header */
+    FM_TwoSourceOneTarget_Payload_t Payload;       /** \brief Command Payload */
 } FM_ConcatFilesCmd_t;
 
 /**
@@ -160,8 +159,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
-    FM_FilenameAndCRC_Payload_t Payload;   /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t     CommandHeader; /** \brief Command header */
+    FM_FilenameAndCRC_Payload_t Payload;       /** \brief Command Payload */
 } FM_GetFileInfoCmd_t;
 
 /**
@@ -181,8 +180,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
-    FM_DirectoryName_Payload_t Payload;    /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t    CommandHeader; /** \brief Command header */
+    FM_DirectoryName_Payload_t Payload;       /** \brief Command Payload */
 } FM_CreateDirectoryCmd_t;
 
 /**
@@ -192,8 +191,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
-    FM_DirectoryName_Payload_t Payload;    /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t    CommandHeader; /** \brief Command header */
+    FM_DirectoryName_Payload_t Payload;       /** \brief Command Payload */
 } FM_DeleteDirectoryCmd_t;
 
 /**
@@ -203,8 +202,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;   /** \brief Command header */
-    FM_GetDirectoryToFile_Payload_t Payload; /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t         CommandHeader; /** \brief Command header */
+    FM_GetDirectoryToFile_Payload_t Payload;       /** \brief Command Payload */
 } FM_GetDirListFileCmd_t;
 
 /**
@@ -214,8 +213,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;  /** \brief Command header */
-    FM_GetDirectoryToPkt_Payload_t Payload; /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t        CommandHeader; /** \brief Command header */
+    FM_GetDirectoryToPkt_Payload_t Payload;       /** \brief Command Payload */
 } FM_GetDirListPktCmd_t;
 
 /**
@@ -235,8 +234,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader;   /** \brief Command header */
-    FM_TableIndexAndState_Payload_t Payload; /** \brief Command Payload */
+    CFE_MSG_CommandHeader_t         CommandHeader; /** \brief Command header */
+    FM_TableIndexAndState_Payload_t Payload;       /** \brief Command Payload */
 } FM_SetTableStateCmd_t;
 
 /**
@@ -246,7 +245,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /** \brief Command header */
+    CFE_MSG_CommandHeader_t      CommandHeader; /** \brief Command header */
     FM_FilenameAndMode_Payload_t Payload;
 } FM_SetPermissionsCmd_t;
 
@@ -265,7 +264,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TelemetryHeader; /** \brief Telemetry Header */
-    FM_DirListPkt_Payload_t Payload;           /** \brief Telemetry Payload */
+    FM_DirListPkt_Payload_t   Payload;         /** \brief Telemetry Payload */
 } FM_DirListPkt_t;
 
 /**
@@ -274,7 +273,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TelemetryHeader; /** \brief Telemetry Header */
-    FM_FileInfoPkt_Payload_t Payload;          /** \brief Telemetry Payload */
+    FM_FileInfoPkt_Payload_t  Payload;         /** \brief Telemetry Payload */
 } FM_FileInfoPkt_t;
 
 /**
@@ -291,8 +290,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TelemetryHeader; /** \brief Telemetry Header */
-    FM_MonitorReportPkt_Payload_t Payload;     /** \brief Telemetry Payload */
+    CFE_MSG_TelemetryHeader_t     TelemetryHeader; /** \brief Telemetry Header */
+    FM_MonitorReportPkt_Payload_t Payload;         /** \brief Telemetry Payload */
 } FM_MonitorReportPkt_t;
 
 /**
@@ -301,7 +300,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TelemetryHeader; /** \brief Telemetry Header */
-    FM_HkTlm_Payload_t Payload;      /** \brief Telemetry Payload */
+    FM_HkTlm_Payload_t        Payload;         /** \brief Telemetry Payload */
 } FM_HkTlm_t;
 
 /**\}*/
