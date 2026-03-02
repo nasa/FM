@@ -537,6 +537,8 @@ CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint
     osal_status_t OS_Status;
     CFE_Status_t  Result;
 
+    memset(&FileStats, 0, sizeof(FileStats));
+
     /* Get file system free space */
     OS_Status = OS_FileSysStatVolume(FileSys, &FileStats);
     if (OS_Status == OS_SUCCESS)
