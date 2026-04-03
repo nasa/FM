@@ -55,9 +55,9 @@
 
 void UT_FM_Child_Cmd_Assert(int32 cmd_ctr, int32 cmderr_ctr, int32 cmdwarn_ctr, int32 previous_cc)
 {
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdCounter, cmd_ctr);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, cmderr_ctr);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdWarnCounter, cmdwarn_ctr);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandCounter, cmd_ctr);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, cmderr_ctr);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandWarningCounter, cmdwarn_ctr);
 
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildPreviousCC, previous_cc);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCurrentCC, 0);
@@ -330,7 +330,7 @@ void Test_FM_ChildProcess_FMGetFileInfoCC(void)
     /* Arrange */
     FM_AppData.ChildQueue[0].CommandCode    = FM_GET_FILE_INFO_CC;
     FM_AppData.ChildQueue[0].FileInfoCRC    = !DEFAULT_FM_INTERFACE_IGNORE_CRC;
-    FM_AppData.ChildQueue[0].FileInfoState  = FM_NAME_IS_FILE_OPEN;
+    FM_AppData.ChildQueue[0].FileInfoState  = FM_FileNameStates_FILE_OPEN;
     FM_AppData.HkTlm.Payload.ChildCurrentCC = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_MSG_Init), CFE_SUCCESS);
@@ -718,7 +718,7 @@ void Test_FM_ChildDeleteAllFilesCmd_InvalidFilenameState(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_INVALID);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_INVALID);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
@@ -747,7 +747,7 @@ void Test_FM_ChildDeleteAllFilesCmd_NotInUseFilenameState(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_NOT_IN_USE);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_NOT_IN_USE);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
@@ -776,7 +776,7 @@ void Test_FM_ChildDeleteAllFilesCmd_DirectoryFilenameState(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_DIRECTORY);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_DIRECTORY);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
@@ -805,7 +805,7 @@ void Test_FM_ChildDeleteAllFilesCmd_OpenFilenameState(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_FILE_OPEN);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_FILE_OPEN);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
@@ -834,7 +834,7 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSRmNotSuccess(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_FILE_CLOSED);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_FILE_CLOSED);
     UT_SetDefaultReturnValue(UT_KEY(OS_remove), !OS_SUCCESS);
 
     /* Act */
@@ -865,7 +865,7 @@ void Test_FM_ChildDeleteAllFilesCmd_ClosedFilename_OSrmSuccess(void)
 
     UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 2, !OS_SUCCESS);
     UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), &direntry, sizeof(direntry), false);
-    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_NAME_IS_FILE_CLOSED);
+    UT_SetDefaultReturnValue(UT_KEY(FM_GetFilenameState), FM_FileNameStates_FILE_CLOSED);
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildDeleteAllFilesCmd(&queue_entry));
@@ -1142,7 +1142,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualIgnoreCRC(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = DEFAULT_FM_INTERFACE_IGNORE_CRC,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildFileInfoCmd(&queue_entry));
@@ -1163,7 +1163,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoStateIsNotFileClosed(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
-                                         .FileInfoState = FM_NAME_IS_FILE_OPEN };
+                                         .FileInfoState = FM_FileNameStates_FILE_OPEN };
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildFileInfoCmd(&queue_entry));
@@ -1186,7 +1186,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission8(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -1211,7 +1211,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission16(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -1236,7 +1236,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCEqualMission32(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_32,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), !OS_SUCCESS);
 
@@ -1261,7 +1261,7 @@ void Test_FM_ChildFileInfoCmd_FileInfoCRCNotEqualToAnyMissionES(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = -1,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     /* Act */
     UtAssert_VOIDCALL(FM_ChildFileInfoCmd(&queue_entry));
@@ -1284,7 +1284,7 @@ void Test_FM_ChildFileInfoCmd_OSOpenCreateTrueBytesReadZero(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 0);
 
@@ -1309,7 +1309,7 @@ void Test_FM_ChildFileInfoCmd_BytesReadLessThanZero(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_16,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), -1);
 
@@ -1336,7 +1336,7 @@ void Test_FM_ChildFileInfoCmd_BytesReadGreaterThanZero(void)
                                          .Source1       = "source1",
                                          .Source2       = "source2",
                                          .FileInfoCRC   = CFE_ES_CrcType_CRC_8,
-                                         .FileInfoState = FM_NAME_IS_FILE_CLOSED };
+                                         .FileInfoState = FM_FileNameStates_FILE_CLOSED };
 
     UT_SetDefaultReturnValue(UT_KEY(OS_read), 1);
     UT_SetDeferredRetcode(UT_KEY(OS_read), FM_CHILD_FILE_LOOP_COUNT + 1, 0);
@@ -1640,7 +1640,7 @@ void Test_FM_ChildDirListPktCmd_OSDirReadNotSuccess(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
@@ -1669,7 +1669,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameThisDirectory(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
@@ -1698,7 +1698,7 @@ void Test_FM_ChildDirListPktCmd_DirEntryNameParentDirectory(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
@@ -1728,9 +1728,9 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetNotExceeded(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 1);
+    UtAssert_UINT32_EQ(ReportPtr->FirstFileIndex, 1);
     UtAssert_UINT32_EQ(ReportPtr->TotalFiles, 1);
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, 0);
 }
 
 void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
@@ -1763,9 +1763,9 @@ void Test_FM_ChildDirListPktCmd_DirListOffsetExceeded(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_CMD_INF_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FirstFileIndex, 0);
     UtAssert_UINT32_EQ(ReportPtr->TotalFiles, sizeof(direntry) / sizeof(direntry[0]));
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, FM_DIR_LIST_PKT_ENTRIES);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, FM_DIR_LIST_PKT_ENTRIES);
 }
 
 void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
@@ -1795,9 +1795,9 @@ void Test_FM_ChildDirListPktCmd_PathAndEntryLengthGreaterMaxPathLength(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_PKT_WARNING_EID);
 
     ReportPtr = &FM_AppData.DirListPkt.Payload;
-    UtAssert_UINT32_EQ(ReportPtr->FirstFile, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FirstFileIndex, 0);
     UtAssert_UINT32_EQ(ReportPtr->TotalFiles, 1);
-    UtAssert_UINT32_EQ(ReportPtr->PacketFiles, 0);
+    UtAssert_UINT32_EQ(ReportPtr->FilesInPacket, 0);
 }
 
 /* ****************
@@ -1862,7 +1862,7 @@ void Test_FM_ChildDirListFileInit_OSOpenCreateFail(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_GET_DIR_FILE_OSCREAT_ERR_EID);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 1);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 1);
 }
 
 void Test_FM_ChildDirListFileInit_FSWriteHeaderNotSameSizeFSHeadert(void)
@@ -2176,7 +2176,7 @@ void Test_FM_ChildLoop_CountSemTakeNotSuccess(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CHILD_TERM_SEM_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 0);
 }
 
 void Test_FM_ChildLoop_ChildQCountEqualZero(void)
@@ -2189,7 +2189,7 @@ void Test_FM_ChildLoop_ChildQCountEqualZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CHILD_TERM_EMPTYQ_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 1);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 1);
 }
 
 void Test_FM_ChildLoop_ChildReadIndexEqualChildQDepth(void)
@@ -2206,7 +2206,7 @@ void Test_FM_ChildLoop_ChildReadIndexEqualChildQDepth(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, FM_CHILD_TERM_QIDX_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 1);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 1);
 }
 
 void Test_FM_ChildLoop_CountSemTakeSuccessDefault(void)
@@ -2229,7 +2229,7 @@ void Test_FM_ChildLoop_CountSemTakeSuccessDefault(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, FM_CHILD_TERM_SEM_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 1);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 1);
 }
 
 /* ****************
@@ -2239,20 +2239,20 @@ void Test_FM_ChildLoop_CountSemTakeSuccessDefault(void)
 void Test_FM_ChildSleepStat_getSizeTimeModeFalse(void)
 {
     /* Arrange */
-    FM_DirListEntry_t DirListData    = { .EntrySize = 1, .ModifyTime = 1, .Mode = 1 };
+    FM_DirListEntry_t DirListData    = { .Size = 1, .ModifyTime = 1, .Permissions = 1 };
     int32             FilesTillSleep = 1;
 
     /* Assert */
     UtAssert_VOIDCALL(FM_ChildSleepStat("fname", &DirListData, &FilesTillSleep, false));
-    UtAssert_INT32_EQ(DirListData.EntrySize, 0);
+    UtAssert_INT32_EQ(DirListData.Size, 0);
     UtAssert_INT32_EQ(DirListData.ModifyTime, 0);
-    UtAssert_INT32_EQ(DirListData.Mode, 0);
+    UtAssert_INT32_EQ(DirListData.Permissions, 0);
 }
 
 void Test_FM_ChildSleepStat_FilesTillSleepPositive(void)
 {
     /* Arrange */
-    FM_DirListEntry_t DirListData           = { .EntrySize = 1, .ModifyTime = 1, .Mode = 1 };
+    FM_DirListEntry_t DirListData           = { .Size = 1, .ModifyTime = 1, .Permissions = 1 };
     int32             FilesTillSleep        = FM_CHILD_STAT_SLEEP_FILECOUNT + 1;
     int32             FilesTillSleep_before = FilesTillSleep;
 
@@ -2264,7 +2264,7 @@ void Test_FM_ChildSleepStat_FilesTillSleepPositive(void)
 void Test_FM_ChildSleepStat_FilesTillSleepLTEQZero(void)
 {
     /* Arrange */
-    FM_DirListEntry_t DirListData    = { .EntrySize = 1, .ModifyTime = 1, .Mode = 1 };
+    FM_DirListEntry_t DirListData    = { .Size = 1, .ModifyTime = 1, .Permissions = 1 };
     int32             FilesTillSleep = 0;
 
     /* Assert */

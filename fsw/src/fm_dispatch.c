@@ -73,7 +73,7 @@ bool FM_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
 
         result = false;
 
-        ++FM_AppData.HkTlm.Payload.CommandErrCounter;
+        ++FM_AppData.HkTlm.Payload.CommandErrorCounter;
     }
 
     return result;
@@ -218,7 +218,7 @@ void FM_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
             break;
 
         default:
-            FM_AppData.HkTlm.Payload.CommandErrCounter++;
+            FM_AppData.HkTlm.Payload.CommandErrorCounter++;
             CFE_EVS_SendEvent(FM_CC_ERR_EID,
                               CFE_EVS_EventType_ERROR,
                               "Invalid ground command code: cc = %d",
@@ -259,7 +259,7 @@ void FM_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.CommandErrCounter++;
+        FM_AppData.HkTlm.Payload.CommandErrorCounter++;
         CFE_EVS_SendEvent(FM_MID_ERR_EID,
                           CFE_EVS_EventType_ERROR,
                           "Invalid command pipe message ID: 0x%08lX",

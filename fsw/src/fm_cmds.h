@@ -52,7 +52,7 @@
 CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t *Msg);
 
 /**
- *  \brief Move File Command Handler Function
+ *  \brief Noop Command Handler
  *
  *  \par Description
  *       This function generates an event that displays the application version

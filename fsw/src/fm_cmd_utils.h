@@ -94,11 +94,11 @@ uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData);
  *  \param [in]  FileInfoCmd Is this for the Get File Info command?
  *
  *  \return File state
- *  \retval #FM_NAME_IS_INVALID     \copydoc FM_NAME_IS_INVALID
- *  \retval #FM_NAME_IS_NOT_IN_USE  \copydoc FM_NAME_IS_NOT_IN_USE
- *  \retval #FM_NAME_IS_FILE_OPEN   \copydoc FM_NAME_IS_FILE_OPEN
- *  \retval #FM_NAME_IS_FILE_CLOSED \copydoc FM_NAME_IS_FILE_CLOSED
- *  \retval #FM_NAME_IS_DIRECTORY   \copydoc FM_NAME_IS_DIRECTORY
+ *  \retval #FM_FileNameStates_INVALID     \copydoc FM_FileNameStates_INVALID
+ *  \retval #FM_FileNameStates_NOT_IN_USE  \copydoc FM_FileNameStates_NOT_IN_USE
+ *  \retval #FM_FileNameStates_FILE_OPEN   \copydoc FM_FileNameStates_FILE_OPEN
+ *  \retval #FM_FileNameStates_FILE_CLOSED \copydoc FM_FileNameStates_FILE_CLOSED
+ *  \retval #FM_FileNameStates_DIRECTORY   \copydoc FM_FileNameStates_DIRECTORY
  *
  *  \sa #OS_stat, #OS_FDGetInfo
  */
@@ -119,11 +119,11 @@ FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t Buffer
  *  \param [in]  CmdText    Error event text (command-specific)
  *
  *  \return File state
- *  \retval #FM_NAME_IS_INVALID     \copydoc FM_NAME_IS_INVALID
- *  \retval #FM_NAME_IS_NOT_IN_USE  \copydoc FM_NAME_IS_NOT_IN_USE
- *  \retval #FM_NAME_IS_FILE_OPEN   \copydoc FM_NAME_IS_FILE_OPEN
- *  \retval #FM_NAME_IS_FILE_CLOSED \copydoc FM_NAME_IS_FILE_CLOSED
- *  \retval #FM_NAME_IS_DIRECTORY   \copydoc FM_NAME_IS_DIRECTORY
+ *  \retval #FM_FileNameStates_INVALID     \copydoc FM_FileNameStates_INVALID
+ *  \retval #FM_FileNameStates_NOT_IN_USE  \copydoc FM_FileNameStates_NOT_IN_USE
+ *  \retval #FM_FileNameStates_FILE_OPEN   \copydoc FM_FileNameStates_FILE_OPEN
+ *  \retval #FM_FileNameStates_FILE_CLOSED \copydoc FM_FileNameStates_FILE_CLOSED
+ *  \retval #FM_FileNameStates_DIRECTORY   \copydoc FM_FileNameStates_DIRECTORY
  *
  *  \sa #FM_GetFilenameState
  */

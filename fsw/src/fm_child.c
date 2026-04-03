@@ -161,7 +161,7 @@ void FM_ChildLoop(void)
             /* Make sure the parent/child handshake is not broken */
             if (FM_AppData.HkTlm.Payload.ChildQueueCount == 0)
             {
-                FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
                 CFE_EVS_SendEvent(FM_CHILD_TERM_EMPTYQ_ERR_EID, CFE_EVS_EventType_ERROR, "%s empty queue", TaskText);
 
                 /* Set result that will terminate child task run loop */
@@ -169,7 +169,7 @@ void FM_ChildLoop(void)
             }
             else if (FM_AppData.ChildReadIndex >= FM_CHILD_QUEUE_DEPTH)
             {
-                FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
                 CFE_EVS_SendEvent(FM_CHILD_TERM_QIDX_ERR_EID,
                                   CFE_EVS_EventType_ERROR,
                                   "%s invalid queue index: index = %d",
@@ -265,7 +265,7 @@ void FM_ChildProcess(void)
             break;
 
         default:
-            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
             CFE_EVS_SendEvent(FM_CHILD_EXE_ERR_EID,
                               CFE_EVS_EventType_ERROR,
                               "%s execution error: invalid command code: cc = %d",
@@ -307,7 +307,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_COPY_OS_ERR_EID,
@@ -320,7 +320,7 @@ void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_COPY_CMD_INF_EID,
@@ -354,7 +354,7 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_MOVE_OS_ERR_EID,
@@ -367,7 +367,7 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_MOVE_CMD_INF_EID,
@@ -401,7 +401,7 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_RENAME_OS_ERR_EID,
@@ -414,7 +414,7 @@ void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_RENAME_CMD_INF_EID,
@@ -448,7 +448,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_DELETE_OS_ERR_EID,
@@ -460,7 +460,7 @@ void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_DELETE_CMD_INF_EID,
@@ -514,7 +514,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_DELETE_ALL_OS_ERR_EID,
@@ -550,11 +550,11 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
                     /* FilenameState cannot have a value beyond five macros in cases below */
                     switch (FilenameState)
                     {
-                        case FM_NAME_IS_INVALID:
+                        case FM_FileNameStates_INVALID:
                             FilesNotDeletedCount++;
                             break;
 
-                        case FM_NAME_IS_NOT_IN_USE:
+                        case FM_FileNameStates_NOT_IN_USE:
 
                             /* This result is very unlikely - the */
                             /*   name existed a moment ago when   */
@@ -564,15 +564,15 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
                             FilesNotDeletedCount++;
                             break;
 
-                        case FM_NAME_IS_DIRECTORY:
+                        case FM_FileNameStates_DIRECTORY:
                             DirectoriesSkippedCount++;
                             break;
 
-                        case FM_NAME_IS_FILE_OPEN:
+                        case FM_FileNameStates_FILE_OPEN:
                             FilesNotDeletedCount++;
                             break;
 
-                        case FM_NAME_IS_FILE_CLOSED:
+                        case FM_FileNameStates_FILE_CLOSED:
                             if ((OS_Status = OS_remove(Filename)) == OS_SUCCESS)
                             {
                                 /*
@@ -607,7 +607,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
                           CmdText,
                           (int)DeleteCount,
                           Directory);
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         if (FilesNotDeletedCount > 0)
         {
@@ -617,7 +617,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
                               "%s command: one or more files could not be deleted. Files may be open : dir = %s",
                               CmdText,
                               Directory);
-            FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
         }
 
         if (DirectoriesSkippedCount > 0)
@@ -628,7 +628,7 @@ void FM_ChildDeleteAllFilesCmd(FM_ChildQueueEntry_t *CmdArgs)
                               "%s command: one or more directories skipped : dir = %s",
                               CmdText,
                               Directory);
-            FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
         }
 
     } /* end if OS_Status != OS_SUCCESS */
@@ -657,7 +657,7 @@ void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (CFE_Status != CFE_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_DECOM_CFE_ERR_EID,
@@ -670,7 +670,7 @@ void FM_ChildDecompressFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_DECOM_CMD_INF_EID,
@@ -712,7 +712,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_CONCAT_OSCPY_ERR_EID,
@@ -730,7 +730,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
         if (OS_Status != OS_SUCCESS)
         {
-            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
             /* Send command failure event (error) */
             CFE_EVS_SendEvent(FM_CONCAT_OPEN_SRC2_ERR_EID,
@@ -747,7 +747,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
             if (OS_Status != OS_SUCCESS)
             {
-                FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
                 /* Send command failure event (error) */
                 CFE_EVS_SendEvent(FM_CONCAT_OPEN_TGT_ERR_EID,
@@ -775,7 +775,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
                         CopyInProgress = false;
                         ConcatResult   = true;
 
-                        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+                        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
                         /* Send command completion event (info) */
                         CFE_EVS_SendEvent(FM_CONCAT_CMD_INF_EID,
@@ -789,7 +789,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
                     else if (BytesRead < 0)
                     {
                         CopyInProgress = false;
-                        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
                         /* Send command failure event (error) */
                         CFE_EVS_SendEvent(FM_CONCAT_OSRD_ERR_EID,
@@ -807,7 +807,7 @@ void FM_ChildConcatFilesCmd(const FM_ChildQueueEntry_t *CmdArgs)
                         if (BytesWritten != BytesRead)
                         {
                             CopyInProgress = false;
-                            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
                             /* Send command failure event (error) */
                             CFE_EVS_SendEvent(FM_CONCAT_OSWR_ERR_EID,
@@ -888,20 +888,20 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     ReportPtr = &FM_AppData.FileInfoPkt.Payload;
 
     /* Report directory or filename state, name, size and time */
-    ReportPtr->FileStatus = (uint8)CmdArgs->FileInfoState;
-    snprintf(ReportPtr->Filename, CFE_MISSION_MAX_PATH_LEN, "%s", CmdArgs->Source1);
+    ReportPtr->Status = (uint8)CmdArgs->FileInfoState;
+    snprintf(ReportPtr->Name, CFE_MISSION_MAX_PATH_LEN, "%s", CmdArgs->Source1);
 
-    ReportPtr->FileSize         = CmdArgs->FileInfoSize;
+    ReportPtr->Size             = CmdArgs->FileInfoSize;
     ReportPtr->LastModifiedTime = CmdArgs->FileInfoTime;
-    ReportPtr->Mode             = CmdArgs->Mode;
+    ReportPtr->Permissions      = CmdArgs->Mode;
 
     /* Validate CRC algorithm */
     if (CmdArgs->FileInfoCRC != DEFAULT_FM_INTERFACE_IGNORE_CRC)
     {
-        if (CmdArgs->FileInfoState != FM_NAME_IS_FILE_CLOSED)
+        if (CmdArgs->FileInfoState != FM_FileNameStates_FILE_CLOSED)
         {
             /* Can only calculate CRC for closed files */
-            FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
 
             CFE_EVS_SendEvent(FM_GET_FILE_INFO_STATE_WARNING_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -916,7 +916,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
                  && (CmdArgs->FileInfoCRC != CFE_ES_CrcType_CRC_32))
         {
             /* Can only calculate CRC using known algorithms */
-            FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
 
             CFE_EVS_SendEvent(FM_GET_FILE_INFO_TYPE_WARNING_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -936,7 +936,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
 
         if (Status != OS_SUCCESS)
         {
-            FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
 
             /* Send CRC failure event (warning) */
             CFE_EVS_SendEvent(FM_GET_FILE_INFO_OPEN_ERR_EID,
@@ -975,7 +975,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
                 OS_close(FileHandle);
 
                 /* Send CRC failure event (warning) */
-                FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
                 CFE_EVS_SendEvent(FM_GET_FILE_INFO_READ_WARNING_EID,
                                   CFE_EVS_EventType_INFORMATION,
                                   "%s warning: unable to compute CRC: OS_read result = %d, file = %s",
@@ -1011,7 +1011,7 @@ void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
     CFE_SB_TimeStampMsg(CFE_MSG_PTR(FM_AppData.FileInfoPkt.TelemetryHeader));
     CFE_SB_TransmitMsg(CFE_MSG_PTR(FM_AppData.FileInfoPkt.TelemetryHeader), true);
 
-    FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+    FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
     /* Send command completion event (info) */
     CFE_EVS_SendEvent(FM_GET_FILE_INFO_CMD_INF_EID,
@@ -1043,7 +1043,7 @@ void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_CREATE_DIR_OS_ERR_EID,
@@ -1055,7 +1055,7 @@ void FM_ChildCreateDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_CREATE_DIR_CMD_INF_EID,
@@ -1101,7 +1101,7 @@ void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
                           CmdArgs->Source1);
 
         RemoveTheDir = false;
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
     }
     else
     {
@@ -1118,7 +1118,7 @@ void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
                                   CmdArgs->Source1);
 
                 RemoveTheDir = false;
-                FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
             }
         }
 
@@ -1140,7 +1140,7 @@ void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
                               (int)OS_Status,
                               CmdArgs->Source1);
 
-            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
         }
         else
         {
@@ -1151,7 +1151,7 @@ void FM_ChildDeleteDirectoryCmd(const FM_ChildQueueEntry_t *CmdArgs)
                               CmdText,
                               CmdArgs->Source1);
 
-            FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandCounter++;
         }
     }
 
@@ -1191,7 +1191,7 @@ void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_GET_DIR_FILE_OSOPENDIR_ERR_EID,
@@ -1269,7 +1269,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (Status != OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_GET_DIR_PKT_OS_ERR_EID,
@@ -1287,8 +1287,8 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
         ReportPtr = &FM_AppData.DirListPkt.Payload;
 
-        snprintf(ReportPtr->DirName, CFE_MISSION_MAX_PATH_LEN, "%s", CmdArgs->Source1);
-        ReportPtr->FirstFile = CmdArgs->DirListOffset;
+        snprintf(ReportPtr->DirectoryName, CFE_MISSION_MAX_PATH_LEN, "%s", CmdArgs->Source1);
+        ReportPtr->FirstFileIndex = CmdArgs->DirListOffset;
 
         StillProcessing = true;
         while (StillProcessing == true)
@@ -1309,11 +1309,11 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
                 /* Start collecting directory entries at command-specified offset */
                 /* Stop collecting directory entries when telemetry packet is full */
-                if ((ReportPtr->TotalFiles > ReportPtr->FirstFile)
-                    && (ReportPtr->PacketFiles < FM_DIR_LIST_PKT_ENTRIES))
+                if ((ReportPtr->TotalFiles > ReportPtr->FirstFileIndex)
+                    && (ReportPtr->FilesInPacket < FM_DIR_LIST_PKT_ENTRIES))
                 {
                     /* Create a shorthand access to the packet list entry */
-                    ListIndex = ReportPtr->PacketFiles;
+                    ListIndex = ReportPtr->FilesInPacket;
                     ListEntry = &ReportPtr->FileList[ListIndex];
 
                     EntryLength = OS_strnlen(OS_DIRENTRY_NAME(DirEntry), CFE_MISSION_MAX_FILE_LEN);
@@ -1332,11 +1332,11 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                         FM_ChildSleepStat(LogicalName, ListEntry, &FilesTillSleep, CmdArgs->GetSizeTimeMode);
 
                         /* Add another entry to the telemetry packet */
-                        ReportPtr->PacketFiles++;
+                        ReportPtr->FilesInPacket++;
                     }
                     else
                     {
-                        FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+                        FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
 
                         /* Send command warning event (info) */
                         CFE_EVS_SendEvent(FM_GET_DIR_PKT_WARNING_EID,
@@ -1364,7 +1364,7 @@ void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
                           (int)CmdArgs->DirListOffset,
                           CmdArgs->Source1);
 
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
     }
 
     /* Report previous child task activity */
@@ -1386,7 +1386,7 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
 
     if (OS_Status == OS_SUCCESS)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         /* Send command completion event (info) */
         CFE_EVS_SendEvent(FM_SET_PERM_CMD_INF_EID,
@@ -1398,7 +1398,7 @@ void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
     }
     else
     {
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send OS error message */
         CFE_EVS_SendEvent(FM_SET_PERM_OS_ERR_EID,
@@ -1457,7 +1457,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
             else
             {
                 CommandResult = false;
-                FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
                 /* Send command failure event (error) */
                 CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRBLANK_ERR_EID,
@@ -1471,7 +1471,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
         else
         {
             CommandResult = false;
-            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
             /* Send command failure event (error) */
             CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRHDR_ERR_EID,
@@ -1491,7 +1491,7 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
     else
     {
         CommandResult = false;
-        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
         /* Send command failure event (error) */
         CFE_EVS_SendEvent(FM_GET_DIR_FILE_OSCREAT_ERR_EID,
@@ -1589,7 +1589,7 @@ void FM_ChildDirListFileLoop(osal_id_t   DirId,
                     else
                     {
                         CommandResult = false;
-                        FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+                        FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
                         /* Send command failure event (error) */
                         CFE_EVS_SendEvent(FM_GET_DIR_FILE_WRENTRY_ERR_EID,
@@ -1602,7 +1602,7 @@ void FM_ChildDirListFileLoop(osal_id_t   DirId,
                 }
                 else
                 {
-                    FM_AppData.HkTlm.Payload.ChildCmdWarnCounter++;
+                    FM_AppData.HkTlm.Payload.ChildCommandWarningCounter++;
 
                     /* Send command failure event (error) */
                     CFE_EVS_SendEvent(FM_GET_DIR_FILE_WARNING_EID,
@@ -1633,7 +1633,7 @@ void FM_ChildDirListFileLoop(osal_id_t   DirId,
         if (BytesWritten != WriteLength)
         {
             CommandResult = false;
-            FM_AppData.HkTlm.Payload.ChildCmdErrCounter++;
+            FM_AppData.HkTlm.Payload.ChildCommandErrorCounter++;
 
             /* Send command failure event (error) */
             CFE_EVS_SendEvent(FM_GET_DIR_FILE_UPSTATS_ERR_EID,
@@ -1648,7 +1648,7 @@ void FM_ChildDirListFileLoop(osal_id_t   DirId,
     /* Send command completion event (info) */
     if (CommandResult == true)
     {
-        FM_AppData.HkTlm.Payload.ChildCmdCounter++;
+        FM_AppData.HkTlm.Payload.ChildCommandCounter++;
 
         CFE_EVS_SendEvent(FM_GET_DIR_FILE_CMD_INF_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1715,14 +1715,14 @@ void FM_ChildSleepStat(const char        *Filename,
         }
 
         /* Get file size, date, and mode */
-        FM_ChildSizeTimeMode(Filename, &(DirListData->EntrySize), &(DirListData->ModifyTime), &(DirListData->Mode));
+        FM_ChildSizeTimeMode(Filename, &(DirListData->Size), &(DirListData->ModifyTime), &(DirListData->Permissions));
 
         (*FilesTillSleep)--;
     }
     else
     {
-        DirListData->EntrySize  = 0;
-        DirListData->ModifyTime = 0;
-        DirListData->Mode       = 0;
+        DirListData->Size        = 0;
+        DirListData->ModifyTime  = 0;
+        DirListData->Permissions = 0;
     }
 }
