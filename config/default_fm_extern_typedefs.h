@@ -31,7 +31,6 @@
 #define FM_TABLE_ENTRY_DISABLED 0
 #define FM_TABLE_ENTRY_ENABLED  1
 
-
 /* ======== */
 /* Typedefs */
 /* ======== */
@@ -41,11 +40,11 @@
  */
 typedef enum
 {
-    FM_NAME_IS_INVALID     = 0,
-    FM_NAME_IS_NOT_IN_USE  = 1,
-    FM_NAME_IS_FILE_OPEN   = 2,
-    FM_NAME_IS_FILE_CLOSED = 3,
-    FM_NAME_IS_DIRECTORY   = 4,
+    FM_FileNameStates_INVALID     = 0,
+    FM_FileNameStates_NOT_IN_USE  = 1,
+    FM_FileNameStates_FILE_OPEN   = 2,
+    FM_FileNameStates_FILE_CLOSED = 3,
+    FM_FileNameStates_DIRECTORY   = 4,
 } FM_FileNameStates_Enum_t;
 
 /**
@@ -53,12 +52,12 @@ typedef enum
  */
 typedef enum
 {
-    FM_FILE_CLOSED,  /**< \brief FM File Is Closed */
-    FM_FILE_EXISTS,  /**< \brief FM File Exists */
-    FM_FILE_NOEXIST, /**< \brief FM File Does Not Exist */
-    FM_FILE_NOTOPEN, /**< \brief FM File Is Not Open */
-    FM_DIR_EXISTS,   /**< \brief FM Directory Exists */
-    FM_DIR_NOEXIST   /**< \brief FM Directory Does Not Exist */
+    FM_FileStates_CLOSED      = 0, /**< \brief FM File Is Closed */
+    FM_FileStates_EXISTS      = 1, /**< \brief FM File Exists */
+    FM_FileStates_NOEXIST     = 2, /**< \brief FM File Does Not Exist */
+    FM_FileStates_NOTOPEN     = 3, /**< \brief FM File Is Not Open */
+    FM_FileStates_DIR_EXISTS  = 4, /**< \brief FM Directory Exists */
+    FM_FileStates_DIR_NOEXIST = 5, /**< \brief FM Directory Does Not Exist */
 } FM_FileStates_Enum_t;
 
 #endif // DEFAULT_FM_EXTERN_TYPEDEFS_H

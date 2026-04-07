@@ -57,22 +57,19 @@
 
 void Test_FM_VerifyCmdLength_Nominal(void)
 {
-    bool Result;
-    size_t ExpectedLen;
-    CFE_SB_MsgId_t MsgId;
+    bool              Result;
+    size_t            ExpectedLen;
+    CFE_SB_MsgId_t    MsgId;
     CFE_MSG_FcnCode_t FcnCode;
 
     /* Set up values for test */
     ExpectedLen = sizeof(FM_NoopCmd_t);
-    MsgId = CFE_SB_MSGID_C(FM_MISSION_CMD_TOPICID);
-    FcnCode = FM_NOOP_CC;
+    MsgId       = CFE_SB_MSGID_C(FM_MISSION_CMD_TOPICID);
+    FcnCode     = FM_NOOP_CC;
 
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &ExpectedLen, sizeof(size_t),
-                    false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &MsgId, sizeof(CFE_SB_MsgId_t),
-                    false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode,
-                    sizeof(CFE_MSG_FcnCode_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &ExpectedLen, sizeof(size_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &MsgId, sizeof(CFE_SB_MsgId_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(CFE_MSG_FcnCode_t), false);
 
     /* Run function under test */
     Result = FM_VerifyCmdLength(NULL, sizeof(FM_NoopCmd_t));
@@ -81,15 +78,15 @@ void Test_FM_VerifyCmdLength_Nominal(void)
     UtAssert_BOOL_TRUE(Result);
 
     UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
 void Test_FM_VerifyCmdLength_InvalidSize(void)
 {
-    size_t ExpectedLen;
-    CFE_SB_MsgId_t MsgId;
+    size_t            ExpectedLen;
+    CFE_SB_MsgId_t    MsgId;
     CFE_MSG_FcnCode_t FcnCode;
 
     /* Set up values for test */
@@ -98,32 +95,30 @@ void Test_FM_VerifyCmdLength_InvalidSize(void)
     {
         FM_Test_Setup();
 
-        FM_AppData.HkTlm.Payload.CommandErrCounter = 0;
+        FM_AppData.HkTlm.Payload.CommandErrorCounter = 0;
 
         ExpectedLen = 1;
-        MsgId = CFE_SB_MSGID_C(FM_MISSION_CMD_TOPICID);
+        MsgId       = CFE_SB_MSGID_C(FM_MISSION_CMD_TOPICID);
 
-        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &ExpectedLen, sizeof(size_t),
-                        false);
-        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &MsgId, sizeof(CFE_SB_MsgId_t),
-                        false);
-        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode,
-                        sizeof(CFE_MSG_FcnCode_t), false);
-        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode,
-                        sizeof(CFE_MSG_FcnCode_t), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &ExpectedLen, sizeof(size_t), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &MsgId, sizeof(CFE_SB_MsgId_t), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(CFE_MSG_FcnCode_t), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(CFE_MSG_FcnCode_t), false);
 
         /* Run function under test */
         UtAssert_VOIDCALL(FM_ProcessGroundCommand(NULL));
 
         UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandCounter, 0);
-        UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandErrCounter, 1);
+        UtAssert_EQ(uint8, FM_AppData.HkTlm.Payload.CommandErrorCounter, 1);
 
         UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 
         if (context_CFE_EVS_SendEvent[0].EventID != FM_CC_ERR_EID)
         {
-            FM_Test_Verify_Event(0, FM_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
-                                "Invalid Msg length: ID = 0x%X,  CC = %u, Len = %u, Expected = %u");
+            FM_Test_Verify_Event(0,
+                                 FM_CMD_LEN_ERR_EID,
+                                 CFE_EVS_EventType_ERROR,
+                                 "Invalid Msg length: ID = 0x%X,  CC = %u, Len = %u, Expected = %u");
         }
     }
 }
@@ -150,7 +145,7 @@ void Test_FM_ProcessGroundCommand_NoopCmdCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_NoopCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_ResetCountersCCReturn(void)
@@ -172,7 +167,7 @@ void Test_FM_ProcessGroundCommand_ResetCountersCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_ResetCountersCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_CopyFileCCReturn(void)
@@ -194,7 +189,7 @@ void Test_FM_ProcessGroundCommand_CopyFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_CopyFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_MoveFileCCReturn(void)
@@ -216,7 +211,7 @@ void Test_FM_ProcessGroundCommand_MoveFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_MoveFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_RenameFileCCReturn(void)
@@ -238,7 +233,7 @@ void Test_FM_ProcessGroundCommand_RenameFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_RenameFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_DeleteFileCCReturn(void)
@@ -260,7 +255,7 @@ void Test_FM_ProcessGroundCommand_DeleteFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_DeleteAllFilesCCReturn(void)
@@ -282,7 +277,7 @@ void Test_FM_ProcessGroundCommand_DeleteAllFilesCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteAllFilesCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_DecompressFileCCReturn(void)
@@ -304,7 +299,7 @@ void Test_FM_ProcessGroundCommand_DecompressFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DecompressFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_ConcatFilesCCReturn(void)
@@ -326,7 +321,7 @@ void Test_FM_ProcessGroundCommand_ConcatFilesCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_ConcatFilesCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_GetFileInfoCCReturn(void)
@@ -348,7 +343,7 @@ void Test_FM_ProcessGroundCommand_GetFileInfoCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetFileInfoCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_GetOpenFilesCCReturn(void)
@@ -370,7 +365,7 @@ void Test_FM_ProcessGroundCommand_GetOpenFilesCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetOpenFilesCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_CreateDirectoryCCReturn(void)
@@ -392,7 +387,7 @@ void Test_FM_ProcessGroundCommand_CreateDirectoryCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_CreateDirectoryCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_DeleteDirectoryCCReturn(void)
@@ -414,7 +409,7 @@ void Test_FM_ProcessGroundCommand_DeleteDirectoryCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_DeleteDirectoryCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_GetDirListFileCCReturn(void)
@@ -436,7 +431,7 @@ void Test_FM_ProcessGroundCommand_GetDirListFileCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetDirListFileCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_GetDirListPktCCReturn(void)
@@ -458,7 +453,7 @@ void Test_FM_ProcessGroundCommand_GetDirListPktCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_GetDirListPktCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_MonitorFilesystemSpaceCCReturn(void)
@@ -480,7 +475,7 @@ void Test_FM_ProcessGroundCommand_MonitorFilesystemSpaceCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_MonitorFilesystemSpaceCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_SetTableStateCCReturn(void)
@@ -502,7 +497,7 @@ void Test_FM_ProcessGroundCommand_SetTableStateCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_SetTableStateCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_SetPermissionsCCReturn(void)
@@ -524,7 +519,7 @@ void Test_FM_ProcessGroundCommand_SetPermissionsCCReturn(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(FM_SetPermissionsCmd, 1);
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
 }
 
 void Test_FM_ProcessGroundCommand_DefaultReturn(void)
@@ -540,11 +535,10 @@ void Test_FM_ProcessGroundCommand_DefaultReturn(void)
 
     /* Assert */
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 1);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_CC_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "Invalid ground command code: cc = %d");
+    FM_Test_Verify_Event(0, FM_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code: cc = %d");
 }
 
 /* ********************************
@@ -553,7 +547,7 @@ void Test_FM_ProcessGroundCommand_DefaultReturn(void)
 void Test_FM_TaskPipe_SendHkCmd(void)
 {
     /* Arrange */
-    CFE_SB_MsgId_t    msgid;
+    CFE_SB_MsgId_t msgid;
 
     msgid = CFE_SB_ValueToMsgId(FM_SEND_HK_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &msgid, sizeof(msgid), false);
@@ -601,8 +595,7 @@ void Test_FM_TaskPipe_CheckDefaultSwitchMessage(void)
 
     /* Assert */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "Invalid command pipe message ID: 0x%08lX");
+    FM_Test_Verify_Event(0, FM_MID_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command pipe message ID: 0x%08lX");
 }
 
 /*

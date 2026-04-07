@@ -78,7 +78,7 @@ static const EdsDispatchTable_EdsComponent_FM_Application_CFE_SB_Telecommand_t F
 /* Function Definitions */
 /* ==================== */
 
-void FM_TaskPipe(const CFE_SB_Buffer_t* BufPtr)
+void FM_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
 {
     CFE_Status_t      Status;
     CFE_SB_MsgId_t    MsgId;
@@ -92,23 +92,30 @@ void FM_TaskPipe(const CFE_SB_Buffer_t* BufPtr)
         CFE_MSG_GetMsgId(&BufPtr->Msg, &MsgId);
         CFE_MSG_GetSize(&BufPtr->Msg, &MsgSize);
         CFE_MSG_GetFcnCode(&BufPtr->Msg, &MsgFc);
-        ++FM_AppData.HkTlm.Payload.CommandErrCounter;
+        ++FM_AppData.HkTlm.Payload.CommandErrorCounter;
 
         if (Status == CFE_STATUS_UNKNOWN_MSG_ID)
         {
-            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                                "FM: invalid command packet,MID = 0x%x", (unsigned int)CFE_SB_MsgIdToValue(MsgId));
+            CFE_EVS_SendEvent(FM_MID_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "FM: invalid command packet,MID = 0x%x",
+                              (unsigned int)CFE_SB_MsgIdToValue(MsgId));
         }
         else if (Status == CFE_STATUS_WRONG_MSG_LENGTH)
         {
-            CFE_EVS_SendEvent(FM_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
-                                "FM: Invalid Msg length: ID = 0x%X, CC = %u, Len = %u",
-                                (unsigned int)CFE_SB_MsgIdToValue(MsgId), (unsigned int)MsgFc, (unsigned int)MsgSize);
+            CFE_EVS_SendEvent(FM_CMD_LEN_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "FM: Invalid Msg length: ID = 0x%X, CC = %u, Len = %u",
+                              (unsigned int)CFE_SB_MsgIdToValue(MsgId),
+                              (unsigned int)MsgFc,
+                              (unsigned int)MsgSize);
         }
         else
         {
-            CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_EventType_ERROR,
-                                "FM: Invalid ground command code: CC = %d", (int)MsgFc);
+            CFE_EVS_SendEvent(FM_CC_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "FM: Invalid ground command code: CC = %d",
+                              (int)MsgFc);
         }
     }
 }

@@ -49,7 +49,6 @@
  * \{
  */
 
-
 /**
  * \brief FM directory entry definitions
  */
@@ -322,7 +321,7 @@
  *       no limits on the definition.  Refer to CFE Table Services
  *       for specific information on limits related to table names.
  */
-#define FM_TABLE_CFE_NAME FM_INTERNAL_CFGVAL(TABLE_CFE_NAME)
+#define FM_TABLE_CFE_NAME                  FM_INTERNAL_CFGVAL(TABLE_CFE_NAME)
 #define DEFAULT_FM_INTERNAL_TABLE_CFE_NAME "Monitor"
 
 /**
@@ -336,7 +335,7 @@
  *       no limits on the definition.  If the named table does not
  *       exist or fails validation, the table load will fail.
  */
-#define FM_TABLE_DEF_NAME FM_INTERNAL_CFGVAL(TABLE_DEF_NAME)
+#define FM_TABLE_DEF_NAME                  FM_INTERNAL_CFGVAL(TABLE_DEF_NAME)
 #define DEFAULT_FM_INTERNAL_TABLE_DEF_NAME "/cf/fm_monitor.tbl"
 
 /**
@@ -352,7 +351,7 @@
  *       valid then the make process may fail, or the table file may
  *       be unloadable to the target hardware.
  */
-#define FM_TABLE_FILENAME FM_INTERNAL_CFGVAL(TABLE_FILENAME)
+#define FM_TABLE_FILENAME                  FM_INTERNAL_CFGVAL(TABLE_FILENAME)
 #define DEFAULT_FM_INTERNAL_TABLE_FILENAME "fm_monitor.tbl"
 
 /**
@@ -368,7 +367,7 @@
  *       no limits on the definition.  Refer to cFE Table Services
  *       for limits related to table descriptive text.
  */
-#define FM_TABLE_DEF_DESC FM_INTERNAL_CFGVAL(TABLE_DEF_DESC)
+#define FM_TABLE_DEF_DESC                  FM_INTERNAL_CFGVAL(TABLE_DEF_DESC)
 #define DEFAULT_FM_INTERNAL_TABLE_DEF_DESC "FM File System Free Space Table"
 
 /**
@@ -387,7 +386,7 @@
  *       filename.  Set this parameter to the empty string if no default
  *       filename is desired.
  */
-#define FM_DIR_LIST_FILE_DEFNAME                   FM_INTERNAL_CFGVAL(DIR_LIST_FILE_DEFNAME)
+#define FM_DIR_LIST_FILE_DEFNAME                  FM_INTERNAL_CFGVAL(DIR_LIST_FILE_DEFNAME)
 #define DEFAULT_FM_INTERNAL_DIR_LIST_FILE_DEFNAME "/ram/fm_dirlist.out"
 
 /**\}*/

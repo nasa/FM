@@ -28,6 +28,7 @@
 <PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
 	<Package name="FM" shortDescription="File Manager application">
 		<DataTypeSet>
+
 			<EnumeratedDataType name="MonitorTableEntry_Type" shortDescription="Table entry types">
 				<EnumerationList>
 					<Enumeration label="UNUSED" value="0" shortDescription="Table entry is not used, these entries are ignored"/>
@@ -51,6 +52,7 @@
 					</Enumeration>
 				</EnumerationList>
 			</EnumeratedDataType>
+
 			<ContainerDataType name="MonitorTableEntry" shortDescription="Monitor table entry">
 				<EntryList>
 					<Entry name="Type" type="BASE_TYPES/uint8">
@@ -70,48 +72,58 @@
 					</Entry>
 				</EntryList>
 			</ContainerDataType>
+
 			<ArrayDataType name="Entries" dataTypeRef="MonitorTableEntry" shortDescription="One entry for each monitor">
 				<DimensionList>
 					<Dimension size="${FM/TABLE_ENTRY_COUNT}"/>
 				</DimensionList>
 			</ArrayDataType>
+
 			<ContainerDataType name="DirListEntry" shortDescription="Get Directory Listing entry structure">
 				<EntryList>
 					<Entry name="EntryName" type="BASE_TYPES/PathName" shortDescription="Directory Listing Filename"/>
-					<Entry name="EntrySize" type="BASE_TYPES/uint32" shortDescription="Directory Listing File Size"/>
+					<Entry name="Size" type="BASE_TYPES/uint32" shortDescription="Directory Listing File Size"/>
 					<Entry name="ModifyTime" type="BASE_TYPES/uint32" shortDescription="Directory Listing File Last Modification Times"/>
-					<Entry name="Mode" type="BASE_TYPES/uint32" shortDescription="Mode of the file (Permissions from #OS_FILESTAT_MODE)"/>
+					<Entry name="Permissions" type="BASE_TYPES/uint32" shortDescription="Mode of the file (Permissions from #OS_FILESTAT_MODE)"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ArrayDataType name="FileList" dataTypeRef="DirListEntry" shortDescription="Directory listing file data">
 				<DimensionList>
 					<Dimension size="${FM/DIR_LIST_PKT_ENTRIES}"/>
 				</DimensionList>
 			</ArrayDataType>
+
 			<ContainerDataType name="MonitorReportEntry" shortDescription="Monitor filesystem list entry structure">
 				<EntryList>
 					<Entry name="ReportType" type="BASE_TYPES/uint8" shortDescription=""/>
-					<Entry name="Name" type="BASE_TYPES/PathName" shortDescription="File system name"/>
+					<PaddingEntry sizeInBits="56" shortDescription="Padding for alignment"/>
+					<Entry name="Path" type="BASE_TYPES/PathName" shortDescription="File system path"/>
+					<PaddingEntry sizeInBits="32" shortDescription="Padding for alignment"/>
 					<Entry name="Blocks" type="BASE_TYPES/uint64" shortDescription="Block count from last check/poll, 0 if unknown"/>
 					<Entry name="Bytes" type="BASE_TYPES/uint64" shortDescription="Byte count from last check/poll, 0 if unknown"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ArrayDataType name="FileSys" dataTypeRef="MonitorReportEntry" shortDescription="Array of file system free space entries">
 				<DimensionList>
 					<Dimension size="${FM/TABLE_ENTRY_COUNT}"/>
 				</DimensionList>
 			</ArrayDataType>
+
 			<ContainerDataType name="OpenFilesEntry" shortDescription="Get Open Files list entry structure">
 				<EntryList>
 					<Entry name="LogicalName" type="BASE_TYPES/PathName" shortDescription="Logical filename"/>
-					<Entry name="AppName" type="BASE_TYPES/ApiName" shortDescription="Application that opened file"/>
+					<Entry name="App" type="BASE_TYPES/ApiName" shortDescription="Application that opened file"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ArrayDataType name="OpenFilesList" dataTypeRef="OpenFilesEntry" shortDescription="List of files opened via cFE">
 				<DimensionList>
 					<Dimension size="${CFE_MISSION/MAX_NUM_FILES}"/>
 				</DimensionList>
 			</ArrayDataType>
+
 			<EnumeratedDataType name="TableEntryState" shortDescription="free space table entry state definitions">
 				<EnumerationList>
 				    <Enumeration label="DISABLED" value="0" />
@@ -119,33 +131,76 @@
 				</EnumerationList>
 		       <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
 			</EnumeratedDataType>
+
 			<EnumeratedDataType name="FileNameStates" shortDescription="used for verifying file name states">
 				<EnumerationList>
-				    <Enumeration label="IS_INVALID" value="0" />
-				    <Enumeration label="IS_NOT_IN_USE" value="1" />
-				    <Enumeration label="IS_FILE_OPEN" value="2" />
-				    <Enumeration label="IS_FILE_CLOSED" value="3" />
-				    <Enumeration label="IS_DIRECTORY" value="4" />
+				    <Enumeration label="INVALID" value="0" />
+				    <Enumeration label="NOT_IN_USE" value="1" />
+				    <Enumeration label="FILE_OPEN" value="2" />
+				    <Enumeration label="FILE_CLOSED" value="3" />
+				    <Enumeration label="DIRECTORY" value="4" />
 				</EnumerationList>
 		       <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
 			</EnumeratedDataType>
+
 			<EnumeratedDataType name="FileStates" shortDescription="used for verifying file states">
 				<EnumerationList>
-					<Enumeration label="FILE_CLOSED" value="0" shortDescription="File Is Closed" />
-					<Enumeration label="FILE_EXISTS" value="1" shortDescription="File Exists" />
-					<Enumeration label="FILE_NOEXIST" value="2" shortDescription="File Does Not Exist" />
-					<Enumeration label="FILE_NOTOPEN" value="3" shortDescription="File Is Not Open" />
+					<Enumeration label="CLOSED" value="0" shortDescription="File Is Closed" />
+					<Enumeration label="EXISTS" value="1" shortDescription="File Exists" />
+					<Enumeration label="NOEXIST" value="2" shortDescription="File Does Not Exist" />
+					<Enumeration label="NOTOPEN" value="3" shortDescription="File Is Not Open" />
 					<Enumeration label="DIR_EXISTS" value="4" shortDescription="Directory Exists" />
 					<Enumeration label="DIR_NOEXIST" value="5" shortDescription="Directory Does Not Exist" />
 				</EnumerationList>
 		       <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
 			</EnumeratedDataType>
+
+			<ContainerDataType name="OverwriteSourceTarget_Payload">
+				<LongDescription>
+					A generic struct containing a path to a source file, a path to a
+ 					target file, and a flag to indicate whether an overwrite should occur
+					that is used by several commands
+
+ 					Used by #FM_COPY_FILE_CC, #FM_MOVE_FILE_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="Overwrite" type="BASE_TYPES/uint16" shortDescription="Allow overwrite"/>
+					<Entry name="SourcePath" type="BASE_TYPES/PathName" shortDescription="Path to source file"/>
+					<Entry name="TargetPath" type="BASE_TYPES/PathName" shortDescription="Path to target file"/>
+				</EntryList>
+			</ContainerDataType>
+
+			<ContainerDataType name="SourceTarget_Payload">
+				<LongDescription>
+					A generic struct containing a path to a source file and a path to a
+					target file that is used by several commands
+
+ 					Used by #FM_RENAME_FILE_CC, #FM_DECOMPRESS_FILE_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="SourcePath" type="BASE_TYPES/PathName" shortDescription="Path to source file"/>
+					<Entry name="TargetPath" type="BASE_TYPES/PathName" shortDescription="Path to target file"/>
+				</EntryList>
+			</ContainerDataType>
+
+			<ContainerDataType name="Path_Payload">
+				<LongDescription>
+					A generic struct containing a path to a file used by several commands
+
+ 					Used by #FM_DELETE_FILE_CC, #FM_DELETE_ALL_FILES_CC, #FM_CREATE_DIRECTORY_CC,
+					#FM_DELETE_DIRECTORY_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="Path" type="BASE_TYPES/PathName" shortDescription="Path to file"/>
+				</EntryList>
+			</ContainerDataType>
+
 			<ContainerDataType name="DirListPkt_Payload" shortDescription="Get Directory Listing telemetry payload">
 				<EntryList>
-					<Entry name="DirName" type="BASE_TYPES/PathName" shortDescription="Directory Name"/>
+					<Entry name="DirectoryName" type="BASE_TYPES/PathName" shortDescription="Directory Name"/>
 					<Entry name="TotalFiles" type="BASE_TYPES/uint32" shortDescription="Number of files in the directory"/>
-					<Entry name="PacketFiles" type="BASE_TYPES/uint32" shortDescription="Number of files in this packet"/>
-					<Entry name="FirstFile" type="BASE_TYPES/uint32" shortDescription="Index into directory files of first packet file"/>
+					<Entry name="FilesInPacket" type="BASE_TYPES/uint32" shortDescription="Number of files in this packet"/>
+					<Entry name="FirstFileIndex" type="BASE_TYPES/uint32" shortDescription="Index into directory files of first packet file"/>
 					<Entry name="FileList" type="FileList" shortDescription="Directory listing file data"/>
 				</EntryList>
 			</ContainerDataType>
@@ -154,183 +209,167 @@
 					<Entry name="Payload" type="DirListPkt_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="DirectoryName_Payload">
-				<LongDescription>
-					Single directory command payload structure
-					Used by #FM_DELETE_ALL_FILES_CC, #FM_CREATE_DIRECTORY_CC, #FM_DELETE_DIRECTORY_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="Directory" type="BASE_TYPES/PathName" shortDescription="Directory name"/>
-				</EntryList>
-			</ContainerDataType>
+
 			<ContainerDataType name="FileInfoPkt_Payload" shortDescription="Get File Info telemetry payload">
 				<EntryList>
-					<Entry name="FileStatus" type="BASE_TYPES/uint8" shortDescription="Status indicating whether the file is open or closed"/>
+					<Entry name="Status" type="BASE_TYPES/uint8" shortDescription="Status indicating whether the file is open or closed"/>
 					<Entry name="CRC_Computed" type="BASE_TYPES/uint8" shortDescription="Flag indicating whether a CRC was computed or not"/>
+					<PaddingEntry sizeInBits="16" shortDescription="Explicit padding for alignment"/>
 					<Entry name="CRC" type="BASE_TYPES/uint32" shortDescription="CRC value if computed"/>
-					<Entry name="FileSize" type="BASE_TYPES/uint32" shortDescription="File Size"/>
+					<Entry name="Size" type="BASE_TYPES/uint32" shortDescription="File Size"/>
 					<Entry name="LastModifiedTime" type="BASE_TYPES/uint32" shortDescription="Last Modification Time of File"/>
-					<Entry name="Mode" type="BASE_TYPES/uint32" shortDescription="Mode of the file (Permissions)"/>
-					<Entry name="Filename" type="BASE_TYPES/PathName" shortDescription="Name of File"/>
+					<Entry name="Permissions" type="BASE_TYPES/uint32" shortDescription="Mode of the file (Permissions)"/>
+					<Entry name="Name" type="BASE_TYPES/PathName" shortDescription="Name of File"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="FileInfoPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Get File Info telemetry packet">
 				<EntryList>
 					<Entry name="Payload" type="FileInfoPkt_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="FilenameAndCRC_Payload">
+
+			<ContainerDataType name="ConcatFilesCmd_Payload">
 				<LongDescription>
-					Filename and CRC command payload structure
+					Concat the Source2 file onto Source1 and call the final file Target
+					Used by #FM_CONCAT_FILES_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="SourcePath1" type="BASE_TYPES/PathName" shortDescription="Path to source file 1"/>
+					<Entry name="SourcePath2" type="BASE_TYPES/PathName" shortDescription="Path to source file 2"/>
+					<Entry name="TargetPath" type="BASE_TYPES/PathName" shortDescription="Path to target file"/>
+				</EntryList>
+			</ContainerDataType>
+
+			<ContainerDataType name="GetFileInfoCmd_Payload">
+				<LongDescription>
+					Get info about file represented by Path and provide the CRC method
 					Used by #FM_GET_FILE_INFO_CC
 				</LongDescription>
 				<EntryList>
-					<Entry name="Filename" type="BASE_TYPES/PathName" shortDescription="Filename"/>
-					<Entry name="FileInfoCRC" type="BASE_TYPES/uint32" shortDescription="File info CRC method"/>
+					<Entry name="Path" type="BASE_TYPES/PathName" shortDescription="Path to file"/>
+					<Entry name="CRC_Method" type="BASE_TYPES/uint32" shortDescription="CRC method"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="FilenameAndMode_Payload">
-				<LongDescription>
-					File name and mode command payload structure
- 					Used by #FM_SET_PERMISSIONS_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="FileName" type="BASE_TYPES/PathName" shortDescription="File name of the permissions to set"/>
-					<Entry name="Mode" type="BASE_TYPES/uint32" shortDescription="Permissions, passed directly to OS_chmod"/>
-				</EntryList>
-			</ContainerDataType>
-			<ContainerDataType name="GetDirectoryToFile_Payload">
+
+			<ContainerDataType name="GetDirListFileCmd_Payload">
 				<LongDescription>
 					Get Directory and output to file command payload
  					Contains a directory and output file name, with optional flags
  					Used by #FM_GET_DIR_LIST_FILE_CC
 				</LongDescription>
 				<EntryList>
-					<Entry name="Directory" type="BASE_TYPES/PathName" shortDescription="Directory name"/>
-					<Entry name="Filename" type="BASE_TYPES/PathName" shortDescription="Filename"/>
+					<Entry name="DirectoryPath" type="BASE_TYPES/PathName" shortDescription="Path to directory to output"/>
+					<Entry name="OutputFilePath" type="BASE_TYPES/PathName" shortDescription="Path to file that holds output"/>
 					<Entry name="GetSizeTimeMode" type="BASE_TYPES/uint8" shortDescription="Option to query size, time, and mode of files (CPU intensive)"/>
+					<PaddingEntry sizeInBits="24" shortDescription="Padding to 32-bit boundary"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="GetDirectoryToPkt_Payload">
+
+			<ContainerDataType name="GetDirListPktCmd_Payload">
 				<LongDescription>
 					Get Directory and output to message command payload
  					Contains a directory and position offset, with optional flags
  					Used by #FM_GET_DIR_LIST_PKT_CC
 				</LongDescription>
 				<EntryList>
-					<Entry name="Directory" type="BASE_TYPES/PathName" shortDescription="Directory name"/>
-					<Entry name="DirListOffset" type="BASE_TYPES/uint32" shortDescription="Index of 1st dir entry to put in packet"/>
+					<Entry name="Path" type="BASE_TYPES/PathName" shortDescription="Path to directory to output"/>
+					<Entry name="Offset" type="BASE_TYPES/uint32" shortDescription="Index of first entry to put in packet"/>
 					<Entry name="GetSizeTimeMode" type="BASE_TYPES/uint8" shortDescription="Option to query size, time, and mode of files (CPU intensive)"/>
+					<PaddingEntry sizeInBits="24" shortDescription="Padding to 32-bit boundary"/>
 				</EntryList>
 			</ContainerDataType>
+
+			<ContainerDataType name="SetTableStateCmd_Payload">
+				<LongDescription>
+					Table Index and State command payload structure
+					Used by #FM_SET_TABLE_STATE_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="Index" type="BASE_TYPES/uint32" shortDescription="Table entry index"/>
+					<Entry name="State" type="BASE_TYPES/uint32" shortDescription="New table entry state"/>
+				</EntryList>
+			</ContainerDataType>
+
+			<ContainerDataType name="SetPermissionsCmd_Payload">
+				<LongDescription>
+					File name and mode command payload structure
+					Used by #FM_SET_PERMISSIONS_CC
+				</LongDescription>
+				<EntryList>
+					<Entry name="Path" type="BASE_TYPES/PathName" shortDescription="Path to the file whose permissions are to be set"/>
+					<Entry name="Permissions" type="BASE_TYPES/uint32" shortDescription="Permissions for the file"/>
+				</EntryList>
+			</ContainerDataType>
+
 			<ContainerDataType name="HkTlm_Payload" shortDescription="Housekeeping telemetry payload">
 				<EntryList>
 					<Entry name="CommandCounter" type="BASE_TYPES/uint8" shortDescription="Application command counter"/>
-					<Entry name="CommandErrCounter" type="BASE_TYPES/uint8" shortDescription="Application command error counter"/>
-					<Entry name="NumOpenFiles" type="BASE_TYPES/uint8" shortDescription="Number of open files in the system"/>
-					<Entry name="ChildCmdCounter" type="BASE_TYPES/uint8" shortDescription="Child task command counter"/>
-					<Entry name="ChildCmdErrCounter" type="BASE_TYPES/uint8" shortDescription="Child task command error counter"/>
-					<Entry name="ChildCmdWarnCounter" type="BASE_TYPES/uint8" shortDescription="Child task command warning counter"/>
+					<Entry name="CommandErrorCounter" type="BASE_TYPES/uint8" shortDescription="Application command error counter"/>
+					<Entry name="OpenFiles" type="BASE_TYPES/uint8" shortDescription="Number of open files in the system"/>
+					<Entry name="ChildCommandCounter" type="BASE_TYPES/uint8" shortDescription="Child task command counter"/>
+					<Entry name="ChildCommandErrorCounter" type="BASE_TYPES/uint8" shortDescription="Child task command error counter"/>
+					<Entry name="ChildCommandWarningCounter" type="BASE_TYPES/uint8" shortDescription="Child task command warning counter"/>
 					<Entry name="ChildQueueCount" type="BASE_TYPES/uint8" shortDescription="Number of pending commands in queue"/>
 					<Entry name="ChildCurrentCC" type="BASE_TYPES/uint8" shortDescription="Command code currently executing"/>
 					<Entry name="ChildPreviousCC" type="BASE_TYPES/uint8" shortDescription="Command code previously executed"/>
+					<PaddingEntry sizeInBits="24" shortDescription="Explicit padding for packet alignment"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="HkTlm" baseType="CFE_HDR/TelemetryHeader" shortDescription="Housekeeping telemetry packet">
 				<EntryList>
 					<Entry name="Payload" type="HkTlm_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MonitorReportPkt_Payload" shortDescription="Monitor filesystem telemetry payload">
 				<EntryList>
 					<Entry name="FileSys" type="FileSys" shortDescription="Array of file system free space entries"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MonitorReportPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Monitor filesystem telemetry packet">
 				<EntryList>
 					<Entry name="Payload" type="MonitorReportPkt_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MonitorTable" shortDescription="Get Free Space table definition">
 				<EntryList>
 					<Entry name="Entries" type="Entries" shortDescription="One entry for each monitor"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="OpenFilesPkt_Payload" shortDescription="Get Open Files telemetry payload">
 				<EntryList>
-					<Entry name="NumOpenFiles" type="BASE_TYPES/uint32" shortDescription="Number of files opened via cFE"/>
+					<Entry name="Count" type="BASE_TYPES/uint32" shortDescription="Number of files opened via cFE"/>
 					<Entry name="OpenFilesList" type="OpenFilesList" shortDescription="List of files opened via cFE"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="OpenFilesPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Get Open Files telemetry packet">
 				<EntryList>
 					<Entry name="Payload" type="OpenFilesPkt_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MonitorPkt_Payload" shortDescription="Monitor filesystem telemetry payload">
 				<EntryList>
 					<Entry name="FileSys" type="FileSys" shortDescription="Array of file system free space entries"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MonitorPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="">
 				<EntryList>
 					<Entry name="Payload" type="MonitorPkt_Payload" shortDescription="Telemetry Payload"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="OvwSourceTargetFilename_Payload">
-				<LongDescription>
-					Copy/Move File command payload structure
- 					Contains a source and target file name and an overwrite flag
- 					Used by #FM_COPY_FILE_CC, #FM_MOVE_FILE_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="Overwrite" type="BASE_TYPES/uint16" shortDescription="Allow overwrite"/>
-					<Entry name="Source" type="BASE_TYPES/PathName" shortDescription="Source filename"/>
-					<Entry name="Target" type="BASE_TYPES/PathName" shortDescription="Target filename"/>
-				</EntryList>
-			</ContainerDataType>
-			<ContainerDataType name="SingleFilename_Payload">
-				<LongDescription>
-					Single filename command payload structure
- 					Used by #FM_DELETE_FILE_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="Filename" type="BASE_TYPES/PathName" shortDescription="Delete filename"/>
-				</EntryList>
-			</ContainerDataType>
-			<ContainerDataType name="SourceTargetFileName_Payload">
-				<LongDescription>
-					Source and Target filename command payload structure
- 					Used by #FM_RENAME_FILE_CC, #FM_DECOMPRESS_FILE_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="Source" type="BASE_TYPES/PathName" shortDescription="Source filename"/>
-					<Entry name="Target" type="BASE_TYPES/PathName" shortDescription="Target filename"/>
-				</EntryList>
-			</ContainerDataType>
-			<ContainerDataType name="TableIndexAndState_Payload">
-				<LongDescription>
-					Table Index and State command payload structure
- 					Used by #FM_SET_TABLE_STATE_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="TableEntryIndex" type="BASE_TYPES/uint32" shortDescription="Table entry index"/>
-					<Entry name="TableEntryState" type="BASE_TYPES/uint32" shortDescription="New table entry state"/>
-				</EntryList>
-			</ContainerDataType>
-			<ContainerDataType name="TwoSourceOneTarget_Payload">
-				<LongDescription>
-					Two source, one target filename command payload structure
- 					Used by #FM_CONCAT_FILES_CC
-				</LongDescription>
-				<EntryList>
-					<Entry name="Source1" type="BASE_TYPES/PathName" shortDescription="Source 1 filename"/>
-					<Entry name="Source2" type="BASE_TYPES/PathName" shortDescription="Source 2 filename"/>
-					<Entry name="Target" type="BASE_TYPES/PathName" shortDescription="Target filename"/>
-				</EntryList>
-			</ContainerDataType>
+
 			<ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader"/>
+
 			<ContainerDataType name="SendHkCmd" baseType="CMD" shortDescription="Housekeeping Request command packet structure"/>
+
 			<ContainerDataType name="NoopCmd" baseType="CMD">
 				<LongDescription>
 					\fmcmd No Operation
@@ -363,6 +402,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="0"/>
 				</ConstraintSet>
 			</ContainerDataType>
+
 			<ContainerDataType name="ResetCountersCmd" baseType="CMD">
 				<LongDescription>
 					\fmcmd Reset Counters
@@ -399,6 +439,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="1"/>
 				</ConstraintSet>
 			</ContainerDataType>
+
 			<ContainerDataType name="CopyFileCmd" baseType="CMD">
 				<LongDescription>
 					\fmcmd Copy File
@@ -462,9 +503,10 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="2"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="OvwSourceTargetFilename_Payload" shortDescription="Command payload"/>
+					<Entry name="Payload" type="OverwriteSourceTarget_Payload" shortDescription="Command payload"/>
 				</EntryList>
 			</ContainerDataType>
+
 			<ContainerDataType name="MoveFileCmd" baseType="CMD">
 				<LongDescription>
 					\fmcmd Move File
@@ -520,7 +562,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="3"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="OvwSourceTargetFilename_Payload" shortDescription="Command payload"/>
+					<Entry name="Payload" type="OverwriteSourceTarget_Payload" shortDescription="Command payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="RenameFileCmd" baseType="CMD">
@@ -572,7 +614,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="4"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="SourceTargetFileName_Payload" shortDescription="Command payload"/>
+					<Entry name="Payload" type="SourceTarget_Payload" shortDescription="Command payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="DeleteFileCmd" baseType="CMD">
@@ -616,7 +658,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="5"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="SingleFilename_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="Path_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="DeleteAllFilesCmd" baseType="CMD">
@@ -680,7 +722,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="7"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="DirectoryName_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="Path_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="DecompressFileCmd" baseType="CMD">
@@ -734,7 +776,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="8"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="SourceTargetFileName_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="SourceTarget_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="ConcatFilesCmd" baseType="CMD">
@@ -792,7 +834,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="9"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="TwoSourceOneTarget_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="ConcatFilesCmd_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="GetFileInfoCmd" baseType="CMD">
@@ -847,7 +889,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="10"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="FilenameAndCRC_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="GetFileInfoCmd_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="GetOpenFilesCmd" baseType="CMD">
@@ -923,7 +965,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="12"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="DirectoryName_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="Path_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="DeleteDirectoryCmd" baseType="CMD">
@@ -968,7 +1010,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="13"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="DirectoryName_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="Path_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="GetDirListFileCmd" baseType="CMD">
@@ -1028,7 +1070,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="14"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="GetDirectoryToFile_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="GetDirListFileCmd_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="GetDirListPktCmd" baseType="CMD">
@@ -1098,7 +1140,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="15"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="GetDirectoryToPkt_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="GetDirListPktCmd_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
 			<ContainerDataType name="MonitorFilesystemSpaceCmd" baseType="CMD">
@@ -1123,7 +1165,7 @@
                          - Free space table is not loaded
 
                     \par Evidence of failure may be found in the following telemetry:
-                         - #FM_HkTlm_t.CommandErrCounter will increment
+                         - #FM_HkTlm_t.CommandErrorCounter will increment
                          - Error event #FM_GET_FREE_SPACE_PKT_ERR_EID may be sent
                          - Error event #FM_GET_FREE_SPACE_TBL_ERR_EID may be sent
 
@@ -1174,32 +1216,9 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="17"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="TableIndexAndState_Payload" shortDescription="Command Payload"/>
+					<Entry name="Payload" type="SetTableStateCmd_Payload" shortDescription="Command Payload"/>
 				</EntryList>
 			</ContainerDataType>
-			<ContainerDataType name="DeleteFileInternalCmd" baseType="CMD">
-				<LongDescription>
-					\fmcmd Delete File (internal)
-
-					\par Description
-				         This is a special version of the #FM_DELETE_CC command for
-				         use when the command is sent by another application, rather
-				         than from the ground.  This version of the command will not
-				         generate a success event, nor will the command increment the
-				         command success counter.  The intent is to avoid confusion
-				         resulting from telemetry representing the results of delete
-				         commands sent by other applications and those sent from the
-				         ground.  Refer to #FM_DELETE_CC command for use details.
-
-			        \sa #FM_DELETE_CC
-			    </LongDescription>
-			    <ConstraintSet>
-			        <ValueConstraint entry="Sec.FunctionCode" value="18" />
-			    </ConstraintSet>
-			    <EntryList>
-			        <Entry type="SingleFilename_Payload" name="Payload" />
-			    </EntryList>
-		    </ContainerDataType>
 			<ContainerDataType name="SetPermissionsCmd" baseType="CMD">
 				<LongDescription>
 					\fmcmd Set Permissions of a file
@@ -1251,7 +1270,7 @@
 					<ValueConstraint entry="Sec.FunctionCode" value="19"/>
 				</ConstraintSet>
 				<EntryList>
-					<Entry name="Payload" type="FilenameAndMode_Payload" shortDescription="Command payload"/>
+					<Entry name="Payload" type="SetPermissionsCmd_Payload" shortDescription="Command payload"/>
 				</EntryList>
 			</ContainerDataType>
 		</DataTypeSet>

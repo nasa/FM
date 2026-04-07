@@ -144,8 +144,12 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
  * Generated stub function for FM_ChildDirListFileLoop()
  * ----------------------------------------------------
  */
-void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *Directory, const char *DirWithSep,
-                             const char *Filename, uint8 GetSizeTimeMode)
+void FM_ChildDirListFileLoop(osal_id_t   DirId,
+                             osal_id_t   FileHandle,
+                             const char *Directory,
+                             const char *DirWithSep,
+                             const char *Filename,
+                             uint8       GetSizeTimeMode)
 {
     UT_GenStub_AddParam(FM_ChildDirListFileLoop, osal_id_t, DirId);
     UT_GenStub_AddParam(FM_ChildDirListFileLoop, osal_id_t, FileHandle);
@@ -202,7 +206,6 @@ CFE_Status_t FM_ChildInit(void)
  */
 void FM_ChildLoop(void)
 {
-
     UT_GenStub_Execute(FM_ChildLoop, Basic, NULL);
 }
 
@@ -225,7 +228,6 @@ void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
  */
 void FM_ChildProcess(void)
 {
-
     UT_GenStub_Execute(FM_ChildProcess, Basic, NULL);
 }
 
@@ -277,8 +279,10 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
  * Generated stub function for FM_ChildSleepStat()
  * ----------------------------------------------------
  */
-void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
-                       bool GetSizeTimeMode)
+void FM_ChildSleepStat(const char        *Filename,
+                       FM_DirListEntry_t *DirListData,
+                       int32             *FilesTillSleep,
+                       bool               GetSizeTimeMode)
 {
     UT_GenStub_AddParam(FM_ChildSleepStat, const char *, Filename);
     UT_GenStub_AddParam(FM_ChildSleepStat, FM_DirListEntry_t *, DirListData);
@@ -295,6 +299,5 @@ void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int
  */
 void FM_ChildTask(void)
 {
-
     UT_GenStub_Execute(FM_ChildTask, Basic, NULL);
 }

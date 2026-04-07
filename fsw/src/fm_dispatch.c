@@ -63,14 +63,17 @@ bool FM_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
         CFE_MSG_GetMsgId(MsgPtr, &MsgId);
         CFE_MSG_GetFcnCode(MsgPtr, &FcnCode);
 
-        CFE_EVS_SendEvent(FM_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+        CFE_EVS_SendEvent(FM_CMD_LEN_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
                           "Invalid Msg length: ID = 0x%X,  CC = %u, Len = %u, Expected = %u",
-                          (unsigned int)CFE_SB_MsgIdToValue(MsgId), (unsigned int)FcnCode, (unsigned int)ActualLength,
+                          (unsigned int)CFE_SB_MsgIdToValue(MsgId),
+                          (unsigned int)FcnCode,
+                          (unsigned int)ActualLength,
                           (unsigned int)ExpectedLength);
 
         result = false;
 
-        ++FM_AppData.HkTlm.Payload.CommandErrCounter;
+        ++FM_AppData.HkTlm.Payload.CommandErrorCounter;
     }
 
     return result;
@@ -91,134 +94,135 @@ void FM_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
         case FM_NOOP_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_NoopCmd_t)))
             {
-                FM_NoopCmd((FM_NoopCmd_t*) BufPtr);
+                FM_NoopCmd((FM_NoopCmd_t *)BufPtr);
             }
             break;
 
         case FM_RESET_COUNTERS_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_ResetCountersCmd_t)))
             {
-                FM_ResetCountersCmd((FM_ResetCountersCmd_t*) BufPtr);
+                FM_ResetCountersCmd((FM_ResetCountersCmd_t *)BufPtr);
             }
             break;
 
         case FM_COPY_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_CopyFileCmd_t)))
             {
-                FM_CopyFileCmd((FM_CopyFileCmd_t*) BufPtr);
+                FM_CopyFileCmd((FM_CopyFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_MOVE_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_MoveFileCmd_t)))
             {
-                FM_MoveFileCmd((FM_MoveFileCmd_t*) BufPtr);
+                FM_MoveFileCmd((FM_MoveFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_RENAME_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_RenameFileCmd_t)))
             {
-                FM_RenameFileCmd((FM_RenameFileCmd_t*) BufPtr);
+                FM_RenameFileCmd((FM_RenameFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_DELETE_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_DeleteFileCmd_t)))
             {
-                FM_DeleteFileCmd((FM_DeleteFileCmd_t*) BufPtr);
+                FM_DeleteFileCmd((FM_DeleteFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_DELETE_ALL_FILES_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_DeleteAllFilesCmd_t)))
             {
-                FM_DeleteAllFilesCmd((FM_DeleteAllFilesCmd_t*) BufPtr);
+                FM_DeleteAllFilesCmd((FM_DeleteAllFilesCmd_t *)BufPtr);
             }
             break;
 
         case FM_DECOMPRESS_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_DecompressFileCmd_t)))
             {
-                FM_DecompressFileCmd((FM_DecompressFileCmd_t*) BufPtr);
+                FM_DecompressFileCmd((FM_DecompressFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_CONCAT_FILES_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_ConcatFilesCmd_t)))
             {
-                FM_ConcatFilesCmd((FM_ConcatFilesCmd_t*) BufPtr);
+                FM_ConcatFilesCmd((FM_ConcatFilesCmd_t *)BufPtr);
             }
             break;
 
         case FM_GET_FILE_INFO_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_GetFileInfoCmd_t)))
             {
-                FM_GetFileInfoCmd((FM_GetFileInfoCmd_t*) BufPtr);
+                FM_GetFileInfoCmd((FM_GetFileInfoCmd_t *)BufPtr);
             }
             break;
 
         case FM_GET_OPEN_FILES_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_GetOpenFilesCmd_t)))
             {
-                FM_GetOpenFilesCmd((FM_GetOpenFilesCmd_t*) BufPtr);
+                FM_GetOpenFilesCmd((FM_GetOpenFilesCmd_t *)BufPtr);
             }
             break;
 
         case FM_CREATE_DIRECTORY_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_CreateDirectoryCmd_t)))
             {
-                FM_CreateDirectoryCmd((FM_CreateDirectoryCmd_t*) BufPtr);
+                FM_CreateDirectoryCmd((FM_CreateDirectoryCmd_t *)BufPtr);
             }
             break;
 
         case FM_DELETE_DIRECTORY_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_DeleteDirectoryCmd_t)))
             {
-                FM_DeleteDirectoryCmd((FM_DeleteDirectoryCmd_t*) BufPtr);
+                FM_DeleteDirectoryCmd((FM_DeleteDirectoryCmd_t *)BufPtr);
             }
             break;
 
         case FM_GET_DIR_LIST_FILE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_GetDirListFileCmd_t)))
             {
-                FM_GetDirListFileCmd((FM_GetDirListFileCmd_t*) BufPtr);
+                FM_GetDirListFileCmd((FM_GetDirListFileCmd_t *)BufPtr);
             }
             break;
 
         case FM_GET_DIR_LIST_PKT_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_GetDirListPktCmd_t)))
             {
-                FM_GetDirListPktCmd((FM_GetDirListPktCmd_t*) BufPtr);
+                FM_GetDirListPktCmd((FM_GetDirListPktCmd_t *)BufPtr);
             }
             break;
 
         case FM_MONITOR_FILESYSTEM_SPACE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_MonitorFilesystemSpaceCmd_t)))
             {
-                FM_MonitorFilesystemSpaceCmd((FM_MonitorFilesystemSpaceCmd_t*) BufPtr);
+                FM_MonitorFilesystemSpaceCmd((FM_MonitorFilesystemSpaceCmd_t *)BufPtr);
             }
             break;
 
         case FM_SET_TABLE_STATE_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_SetTableStateCmd_t)))
             {
-                FM_SetTableStateCmd((FM_SetTableStateCmd_t*) BufPtr);
+                FM_SetTableStateCmd((FM_SetTableStateCmd_t *)BufPtr);
             }
             break;
 
         case FM_SET_PERMISSIONS_CC:
             if (FM_VerifyCmdLength(&BufPtr->Msg, sizeof(FM_SetPermissionsCmd_t)))
             {
-                FM_SetPermissionsCmd((FM_SetPermissionsCmd_t*) BufPtr);
+                FM_SetPermissionsCmd((FM_SetPermissionsCmd_t *)BufPtr);
             }
             break;
 
         default:
-            FM_AppData.HkTlm.Payload.CommandErrCounter++;
-            CFE_EVS_SendEvent(FM_CC_ERR_EID, CFE_EVS_EventType_ERROR,
-                                "Invalid ground command code: cc = %d",
-                                CommandCode);
+            FM_AppData.HkTlm.Payload.CommandErrorCounter++;
+            CFE_EVS_SendEvent(FM_CC_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "Invalid ground command code: cc = %d",
+                              CommandCode);
             break;
     }
 }
@@ -231,27 +235,34 @@ void FM_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
 
 void FM_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
 {
-    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+    static CFE_SB_MsgId_t CMD_MID     = CFE_SB_MSGID_RESERVED;
+    static CFE_SB_MsgId_t SEND_HK_MID = CFE_SB_MSGID_RESERVED;
 
-    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+    CFE_SB_MsgId_t MessageId = CFE_SB_INVALID_MSG_ID;
 
-    switch (CFE_SB_MsgIdToValue(MessageID))
+    /* Cache the local MID values here, this avoid repeat lookups */
+    if (!CFE_SB_IsValidMsgId(CMD_MID))
     {
-        /* FM ground commands */
-        case FM_CMD_MID:
-            FM_ProcessGroundCommand(BufPtr);
-            break;
+        CMD_MID     = CFE_SB_ValueToMsgId(FM_CMD_MID);
+        SEND_HK_MID = CFE_SB_ValueToMsgId(FM_SEND_HK_MID);
+    }
 
-        /* Housekeeping request */
-        case FM_SEND_HK_MID:
-            FM_SendHkCmd((const FM_SendHkCmd_t *)BufPtr);
-            break;
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageId);
 
-        default:
-            FM_AppData.HkTlm.Payload.CommandErrCounter++;
-            CFE_EVS_SendEvent(FM_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid command pipe message ID: 0x%08lX",
-                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
-            break;
+    if (CFE_SB_MsgId_Equal(MessageId, CMD_MID))
+    {
+        FM_ProcessGroundCommand(BufPtr);
+    }
+    else if (CFE_SB_MsgId_Equal(MessageId, SEND_HK_MID))
+    {
+        FM_SendHkCmd((const FM_SendHkCmd_t *)BufPtr);
+    }
+    else
+    {
+        FM_AppData.HkTlm.Payload.CommandErrorCounter++;
+        CFE_EVS_SendEvent(FM_MID_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "Invalid command pipe message ID: 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(MessageId));
     }
 }
