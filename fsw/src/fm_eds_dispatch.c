@@ -49,7 +49,6 @@ static const EdsDispatchTable_EdsComponent_FM_Application_CFE_SB_Telecommand_t F
     {
         .NoopCmd_indication                   = FM_NoopCmd,
         .ResetCountersCmd_indication          = FM_ResetCountersCmd,
-        .SendHkCmd_indication                 = FM_SendHkCmd,
         .CopyFileCmd_indication               = FM_CopyFileCmd,
         .MoveFileCmd_indication               = FM_MoveFileCmd,
         .RenameFileCmd_indication             = FM_RenameFileCmd,
