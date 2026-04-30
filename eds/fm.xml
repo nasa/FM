@@ -368,7 +368,7 @@
 
 			<ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader"/>
 
-			<ContainerDataType name="SendHkCmd" baseType="CMD" shortDescription="Housekeeping Request command packet structure"/>
+			<ContainerDataType name="SendHkCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Housekeeping Request command packet structure"/>
 
 			<ContainerDataType name="NoopCmd" baseType="CMD">
 				<LongDescription>
