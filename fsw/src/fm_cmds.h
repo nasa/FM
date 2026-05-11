@@ -49,10 +49,10 @@
  *
  *  \sa #FM_SendHkCmd_t, #FM_HkTlm_t
  */
-CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t* Msg);
+CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t *Msg);
 
 /**
- *  \brief Move File Command Handler Function
+ *  \brief Noop Command Handler
  *
  *  \par Description
  *       This function generates an event that displays the application version
@@ -68,7 +68,7 @@ CFE_Status_t FM_SendHkCmd(const FM_SendHkCmd_t* Msg);
  *
  *  \sa #FM_NOOP_CC, #FM_NoopCmd_t
  */
-CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t* Msg);
+CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t *Msg);
 
 /**
  *  \brief Reset Counters Command Handler Function
@@ -86,7 +86,7 @@ CFE_Status_t FM_NoopCmd(const FM_NoopCmd_t* Msg);
  *
  *  \sa #FM_RESET_COUNTERS_CC, #FM_ResetCountersCmd_t
  */
-CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t* Msg);
+CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t *Msg);
 
 /**
  *  \brief Copy File Command Handler Function
@@ -112,7 +112,7 @@ CFE_Status_t FM_ResetCountersCmd(const FM_ResetCountersCmd_t* Msg);
  *
  *  \sa #FM_COPY_FILE_CC, #FM_CopyFileCmd_t
  */
-CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t* Msg);
+CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t *Msg);
 
 /**
  *  \brief Move File Command Handler Function
@@ -131,7 +131,7 @@ CFE_Status_t FM_CopyFileCmd(const FM_CopyFileCmd_t* Msg);
  *
  *  \sa #FM_MOVE_FILE_CC, #FM_MoveFileCmd_t
  */
-CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t* Msg);
+CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t *Msg);
 
 /**
  *  \brief Rename File Command Handler Function
@@ -150,7 +150,7 @@ CFE_Status_t FM_MoveFileCmd(const FM_MoveFileCmd_t* Msg);
  *
  *  \sa #FM_RENAME_FILE_CC, #FM_RenameFileCmd_t
  */
-CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t* Msg);
+CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t *Msg);
 
 /**
  *  \brief Delete File Command Handler Function
@@ -168,7 +168,7 @@ CFE_Status_t FM_RenameFileCmd(const FM_RenameFileCmd_t* Msg);
  *
  *  \sa #FM_DELETE_FILE_CC, #FM_DeleteFileCmd_t
  */
-CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t* Msg);
+CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t *Msg);
 
 /**
  *  \brief Delete All Files Command Handler Function
@@ -194,7 +194,7 @@ CFE_Status_t FM_DeleteFileCmd(const FM_DeleteFileCmd_t* Msg);
  *
  *  \sa #FM_DELETE_ALL_FILES_CC, #FM_DeleteAllFilesCmd_t
  */
-CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t* Msg);
+CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t *Msg);
 
 /**
  *  \brief Decompress Files Command Handler Function
@@ -221,7 +221,7 @@ CFE_Status_t FM_DeleteAllFilesCmd(const FM_DeleteAllFilesCmd_t* Msg);
  *
  *  \sa #FM_DECOMPRESS_FILE_CC, #FM_DecompressFileCmd_t
  */
-CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t* Msg);
+CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t *Msg);
 
 /**
  *  \brief Concatenate Files Command Handler Function
@@ -249,7 +249,7 @@ CFE_Status_t FM_DecompressFileCmd(const FM_DecompressFileCmd_t* Msg);
  *
  *  \sa #FM_CONCAT_FILES_CC, #FM_ConcatFilesCmd_t
  */
-CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t* Msg);
+CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t *Msg);
 
 /**
  *  \brief Get File Information Command Handler Function
@@ -276,7 +276,7 @@ CFE_Status_t FM_ConcatFilesCmd(const FM_ConcatFilesCmd_t* Msg);
  *
  *  \sa #FM_GET_FILE_INFO_CC, #FM_GetFileInfoCmd_t, #FM_FileInfoPkt_t
  */
-CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t* Msg);
+CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t *Msg);
 
 /**
  *  \brief Get Open Files List Command Handler Function
@@ -295,7 +295,7 @@ CFE_Status_t FM_GetFileInfoCmd(const FM_GetFileInfoCmd_t* Msg);
  *
  *  \sa #FM_GET_OPEN_FILES_CC, #FM_GetOpenFilesCmd_t, #FM_OpenFilesPkt_t
  */
-CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t* Msg);
+CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t *Msg);
 
 /**
  *  \brief Create Directory Command Handler Function
@@ -313,7 +313,7 @@ CFE_Status_t FM_GetOpenFilesCmd(const FM_GetOpenFilesCmd_t* Msg);
  *
  *  \sa #FM_CREATE_DIRECTORY_CC, #FM_CreateDirectoryCmd_t
  */
-CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t* Msg);
+CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t *Msg);
 
 /**
  *  \brief Delete Directory Command Handler Function
@@ -331,7 +331,7 @@ CFE_Status_t FM_CreateDirectoryCmd(const FM_CreateDirectoryCmd_t* Msg);
  *
  *  \sa #FM_DELETE_DIRECTORY_CC, #FM_DeleteDirectoryCmd_t
  */
-CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t* Msg);
+CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t *Msg);
 
 /**
  *  \brief Get Directory List to Packet Command Handler Function
@@ -358,7 +358,7 @@ CFE_Status_t FM_DeleteDirectoryCmd(const FM_DeleteDirectoryCmd_t* Msg);
  *  \sa #FM_GET_DIR_LIST_FILE_CC, #FM_GetDirListFileCmd_t,
  *      #FM_DirListFileStats_t, FM_DirListEntry_t
  */
-CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t* Msg);
+CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t *Msg);
 
 /**
  *  \brief Get Directory List to Packet Command Handler Function
@@ -385,7 +385,7 @@ CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t* Msg);
  *
  *  \sa #FM_GET_DIR_LIST_PKT_CC, #FM_GetDirListPktCmd_t, #FM_DirListPkt_t
  */
-CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t* Msg);
+CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t *Msg);
 
 /**
  *  \brief Monitor Filesystem Command Handler Function
@@ -405,7 +405,7 @@ CFE_Status_t FM_GetDirListPktCmd(const FM_GetDirListPktCmd_t* Msg);
  *
  *  \sa #FM_MONITOR_FILESYSTEM_SPACE_CC, #FM_MonitorFilesystemSpaceCmd_t, #FM_MonitorReportPkt_t
  */
-CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* Msg);
+CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *Msg);
 
 /**
  *  \brief Set Table Entry State Command Handler Function
@@ -424,7 +424,7 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t* 
  *
  *  \sa #FM_SET_TABLE_STATE_CC, #FM_SetTableStateCmd_t, #FM_MonitorTableEntry_t
  */
-CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg);
+CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t *Msg);
 
 /**
  *  \brief Set File Permissions of a file
@@ -442,6 +442,6 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t* Msg);
  *
  *  \sa #FM_SET_PERMISSIONS_CC, #FM_SetPermissionsCmd_t, #FM_SET_PERM_CMD_INF_EID, #FM_SET_PERM_ERR_EID
  */
-CFE_Status_t FM_SetPermissionsCmd(const FM_SetPermissionsCmd_t* Msg);
+CFE_Status_t FM_SetPermissionsCmd(const FM_SetPermissionsCmd_t *Msg);
 
 #endif

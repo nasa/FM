@@ -32,8 +32,8 @@
 /* ====== */
 
 #define ADD_TEST(test) UtTest_Add(test, FM_Test_Setup, FM_Test_Teardown, #test)
-#define FM_UT_OBJID_1 OS_ObjectIdFromInteger(1)
-#define FM_UT_OBJID_2 OS_ObjectIdFromInteger(2)
+#define FM_UT_OBJID_1  OS_ObjectIdFromInteger(1)
+#define FM_UT_OBJID_2  OS_ObjectIdFromInteger(2)
 
 /* ======== */
 /* Typedefs */
@@ -52,7 +52,7 @@ extern CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[];
 /* Function Prototypes */
 /* =================== */
 
-void FM_Test_Verify_Event(uint8 IssuedOrder, uint16 EventId, uint16 EventType, const char* EventText);
+void FM_Test_Verify_Event(uint8 IssuedOrder, uint16 EventId, uint16 EventType, const char *EventText);
 
 void FM_Test_Setup(void);
 

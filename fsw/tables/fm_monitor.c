@@ -38,8 +38,11 @@
 /*
 ** FM file system free space table header
 */
-CFE_TBL_FileDef_t CFE_TBL_FileDef = {"FM_MonitorTable", FM_APP_NAME "." FM_TABLE_CFE_NAME, FM_TABLE_DEF_DESC,
-                                     FM_TABLE_FILENAME, sizeof(FM_MonitorTable_t)};
+CFE_TBL_FileDef_t CFE_TBL_FileDef = { "FM_MonitorTable",
+                                      FM_APP_NAME "." FM_TABLE_CFE_NAME,
+                                      FM_TABLE_DEF_DESC,
+                                      FM_TABLE_FILENAME,
+                                      sizeof(FM_MonitorTable_t) };
 
 /*
 ** FM file system monitor table data
@@ -55,42 +58,38 @@ CFE_TBL_FileDef_t CFE_TBL_FileDef = {"FM_MonitorTable", FM_APP_NAME "." FM_TABLE
 ** -- the file system name for unused entries is ignored
 */
 FM_MonitorTable_t FM_MonitorTable = {
-    {{
-         /* - 0 - */
-         .Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE, /* Entry Type (unused, volume free, directory estimate) */
-         .Enabled = true,
-         .Name    = "/ram" /* File system name (logical mount point) */
-     },
-     {
-         /* - 1 - */
-         .Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE, /* Entry Type (unused, volume free, directory estimate) */
-         .Enabled = false,
-         .Name    = "/boot" /* File system name (logical mount point) */
-     },
-     {
-         /* - 2 - */
-         .Type =
-             FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE, /* Entry Type (unused, volume free, directory estimate) */
-         .Enabled = true,
-         .Name    = "/cf" /* File system name (logical mount point) */
-     },
-     {
-         /* - 3 - */
-         .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
-     },
-     {
-         /* - 4 - */
-         .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
-     },
-     {
-         /* - 5 - */
-         .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
-     },
-     {
-         /* - 6 - */
-         .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
-     },
-     {
-         /* - 7 - */
-         .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
-     }}};
+    { {
+          /* - 0 - */
+          .Type =
+              FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE, /* Entry Type (unused, volume free, directory estimate) */
+          .Enabled = true,
+          .Name    = "/ram" /* File system name (logical mount point) */
+      }, {
+          /* - 1 - */
+          .Type =
+              FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE, /* Entry Type (unused, volume free, directory estimate) */
+          .Enabled = false,
+          .Name    = "/boot" /* File system name (logical mount point) */
+      }, {
+          /* - 2 - */
+          .Type =
+              FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE, /* Entry Type (unused, volume free, directory estimate) */
+          .Enabled = true,
+          .Name    = "/cf" /* File system name (logical mount point) */
+      }, {
+          /* - 3 - */
+          .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
+      }, {
+          /* - 4 - */
+          .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
+      }, {
+          /* - 5 - */
+          .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
+      }, {
+          /* - 6 - */
+          .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
+      }, {
+          /* - 7 - */
+          .Type = FM_MonitorTableEntry_Type_UNUSED /* Entry Type (unused, volume free, directory estimate) */
+      } }
+};

@@ -40,8 +40,8 @@
 typedef struct
 {
     char   DirName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Directory name */
-    uint32 DirEntries;               /**< \brief Number of entries in the directory */
-    uint32 FileEntries;              /**< \brief Number of entries written to output file */
+    uint32 DirEntries;                        /**< \brief Number of entries in the directory */
+    uint32 FileEntries;                       /**< \brief Number of entries written to output file */
 } FM_DirListFileStats_t;
 
 /**
@@ -49,29 +49,30 @@ typedef struct
  */
 typedef struct
 {
-    FM_MonitorTable_t *MonitorTablePtr;     /** \brief File System Table Pointer */
-    CFE_TBL_Handle_t   MonitorTableHandle;  /** \brief File System Table Handle */
-    CFE_SB_PipeId_t    CmdPipe;             /** \brief cFE software bus command pipe */
-    CFE_ES_TaskId_t    ChildTaskID;         /** \brief Child task ID */
-    osal_id_t          ChildSemaphore;      /** \brief Child task wakeup counting semaphore */
-    osal_id_t          ChildQueueCountSem;  /** \brief Child queue counter mutex semaphore */
-    uint8              ChildWriteIndex;     /** \brief Array index for next write to command args */
-    uint8              ChildReadIndex;      /** \brief Array index for next read from command args */
+    FM_MonitorTable_t *MonitorTablePtr;    /** \brief File System Table Pointer */
+    CFE_TBL_Handle_t   MonitorTableHandle; /** \brief File System Table Handle */
+    CFE_SB_PipeId_t    CmdPipe;            /** \brief cFE software bus command pipe */
+    CFE_ES_TaskId_t    ChildTaskID;        /** \brief Child task ID */
+    osal_id_t          ChildSemaphore;     /** \brief Child task wakeup counting semaphore */
+    osal_id_t          ChildQueueCountSem; /** \brief Child queue counter mutex semaphore */
+    uint8              ChildWriteIndex;    /** \brief Array index for next write to command args */
+    uint8              ChildReadIndex;     /** \brief Array index for next read from command args */
 
     uint8 Spare8a; /** \brief Placeholder for unused command warning counter */
     uint8 Spare8b; /** \brief Structure alignment spare */
 
-    uint32                FileStatTime;                          /** \brief Modify time from most recent OS_stat */
-    uint32                FileStatSize;                          /** \brief File size from most recent OS_stat */
-    uint32                FileStatMode;                          /** \brief File mode from most recent OS_stat (OS_FILESTAT_MODE) */
-    FM_DirListFileStats_t DirListFileStats;                      /** \brief Get dir list to file statistics structure */
-    FM_DirListPkt_t       DirListPkt;                            /** \brief Get dir list to packet telemetry packet */
-    FM_MonitorReportPkt_t MonitorReportPkt;                      /** \brief Telemetry packet reporting status of items in the monitor table */
-    FM_FileInfoPkt_t      FileInfoPkt;                           /** \brief Get file info telemetry packet */
-    FM_OpenFilesPkt_t     OpenFilesPkt;                          /** \brief Get open files telemetry packet */
-    FM_HkTlm_t            HkTlm;                                 /** \brief Application housekeeping telemetry packet */
-    char                  ChildBuffer[FM_CHILD_FILE_BLOCK_SIZE]; /** \brief Child task file I/O buffer */
-    FM_ChildQueueEntry_t  ChildQueue[FM_CHILD_QUEUE_DEPTH];      /** \brief Child task command queue */
+    uint32                FileStatTime;     /** \brief Modify time from most recent OS_stat */
+    uint32                FileStatSize;     /** \brief File size from most recent OS_stat */
+    uint32                FileStatMode;     /** \brief File mode from most recent OS_stat (OS_FILESTAT_MODE) */
+    FM_DirListFileStats_t DirListFileStats; /** \brief Get dir list to file statistics structure */
+    FM_DirListPkt_t       DirListPkt;       /** \brief Get dir list to packet telemetry packet */
+    FM_MonitorReportPkt_t
+                         MonitorReportPkt; /** \brief Telemetry packet reporting status of items in the monitor table */
+    FM_FileInfoPkt_t     FileInfoPkt;      /** \brief Get file info telemetry packet */
+    FM_OpenFilesPkt_t    OpenFilesPkt;     /** \brief Get open files telemetry packet */
+    FM_HkTlm_t           HkTlm;            /** \brief Application housekeeping telemetry packet */
+    char                 ChildBuffer[FM_CHILD_FILE_BLOCK_SIZE]; /** \brief Child task file I/O buffer */
+    FM_ChildQueueEntry_t ChildQueue[FM_CHILD_QUEUE_DEPTH];      /** \brief Child task command queue */
 
     /**
      * \brief State of the embedded decompression routine

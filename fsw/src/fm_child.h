@@ -31,19 +31,19 @@
  */
 typedef struct
 {
-    CFE_MSG_FcnCode_t CommandCode;              /** \brief Command code - identifies the command */
-    uint16            Padding1;                 /** \brief Structure padding to align to 32-bit boundaries */
-    uint32            DirListOffset;            /** \brief Starting entry for dir list commands */
-    uint32            FileInfoState;            /** \brief File info state */
-    uint32            FileInfoSize;             /** \brief File info size */
-    uint32            FileInfoTime;             /** \brief File info time */
-    uint32            FileInfoCRC;              /** \brief File info CRC method */
-    char              Source1[CFE_MISSION_MAX_PATH_LEN]; /** \brief First source file or directory name command argument */
-    char              Source2[CFE_MISSION_MAX_PATH_LEN]; /** \brief Second source filename command argument */
-    char              Target[CFE_MISSION_MAX_PATH_LEN];  /** \brief Target filename command argument */
-    uint8             GetSizeTimeMode;          /** \brief Whether to invoke stat call for size and time (CPU intensive) */
-    uint8             Padding2[3];              /** \brief Structure padding to align to 32-bit boundaries */
-    uint32            Mode;                     /** \brief File Mode */
+    CFE_MSG_FcnCode_t CommandCode;            /** \brief Command code - identifies the command */
+    uint16            Padding1;               /** \brief Structure padding to align to 32-bit boundaries */
+    uint32            DirListOffset;          /** \brief Starting entry for dir list commands */
+    uint32            FileInfoState;          /** \brief File info state */
+    uint32            FileInfoSize;           /** \brief File info size */
+    uint32            FileInfoTime;           /** \brief File info time */
+    uint32            FileInfoCRC;            /** \brief File info CRC method */
+    char   Source1[CFE_MISSION_MAX_PATH_LEN]; /** \brief First source file or directory name command argument */
+    char   Source2[CFE_MISSION_MAX_PATH_LEN]; /** \brief Second source filename command argument */
+    char   Target[CFE_MISSION_MAX_PATH_LEN];  /** \brief Target filename command argument */
+    uint8  GetSizeTimeMode; /** \brief Whether to invoke stat call for size and time (CPU intensive) */
+    uint8  Padding2[3];     /** \brief Structure padding to align to 32-bit boundaries */
+    uint32 Mode;            /** \brief File Mode */
 } FM_ChildQueueEntry_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -390,8 +390,12 @@ bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, co
  *  \param [in] Filename        Pointer to a buffer containing the output filename.
  *  \param [in] GetSizeTimeMode Option to call OS_stat for size, time, mode of files
  */
-void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *Directory, const char *DirWithSep,
-                             const char *Filename, uint8 GetSizeTimeMode);
+void FM_ChildDirListFileLoop(osal_id_t   DirId,
+                             osal_id_t   FileHandle,
+                             const char *Directory,
+                             const char *DirWithSep,
+                             const char *Filename,
+                             uint8       GetSizeTimeMode);
 
 /**
  *  \brief Child Task File Size Time and Mode Utility Function
@@ -431,7 +435,9 @@ int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileT
  *                              #FM_CHILD_STAT_SLEEP_FILECOUNT. Otherwise it will subtract 1
  *  \param [in] GetSizeTimeMode Whether this function should call FM_ChildSizeTimeMode
  */
-void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
-                       bool GetSizeTimeMode);
+void FM_ChildSleepStat(const char        *Filename,
+                       FM_DirListEntry_t *DirListData,
+                       int32             *FilesTillSleep,
+                       bool               GetSizeTimeMode);
 
 #endif

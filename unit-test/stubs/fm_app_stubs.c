@@ -46,6 +46,5 @@ CFE_Status_t FM_AppInit(void)
  */
 void FM_AppMain(void)
 {
-
     UT_GenStub_Execute(FM_AppMain, Basic, NULL);
 }

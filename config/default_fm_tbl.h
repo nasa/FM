@@ -50,5 +50,4 @@
  */
 #define FM_TABLE_VALIDATION_ERR (-1)
 
-
 #endif /* DEFAULT_FM_TBL_H */

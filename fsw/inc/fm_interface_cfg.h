@@ -43,7 +43,6 @@
  * \{
  */
 
-
 /**
  * \brief Directory List Telemetry Packet Entry Count
  *
@@ -117,7 +116,7 @@
  *  \par Limits:
  *       FM limits this value to be not less than 1 and not greater than 32.
  */
-#define FM_TABLE_ENTRY_COUNT FM_INTERFACE_CFGVAL(TABLE_ENTRY_COUNT)
+#define FM_TABLE_ENTRY_COUNT                   FM_INTERFACE_CFGVAL(TABLE_ENTRY_COUNT)
 #define DEFAULT_FM_INTERFACE_TABLE_ENTRY_COUNT 8
 
 /**\}*/

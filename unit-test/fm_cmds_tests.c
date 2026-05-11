@@ -85,11 +85,11 @@ void Test_FM_ResetCountersCmd_Success(void)
 
     memset(&ResetCountersCmd, 0, sizeof(ResetCountersCmd));
 
-    FM_AppData.HkTlm.Payload.CommandCounter      = 1;
-    FM_AppData.HkTlm.Payload.CommandErrCounter   = 1;
-    FM_AppData.HkTlm.Payload.ChildCmdCounter     = 1;
-    FM_AppData.HkTlm.Payload.ChildCmdErrCounter  = 1;
-    FM_AppData.HkTlm.Payload.ChildCmdWarnCounter = 1;
+    FM_AppData.HkTlm.Payload.CommandCounter             = 1;
+    FM_AppData.HkTlm.Payload.CommandErrorCounter        = 1;
+    FM_AppData.HkTlm.Payload.ChildCommandCounter        = 1;
+    FM_AppData.HkTlm.Payload.ChildCommandErrorCounter   = 1;
+    FM_AppData.HkTlm.Payload.ChildCommandWarningCounter = 1;
 
     Status = FM_ResetCountersCmd(&ResetCountersCmd);
 
@@ -97,14 +97,13 @@ void Test_FM_ResetCountersCmd_Success(void)
     UtAssert_EQ(CFE_Status_t, Status, CFE_SUCCESS);
 
     UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdErrCounter, 0);
-    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCmdWarnCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.CommandErrorCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandErrorCounter, 0);
+    UtAssert_INT32_EQ(FM_AppData.HkTlm.Payload.ChildCommandWarningCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "Reset Counters command");
+    FM_Test_Verify_Event(0, FM_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters command");
 }
 
 /****************************/
@@ -118,8 +117,8 @@ void Test_FM_CopyFileCmd_Success(void)
 
     memset(&CopyFileCmd, 0, sizeof(CopyFileCmd));
 
-    strncpy(CopyFileCmd.Payload.Source, "src1", sizeof(CopyFileCmd.Payload.Source) - 1);
-    strncpy(CopyFileCmd.Payload.Target, "tgt", sizeof(CopyFileCmd.Payload.Target) - 1);
+    strncpy(CopyFileCmd.Payload.SourcePath, "src1", sizeof(CopyFileCmd.Payload.SourcePath) - 1);
+    strncpy(CopyFileCmd.Payload.TargetPath, "tgt", sizeof(CopyFileCmd.Payload.TargetPath) - 1);
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
 
@@ -430,8 +429,8 @@ void Test_FM_RenameFileCmd_Success(void)
 
     memset(&RenameFileCmd, 0, sizeof(RenameFileCmd));
 
-    strncpy(RenameFileCmd.Payload.Source, "src1", sizeof(RenameFileCmd.Payload.Source) - 1);
-    strncpy(RenameFileCmd.Payload.Target, "tgt", sizeof(RenameFileCmd.Payload.Target) - 1);
+    strncpy(RenameFileCmd.Payload.SourcePath, "src1", sizeof(RenameFileCmd.Payload.SourcePath) - 1);
+    strncpy(RenameFileCmd.Payload.TargetPath, "tgt", sizeof(RenameFileCmd.Payload.TargetPath) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -608,7 +607,7 @@ void Test_FM_DeleteAllFilesCmd_Success(void)
 
     memset(&DeleteAllFilesCmd, 0, sizeof(DeleteAllFilesCmd));
 
-    strncpy(DeleteAllFilesCmd.Payload.Directory, "dir", sizeof(DeleteAllFilesCmd.Payload.Directory) - 1);
+    strncpy(DeleteAllFilesCmd.Payload.Path, "dir", sizeof(DeleteAllFilesCmd.Payload.Path) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -654,7 +653,7 @@ void Test_FM_DeleteAllFilesCmd_NoChildTask(void)
 
     memset(&DeleteAllFilesCmd, 0, sizeof(DeleteAllFilesCmd));
 
-    strncpy(DeleteAllFilesCmd.Payload.Directory, "dir", sizeof(DeleteAllFilesCmd.Payload.Directory) - 1);
+    strncpy(DeleteAllFilesCmd.Payload.Path, "dir", sizeof(DeleteAllFilesCmd.Payload.Path) - 1);
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
 
@@ -777,9 +776,9 @@ void Test_FM_ConcatFilesCmd_Success(void)
 
     memset(&ConcatFilesCmd, 0, sizeof(ConcatFilesCmd));
 
-    strncpy(ConcatFilesCmd.Payload.Source1, "src1", sizeof(ConcatFilesCmd.Payload.Source1) - 1);
-    strncpy(ConcatFilesCmd.Payload.Source2, "src2", sizeof(ConcatFilesCmd.Payload.Source2) - 1);
-    strncpy(ConcatFilesCmd.Payload.Target, "tgt", sizeof(ConcatFilesCmd.Payload.Target) - 1);
+    strncpy(ConcatFilesCmd.Payload.SourcePath1, "src1", sizeof(ConcatFilesCmd.Payload.SourcePath1) - 1);
+    strncpy(ConcatFilesCmd.Payload.SourcePath2, "src2", sizeof(ConcatFilesCmd.Payload.SourcePath2) - 1);
+    strncpy(ConcatFilesCmd.Payload.TargetPath, "tgt", sizeof(ConcatFilesCmd.Payload.TargetPath) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -901,7 +900,7 @@ void Test_FM_GetFileInfoCmd_Success(void)
 
     memset(&GetFileInfoCmd, 0, sizeof(GetFileInfoCmd));
 
-    strncpy(GetFileInfoCmd.Payload.Filename, "file", sizeof(GetFileInfoCmd.Payload.Filename) - 1);
+    strncpy(GetFileInfoCmd.Payload.Path, "file", sizeof(GetFileInfoCmd.Payload.Path) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -980,8 +979,7 @@ void Test_FM_GetOpenFilesCmd_Success(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 
-    FM_Test_Verify_Event(0, FM_GET_OPEN_FILES_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "%s command");
+    FM_Test_Verify_Event(0, FM_GET_OPEN_FILES_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command");
 }
 
 /****************************/
@@ -995,7 +993,7 @@ void Test_FM_CreateDirectoryCmd_Success(void)
 
     memset(&CreateDirectoryCmd, 0, sizeof(CreateDirectoryCmd));
 
-    strncpy(CreateDirectoryCmd.Payload.Directory, "dir", sizeof(CreateDirectoryCmd.Payload.Directory) - 1);
+    strncpy(CreateDirectoryCmd.Payload.Path, "dir", sizeof(CreateDirectoryCmd.Payload.Path) - 1);
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
 
@@ -1066,7 +1064,7 @@ void Test_FM_DeleteDirectoryCmd_Success(void)
 
     memset(&DeleteDirectoryCmd, 0, sizeof(DeleteDirectoryCmd));
 
-    strncpy(DeleteDirectoryCmd.Payload.Directory, "dir", sizeof(DeleteDirectoryCmd.Payload.Directory) - 1);
+    strncpy(DeleteDirectoryCmd.Payload.Path, "dir", sizeof(DeleteDirectoryCmd.Payload.Path) - 1);
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
 
@@ -1137,8 +1135,8 @@ void Test_FM_GetDirListFileCmd_Success(void)
 
     memset(&GetDirListFileCmd, 0, sizeof(GetDirListFileCmd));
 
-    strncpy(GetDirListFileCmd.Payload.Filename, "file", sizeof(GetDirListFileCmd.Payload.Filename) - 1);
-    strncpy(GetDirListFileCmd.Payload.Directory, "dir", sizeof(GetDirListFileCmd.Payload.Directory) - 1);
+    strncpy(GetDirListFileCmd.Payload.OutputFilePath, "file", sizeof(GetDirListFileCmd.Payload.OutputFilePath) - 1);
+    strncpy(GetDirListFileCmd.Payload.DirectoryPath, "dir", sizeof(GetDirListFileCmd.Payload.DirectoryPath) - 1);
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
 
@@ -1162,10 +1160,10 @@ void Test_FM_GetDirListFileCmd_SuccessDefaultPath(void)
 
     memset(&GetDirListFileCmd, 0, sizeof(GetDirListFileCmd));
 
-    strncpy(GetDirListFileCmd.Payload.Directory, "dir", sizeof(GetDirListFileCmd.Payload.Directory) - 1);
-    GetDirListFileCmd.Payload.Filename[0] = '\0';
-    FM_AppData.ChildWriteIndex            = 0;
-    FM_AppData.ChildQueue[0].CommandCode  = 0;
+    strncpy(GetDirListFileCmd.Payload.DirectoryPath, "dir", sizeof(GetDirListFileCmd.Payload.DirectoryPath) - 1);
+    GetDirListFileCmd.Payload.OutputFilePath[0] = '\0';
+    FM_AppData.ChildWriteIndex                  = 0;
+    FM_AppData.ChildQueue[0].CommandCode        = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyDirExists), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyFileNotOpen), true);
@@ -1210,8 +1208,8 @@ void Test_FM_GetDirListFileCmd_TargetFileOpen(void)
 
     memset(&GetDirListFileCmd, 0, sizeof(GetDirListFileCmd));
 
-    strncpy(GetDirListFileCmd.Payload.Filename, "file", sizeof(GetDirListFileCmd.Payload.Filename) - 1);
-    strncpy(GetDirListFileCmd.Payload.Directory, "dir", sizeof(GetDirListFileCmd.Payload.Directory) - 1);
+    strncpy(GetDirListFileCmd.Payload.OutputFilePath, "file", sizeof(GetDirListFileCmd.Payload.OutputFilePath) - 1);
+    strncpy(GetDirListFileCmd.Payload.DirectoryPath, "dir", sizeof(GetDirListFileCmd.Payload.DirectoryPath) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -1236,8 +1234,8 @@ void Test_FM_GetDirListFileCmd_NoChildTask(void)
 
     memset(&GetDirListFileCmd, 0, sizeof(GetDirListFileCmd));
 
-    strncpy(GetDirListFileCmd.Payload.Filename, "file", sizeof(GetDirListFileCmd.Payload.Filename) - 1);
-    strncpy(GetDirListFileCmd.Payload.Directory, "dir", sizeof(GetDirListFileCmd.Payload.Directory) - 1);
+    strncpy(GetDirListFileCmd.Payload.OutputFilePath, "file", sizeof(GetDirListFileCmd.Payload.OutputFilePath) - 1);
+    strncpy(GetDirListFileCmd.Payload.DirectoryPath, "dir", sizeof(GetDirListFileCmd.Payload.DirectoryPath) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -1266,7 +1264,7 @@ void Test_FM_GetDirListPktCmd_Success(void)
 
     memset(&GetDirListPktCmd, 0, sizeof(GetDirListPktCmd));
 
-    strncpy(GetDirListPktCmd.Payload.Directory, "dir", sizeof(GetDirListPktCmd.Payload.Directory) - 1);
+    strncpy(GetDirListPktCmd.Payload.Path, "dir", sizeof(GetDirListPktCmd.Payload.Path) - 1);
 
     FM_AppData.ChildWriteIndex           = 0;
     FM_AppData.ChildQueue[0].CommandCode = 0;
@@ -1348,11 +1346,10 @@ void Test_FM_MonitorFilesystemSpaceCmd_Success(void)
 
     uint8 call_count_CFE_SB_TransmitMsg;
 
-
     FM_MonitorTable_t Table;
     uint64            RefVal1;
     uint64            RefVal2;
-    void *TablePtr;
+    void             *TablePtr;
 
     RefVal1 = 20;
     RefVal2 = 10;
@@ -1391,14 +1388,13 @@ void Test_FM_MonitorFilesystemSpaceCmd_Success(void)
     UtAssert_UINT32_EQ(ReportPtr->FileSys[2].Blocks, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "%s command");
+    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command");
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_NullFreeSpaceTable(void)
 {
     FM_MonitorFilesystemSpaceCmd_t MonitorFilesystemSpaceCmd;
-    uint8 call_count_CFE_SB_TransmitMsg;
+    uint8                          call_count_CFE_SB_TransmitMsg;
 
     memset(&MonitorFilesystemSpaceCmd, 0, sizeof(MonitorFilesystemSpaceCmd));
 
@@ -1410,8 +1406,10 @@ void Test_FM_MonitorFilesystemSpaceCmd_NullFreeSpaceTable(void)
     UtAssert_INT32_EQ(call_count_CFE_SB_TransmitMsg, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_GET_FREE_SPACE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "%s error: file system free space table is not loaded");
+    FM_Test_Verify_Event(0,
+                         FM_GET_FREE_SPACE_TBL_ERR_EID,
+                         CFE_EVS_EventType_ERROR,
+                         "%s error: file system free space table is not loaded");
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
@@ -1420,7 +1418,7 @@ void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
     FM_MonitorReportPkt_Payload_t *ReportPtr;
     FM_MonitorTable_t              Table;
     uint8                          call_count_CFE_SB_TransmitMsg;
-    void *TablePtr;
+    void                          *TablePtr;
 
     memset(&Table, 0, sizeof(Table));
     memset(&MonitorFilesystemSpaceCmd, 0, sizeof(MonitorFilesystemSpaceCmd));
@@ -1444,8 +1442,7 @@ void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
     UtAssert_ZERO(ReportPtr->FileSys[0].Bytes);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "%s command");
+    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command");
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
@@ -1454,7 +1451,7 @@ void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
     FM_MonitorReportPkt_Payload_t *ReportPtr;
     uint8                          call_count_CFE_SB_TransmitMsg;
     FM_MonitorTable_t              Table;
-    void *TablePtr;
+    void                          *TablePtr;
 
     memset(&Table, 0, sizeof(Table));
     memset(&MonitorFilesystemSpaceCmd, 0, sizeof(MonitorFilesystemSpaceCmd));
@@ -1464,7 +1461,6 @@ void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
 
     TablePtr = &Table;
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &TablePtr, sizeof(TablePtr), false);
-
 
     /* Assert */
     FM_MonitorFilesystemSpaceCmd(&MonitorFilesystemSpaceCmd);
@@ -1477,8 +1473,7 @@ void Test_FM_MonitorFilesystemSpaceCmd_NotImpl(void)
     UtAssert_ZERO(ReportPtr->FileSys[0].Bytes);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
-                        "%s command");
+    FM_Test_Verify_Event(0, FM_MONITOR_FILESYSTEM_SPACE_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "%s command");
 }
 
 /****************************/
@@ -1490,15 +1485,15 @@ void Test_FM_SetTableStateCmd_Success(void)
     CFE_Status_t          Status;
     FM_SetTableStateCmd_t SetTableStateCmd;
     FM_MonitorTable_t     Table;
-    void *TablePtr;
+    void                 *TablePtr;
 
     memset(&Table, 0, sizeof(Table));
     memset(&SetTableStateCmd, 0, sizeof(SetTableStateCmd));
 
-    SetTableStateCmd.Payload.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    SetTableStateCmd.Payload.TableEntryIndex = 0;
+    SetTableStateCmd.Payload.State = FM_TABLE_ENTRY_ENABLED;
+    SetTableStateCmd.Payload.Index = 0;
 
-    Table.Entries[0].Type         = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
+    Table.Entries[0].Type = FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE;
 
     TablePtr = &Table;
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &TablePtr, sizeof(TablePtr), false);
@@ -1510,8 +1505,10 @@ void Test_FM_SetTableStateCmd_Success(void)
     UtAssert_INT32_EQ(Table.Entries[0].Enabled, FM_TABLE_ENTRY_ENABLED);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_SET_TABLE_STATE_CMD_EID, CFE_EVS_EventType_INFORMATION,
-                        "%s command: index = %d, state = %d");
+    FM_Test_Verify_Event(0,
+                         FM_SET_TABLE_STATE_CMD_EID,
+                         CFE_EVS_EventType_INFORMATION,
+                         "%s command: index = %d, state = %d");
 }
 
 void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
@@ -1521,8 +1518,8 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
 
     memset(&SetTableStateCmd, 0, sizeof(SetTableStateCmd));
 
-    SetTableStateCmd.Payload.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    SetTableStateCmd.Payload.TableEntryIndex = 0;
+    SetTableStateCmd.Payload.State = FM_TABLE_ENTRY_ENABLED;
+    SetTableStateCmd.Payload.Index = 0;
 
     FM_AppData.MonitorTablePtr = NULL;
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_ERR_NEVER_LOADED);
@@ -1533,26 +1530,27 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
     UtAssert_EQ(CFE_Status_t, Status, CFE_SUCCESS);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_SET_TABLE_STATE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "%s error: file system free space table is not loaded");
+    FM_Test_Verify_Event(0,
+                         FM_SET_TABLE_STATE_TBL_ERR_EID,
+                         CFE_EVS_EventType_ERROR,
+                         "%s error: file system free space table is not loaded");
 }
 
-void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
+void Test_FM_SetTableStateCmd_IndexTooLarge(void)
 {
     CFE_Status_t          Status;
     FM_SetTableStateCmd_t SetTableStateCmd;
     FM_MonitorTable_t     Table;
-    void *TablePtr;
+    void                 *TablePtr;
 
     memset(&Table, 0, sizeof(Table));
     memset(&SetTableStateCmd, 0, sizeof(SetTableStateCmd));
 
-    SetTableStateCmd.Payload.TableEntryState = FM_TABLE_ENTRY_ENABLED;
-    SetTableStateCmd.Payload.TableEntryIndex = FM_TABLE_ENTRY_COUNT;
+    SetTableStateCmd.Payload.State = FM_TABLE_ENTRY_ENABLED;
+    SetTableStateCmd.Payload.Index = FM_TABLE_ENTRY_COUNT;
 
     TablePtr = &Table;
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &TablePtr, sizeof(TablePtr), false);
-
 
     Status = FM_SetTableStateCmd(&SetTableStateCmd);
 
@@ -1560,8 +1558,10 @@ void Test_FM_SetTableStateCmd_TableEntryIndexTooLarge(void)
     UtAssert_EQ(CFE_Status_t, Status, CFE_SUCCESS);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_SET_TABLE_STATE_ARG_IDX_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "%s error: invalid command argument: index = %d");
+    FM_Test_Verify_Event(0,
+                         FM_SET_TABLE_STATE_ARG_IDX_ERR_EID,
+                         CFE_EVS_EventType_ERROR,
+                         "%s error: invalid command argument: index = %d");
 }
 
 void Test_FM_SetTableStateCmd_BadNewState(void)
@@ -1569,13 +1569,13 @@ void Test_FM_SetTableStateCmd_BadNewState(void)
     CFE_Status_t          Status;
     FM_SetTableStateCmd_t SetTableStateCmd;
     FM_MonitorTable_t     Table;
-    void *TablePtr;
+    void                 *TablePtr;
 
     memset(&Table, 0, sizeof(Table));
     memset(&SetTableStateCmd, 0, sizeof(SetTableStateCmd));
 
-    SetTableStateCmd.Payload.TableEntryState = 55;
-    SetTableStateCmd.Payload.TableEntryIndex = 0;
+    SetTableStateCmd.Payload.State = 55;
+    SetTableStateCmd.Payload.Index = 0;
 
     TablePtr = &Table;
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &TablePtr, sizeof(TablePtr), false);
@@ -1586,8 +1586,10 @@ void Test_FM_SetTableStateCmd_BadNewState(void)
     UtAssert_EQ(CFE_Status_t, Status, CFE_SUCCESS);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_SET_TABLE_STATE_ARG_STATE_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "%s error: invalid command argument: state = %d");
+    FM_Test_Verify_Event(0,
+                         FM_SET_TABLE_STATE_ARG_STATE_ERR_EID,
+                         CFE_EVS_EventType_ERROR,
+                         "%s error: invalid command argument: state = %d");
 }
 
 void Test_FM_SetTableStateCmd_BadCurrentState(void)
@@ -1595,10 +1597,10 @@ void Test_FM_SetTableStateCmd_BadCurrentState(void)
     CFE_Status_t          Status;
     FM_SetTableStateCmd_t SetTableStateCmd;
     FM_MonitorTable_t     Table;
-    void *TablePtr;
+    void                 *TablePtr;
 
-    SetTableStateCmd.Payload.TableEntryState = FM_TABLE_ENTRY_DISABLED;
-    SetTableStateCmd.Payload.TableEntryIndex = 0;
+    SetTableStateCmd.Payload.State = FM_TABLE_ENTRY_DISABLED;
+    SetTableStateCmd.Payload.Index = 0;
 
     memset(&Table, 0, sizeof(Table));
     memset(&SetTableStateCmd, 0, sizeof(SetTableStateCmd));
@@ -1611,8 +1613,10 @@ void Test_FM_SetTableStateCmd_BadCurrentState(void)
     UtAssert_EQ(CFE_Status_t, Status, CFE_SUCCESS);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    FM_Test_Verify_Event(0, FM_SET_TABLE_STATE_UNUSED_ERR_EID, CFE_EVS_EventType_ERROR,
-                        "%s error: cannot modify unused table entry: index = %d");
+    FM_Test_Verify_Event(0,
+                         FM_SET_TABLE_STATE_UNUSED_ERR_EID,
+                         CFE_EVS_EventType_ERROR,
+                         "%s error: cannot modify unused table entry: index = %d");
 }
 
 /****************************/
@@ -1626,7 +1630,7 @@ void Test_FM_SetPermissionsCmd_Success(void)
 
     memset(&SetPermissionsCmd, 0, sizeof(SetPermissionsCmd));
 
-    strncpy(SetPermissionsCmd.Payload.FileName, "file", sizeof(SetPermissionsCmd.Payload.FileName) - 1);
+    strncpy(SetPermissionsCmd.Payload.Path, "file", sizeof(SetPermissionsCmd.Payload.Path) - 1);
 
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyNameValid), true);
     UT_SetDefaultReturnValue(UT_KEY(FM_VerifyChildTask), true);
@@ -1687,14 +1691,14 @@ void Test_FM_SendHkCmd(void)
     UT_SetDefaultReturnValue(UT_KEY(FM_GetOpenFilesData), 0);
 
     /* Set non-zero values to assert */
-    FM_AppData.HkTlm.Payload.CommandCounter    = 1;
-    FM_AppData.HkTlm.Payload.CommandErrCounter = 2;
-    FM_AppData.HkTlm.Payload.ChildCmdCounter     = 3;
-    FM_AppData.HkTlm.Payload.ChildCmdErrCounter  = 4;
-    FM_AppData.HkTlm.Payload.ChildCmdWarnCounter = 5;
-    FM_AppData.HkTlm.Payload.ChildQueueCount     = 6;
-    FM_AppData.HkTlm.Payload.ChildCurrentCC      = 7;
-    FM_AppData.HkTlm.Payload.ChildPreviousCC     = 8;
+    FM_AppData.HkTlm.Payload.CommandCounter             = 1;
+    FM_AppData.HkTlm.Payload.CommandErrorCounter        = 2;
+    FM_AppData.HkTlm.Payload.ChildCommandCounter        = 3;
+    FM_AppData.HkTlm.Payload.ChildCommandErrorCounter   = 4;
+    FM_AppData.HkTlm.Payload.ChildCommandWarningCounter = 5;
+    FM_AppData.HkTlm.Payload.ChildQueueCount            = 6;
+    FM_AppData.HkTlm.Payload.ChildCurrentCC             = 7;
+    FM_AppData.HkTlm.Payload.ChildPreviousCC            = 8;
 
     /* Act */
     UtAssert_VOIDCALL(FM_SendHkCmd(NULL));
@@ -1769,7 +1773,7 @@ void UtTest_Setup(void)
     ADD_TEST(Test_FM_MonitorFilesystemSpaceCmd_NotImpl);
     ADD_TEST(Test_FM_SetTableStateCmd_Success);
     ADD_TEST(Test_FM_SetTableStateCmd_NullFreeSpaceTable);
-    ADD_TEST(Test_FM_SetTableStateCmd_TableEntryIndexTooLarge);
+    ADD_TEST(Test_FM_SetTableStateCmd_IndexTooLarge);
     ADD_TEST(Test_FM_SetTableStateCmd_BadNewState);
     ADD_TEST(Test_FM_SetTableStateCmd_BadCurrentState);
     ADD_TEST(Test_FM_SetPermissionsCmd_Success);

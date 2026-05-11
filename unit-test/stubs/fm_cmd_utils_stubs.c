@@ -125,7 +125,6 @@ CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint
  */
 void FM_InvokeChildTask(void)
 {
-
     UT_GenStub_Execute(FM_InvokeChildTask, Basic, NULL);
 }
 
@@ -265,8 +264,11 @@ bool FM_VerifyFileNotOpen(const char *Filename, size_t BufferSize, uint32 EventI
  * Generated stub function for FM_VerifyFileState()
  * ----------------------------------------------------
  */
-bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t BufferSize, uint32 EventID,
-                        const char *CmdText)
+bool FM_VerifyFileState(FM_FileStates_Enum_t State,
+                        const char          *Filename,
+                        size_t               BufferSize,
+                        uint32               EventID,
+                        const char          *CmdText)
 {
     UT_GenStub_SetupReturnBuffer(FM_VerifyFileState, bool);
 

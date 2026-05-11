@@ -87,7 +87,7 @@ static void LoadOpenFileData(osal_id_t ObjId, void *CallbackArg)
 
                 if (OS_TaskGetInfo(FdProp.User, &TaskInfo) == OS_SUCCESS)
                 {
-                    strncpy(OpenFilesData[OpenFileCount].AppName, (char *)TaskInfo.name, CFE_MISSION_MAX_API_LEN);
+                    strncpy(OpenFilesData[OpenFileCount].App, (char *)TaskInfo.name, CFE_MISSION_MAX_API_LEN);
                 }
             }
         }
@@ -113,7 +113,7 @@ uint32 FM_GetOpenFilesData(FM_OpenFilesEntry_t *OpenFilesData)
 
 static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
 {
-    const char *   Fname = (const char *)CallbackArg;
+    const char    *Fname = (const char *)CallbackArg;
     OS_file_prop_t FdProp;
 
     memset(&FdProp, 0, sizeof(FdProp));
@@ -134,10 +134,10 @@ static void SearchOpenFileData(osal_id_t ObjId, void *CallbackArg)
 
 FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t BufferSize, bool FileInfoCmd)
 {
-    os_fstat_t          FileStatus;
-    FM_FileNameStates_Enum_t FilenameState   = FM_NAME_IS_INVALID;
-    bool                FilenameIsValid = false;
-    int32               StringLength;
+    os_fstat_t               FileStatus;
+    FM_FileNameStates_Enum_t FilenameState   = FM_FileNameStates_INVALID;
+    bool                     FilenameIsValid = false;
+    int32                    StringLength;
 
     memset(&FileStatus, 0, sizeof(FileStatus));
 
@@ -169,19 +169,19 @@ FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t Buffer
             if (OS_FILESTAT_ISDIR(FileStatus))
             {
                 /* Filename is a directory */
-                FilenameState = FM_NAME_IS_DIRECTORY;
+                FilenameState = FM_FileNameStates_DIRECTORY;
             }
             else
             {
                 /* Filename is a file, but is it open? */
-                FilenameState = FM_NAME_IS_FILE_CLOSED;
+                FilenameState = FM_FileNameStates_FILE_CLOSED;
                 FileIsOpen    = false;
 
                 OS_ForEachObject(OS_OBJECT_CREATOR_ANY, SearchOpenFileData, (void *)Filename);
 
                 if (FileIsOpen == true)
                 {
-                    FilenameState = FM_NAME_IS_FILE_OPEN;
+                    FilenameState = FM_FileNameStates_FILE_OPEN;
                 }
             }
 
@@ -196,7 +196,7 @@ FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t Buffer
         else
         {
             /* Cannot get file stat - therefore does not exist */
-            FilenameState = FM_NAME_IS_NOT_IN_USE;
+            FilenameState = FM_FileNameStates_NOT_IN_USE;
 
             /* Save the last modify time and file size for File Info commands */
             if (FileInfoCmd)
@@ -219,13 +219,13 @@ FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t Buffer
 
 FM_FileNameStates_Enum_t FM_VerifyNameValid(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    char   LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
-    FM_FileNameStates_Enum_t FilenameState = FM_NAME_IS_INVALID;
+    char                     LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
+    FM_FileNameStates_Enum_t FilenameState = FM_FileNameStates_INVALID;
 
-    /* Looking for filename state != FM_NAME_IS_INVALID */
+    /* Looking for filename state != FM_FileNameStates_INVALID */
     FilenameState = FM_GetFilenameState(Name, BufferSize, true);
 
-    if (FilenameState == FM_NAME_IS_INVALID)
+    if (FilenameState == FM_FileNameStates_INVALID)
     {
         /*
          * This function provided by SB will copy the string from a fixed-size buffer,
@@ -244,11 +244,14 @@ FM_FileNameStates_Enum_t FM_VerifyNameValid(const char *Name, size_t BufferSize,
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t BufferSize, uint32 EventID,
-                        const char *CmdText)
+bool FM_VerifyFileState(FM_FileStates_Enum_t State,
+                        const char          *Filename,
+                        size_t               BufferSize,
+                        uint32               EventID,
+                        const char          *CmdText)
 {
     bool        Result        = false;
-    uint32      FilenameState = FM_NAME_IS_INVALID;
+    uint32      FilenameState = FM_FileNameStates_INVALID;
     uint32      ErrorCode     = FM_FNAME_INVALID_EID_OFFSET;
     const char *ErrorDesc     = "";
     char        LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
@@ -258,8 +261,8 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
 
     switch (FilenameState)
     {
-        case FM_NAME_IS_NOT_IN_USE:
-            if (State == FM_FILE_NOEXIST || State == FM_FILE_NOTOPEN || State == FM_DIR_NOEXIST)
+        case FM_FileNameStates_NOT_IN_USE:
+            if (State == FM_FileStates_NOEXIST || State == FM_FileStates_NOTOPEN || State == FM_FileStates_DIR_NOEXIST)
             {
                 Result = true;
             }
@@ -269,22 +272,22 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
                 ErrorDesc = "file does not exist";
             }
             break;
-        case FM_NAME_IS_FILE_OPEN:
-            if (State == FM_FILE_EXISTS)
+        case FM_FileNameStates_FILE_OPEN:
+            if (State == FM_FileStates_EXISTS)
             {
                 Result = true;
             }
-            else if (State == FM_FILE_NOEXIST)
+            else if (State == FM_FileStates_NOEXIST)
             {
                 ErrorCode = FM_FNAME_EXIST_EID_OFFSET;
                 ErrorDesc = "file already exists";
             }
-            else if (State == FM_DIR_EXISTS)
+            else if (State == FM_FileStates_DIR_EXISTS)
             {
                 ErrorCode = FM_FNAME_ISFILE_EID_OFFSET;
                 ErrorDesc = "directory name exists as a file";
             }
-            else if (State == FM_DIR_NOEXIST)
+            else if (State == FM_FileStates_DIR_NOEXIST)
             {
                 ErrorCode = FM_FNAME_DNE_EID_OFFSET;
                 ErrorDesc = "directory name exists as a file";
@@ -295,17 +298,17 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
                 ErrorDesc = "file is already open";
             }
             break;
-        case FM_NAME_IS_FILE_CLOSED:
-            if (State == FM_FILE_CLOSED || State == FM_FILE_EXISTS || State == FM_FILE_NOTOPEN)
+        case FM_FileNameStates_FILE_CLOSED:
+            if (State == FM_FileStates_CLOSED || State == FM_FileStates_EXISTS || State == FM_FileStates_NOTOPEN)
             {
                 Result = true;
             }
-            else if (State == FM_DIR_EXISTS)
+            else if (State == FM_FileStates_DIR_EXISTS)
             {
                 ErrorCode = FM_FNAME_ISFILE_EID_OFFSET;
                 ErrorDesc = "directory name exists as a file";
             }
-            else if (State == FM_DIR_NOEXIST)
+            else if (State == FM_FileStates_DIR_NOEXIST)
             {
                 ErrorCode = FM_FNAME_DNE_EID_OFFSET;
                 ErrorDesc = "directory name exists as a file";
@@ -316,8 +319,8 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
                 ErrorDesc = "file already exists";
             }
             break;
-        case FM_NAME_IS_DIRECTORY:
-            if (State == FM_DIR_EXISTS)
+        case FM_FileNameStates_DIRECTORY:
+            if (State == FM_FileStates_DIR_EXISTS)
             {
                 Result = true;
             }
@@ -327,7 +330,7 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
                 ErrorDesc = "filename is a directory";
             }
             break;
-        default: /* FilenameState == FM_NAME_IS_INVALID */
+        default: /* FilenameState == FM_FileNameStates_INVALID */
             /* Insert a terminator in case the invalid string did not have one */
             ErrorCode = FM_FNAME_INVALID_EID_OFFSET;
             ErrorDesc = "filename is invalid";
@@ -341,7 +344,11 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
          * and always ensures the result is null-terminated
          */
         CFE_SB_MessageStringGet(LocalFile, Filename, NULL, sizeof(LocalFile), BufferSize);
-        CFE_EVS_SendEvent((EventID + ErrorCode), CFE_EVS_EventType_ERROR, "%s error: %s: name = %s", CmdText, ErrorDesc,
+        CFE_EVS_SendEvent((EventID + ErrorCode),
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: %s: name = %s",
+                          CmdText,
+                          ErrorDesc,
                           LocalFile);
     }
 
@@ -356,7 +363,7 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State, const char *Filename, size_t
 
 bool FM_VerifyFileClosed(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_FILE_CLOSED, Filename, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_CLOSED, Filename, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -367,7 +374,7 @@ bool FM_VerifyFileClosed(const char *Filename, size_t BufferSize, uint32 EventID
 
 bool FM_VerifyFileExists(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_FILE_EXISTS, Filename, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_EXISTS, Filename, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -378,7 +385,7 @@ bool FM_VerifyFileExists(const char *Filename, size_t BufferSize, uint32 EventID
 
 bool FM_VerifyFileNoExist(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_FILE_NOEXIST, Filename, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_NOEXIST, Filename, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -389,7 +396,7 @@ bool FM_VerifyFileNoExist(const char *Filename, size_t BufferSize, uint32 EventI
 
 bool FM_VerifyFileNotOpen(const char *Filename, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_FILE_NOTOPEN, Filename, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_NOTOPEN, Filename, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -400,7 +407,7 @@ bool FM_VerifyFileNotOpen(const char *Filename, size_t BufferSize, uint32 EventI
 
 bool FM_VerifyDirExists(const char *Directory, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_DIR_EXISTS, Directory, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_DIR_EXISTS, Directory, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -411,7 +418,7 @@ bool FM_VerifyDirExists(const char *Directory, size_t BufferSize, uint32 EventID
 
 bool FM_VerifyDirNoExist(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    return FM_VerifyFileState(FM_DIR_NOEXIST, Name, BufferSize, EventID, CmdText);
+    return FM_VerifyFileState(FM_FileStates_DIR_NOEXIST, Name, BufferSize, EventID, CmdText);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -430,24 +437,31 @@ bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
     /* Verify child task is active and queue interface is healthy */
     if (!OS_ObjectIdDefined(FM_AppData.ChildSemaphore))
     {
-        CFE_EVS_SendEvent((EventID + FM_CHILD_DISABLED_EID_OFFSET), CFE_EVS_EventType_ERROR,
-                          "%s error: child task is disabled", CmdText);
+        CFE_EVS_SendEvent((EventID + FM_CHILD_DISABLED_EID_OFFSET),
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: child task is disabled",
+                          CmdText);
 
         /* Child task disabled - cannot add another command */
         Result = false;
     }
     else if (LocalQueueCount == FM_CHILD_QUEUE_DEPTH)
     {
-        CFE_EVS_SendEvent((EventID + FM_CHILD_Q_FULL_EID_OFFSET), CFE_EVS_EventType_ERROR,
-                          "%s error: child task queue is full", CmdText);
+        CFE_EVS_SendEvent((EventID + FM_CHILD_Q_FULL_EID_OFFSET),
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: child task queue is full",
+                          CmdText);
 
         /* Queue full - cannot add another command */
         Result = false;
     }
     else if ((LocalQueueCount > FM_CHILD_QUEUE_DEPTH) || (FM_AppData.ChildWriteIndex >= FM_CHILD_QUEUE_DEPTH))
     {
-        CFE_EVS_SendEvent((EventID + FM_CHILD_BROKEN_EID_OFFSET), CFE_EVS_EventType_ERROR,
-                          "%s error: child task interface is broken: count = %d, index = %d", CmdText, LocalQueueCount,
+        CFE_EVS_SendEvent((EventID + FM_CHILD_BROKEN_EID_OFFSET),
+                          CFE_EVS_EventType_ERROR,
+                          "%s error: child task interface is broken: count = %d, index = %d",
+                          CmdText,
+                          LocalQueueCount,
                           FM_AppData.ChildWriteIndex);
 
         /* Queue broken - cannot add another command */
@@ -533,7 +547,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
 
 CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
 {
-    OS_statvfs_t  FileStats = {0};
+    OS_statvfs_t  FileStats = { 0 };
     osal_status_t OS_Status;
     CFE_Status_t  Result;
 
@@ -548,8 +562,11 @@ CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint
     }
     else
     {
-        CFE_EVS_SendEvent(FM_OS_SYS_STAT_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Could not get file system free space for %s. Returned %d", FileSys, (int)OS_Status);
+        CFE_EVS_SendEvent(FM_OS_SYS_STAT_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "Could not get file system free space for %s. Returned %d",
+                          FileSys,
+                          (int)OS_Status);
 
         Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
     }
@@ -596,8 +613,11 @@ CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCo
     if (OS_Status != OS_SUCCESS)
     {
         /* Send command failure event (error) */
-        CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID, CFE_EVS_EventType_ERROR, "OS_DirectoryOpen err=%d, path=%s",
-                          (int)OS_Status, Directory);
+        CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "OS_DirectoryOpen err=%d, path=%s",
+                          (int)OS_Status,
+                          Directory);
 
         Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
     }
@@ -611,8 +631,11 @@ CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCo
             OS_Status = OS_stat(FullPath, &FileStat);
             if (OS_Status != OS_SUCCESS)
             {
-                CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID, CFE_EVS_EventType_ERROR, "OS_stat err=%d, path=%s",
-                                  (int)OS_Status, FullPath);
+                CFE_EVS_SendEvent(FM_DIRECTORY_ESTIMATE_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "OS_stat err=%d, path=%s",
+                                  (int)OS_Status,
+                                  FullPath);
             }
             else if (!OS_FILESTAT_ISDIR(FileStat))
             {

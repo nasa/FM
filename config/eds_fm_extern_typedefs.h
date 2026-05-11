@@ -22,11 +22,11 @@
 #include "common_types.h"
 #include "fm_eds_typedefs.h"
 
-#define FM_NAME_IS_INVALID      EdsLabel_FM_FileNameStates_IS_INVALID
-#define FM_NAME_IS_NOT_IN_USE   EdsLabel_FM_FileNameStates_IS_NOT_IN_USE
-#define FM_NAME_IS_FILE_OPEN    EdsLabel_FM_FileNameStates_IS_FILE_OPEN
-#define FM_NAME_IS_FILE_CLOSED  EdsLabel_FM_FileNameStates_IS_FILE_CLOSED
-#define FM_NAME_IS_DIRECTORY    EdsLabel_FM_FileNameStates_IS_DIRECTORY
+#define FM_NAME_IS_INVALID     EdsLabel_FM_FileNameStates_IS_INVALID
+#define FM_NAME_IS_NOT_IN_USE  EdsLabel_FM_FileNameStates_IS_NOT_IN_USE
+#define FM_NAME_IS_FILE_OPEN   EdsLabel_FM_FileNameStates_IS_FILE_OPEN
+#define FM_NAME_IS_FILE_CLOSED EdsLabel_FM_FileNameStates_IS_FILE_CLOSED
+#define FM_NAME_IS_DIRECTORY   EdsLabel_FM_FileNameStates_IS_DIRECTORY
 
 #define FM_FILE_CLOSED  EdsLabel_FM_FileStates_FILE_CLOSED
 #define FM_FILE_EXISTS  EdsLabel_FM_FileStates_FILE_EXISTS
@@ -37,8 +37,5 @@
 
 #define FM_TABLE_ENTRY_DISABLED EdsLabel_FM_TableEntryState_DISABLED
 #define FM_TABLE_ENTRY_ENABLED  EdsLabel_FM_TableEntryState_ENABLED
-
-
-
 
 #endif /* EDS_FM_EXTERN_TYPEDEFS_H */
