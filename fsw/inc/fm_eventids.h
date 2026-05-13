@@ -1314,6 +1314,19 @@
  */
 #define FM_DIRECTORY_ESTIMATE_ERR_EID 87
 
+/**
+ * \brief FM Monitor Table failed to load default table data at Initializaiton
+ *
+ *  \par Type: Information
+ *
+ *  \par Cause:
+ *
+ * This event message occurs if default table data fails to load 
+ * in the monitor table at initialization - This is only informational because
+ * it is OK if it fails
+ */
+#define FM_TABLE_INIT_LOAD_FAILED_INF_EID   88
+
 /** -------------------------------------------------------------
  *  NOTE: From here on, the event IDs will take the form of a
  *  "base" EID + an offset.  This is done to allow unique event

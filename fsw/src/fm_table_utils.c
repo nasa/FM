@@ -54,8 +54,16 @@ CFE_Status_t FM_TableInit(void)
 
     if (Status == CFE_SUCCESS)
     {
+        CFE_Status_t Load_Status;
         /* Make an attempt to load the default table data - OK if this fails */
-        CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+        Load_Status = CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+
+        if (Load_Status <= CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(FM_TABLE_INIT_LOAD_FAILED_INF_EID,
+                              CFE_EVS_EventType_INFORMATION,
+                             "Monitor Table Load at Initialization Failed");
+        }
 
         /* Allow cFE a chance to dump, update, etc. */
         FM_AcquireTablePointers();

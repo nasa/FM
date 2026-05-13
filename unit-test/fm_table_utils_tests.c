@@ -65,7 +65,7 @@ void Test_FM_TableInit_Success(void)
     /* Assert */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
     UtAssert_INT32_EQ(Result, CFE_SUCCESS);
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
 void Test_FM_TableInit_Fail(void)
