@@ -55,7 +55,9 @@ CFE_Status_t FM_TableInit(void)
     if (Status == CFE_SUCCESS)
     {
         /* Make an attempt to load the default table data - OK if this fails */
-        CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+        /* SAD: Suppress Ignored Return Value warning from CodeSonar.  CFE_TBL_Load() will send event message if
+         * there is any error */
+        (void)CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
 
         /* Allow cFE a chance to dump, update, etc. */
         FM_AcquireTablePointers();
