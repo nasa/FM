@@ -861,8 +861,14 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *
     /* Acquire pointer to file system free space table, also locks table */
     Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
 
-    /* Verify that we have a pointer to the file system table data */
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
+    /*
+    ** Per cfe_tbl.h, CFE_TBL_GetAddress leaves the table pointer undefined on
+    ** any non-success return. Only CFE_SUCCESS and CFE_TBL_INFO_UPDATED set
+    ** the pointer. Prior versions only handled CFE_TBL_ERR_NEVER_LOADED and
+    ** would dereference an undefined pointer on _INVALID_HANDLE / _NO_ACCESS /
+    ** CFE_ES_ERR_RESOURCEID_NOT_VALID / CFE_TBL_BAD_ARGUMENT.
+    */
+    if (Status != CFE_SUCCESS && Status != CFE_TBL_INFO_UPDATED)
     {
         /* Make sure we don't try to use the empty table buffer */
         FM_AppData.MonitorTablePtr = NULL;
@@ -974,7 +980,14 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t *Msg)
 
     /* Acquire pointer to file system free space table */
     Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
+    /*
+    ** Per cfe_tbl.h, CFE_TBL_GetAddress leaves the table pointer undefined on
+    ** any non-success return. Only CFE_SUCCESS and CFE_TBL_INFO_UPDATED set
+    ** the pointer. Prior versions only handled CFE_TBL_ERR_NEVER_LOADED and
+    ** would dereference an undefined pointer on _INVALID_HANDLE / _NO_ACCESS /
+    ** CFE_ES_ERR_RESOURCEID_NOT_VALID / CFE_TBL_BAD_ARGUMENT.
+    */
+    if (Status != CFE_SUCCESS && Status != CFE_TBL_INFO_UPDATED)
     {
         /* Make sure we don't try to use the empty table buffer */
         FM_AppData.MonitorTablePtr = NULL;

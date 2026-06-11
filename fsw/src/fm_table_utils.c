@@ -55,7 +55,9 @@ CFE_Status_t FM_TableInit(void)
     if (Status == CFE_SUCCESS)
     {
         /* Make an attempt to load the default table data - OK if this fails */
-        CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
+        /* SAD: Suppress Ignored Return Value warning from CodeSonar.  CFE_TBL_Load() will send event message if
+         * there is any error */
+        (void)CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
 
         /* Allow cFE a chance to dump, update, etc. */
         FM_AcquireTablePointers();
@@ -211,9 +213,16 @@ void FM_AcquireTablePointers(void)
     /* Acquire pointer to file system free space table */
     Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
 
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
+    /*
+    ** Per cfe_tbl.h, CFE_TBL_GetAddress leaves the table pointer undefined on
+    ** any non-success return (CFE_TBL_ERR_NEVER_LOADED, _INVALID_HANDLE,
+    ** _NO_ACCESS, CFE_ES_ERR_RESOURCEID_NOT_VALID, CFE_TBL_BAD_ARGUMENT).
+    ** Only CFE_SUCCESS and CFE_TBL_INFO_UPDATED set the pointer. NULL out
+    ** the local copy on any other return so callers see a clean NULL rather
+    ** than a stale or undefined pointer.
+    */
+    if (Status != CFE_SUCCESS && Status != CFE_TBL_INFO_UPDATED)
     {
-        /* Make sure we don't try to use the empty table buffer */
         FM_AppData.MonitorTablePtr = NULL;
     }
 }
