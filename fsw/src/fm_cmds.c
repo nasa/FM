@@ -736,7 +736,8 @@ CFE_Status_t FM_GetDirListFileCmd(const FM_GetDirListFileCmd_t *Msg)
         }
         else
         {
-            memcpy(Filename, CmdPtr->OutputFilePath, sizeof(Filename));
+            strncpy(Filename, CmdPtr->OutputFilePath, sizeof(Filename) - 1);
+            Filename[sizeof(Filename) - 1] = '\0';
         }
 
         /* Note: it is OK for this file to overwrite a previous version of the file */
