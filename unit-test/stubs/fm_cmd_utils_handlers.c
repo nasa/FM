@@ -43,12 +43,6 @@ static void UT_fm_cmd_utils_bool_conversion(UT_EntryKey_t FuncKey, const UT_Stub
 }
 
 /*------------------------------------------------------------*/
-void UT_DefaultHandler_FM_IsValidCmdPktLength(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
-}
-
-/*------------------------------------------------------------*/
 void UT_DefaultHandler_FM_VerifyChildTask(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
 {
     UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
