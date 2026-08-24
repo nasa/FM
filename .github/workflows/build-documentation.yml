@@ -15,7 +15,7 @@ on:
 jobs:
   build-documentation:
     name: Build and deploy cFS documents
-    uses: nasa/cFS/.github/workflows/build-doc-reusable.yml@dev
+    uses: jphickey/cFS/.github/workflows/build-doc-reusable.yml@jph-wip-cfs1097-doc-workflow
     with:
       target: "[\"fm-usersguide\"]"
       app-name: fm
