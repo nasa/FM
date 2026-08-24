@@ -27,26 +27,6 @@
 
 /*
  * ----------------------------------------------------
- * Generated stub function for FM_AcquireTablePointers()
- * ----------------------------------------------------
- */
-void FM_AcquireTablePointers(void)
-{
-    UT_GenStub_Execute(FM_AcquireTablePointers, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
- * Generated stub function for FM_ReleaseTablePointers()
- * ----------------------------------------------------
- */
-void FM_ReleaseTablePointers(void)
-{
-    UT_GenStub_Execute(FM_ReleaseTablePointers, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
  * Generated stub function for FM_TableInit()
  * ----------------------------------------------------
  */

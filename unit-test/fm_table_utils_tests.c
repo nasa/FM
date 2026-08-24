@@ -388,41 +388,6 @@ void Test_FM_ValidateTable_NameTooLong(void)
     UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 }
 
-void Test_FM_AcquireTablePointers_Success(void)
-{
-    FM_MonitorTable_t Table;
-
-    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
-
-    FM_AppData.MonitorTablePtr = &Table;
-
-    UtAssert_VOIDCALL(FM_AcquireTablePointers());
-
-    UtAssert_NOT_NULL(FM_AppData.MonitorTablePtr);
-}
-
-void Test_FM_AcquireTablePointers_Fail(void)
-{
-    FM_MonitorTable_t Table;
-
-    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_ERR_NEVER_LOADED);
-
-    FM_AppData.MonitorTablePtr = &Table;
-
-    UtAssert_VOIDCALL(FM_AcquireTablePointers());
-
-    UtAssert_NULL(FM_AppData.MonitorTablePtr);
-}
-
-void Test_FM_ReleaseTablePointers(void)
-{
-    FM_MonitorTable_t Table;
-
-    FM_AppData.MonitorTablePtr = &Table;
-
-    UtAssert_VOIDCALL(FM_ReleaseTablePointers());
-}
-
 /*
  * Register the test cases to execute with the unit test tool
  */
@@ -446,11 +411,4 @@ void UtTest_Setup(void)
     UtTest_Add(Test_FM_ValidateTable_EmptyName, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ValidateTable_EmptyName");
 
     UtTest_Add(Test_FM_ValidateTable_NameTooLong, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ValidateTable_NameTooLong");
-
-    UtTest_Add(Test_FM_AcquireTablePointers_Success,
-               FM_Test_Setup,
-               FM_Test_Teardown,
-               "Test_FM_AcquireTablePointers_Success");
-    UtTest_Add(Test_FM_AcquireTablePointers_Fail, FM_Test_Setup, FM_Test_Teardown, "Test_FM_AcquireTablePointers_Fail");
-    UtTest_Add(Test_FM_ReleaseTablePointers, FM_Test_Setup, FM_Test_Teardown, "Test_FM_ReleaseTablePointers");
 }

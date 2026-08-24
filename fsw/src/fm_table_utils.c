@@ -42,9 +42,6 @@ CFE_Status_t FM_TableInit(void)
 {
     CFE_Status_t Status;
 
-    /* Initialize file system free space table pointer */
-    FM_AppData.MonitorTablePtr = NULL;
-
     /* Register the file system free space table - this must succeed! */
     Status = CFE_TBL_Register(&FM_AppData.MonitorTableHandle,
                               FM_TABLE_CFE_NAME,
@@ -58,9 +55,6 @@ CFE_Status_t FM_TableInit(void)
         /* SAD: Suppress Ignored Return Value warning from CodeSonar.  CFE_TBL_Load() will send event message if
          * there is any error */
         (void)CFE_TBL_Load(FM_AppData.MonitorTableHandle, CFE_TBL_SRC_FILE, FM_TABLE_DEF_NAME);
-
-        /* Allow cFE a chance to dump, update, etc. */
-        FM_AcquireTablePointers();
     }
 
     return Status;
@@ -195,42 +189,4 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
     }
 
     return Result;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- acquire table data pointer                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_AcquireTablePointers(void)
-{
-    CFE_Status_t Status;
-
-    /* Allow cFE an opportunity to make table updates */
-    CFE_TBL_Manage(FM_AppData.MonitorTableHandle);
-
-    /* Acquire pointer to file system free space table */
-    Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
-
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
-    {
-        /* Make sure we don't try to use the empty table buffer */
-        FM_AppData.MonitorTablePtr = NULL;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* FM table function -- release table data pointer                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void FM_ReleaseTablePointers(void)
-{
-    /* Release pointer to file system free space table */
-    CFE_TBL_ReleaseAddress(FM_AppData.MonitorTableHandle);
-
-    /* Prevent table pointer use while released */
-    FM_AppData.MonitorTablePtr = NULL;
 }

@@ -49,14 +49,13 @@ typedef struct
  */
 typedef struct
 {
-    FM_MonitorTable_t *MonitorTablePtr;    /** \brief File System Table Pointer */
-    CFE_TBL_Handle_t   MonitorTableHandle; /** \brief File System Table Handle */
-    CFE_SB_PipeId_t    CmdPipe;            /** \brief cFE software bus command pipe */
-    CFE_ES_TaskId_t    ChildTaskID;        /** \brief Child task ID */
-    osal_id_t          ChildSemaphore;     /** \brief Child task wakeup counting semaphore */
-    osal_id_t          ChildQueueCountSem; /** \brief Child queue counter mutex semaphore */
-    uint8              ChildWriteIndex;    /** \brief Array index for next write to command args */
-    uint8              ChildReadIndex;     /** \brief Array index for next read from command args */
+    CFE_TBL_Handle_t MonitorTableHandle; /** \brief File System Table Handle */
+    CFE_SB_PipeId_t  CmdPipe;            /** \brief cFE software bus command pipe */
+    CFE_ES_TaskId_t  ChildTaskID;        /** \brief Child task ID */
+    osal_id_t        ChildSemaphore;     /** \brief Child task wakeup counting semaphore */
+    osal_id_t        ChildQueueCountSem; /** \brief Child queue counter mutex semaphore */
+    uint8            ChildWriteIndex;    /** \brief Array index for next write to command args */
+    uint8            ChildReadIndex;     /** \brief Array index for next read from command args */
 
     uint8 Spare8a; /** \brief Placeholder for unused command warning counter */
     uint8 Spare8b; /** \brief Structure alignment spare */
