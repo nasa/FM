@@ -9,7 +9,7 @@ on:
     types:
       - opened
       - reopened
-      - synchronize
+
   workflow_dispatch:
   schedule:
     # 9:35 PM UTC every Sunday
