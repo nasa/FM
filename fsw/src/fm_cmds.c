@@ -855,24 +855,26 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *
     uint32       i;
     int32        OpResult;
     CFE_Status_t Status;
+    void        *TablePtr;
 
     const FM_MonitorTableEntry_t *MonitorPtr;
     FM_MonitorReportEntry_t      *ReportPtr;
 
     /* Acquire pointer to file system free space table, also locks table */
-    Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
+    Status = CFE_TBL_GetAddress(&TablePtr, FM_AppData.MonitorTableHandle);
 
     /* Verify that we have a pointer to the file system table data */
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
+    if (Status < CFE_SUCCESS)
     {
         /* Make sure we don't try to use the empty table buffer */
-        FM_AppData.MonitorTablePtr = NULL;
+        TablePtr = NULL;
 
         CommandResult = false;
         CFE_EVS_SendEvent(FM_GET_FREE_SPACE_TBL_ERR_EID,
                           CFE_EVS_EventType_ERROR,
-                          "%s error: file system free space table is not loaded",
-                          CmdText);
+                          "%s error: file system free space table unavailable: status=%08x",
+                          CmdText,
+                          (unsigned int)Status);
     }
     else
     {
@@ -882,7 +884,7 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *
                      sizeof(FM_MonitorReportPkt_t));
 
         /* Process enabled file system table entries */
-        MonitorPtr = FM_AppData.MonitorTablePtr->Entries;
+        MonitorPtr = TablePtr;
         ReportPtr  = FM_AppData.MonitorReportPkt.Payload.FileSys;
         for (i = 0; i < FM_TABLE_ENTRY_COUNT; i++)
         {
@@ -942,9 +944,6 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *
 
         /* Release pointer to file system free space table */
         CFE_TBL_ReleaseAddress(FM_AppData.MonitorTableHandle);
-
-        /* Prevent table pointer use while released */
-        FM_AppData.MonitorTablePtr = NULL;
     }
 
     if (CommandResult == true)
@@ -967,27 +966,16 @@ CFE_Status_t FM_MonitorFilesystemSpaceCmd(const FM_MonitorFilesystemSpaceCmd_t *
 
 CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t *Msg)
 {
-    const char  *CmdText       = "Set Table State";
-    bool         CommandResult = true;
-    CFE_Status_t Status;
+    const char             *CmdText       = "Set Table State";
+    bool                    CommandResult = true;
+    CFE_Status_t            Status;
+    void                   *TablePtr;
+    FM_MonitorTableEntry_t *MonitorPtr;
 
     const FM_SetTableStateCmd_Payload_t *CmdPtr = &Msg->Payload;
 
-    /* Acquire pointer to file system free space table */
-    Status = CFE_TBL_GetAddress((void *)&FM_AppData.MonitorTablePtr, FM_AppData.MonitorTableHandle);
-    if (Status == CFE_TBL_ERR_NEVER_LOADED)
-    {
-        /* Make sure we don't try to use the empty table buffer */
-        FM_AppData.MonitorTablePtr = NULL;
-
-        /* File system table has not been loaded */
-        CommandResult = false;
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_TBL_ERR_EID,
-                          CFE_EVS_EventType_ERROR,
-                          "%s error: file system free space table is not loaded",
-                          CmdText);
-    }
-    else if (CmdPtr->Index >= FM_TABLE_ENTRY_COUNT)
+    /* do the basic command checks first before getting the address */
+    if (CmdPtr->Index >= FM_TABLE_ENTRY_COUNT)
     {
         /* Table index argument is out of range */
         CommandResult = false;
@@ -1009,39 +997,58 @@ CFE_Status_t FM_SetTableStateCmd(const FM_SetTableStateCmd_t *Msg)
                           CmdText,
                           (int)CmdPtr->State);
     }
-    else if (FM_AppData.MonitorTablePtr->Entries[CmdPtr->Index].Type == FM_MonitorTableEntry_Type_UNUSED)
-    {
-        /* Current table entry state must not be unused */
-        CommandResult = false;
-
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_UNUSED_ERR_EID,
-                          CFE_EVS_EventType_ERROR,
-                          "%s error: cannot modify unused table entry: index = %d",
-                          CmdText,
-                          (int)CmdPtr->Index);
-    }
     else
     {
-        /* Update the table entry state as commanded */
-        FM_AppData.MonitorTablePtr->Entries[CmdPtr->Index].Enabled = CmdPtr->State;
+        /* Now we need the table */
+        /* Acquire pointer to file system free space table */
+        Status = CFE_TBL_GetAddress(&TablePtr, FM_AppData.MonitorTableHandle);
+        if (Status < CFE_SUCCESS)
+        {
+            /* File system table has not been loaded */
+            CommandResult = false;
+            CFE_EVS_SendEvent(FM_SET_TABLE_STATE_TBL_ERR_EID,
+                              CFE_EVS_EventType_ERROR,
+                              "%s error: file system free space table unavailable: status=%08x",
+                              CmdText,
+                              (unsigned int)Status);
+        }
+        else
+        {
+            MonitorPtr  = TablePtr;
+            MonitorPtr += CmdPtr->Index; /* move to the specified index (already validated) */
 
-        /* Notify cFE that we have modified the table data */
-        CFE_TBL_Modified(FM_AppData.MonitorTableHandle);
+            if (MonitorPtr->Type == FM_MonitorTableEntry_Type_UNUSED)
+            {
+                /* Current table entry state must not be unused */
+                CommandResult = false;
 
-        /* Send command completion event (info) */
-        CFE_EVS_SendEvent(FM_SET_TABLE_STATE_CMD_EID,
-                          CFE_EVS_EventType_INFORMATION,
-                          "%s command: index = %d, state = %d",
-                          CmdText,
-                          (int)CmdPtr->Index,
-                          (int)CmdPtr->State);
+                CFE_EVS_SendEvent(FM_SET_TABLE_STATE_UNUSED_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "%s error: cannot modify unused table entry: index = %d",
+                                  CmdText,
+                                  (int)CmdPtr->Index);
+            }
+            else
+            {
+                /* Update the table entry state as commanded */
+                MonitorPtr->Enabled = CmdPtr->State;
+
+                /* Notify cFE that we have modified the table data */
+                CFE_TBL_Modified(FM_AppData.MonitorTableHandle);
+
+                /* Send command completion event (info) */
+                CFE_EVS_SendEvent(FM_SET_TABLE_STATE_CMD_EID,
+                                  CFE_EVS_EventType_INFORMATION,
+                                  "%s command: index = %d, state = %d",
+                                  CmdText,
+                                  (int)CmdPtr->Index,
+                                  (int)CmdPtr->State);
+            }
+
+            /* Release pointer to file system free space table */
+            CFE_TBL_ReleaseAddress(FM_AppData.MonitorTableHandle);
+        }
     }
-
-    /* Release pointer to file system free space table */
-    CFE_TBL_ReleaseAddress(FM_AppData.MonitorTableHandle);
-
-    /* Prevent table pointer use while released */
-    FM_AppData.MonitorTablePtr = NULL;
 
     if (CommandResult == true)
     {
