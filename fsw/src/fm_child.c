@@ -86,7 +86,7 @@ CFE_Status_t FM_ChildInit(void)
             Result = CFE_ES_CreateChildTask(&FM_AppData.ChildTaskID,
                                             FM_CHILD_TASK_NAME,
                                             FM_ChildTask,
-                                            0,
+                                            NULL,
                                             FM_CHILD_TASK_STACK_SIZE,
                                             FM_CHILD_TASK_PRIORITY,
                                             0);
