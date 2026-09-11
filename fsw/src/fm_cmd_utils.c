@@ -219,11 +219,10 @@ FM_FileNameStates_Enum_t FM_GetFilenameState(const char *Filename, size_t Buffer
 
 FM_FileNameStates_Enum_t FM_VerifyNameValid(const char *Name, size_t BufferSize, uint32 EventID, const char *CmdText)
 {
-    char                     LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
-    FM_FileNameStates_Enum_t FilenameState = FM_FileNameStates_INVALID;
+    char LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
 
     /* Looking for filename state != FM_FileNameStates_INVALID */
-    FilenameState = FM_GetFilenameState(Name, BufferSize, true);
+    FM_FileNameStates_Enum_t FilenameState = FM_GetFilenameState(Name, BufferSize, true);
 
     if (FilenameState == FM_FileNameStates_INVALID)
     {
@@ -250,14 +249,13 @@ bool FM_VerifyFileState(FM_FileStates_Enum_t State,
                         uint32               EventID,
                         const char          *CmdText)
 {
-    bool        Result        = false;
-    uint32      FilenameState = FM_FileNameStates_INVALID;
-    uint32      ErrorCode     = FM_FNAME_INVALID_EID_OFFSET;
-    const char *ErrorDesc     = "";
+    bool        Result    = false;
+    uint32      ErrorCode = FM_FNAME_INVALID_EID_OFFSET;
+    const char *ErrorDesc = "";
     char        LocalFile[1 + CFE_MISSION_MAX_PATH_LEN];
 
     /* Get state of the filename */
-    FilenameState = FM_GetFilenameState(Filename, BufferSize, false);
+    FM_FileNameStates_Enum_t FilenameState = FM_GetFilenameState(Filename, BufferSize, false);
 
     switch (FilenameState)
     {
@@ -429,7 +427,7 @@ bool FM_VerifyDirNoExist(const char *Name, size_t BufferSize, uint32 EventID, co
 
 bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
 {
-    bool Result = false;
+    bool Result;
 
     /* Copy of child queue count that child task cannot change */
     uint8 LocalQueueCount = FM_AppData.HkTlm.Payload.ChildQueueCount;
@@ -520,9 +518,7 @@ void FM_AppendPathSep(char *Directory, uint32 BufferSize)
     **   the string is both non-zero and less than the size
     **   of the string buffer.
     */
-    size_t StringLength = 0;
-
-    StringLength = OS_strnlen(Directory, CFE_MISSION_MAX_PATH_LEN);
+    size_t StringLength = OS_strnlen(Directory, CFE_MISSION_MAX_PATH_LEN);
 
     /* Do nothing if string already ends with a path separator */
     if ((StringLength != 0) && (Directory[StringLength - 1] != '/'))

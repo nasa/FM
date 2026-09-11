@@ -66,7 +66,7 @@ void FM_AppMain(void)
 {
     uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
     CFE_SB_Buffer_t *BufPtr    = NULL;
-    CFE_Status_t     Result    = CFE_SUCCESS;
+    CFE_Status_t     Result;
 
     /* Performance Log (start time counter) */
     CFE_ES_PerfLogEntry(FM_APPMAIN_PERF_ID);
@@ -165,7 +165,7 @@ void FM_AppMain(void)
 CFE_Status_t FM_AppInit(void)
 {
     const char  *ErrText = "Initialization error:";
-    CFE_Status_t Result  = CFE_SUCCESS;
+    CFE_Status_t Result;
 
     /* Initialize global data  */
     memset(&FM_AppData, 0, sizeof(FM_AppData));
