@@ -582,9 +582,9 @@ CFE_Status_t FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint
 
 CFE_Status_t FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
 {
-    osal_id_t     DirId;
+    osal_id_t     DirId = OS_OBJECT_ID_UNDEFINED;
     os_dirent_t   DirEntry;
-    os_fstat_t    FileStat;
+    os_fstat_t    FileStat = { 0 };
     osal_status_t OS_Status;
     CFE_Status_t  Result;
     char          FullPath[CFE_MISSION_MAX_PATH_LEN];

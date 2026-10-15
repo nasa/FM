@@ -1409,7 +1409,7 @@ void Test_FM_MonitorFilesystemSpaceCmd_NullFreeSpaceTable(void)
     FM_Test_Verify_Event(0,
                          FM_GET_FREE_SPACE_TBL_ERR_EID,
                          CFE_EVS_EventType_ERROR,
-                         "%s error: file system free space table is not loaded");
+                         "%s error: file system free space table unavailable: status=%08x");
 }
 
 void Test_FM_MonitorFilesystemSpaceCmd_ImplCallFails(void)
@@ -1521,7 +1521,6 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
     SetTableStateCmd.Payload.State = FM_TABLE_ENTRY_ENABLED;
     SetTableStateCmd.Payload.Index = 0;
 
-    FM_AppData.MonitorTablePtr = NULL;
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_ERR_NEVER_LOADED);
 
     Status = FM_SetTableStateCmd(&SetTableStateCmd);
@@ -1533,7 +1532,7 @@ void Test_FM_SetTableStateCmd_NullFreeSpaceTable(void)
     FM_Test_Verify_Event(0,
                          FM_SET_TABLE_STATE_TBL_ERR_EID,
                          CFE_EVS_EventType_ERROR,
-                         "%s error: file system free space table is not loaded");
+                         "%s error: file system free space table unavailable: status=%08x");
 }
 
 void Test_FM_SetTableStateCmd_IndexTooLarge(void)

@@ -71,35 +71,4 @@ CFE_Status_t FM_TableInit(void);
  */
 CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr);
 
-/**
- *  \brief Acquire Table Data Pointer Function
- *
- *  \par Description
- *       This function is invoked to acquire a pointer to the FM file system free
- *       space table data.  The pointer is maintained in the FM global data
- *       structure.  Note that the table data pointer will be set to NULL if the
- *       table has not yet been successfully loaded.
- *
- *  \par Assumptions, External Events, and Notes:
- *
- *  \sa #FM_AppData_t
- */
-void FM_AcquireTablePointers(void);
-
-/**
- *  \brief Release Table Data Pointer Function
- *
- *  \par Description
- *       This function is invoked to release the pointer to the FM file system free
- *       space table data.  The pointer is maintained in the FM global data
- *       structure.  The table data pointer must be periodically released to allow
- *       CFE Table Services an opportunity to load or dump the table without risk
- *       of interfering with users of the table data.
- *
- *  \par Assumptions, External Events, and Notes:
- *
- *  \sa #FM_AppData_t
- */
-void FM_ReleaseTablePointers(void);
-
 #endif
