@@ -35,11 +35,11 @@
 
 #include "cfe.h"
 
-/* ======== */
-/* Typedefs */
-/* ======== */
+/* ========== */
+/* Constants  */
+/* ========== */
 
-typedef enum
+enum
 {
     /**
      * Table entry is not used, these entries are ignored
@@ -66,7 +66,7 @@ typedef enum
      * used by a given file.
      */
     FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE = 2
-} FM_MonitorTableEntryType_Enum_t;
+};
 
 /* ======== */
 /* Payloads */
@@ -80,7 +80,7 @@ typedef struct
     /**
      * Table entry type.
      *
-     * This should be one of the enumeration values in FM_MonitorTableEntryType_Enum_t.
+     * This should be one of the FM_MonitorTableEntry_Type_* enumeration values.
      * It is defined as a uint8 in this table to ensure a consistent size.
      */
     uint8_t Type;
@@ -94,7 +94,7 @@ typedef struct
      * Location to monitor
      *
      * The interpretation of this string depends on Type
-     * See description of the FM_MonitorTableEntryType_Enum_t for how this is to be set
+     * See the FM_MonitorTableEntry_Type_* descriptions for how this is to be set
      */
     char Name[CFE_MISSION_MAX_PATH_LEN];
 } FM_MonitorTableEntry_t;
