@@ -70,7 +70,7 @@ CFE_Status_t FM_ValidateTable(FM_MonitorTable_t *TablePtr)
 {
     CFE_Status_t Result = CFE_SUCCESS;
     int32        NameLength;
-    int32        i = 0;
+    int32        i;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
