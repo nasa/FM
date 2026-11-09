@@ -43,7 +43,7 @@
 typedef struct FM_Compressor_State FM_Compressor_State_t;
 
 /**
- * @brief The state object for a compressor
+ * @brief The state object for a decompressor
  *
  * This is an abstract object at this level, the definition of this
  * object depends on the selected implementation.
@@ -91,7 +91,7 @@ CFE_Status_t FM_Decompress_Impl(FM_Decompressor_State_t *State, const char *SrcF
  * @param DstFileName the compressed output file
  *
  * @returns Status code
- * @retval #CFE_SUCCESS if decompression was successful
+ * @retval #CFE_SUCCESS if compression was successful
  */
 CFE_Status_t FM_Compress_Impl(FM_Compressor_State_t *State, const char *SrcFileName, const char *DstFileName);
 
